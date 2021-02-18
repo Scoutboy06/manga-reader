@@ -1,4 +1,4 @@
-/const cacheName = 'manga-reader-cache';
+const cacheName = 'manga-reader-cache';
 const filesToCache = [
 	'/index.html',
 	'/page.html',
