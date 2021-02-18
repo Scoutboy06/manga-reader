@@ -1,0 +1,21 @@
+{
+  "name": "manga-reader",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "My personal website for scraping and reading mangas",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Elias Wennerlund",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "node-html-parser": "^2.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

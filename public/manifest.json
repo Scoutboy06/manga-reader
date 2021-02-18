@@ -1,0 +1,29 @@
+{
+	"name": "Manga Reader",
+	"icons": [
+		{
+			"src": "/img/rikka_square128.png",
+			"type": "image/png",
+			"sizes": "128x128"
+		},
+		{
+			"src": "/img/rikka_square256.png",
+			"type": "image/png",
+			"sizes": "256x256"
+		},
+		{
+			"src": "/img/rikka_square512.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		},
+		{
+			"src": "/img/rikka_square1028.png",
+			"type": "image/png",
+			"sizes": "1024x1024"
+		}
+	],
+	"start_url": "/index.html",
+	"background_color": "#121212",
+	"display": "standalone",
+	"theme_color": "#2596be"
+}
