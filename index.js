@@ -29,11 +29,6 @@ app.get('/', (req, res) => {
 });
 
 
-app.get('/robots.txt', (req, res) => {
-	res.send('User-agent: *\nDisallow: /');
-});
-
-
 
 
 app.get('/api/image/*', async (req, res) => {
