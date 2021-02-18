@@ -1,7 +1,5 @@
 const $ = s => s[0] == '#' ? document.querySelector(s) : document.querySelectorAll(s);
 
-const api = 'http://127.0.0.1:3000/api';
-
 const root = $('#root');
 const title = $('#title');
 
@@ -16,18 +14,25 @@ async function getData(mangaName, chapter) {
 async function loadChapter() {
 	root.innerHTML = '';
 	
-	const [ mangaName, chapter ] = location.href.split('/').slice(-2);
+	let [ mangaName, chapter ] = location.href.split('/').slice(-2);
+	chapter = Number(chapter);
 
 	title.textContent = 'Chapter ' + chapter;
 
 	const links = await getData(mangaName, chapter);
-	console.log(links)
 
 	links.forEach(src => {
 		const img = document.createElement('img');
 		img.setAttribute('src', `/api/image/${encodeURI(src)}`);
 		root.appendChild(img);
 	});
+
+	fetch(`/api/chapterProgress`, {
+		method: 'POST',
+		body: JSON.stringify({ mangaName, chapter }),
+		headers: { 'Content-Type': 'application/json' }
+	})
+		.catch(alert);
 
 }
 
@@ -86,5 +91,7 @@ window.addEventListener('load', () => {
 		const script = document.createElement('script');
 		script.setAttribute('src', '/js/smoothscroll.min.js');
 		document.body.appendChild(script);
+
+		document.body.style['width'] = 'calc(100vw - 10px)';
 	}
 });

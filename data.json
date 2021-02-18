@@ -3,7 +3,9 @@
 		{
 			"name": "Martial Peak",
 			"urlName": "martial-peak",
-			"id": "e2141140-70ae-11eb-991f-00dbdfa4a663",
+			"chapter": 610,
+			"lastChapter": 978,
+			"subscribed": false,
 			"sites": [
 				{
 					"siteName": "readm.org",
@@ -13,19 +15,24 @@
 					"siteName": "disasterscans.com",
 					"mangaName": "martial-peak"
 				}
-			]
+			],
+			"coverUrl": "readm.org/uploads/chapter_files/cover/tbn/1609673137_198x0.jpg"
 		}
 	],
 	"hosts": [
 		{
 			"siteName": "readm.org",
-			"path": "https://readm.org/manga/%name%/%chapter%/all-pages",
-			"querySelector": ".img-responsive.scroll-down"
+			"path": "https://readm.org/manga/%name%/%chapter%/all-pages/",
+			"querySelector": ".img-responsive.scroll-down",
+			"detailsPage": "https://readm.org/manga/%name%/",
+			"coverSelector": ".series-profile-thumb"
 		},
 		{
 			"siteName": "disasterscans.com",
 			"path": "https://disasterscans.com/manga/%name%/chapter-%chapter%/",
-			"querySelector": ".page-break img"
+			"querySelector": ".page-break img",
+			"detailsPage": "https://disasterscans.com/manga/%name%/",
+			"coverSelector": ".summary_image img"
 		}
 	]
 }

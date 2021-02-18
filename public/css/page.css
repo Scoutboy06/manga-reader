@@ -6,7 +6,7 @@
 
 body {
 	background: #121212;
-	width: calc(100vw - 10px);
+	width: 100vw;
 	display: flex;
 	align-items: center;
 	flex-direction: column;

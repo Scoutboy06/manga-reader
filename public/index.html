@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Choose manga</title>
-	<link rel="stylesheet" href="/css/index.css" type="text/css">
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap">
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+		<link rel="apple-touch-icon" href="/img/rikka_square512.png">
+		<link rel="shortcut icon" href="/img/rikka_square128.png" type="image/png">
+		<meta name="description" content="Elias personal manga reader">
+		<meta name="theme-color" content="#2596be">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#121212">
+		<meta name="apple-mobile-web-app-title" content="Manga Reader">
+		<meta name="msapplication-TileImage" content="/img/rikka_square512.png">
+		<meta name="msapplication-TileColor" content="#000">
+	
+		<title>Choose a Manga</title>
+	
+		<link rel="stylesheet" href="/css/index.css" type="text/css">
+		<link rel="manifest" href="/manifest.json">
+	
+		<script>
+			if('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('/sw.js');
+			}
+		</script>
+	</head>
 <body>
-	<h1>Choose manga</h1>
-
+	<h2 id="title">Choose manga</h2>
 	<div id="root"></div>
 
 	<script src="/js/index.js"></script>

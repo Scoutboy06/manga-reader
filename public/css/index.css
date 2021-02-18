@@ -4,3 +4,97 @@
 	box-sizing: border-box;
 }
 
+body {
+	background: #121212;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#title {
+	color: rgba(255, 255, 255, .7);
+	padding-top: 20px;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	font-weight: 100;
+}
+
+
+#root {
+	width: 100vw;
+	margin: 10px 0;
+	padding: 15px 10px 20px;
+}
+
+
+.item {
+	width: 159px;
+	height: 209px;
+	margin: 10px 5px;
+	color: #fff;
+	display: inline-flex;
+	flex-direction: column;
+	cursor: pointer;
+	box-sizing: border-box;
+	position: relative;
+}
+
+.item .img {
+	width: 159px;
+	height: 209px;
+}
+
+.item img {
+	width: 100%;
+	height: 100%;
+}
+
+
+.item .footer {
+	background: rgba(0, 0, 0, .6);
+	padding: 3px 5px;
+	overflow: hidden;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.item .footer span {
+	font-size: 11px;
+	white-space: nowrap;
+	font-size: 14px;
+	color: #b5b5b5;
+}
+
+
+
+.item > div > p {
+	margin: 0;
+	margin-bottom: 15px;
+}
+
+
+
+
+body::-webkit-scrollbar {
+	-webkit-appearance: none;
+	width: 10px;
+	height: 10px;
+}
+
+
+body::-webkit-scrollbar-thumb {
+	cursor: pointer;
+	border-radius: 5px;
+	background: rgba(0,0,0,.25);
+	-webkit-transition: color .2s ease;
+	transition: color .2s ease;
+}
+
+
+body::-webkit-scrollbar-track {
+	background: rgba(240,240,240,.3);
+	border-radius: 0;
+}
