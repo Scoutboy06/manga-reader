@@ -21,14 +21,14 @@
 	],
 	"hosts": [
 		{
-			"siteName": "readm.org",
+			"hostName": "readm.org",
 			"path": "https://readm.org/manga/%name%/%chapter%/all-pages/",
 			"querySelector": ".img-responsive.scroll-down",
 			"detailsPage": "https://readm.org/manga/%name%/",
 			"coverSelector": ".series-profile-thumb"
 		},
 		{
-			"siteName": "disasterscans.com",
+			"hostName": "disasterscans.com",
 			"path": "https://disasterscans.com/manga/%name%/chapter-%chapter%/",
 			"querySelector": ".page-break img",
 			"detailsPage": "https://disasterscans.com/manga/%name%/",

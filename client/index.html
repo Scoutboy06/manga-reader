@@ -15,21 +15,23 @@
 	<meta name="msapplication-TileImage" content="/img/rikka_square512.png">
 	<meta name="msapplication-TileColor" content="#000">
 
-	<title>Read manga</title>
+	<title>Choose a Manga</title>
 
-	<link rel="stylesheet" href="/css/page.css" type="text/css">
 	<link rel="manifest" href="/manifest.json">
-
+	
 	<script>
 		if('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('/sw.js');
 		}
 	</script>
+
+	<link rel="stylesheet" href="/css/index.css" type="text/css">
+
 </head>
 <body>
-	<h2 id="title"></h2>
+	<h2 id="title">Choose manga</h2>
 	<div id="root"></div>
 
-	<script src="/js/page.js"></script>
+	<script src="/js/index.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ const title = $('#title');
 
 
 window.addEventListener('load', async () => {
-	const raw = await fetch('/api/mangas');
+	const raw = await fetch('/api/manga');
 	const json = await raw.json();
 
 	console.log(json);

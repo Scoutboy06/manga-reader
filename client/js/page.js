@@ -5,7 +5,7 @@ const title = $('#title');
 
 
 async function getData(mangaName, chapter) {
-	const raw = await fetch(`/api/${mangaName}/${chapter}`);
+	const raw = await fetch(`/api/manga/${mangaName}/${chapter}`);
 	const json = await raw.json();
 	return json;
 }
@@ -14,26 +14,42 @@ async function getData(mangaName, chapter) {
 async function loadChapter() {
 	root.innerHTML = '';
 	
-	let [ mangaName, chapter ] = location.href.split('/').slice(-2);
+	let [ urlName, chapter ] = location.href.split('/').slice(-2);
 	chapter = Number(chapter);
 
 	title.textContent = 'Chapter ' + chapter;
 
-	const links = await getData(mangaName, chapter);
+	const links = await getData(urlName, chapter);
 
 	links.forEach(src => {
 		const img = document.createElement('img');
-		img.setAttribute('src', `/api/image/${encodeURI(src)}`);
+		img.setAttribute('loading', 'lazy');
+		img.setAttribute('src', `${encodeURI(src)}`);
 		root.appendChild(img);
 	});
 
-	fetch(`/api/chapterProgress`, {
+	fetch(`/api/manga/updateProgress`, {
 		method: 'POST',
-		body: JSON.stringify({ mangaName, chapter }),
+		body: JSON.stringify({ urlName, chapter }),
 		headers: { 'Content-Type': 'application/json' }
 	})
-		.catch(alert);
+		.catch(console.error);
 
+
+	// preloadChapter(1);
+}
+
+
+async function preloadChapter(dir) {
+	let [ mangaName, chapter ] = location.href.split('/').slice(-2);
+	chapter = Number(chapter) + dir;
+
+	const links = await getData(mangaName, chapter);
+
+	links.forEach(link => {
+		const img = new Image();
+		img.src = link;
+	});
 }
 
 
