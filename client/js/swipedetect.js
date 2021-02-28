@@ -1,6 +1,6 @@
 function swipedetect(el, callback){
   
-	var touchsurface = el,
+	let touchsurface = el,
 	swipedir,
 	startX,
 	startY,
@@ -14,13 +14,13 @@ function swipedetect(el, callback){
 	handleswipe = callback || function(swipedir){}
 
 	touchsurface.addEventListener('touchstart', function(e){
-			var touchobj = e.changedTouches[0]
+			let touchobj = e.changedTouches[0]
 			swipedir = 'none'
 			dist = 0
 			startX = touchobj.pageX
 			startY = touchobj.pageY
 			startTime = new Date().getTime() // record time when finger first makes contact with surface
-			e.preventDefault()
+			// e.preventDefault()
 	}, { passive: false });
 
 	// touchsurface.addEventListener('touchmove', function(e){
@@ -28,7 +28,7 @@ function swipedetect(el, callback){
 	// }, false)
 
 	touchsurface.addEventListener('touchend', function(e){
-			var touchobj = e.changedTouches[0]
+			let touchobj = e.changedTouches[0]
 			distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
 			distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
 			elapsedTime = new Date().getTime() - startTime // get time elapsed
@@ -41,7 +41,7 @@ function swipedetect(el, callback){
 					}
 			}
 			handleswipe(swipedir)
-			e.preventDefault()
+			// e.preventDefault()
 	}, { passive: false });
 }
 

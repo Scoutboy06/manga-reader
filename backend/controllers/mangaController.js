@@ -19,7 +19,7 @@ const createManga = asyncHandler(async (req, res) => {
 		lastChapter,
 		subscribed,
 		sites,
-		coverUrl
+		coverUrl,
 	} = req.body;
 
 	const manga = new Manga({
@@ -29,7 +29,7 @@ const createManga = asyncHandler(async (req, res) => {
 		lastChapter,
 		subscribed,
 		sites,
-		coverUrl
+		coverUrl,
 	});
 
 	const createdManga = await manga.save();
@@ -83,38 +83,41 @@ const deleteManga = asyncHandler(async (req, res) => {
 const getImageUrls = asyncHandler(async (req, res) => {
 	// return res.send(['https://i2.wp.com/disasterscans.com/wp-content/uploads/WP-manga/data/manga_5e42adf14224b/9da11b8733b78861c7b813edd89f8a58/0016.jpg?ssl=1'])
 	const { urlName, chapter } = req.params;
-	let foundOne = false;
 
 
 	async function handler(err, docs) {
 		for(const host of docs) {
-			if(foundOne) return;
 
-			const url = host['path']
-				.replace('%name%', urlName)
-				.replace('%chapter%', chapter)
+			try {
+				const url = host['path']
+					.replace('%name%', urlName)
+					.replace('%chapter%', chapter)
 
-			const raw = await fetch(url);
-			const html = await raw.text();
+				const raw = await fetch(url);
+				const html = await raw.text();
 
-			const document = HTMLParser.parse(html);
-			
-			
-			const images = document.querySelectorAll(host['querySelector']);
-			let srcs = [];
+				const document = HTMLParser.parse(html);
+				
+				
+				const images = document.querySelectorAll(host['querySelector']);
+				let srcs = [];
 
-			for(const img of images) {
-				let src = img.getAttribute('data-src').trim();
-				if(host['needProxy']) {
-					src = 'http://127.0.0.1:5000/api/image/' + src;
+				for(const img of images) {
+					let src = img.getAttribute('data-src').trim();
+					if(host['needProxy']) {
+						src = 'http://127.0.0.1:5000/api/image/' + src;
+					}
+
+					srcs.push(src);
 				}
 
-				srcs.push(src);
+				res.send(srcs);
+
+				return true;
+
+			} catch(err) {
+				continue;
 			}
-
-			res.send(srcs);
-
-			return true;
 		}
 	}
 
@@ -132,18 +135,23 @@ const getImageUrls = asyncHandler(async (req, res) => {
 				hostName: host['hostName'],
 				needProxy: false
 			}, async (err, docs) => {
-				const res = await handler(err, docs);
-
-				// If none - check proxy sites
-				if(!res) {
-					Host.find({
-						hostName: host['hostName'],
-						needProxy: false
-					}, async (err, docs) => { await handler(err, docs) });
-				}
+				await handler(err, docs);
 			});
 		}
-	});	
+		
+		// for(const host of manga['hosts']) {
+			
+		// 	// Then check proxy sites
+		// 	await Host.find({
+		// 		hostName: host['hostName'],
+		// 		needProxy: true
+		// 	}, async (err, docs) => {
+		// 		await handler(err, docs);
+		// 	});
+		// }
+	});
+
+	
 });
 
 
