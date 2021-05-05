@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -29,8 +29,64 @@
 
 </head>
 <body>
-	<h2 id="title"></h2>
+	<header>
+		<h2 id="title"></h2>
+
+		<div class="container" style="margin-bottom: 30px">
+			<a href="#" target="_blank" rel="nofollow noreferrer noopener" class="pagination" id="originBtn" disabled="true">
+				<img src="/icons/open_in_new_white_24dp.svg" alt="Open original">
+			</a>
+		</div>
+
+		<div class="container">
+
+			<div class="pagination backBtn" disabled="true">
+				<img src="/icons/arrow_back-white-24dp.svg" alt="<-">
+				<span>Prev</span>
+			</div>
+
+			<a href="/" class="pagination" id="homeBtn">
+				<img src="/icons/home-white-24dp.svg" alt="Home">
+			</a>
+
+			<div class="pagination nextBtn" disabled="true">
+				<span>Next</span>
+				<img src="/icons/arrow_forward-white-24dp.svg" alt="->">
+			</div>
+
+		</div>
+	</header>
+
+
+
 	<div id="root"></div>
+
+
+	<header>
+		<div class="container">
+
+			<div class="pagination backBtn" disabled="true">
+				<img src="/icons/arrow_back-white-24dp.svg" alt="<-">
+				<span>Prev</span>
+			</div>
+
+			<a href="/" class="pagination" id="homeBtn">
+				<img src="/icons/home-white-24dp.svg" alt="Home">
+			</a>
+
+			<div class="pagination nextBtn" disabled="true">
+				<span>Next</span>
+				<img src="/icons/arrow_forward-white-24dp.svg" alt="->">
+			</div>
+
+		</div>
+	</header>
+
+
+	<div id="alert" class="error">
+		Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro expedita, quas excepturi vero veritatis praesentium accusantium rem. Ratione voluptate magni explicabo labore? Sunt vero quam suscipit ipsum, repudiandae hic recusandae!
+	</div>
+	
 
 	<script src="/js/page.js"></script>
 </body>

@@ -6,6 +6,7 @@ import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import mangaRoutes from './routes/mangaRoutes.js';
 import hostRoutes from './routes/hostRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
 
 
@@ -23,6 +24,7 @@ app.use(express.json());
 
 app.use('/api/manga', mangaRoutes);
 app.use('/api/host', hostRoutes);
+app.use('/api/search', searchRoutes);
 app.use('/api/image', imageRoutes);
 
 

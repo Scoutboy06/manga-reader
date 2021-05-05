@@ -2,15 +2,12 @@
   "name": "manga-reader",
   "type": "module",
   "version": "1.0.0",
-  "description": "My personal website for scraping and reading mangas",
+  "description": "My personal website for reading manga",
   "main": "backend/server.js",
-  "homepage": "http://scoutboy06.github.io/manga-reader",
   "scripts": {
     "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
-    "db": "node backend/config/db.js",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "dev": "nodemon backend/server.js",
+    "db": "nodemon backend/config/db.js"
   },
   "author": "Elias Wennerlund",
   "license": "ISC",
@@ -23,7 +20,6 @@
     "node-html-parser": "^2.1.0"
   },
   "devDependencies": {
-    "gh-pages": "^3.1.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7"
   }

@@ -22,7 +22,7 @@
 			"sizes": "1024x1024"
 		}
 	],
-	"start_url": "/index.html",
+	"start_url": "/",
 	"background_color": "#121212",
 	"display": "standalone",
 	"theme_color": "#2596be"

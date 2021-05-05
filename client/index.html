@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="apple-touch-icon" href="/img/rikka_square512.png">
-	<link rel="shortcut icon" href="/img/rikka_square128.png" type="image/png">
+	<link rel="apple-touch-icon" href="./img/rikka_square512.png">
+	<link rel="shortcut icon" href="./img/rikka_square128.png" type="image/png">
 	<meta name="description" content="Elias personal manga reader">
 	<meta name="theme-color" content="#2596be">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="#121212">
 	<meta name="apple-mobile-web-app-title" content="Manga Reader">
-	<meta name="msapplication-TileImage" content="/img/rikka_square512.png">
+	<meta name="msapplication-TileImage" content="./img/rikka_square512.png">
 	<meta name="msapplication-TileColor" content="#000">
 
 	<title>Choose a Manga</title>
 
-	<link rel="manifest" href="/manifest.json">
+	<link rel="manifest" href="./manifest.json">
 	
 	<script>
 		if('serviceWorker' in navigator) {
@@ -25,13 +25,33 @@
 		}
 	</script>
 
-	<link rel="stylesheet" href="/css/index.css" type="text/css">
+	<link rel="stylesheet" href="./css/index.css" type="text/css">
 
 </head>
 <body>
-	<h2 id="title">Choose manga</h2>
+	<header>
+		<h2 id="title">Choose manga</h2>
+	</header>
+
 	<div id="root"></div>
 
-	<script src="/js/index.js"></script>
+	<div id="overlay" class="">
+		<header>
+			<input type="text" placeholder="Search Manga">
+		</header>
+
+		<content></content>
+
+		<footer>
+			<button type="reset">Cancel</button>
+			<button type="submit" disabled>Select</button>
+		</footer>
+	</div>
+
+	<button id="newManga">
+		<img src="./icons/add-white-24dp.svg" alt="+">
+	</button>
+
+	<script src="./js/index.js"></script>
 </body>
 </html>

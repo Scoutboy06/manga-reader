@@ -13,17 +13,21 @@ const createHost = asyncHandler(async (req, res) => {
 	const {
 		hostName,
 		path,
-		querySelector,
+		imgSelector,
 		detailsPage,
 		coverSelector,
+		search,
+		needProxy,
 	} = req.body;
 
 	const host = new Host({
 		hostName,
 		path,
-		querySelector,
+		imgSelector,
 		detailsPage,
 		coverSelector,
+		search,
+		needProxy,
 	});
 
 	const createdHost = await host.save();
@@ -33,6 +37,28 @@ const createHost = asyncHandler(async (req, res) => {
 
 
 
+// @desc	Get a host by its name (domain)
+// @route	GET /api/host/:hostName
+const getHostByName = asyncHandler(async (req, res) => {
+	const { hostName } = req.params;
+
+	Host.findOne({ hostName }, (err, doc) => {
+		if(err) {
+			res.status(404);
+			throw new Error("Couldn't find host : " + hostName);
+		}
+		
+		else {
+			res.status(200).json(doc);
+		}
+	})
+
+});
+
+
+
+
 export {
 	createHost,
+	getHostByName,
 }

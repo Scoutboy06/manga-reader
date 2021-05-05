@@ -1,13 +1,18 @@
 const cacheName = 'manga-reader-cache';
 const filesToCache = [
-	'/index.html',
 	'/page.html',
-	'/css/index.css',
 	'/css/page.css',
-	'/js/page.js',
-	'/js/index.js',
-	'/js/smoothscroll.min.js',
+	// '/js/page.js',
 	'/js/swipedetect.min.js',
+	'/js/smoothscroll.min.js',
+	'/index.html',
+	'/css/index.css',
+	'/js/index.js',
+	'/icons/arrow_back-24dp.svg',
+	'/icons/arrow_forward-24dp.svg',
+	'/icons/home-white-24dp.svg',
+	'/icons/search-white-24dp.svg',
+	'/icons/add-white-24dp.svg',
 ];
 
 

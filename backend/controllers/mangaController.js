@@ -17,10 +17,24 @@ const createManga = asyncHandler(async (req, res) => {
 		urlName,
 		chapter,
 		lastChapter,
-		subscribed,
-		sites,
+		subscribed = false,
+		host,
 		coverUrl,
 	} = req.body;
+
+
+	// Find first chapter
+	Host.findOne({ hostName: host['hostName'] }, (err, host) => {
+		/* 
+		host: {
+			hostName,
+			mangaName
+		}
+		*/
+
+		
+	});
+
 
 	const manga = new Manga({
 		name,
@@ -28,7 +42,7 @@ const createManga = asyncHandler(async (req, res) => {
 		chapter,
 		lastChapter,
 		subscribed,
-		sites,
+		host,
 		coverUrl,
 	});
 
@@ -81,45 +95,7 @@ const deleteManga = asyncHandler(async (req, res) => {
 // @desc	Get images from a chapter
 // @route	GET /api/manga/:urlName/:chapter
 const getImageUrls = asyncHandler(async (req, res) => {
-	// return res.send(['https://i2.wp.com/disasterscans.com/wp-content/uploads/WP-manga/data/manga_5e42adf14224b/9da11b8733b78861c7b813edd89f8a58/0016.jpg?ssl=1'])
 	const { urlName, chapter } = req.params;
-
-
-	async function handler(err, docs) {
-		for(const host of docs) {
-
-			try {
-				const url = host['path']
-					.replace('%name%', urlName)
-					.replace('%chapter%', chapter)
-
-				const raw = await fetch(url);
-				const html = await raw.text();
-
-				const document = HTMLParser.parse(html);
-				
-				
-				const images = document.querySelectorAll(host['querySelector']);
-				let srcs = [];
-
-				for(const img of images) {
-					let src = img.getAttribute('data-src').trim();
-					if(host['needProxy']) {
-						src = 'http://127.0.0.1:5000/api/image/' + src;
-					}
-
-					srcs.push(src);
-				}
-
-				res.send(srcs);
-
-				return true;
-
-			} catch(err) {
-				continue;
-			}
-		}
-	}
 
 
 	Manga.findOne({ urlName }, async (err, manga) => {
@@ -128,27 +104,78 @@ const getImageUrls = asyncHandler(async (req, res) => {
 			throw new Error("Couldn't find manga : " + urlName);
 		}
 
-		for(const host of manga['hosts']) {
 
-			// Check no-proxy sites first
-			await Host.find({
-				hostName: host['hostName'],
-				needProxy: false
-			}, async (err, docs) => {
-				await handler(err, docs);
-			});
-		}
-		
-		// for(const host of manga['hosts']) {
+		Host.findOne({
+			hostName: manga['host']['hostName'],
+		}, async (err, host) => {
+
+			if(err) {
+				res.status(500);
+				throw new Error("The manga either doesn't have a host or the host doesn't exist");
+			}
+
+			const url = host['path']
+				.replace('%name%', urlName)
+				.replace('%chapter%', chapter)
+
 			
-		// 	// Then check proxy sites
-		// 	await Host.find({
-		// 		hostName: host['hostName'],
-		// 		needProxy: true
-		// 	}, async (err, docs) => {
-		// 		await handler(err, docs);
-		// 	});
-		// }
+			const raw = await fetch(url);
+			const html = await raw.text();
+
+			const document = HTMLParser.parse(html);
+			
+			
+			const images = document.querySelectorAll(host['imgSelector']['querySelector']);
+			let srcs = [];
+
+			// console.log(url);
+			// console.log(host['imgSelector']['querySelector']);
+
+			for(const img of images) {
+				let src = img.getAttribute(host['imgSelector']['attrSelector']).trim();
+				// console.log(src);
+				if(host['needProxy']) {
+					src = 'http://127.0.0.1:5000/api/image/' + src;
+				}
+
+				srcs.push(src);
+			}
+
+
+			const parent = document.querySelector(host['chapterNameSelectors']['parent']);
+			const prevBtn = parent.querySelector(host['chapterNameSelectors']['prev']);
+			const nextBtn = parent.querySelector(host['chapterNameSelectors']['next']);
+
+			const pathSplit = host['path'].split('/');
+			const chapterInUrlIndex = pathSplit.indexOf(
+				pathSplit.find(el => el.indexOf('%chapter%') > -1)
+			);
+
+			const prevPath = prevBtn ?
+				prevBtn
+					.getAttribute('href')
+					.split('/')
+					[chapterInUrlIndex]
+				: null;
+			
+			const nextPath = nextBtn ?
+				nextBtn
+					.getAttribute('href')
+					.split('/')
+					[chapterInUrlIndex]
+				: null;
+			
+
+			const data = {
+				prevPath,
+				nextPath,
+				originalUrl: url,
+				images: srcs
+			}
+
+			res.send(data);
+
+		});
 	});
 
 	

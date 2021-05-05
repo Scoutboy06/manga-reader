@@ -4,6 +4,19 @@ const root = $('#root');
 const title = $('#title');
 
 
+let chapters = {
+	prev: null,
+	next: null,
+};
+
+
+function createElement(innerHTML) {
+	const div = document.createElement('div');
+	div.innerHTML = innerHTML; //.replace(/\n/g, '');
+	return div.firstElementChild;
+}
+
+
 async function getData(mangaName, chapter) {
 	const raw = await fetch(`/api/manga/${mangaName}/${chapter}`);
 	const json = await raw.json();
@@ -15,42 +28,69 @@ async function loadChapter() {
 	root.innerHTML = '';
 	
 	let [ urlName, chapter ] = location.href.split('/').slice(-2);
-	chapter = Number(chapter);
 
-	title.textContent = 'Chapter ' + chapter;
+	const chapterName = isNaN(Number(chapter)) ? chapter : 'Chapter ' + chapter;
 
-	const links = await getData(urlName, chapter);
+	title.textContent = chapterName;
+	$('title')[0].textContent = chapterName;
 
-	links.forEach(src => {
-		const img = document.createElement('img');
+
+	const data = await getData(urlName, chapter);
+
+	chapters = {
+		prev: data['prevPath'],
+		next: data['nextPath'],
+		originalUrl: data['originalUrl'],
+	};
+
+
+	for(const btn of $('.pagination.backBtn')) {
+		if(chapters['prev']) btn.removeAttribute('disabled');
+		else btn.setAttribute('disabled', '');
+	}
+	for(const btn of $('.pagination.nextBtn')) {
+		if(chapters['next']) btn.removeAttribute('disabled');
+		else btn.setAttribute('disabled', '');
+	}
+
+	if(chapters['originalUrl']) {
+		const el = $('#originBtn');
+		el.setAttribute('href', chapters['originalUrl']);
+		el.removeAttribute('disabled');
+	} else {
+		const el = $('#originBtn');
+		el.setAttribute('href', '#');
+		el.setAttribute('disabled', '');
+	}
+
+
+	data['images'].forEach(src => {
+		const img = new Image();
 		img.setAttribute('loading', 'lazy');
-		img.setAttribute('src', `${encodeURI(src)}`);
+		img.src = encodeURI(src.replace('i2.wp.com/', ''));
+
+		img.addEventListener('error', e => {
+			if(img.src.startsWith(location.origin))
+				alert('error', 'Image(s) could not load');
+			else
+				img.src = location.origin + '/api/image/' + encodeURI(src.replace('i2.wp.com/', ''));
+		});
+
 		root.appendChild(img);
 	});
+
 
 	fetch(`/api/manga/updateProgress`, {
 		method: 'POST',
 		body: JSON.stringify({ urlName, chapter }),
-		headers: { 'Content-Type': 'application/json' }
+		headers: { 'Content-Type': 'application/json' },
 	})
 		.catch(console.error);
 
-
-	// preloadChapter(1);
 }
 
 
-async function preloadChapter(dir) {
-	let [ mangaName, chapter ] = location.href.split('/').slice(-2);
-	chapter = Number(chapter) + dir;
 
-	const links = await getData(mangaName, chapter);
-
-	links.forEach(link => {
-		const img = new Image();
-		img.src = link;
-	});
-}
 
 
 function isTouchDevice() {
@@ -76,11 +116,22 @@ function isMobile() {
 
 
 function newChapter(dir) {
-	const newChapter = Number(location.href.split('/').slice(-1)[0]) + dir;
-	history.pushState({}, null, newChapter);
+	if(dir > 0) {
+		if(!chapters.next)
+			return alert('error', 'Next chapter not found');
+
+		history.pushState({}, '', chapters.next);
+	}
+
+	else {
+		if(!chapters.prev)
+			return alert('error', 'Previous chapter not found');
+
+		history.pushState({}, '', chapters.prev);
+	}
+
 	loadChapter();
 }
-
 
 
 
@@ -110,4 +161,46 @@ window.addEventListener('load', () => {
 
 		document.body.style['width'] = 'calc(100vw - 10px)';
 	}
+
+
+	for(const btn of $('.pagination.backBtn')) {
+		btn.addEventListener('click', () => chapterClickHandler(btn));
+	}
+
+	for(const btn of $('.pagination.nextBtn')) {
+		btn.addEventListener('click', () => chapterClickHandler(btn));
+	}
+
+
+	function chapterClickHandler(btn) {
+		if(btn.getAttribute !== '') {
+			for(const btn of $('.pagination:not(#homeBtn)')) {
+				btn.setAttribute('disabled', '');
+			}
+
+			if(btn.classList.contains('backBtn'))
+				newChapter(-1);
+			else
+				newChapter(1);
+		}
+	}
 });
+
+
+let alertTimeout;
+function alert(type, message) {
+	const el = $('#alert');
+
+	el.classList.add('show');
+	el.classList.add(type);
+	el.textContent = message;
+
+	setTimeout(() => {
+		if(alertTimeout) clearTimeout(alertTimeout);
+		el.classList.remove(type);
+		alertTimeout = setTimeout(() => {
+			el.classList.remove('show');
+			el.textContent = '';
+		}, 300);
+	}, 5000);
+}

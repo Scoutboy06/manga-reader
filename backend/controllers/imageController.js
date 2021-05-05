@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 // @route	GET /api/image/*
 const getImageFromUrl = asyncHandler(async (req, res) => {
 
-	const imgUrl = decodeURI('https://' + req.params['0']);
+	const imgUrl = (req.params['0'].startsWith('https://') ? '' : 'https://') + req.params['0'];
 
 	const raw = await fetch(imgUrl);
 	const blob = await raw.blob();
