@@ -15,10 +15,10 @@ connectDB();
 
 const app = express();
 
-if (process.env.NODE_ENV === 'development') {
-  const morgan = require('morgan');
-  app.use(morgan('dev'));
-}
+// if (process.env.NODE_ENV === 'development') {
+//   const morgan = require('morgan');
+//   app.use(morgan('dev'));
+// }
 
 app.use(express.json());
 
