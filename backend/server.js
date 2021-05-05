@@ -1,7 +1,6 @@
 import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
-import morgan from 'morgan';
 import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import mangaRoutes from './routes/mangaRoutes.js';
@@ -17,6 +16,7 @@ connectDB();
 const app = express();
 
 if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan');
   app.use(morgan('dev'));
 }
 
