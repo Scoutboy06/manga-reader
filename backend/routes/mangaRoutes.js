@@ -6,6 +6,7 @@ import {
 	getImageUrls,
 	updateProgress,
 	getAllMangas,
+	updateAttributeSelector,
 } from '../controllers/mangaController.js';
 
 
@@ -28,6 +29,8 @@ router.post('/updateProgress', updateProgress);
 router.route('/:urlName/:chapter')
 	.get(getImageUrls)
 
+
+router.put('/updateAttributeSelector', updateAttributeSelector);
 
 
 export default router;

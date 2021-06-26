@@ -1,12 +1,14 @@
 import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
+import morgan from 'morgan';
 import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import mangaRoutes from './routes/mangaRoutes.js';
 import hostRoutes from './routes/hostRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
+import { getSubscribedUpdates } from './controllers/updatesController.js';
 
 
 dotenv.config();
@@ -14,11 +16,11 @@ dotenv.config();
 connectDB();
 
 const app = express();
+const router = express.Router();
 
-// if (process.env.NODE_ENV === 'development') {
-//   const morgan = require('morgan');
-//   app.use(morgan('dev'));
-// }
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.use(express.json());
 
@@ -26,6 +28,8 @@ app.use('/api/manga', mangaRoutes);
 app.use('/api/host', hostRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/image', imageRoutes);
+
+app.get('/api/getUpdates', getSubscribedUpdates);
 
 
 const __dirname = path.resolve();
@@ -49,9 +53,6 @@ app.use(errorHandler);
 
 
 const PORT = process.env.PORT || 5000;
-app.listen(
-  PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
-  )
+app.listen(PORT,
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`),
 );

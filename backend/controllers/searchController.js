@@ -50,17 +50,19 @@ const search = asyncHandler(async (req, res) => {
 
     for(const manga of mangas) {
 
-      const mangaName = manga.querySelector(selectors['mangaName']).innerText.trim();
-      const imgUrl = manga.querySelector(selectors['img']['selector'])
-                      .getAttribute(selectors['img']['attribute']).trim();
-      const latestChapter = manga.querySelector(selectors['latestChapter']).innerText.trim();
-      const latestUpdate = manga.querySelector(selectors['latestUpdate']).innerText.trim();
-      const detailsPage = manga.querySelector(selectors['detailsPage'])
+      // TODO: fix .trim() error
+
+      const mangaName = manga.querySelector(selectors.mangaName).innerText.trim();
+      const imgUrl = manga.querySelector(selectors.img.selector)
+                      .getAttribute(selectors.img.attribute).trim();
+      const latestChapter = manga.querySelector(selectors.latestChapter).innerText.trim();
+      const latestUpdate = manga.querySelector(selectors.latestUpdate).innerText.trim();
+      const detailsPage = manga.querySelector(selectors.detailsPage)
                             .getAttribute('href');
       
       // Compare saved details page path with the one we got earlier
       const detailsPageSplit = detailsPage.split('/');
-      const urlNameIndex = host['detailsPage'].split('/').indexOf('%name%');
+      const urlNameIndex = host.detailsPage.split('/').indexOf('%name%');
       
       const urlName = detailsPageSplit[urlNameIndex];
       
@@ -89,7 +91,7 @@ const search = asyncHandler(async (req, res) => {
 	}
 
 
-  res.status(200).send(data);
+  res.status(200).json(data);
 });
 
 

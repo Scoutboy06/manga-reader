@@ -22,20 +22,6 @@ const createManga = asyncHandler(async (req, res) => {
 		coverUrl,
 	} = req.body;
 
-
-	// Find first chapter
-	Host.findOne({ hostName: host['hostName'] }, (err, host) => {
-		/* 
-		host: {
-			hostName,
-			mangaName
-		}
-		*/
-
-		
-	});
-
-
 	const manga = new Manga({
 		name,
 		urlName,
@@ -106,7 +92,7 @@ const getImageUrls = asyncHandler(async (req, res) => {
 
 
 		Host.findOne({
-			hostName: manga['host']['hostName'],
+			hostName: manga.host.hostName,
 		}, async (err, host) => {
 
 			if(err) {
@@ -114,7 +100,7 @@ const getImageUrls = asyncHandler(async (req, res) => {
 				throw new Error("The manga either doesn't have a host or the host doesn't exist");
 			}
 
-			const url = host['path']
+			const url = host.path
 				.replace('%name%', urlName)
 				.replace('%chapter%', chapter)
 
@@ -125,16 +111,27 @@ const getImageUrls = asyncHandler(async (req, res) => {
 			const document = HTMLParser.parse(html);
 			
 			
-			const images = document.querySelectorAll(host['imgSelector']['querySelector']);
+			const images = document.querySelectorAll(host.imgSelector.querySelector);
 			let srcs = [];
 
-			// console.log(url);
-			// console.log(host['imgSelector']['querySelector']);
 
 			for(const img of images) {
-				let src = img.getAttribute(host['imgSelector']['attrSelector']).trim();
-				// console.log(src);
-				if(host['needProxy']) {
+				// let src = img.getAttribute(host.imgSelector.attrSelector).trim();
+				let src = img.getAttribute(host.imgSelector.attrSelector);
+
+				if(!src) {
+					res.status(507).json({
+						message: `Invalid attribute selector for host ${host.hostName}`,
+						originalUrl: url,
+						hostName: host.hostName,
+						hostId: host._id,
+					});
+					return;
+				}
+
+				src = src.trim();
+				
+				if(host.needProxy) {
 					src = 'http://127.0.0.1:5000/api/image/' + src;
 				}
 
@@ -142,27 +139,21 @@ const getImageUrls = asyncHandler(async (req, res) => {
 			}
 
 
-			const parent = document.querySelector(host['chapterNameSelectors']['parent']);
-			const prevBtn = parent.querySelector(host['chapterNameSelectors']['prev']);
-			const nextBtn = parent.querySelector(host['chapterNameSelectors']['next']);
+			const parent = document.querySelector(host.chapterNameSelectors.parent);
+			const prevBtn = parent.querySelector(host.chapterNameSelectors.prev);
+			const nextBtn = parent.querySelector(host.chapterNameSelectors.next);
 
-			const pathSplit = host['path'].split('/');
+			const pathSplit = host.path.split('/');
 			const chapterInUrlIndex = pathSplit.indexOf(
 				pathSplit.find(el => el.indexOf('%chapter%') > -1)
 			);
 
-			const prevPath = prevBtn ?
-				prevBtn
-					.getAttribute('href')
-					.split('/')
-					[chapterInUrlIndex]
+			const prevPath = prevBtn
+				? prevBtn.getAttribute('href').split('/')[chapterInUrlIndex]
 				: null;
 			
-			const nextPath = nextBtn ?
-				nextBtn
-					.getAttribute('href')
-					.split('/')
-					[chapterInUrlIndex]
+			const nextPath = nextBtn
+				? nextBtn.getAttribute('href').split('/')[chapterInUrlIndex]
 				: null;
 			
 
@@ -226,6 +217,19 @@ const getAllMangas = asyncHandler(async (req, res) => {
 
 
 
+const updateAttributeSelector = asyncHandler(async (req, res) => {
+	const { hostId, newSelector } = req.body;
+
+	const host = await Host.findById(hostId);
+	host.imgSelector.attrSelector = newSelector;
+	const savedHost = await host.save();
+
+	res.status(200).json(savedHost);
+});
+
+
+
+
 export {
 	getMangaByUrlName,
 	createManga,
@@ -233,4 +237,5 @@ export {
 	getImageUrls,
 	updateProgress,
 	getAllMangas,
+	updateAttributeSelector,
 }

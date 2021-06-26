@@ -26,14 +26,15 @@ function isMobile() {
 
 
 window.addEventListener('load', async () => {
-	const raw = await fetch('/api/manga');
+	let raw = await fetch('/api/manga');
 	const json = await raw.json();
 
 	console.log(json);
 
 	json.forEach(manga => {
 		const a = createElement(`
-			<a href="/${manga['urlName']}/${manga['chapter']}" class="item">
+			<a href="/${manga['urlName']}/${manga['chapter']}" class="item" data-id="${manga._id}">
+				<div class="updates"></div>
 				<div class="img">
 					<img src="${manga['coverUrl']}">
 				</div>
@@ -47,9 +48,20 @@ window.addEventListener('load', async () => {
 	});
 
 
-	if(!isMobile())
+	if(!isMobile()) {
 		document.body.style['width'] = 'calc(100vw - 20px)';
+	}
 
+	raw = await fetch('/api/getUpdates');
+	const hasUpdates = await raw.json();
+
+	console.log(hasUpdates);
+
+	for(const mangaId of hasUpdates) {
+		for(const el of root.children) {
+			if(el.getAttribute('data-id') === mangaId) el.classList.add('hasUpdates');
+		}
+	}
 });
 
 
@@ -169,26 +181,10 @@ $('#overlay footer button[type="reset"]')[0].addEventListener('click', () => {
 
 
 
-newManga.addEventListener('click', e => {
-	for(const ch of newManga.children) {
-		if(ch.classList.contains('ripple'))
-			newManga.removeChild(ch);
-	}
-
-	const buttonPos = newManga.getBoundingClientRect();
-	const ripple = createElement(`<div class="ripple" style="left: ${e.clientX - buttonPos.x}px; top: ${e.clientY - buttonPos.y}px"></div>`);
-	newManga.appendChild(ripple);
 
 
+
+
+newManga.addEventListener('click', () => {
 	newMangaOverLay.classList.add('show');
-});
-
-
-newManga.addEventListener('blur', () => {
-	setTimeout(() => {
-		for(const ch of newManga.children) {
-			if(ch.classList.contains('ripple'))
-				newManga.removeChild(ch);
-		}
-	}, 400);
 });

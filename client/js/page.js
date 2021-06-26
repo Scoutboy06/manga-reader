@@ -17,13 +17,6 @@ function createElement(innerHTML) {
 }
 
 
-async function getData(mangaName, chapter) {
-	const raw = await fetch(`/api/manga/${mangaName}/${chapter}`);
-	const json = await raw.json();
-	return json;
-}
-
-
 async function loadChapter() {
 	root.innerHTML = '';
 	
@@ -35,7 +28,32 @@ async function loadChapter() {
 	$('title')[0].textContent = chapterName;
 
 
-	const data = await getData(urlName, chapter);
+	const res = await fetch(`/api/manga/${urlName}/${chapter}`);
+	const data = await res.json();
+
+	if(res.status === 507) {
+		console.error(data.message);
+		alert('error', data.message);
+
+		window.open(data.originalUrl, '_blank');
+
+		const newSelector = prompt(`New attribute selector for ${data.hostName}`);
+
+		try {
+			await fetch(`/api/manga/updateAttributeSelector`, {
+				method: 'PUT',
+				body: JSON.stringify({ hostId: data.hostId, newSelector }),
+				headers: { 'Content-Type': 'application/json' },
+			});
+
+			loadChapter();
+		}	catch(err) {
+			alert('error', err);
+			console.error(err);
+		}
+
+		return;
+	}
 
 	chapters = {
 		prev: data['prevPath'],

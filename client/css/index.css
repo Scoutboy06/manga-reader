@@ -1,6 +1,7 @@
 :root {
 	--main-color: #2596be;
 	--main-color-hover: #30b1e0;
+	--main-color-focus: #40A4C6;
 }
 
 * {
@@ -62,6 +63,10 @@ body {
 	background: var(--main-color-hover);
 }
 
+#newManga.focus {
+	background: var(--main-color-focus);
+}
+
 
 #newManga img {
 	width: 45%;
@@ -69,39 +74,6 @@ body {
 }
 
 
-
-.ripple {
-	position: absolute;
-	z-index: 99;
-
-	width: 300%;
-	height: 300%;
-	transform: translate(-50%, -50%);
-	animation: ripple .4s;
-	border-radius: 50%;
-
-	background: rgba(255, 255, 255, .15);
-	opacity: 0;
-	transition: opacity .3s;
-}
-
-
-@keyframes ripple {
-	from {
-		width: 0;
-		height: 0;
-	}
-
-	to {
-		width: 200%;
-		height: 200%;
-	}
-}
-
-
-#newManga:focus .ripple {
-	opacity: 1;
-}
 
 
 
@@ -116,6 +88,22 @@ body {
 	box-sizing: border-box;
 	position: relative;
 }
+
+#root .item .updates {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	width: 20px;
+	height: 20px;
+	background: rgb(219, 8, 8);
+	border-radius: 50%;
+	display: none;
+}
+
+#root .item.hasUpdates .updates {
+	display: block;
+}
+
 
 #root .item .img {
 	width: 159px;
@@ -150,6 +138,8 @@ body {
 	margin: 0;
 	margin-bottom: 15px;
 }
+
+
 
 
 
