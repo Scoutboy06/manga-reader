@@ -17,19 +17,19 @@ export default function Home() {
 
 	
 	const fetchMangas = () =>
-		fetch('http://127.0.0.1:5000/api/manga') // TODO: process.env.REACT_APP_API_URI
+		fetch(`${window.location.origin}/api/manga`)
 			.then(raw => raw.json())
 			.catch(console.error);
 
 
 	const fetchSingles = () =>
-		fetch('http://127.0.0.1:5000/api/single') // TODO: process.env.REACT_APP_API_URI
+		fetch(`${window.location.origin}/api/single`)
 			.then(raw => raw.json())
 			.catch(console.error);
 
 
 	const fetchUpdates = () =>
-		fetch('http://127.0.0.1:5000/api/getUpdates') // TODO: process.env.REACT_APP_API_URI
+		fetch(`${window.location.origin}/api/getUpdates`)
 			.then(raw => raw.json())
 			.catch(console.error);
 
@@ -45,6 +45,7 @@ export default function Home() {
 			const u = await fetchUpdates();
 			setUpdates(u);
 			setIsFetchingUpdates(false);
+
 		}
 
 		fetchData();

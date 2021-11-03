@@ -65,13 +65,13 @@ export default function Read({ match, location }) {
 
 
 	const fetchChapters = () =>
-		fetch(`http://127.0.0.1:5000/api/manga/${match.params.mangaName}/${match.params.chapter}`) // TODO: process.env.REACT_APP_API_URI
+		fetch(`${window.location.origin}/api/manga/${match.params.mangaName}/${match.params.chapter}`)
 		.then(res => res.json())
 		.catch(console.error);
 
 
 	const updateProgress = () =>
-		fetch(`http://127.0.0.1:5000/api/manga/updateProgress`, { // TODO: process.env.REACT_APP_API_URI
+		fetch(`${window.location.origin}/api/manga/updateProgress`, {
 			method: 'POST',
 			body: JSON.stringify({ urlName: match.params.mangaName, chapter: match.params.chapter }),
 			headers: { 'Content-Type': 'application/json' },

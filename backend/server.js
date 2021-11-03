@@ -1,4 +1,4 @@
-import path from 'path';
+// import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -13,7 +13,8 @@ import singleRoutes from './routes/singleRoutes.js';
 import { getSubscribedUpdates } from './controllers/updatesController.js';
 
 
-dotenv.config();
+// dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '.env' });
 
 connectDB();
 
@@ -33,19 +34,19 @@ app.use('/api/image', imageRoutes);
 app.get('/api/getUpdates', getSubscribedUpdates);
 
 
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 
 // app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
-app.use(express.static(path.join(__dirname, 'client')));
+// app.use(express.static(path.join(__dirname, 'client')));
 
-app.get('/', (req, res) =>
-  res.sendFile(path.resolve(__dirname, 'client', 'index.html'))
-);
+// app.get('/', (req, res) =>
+//   res.sendFile(path.resolve(__dirname, 'client', 'index.html'))
+// );
 
-app.get('/:urlName/:chapter', (req, res) =>
-  res.sendFile(path.resolve(__dirname, 'client', 'page.html'))
-);
+// app.get('/:urlName/:chapter', (req, res) =>
+//   res.sendFile(path.resolve(__dirname, 'client', 'page.html'))
+// );
 
 
 app.use(notFound);
@@ -53,7 +54,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.BACKEND_PORT;
 app.listen(PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`),
+  console.log(`Server running on http://127.0.0.1:${PORT}`),
 );

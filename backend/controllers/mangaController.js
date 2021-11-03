@@ -146,10 +146,7 @@ const getImageUrls = asyncHandler(async (req, res, next) => {
 
 		const url = btn.getAttribute('href');
 		const reg = RegExp(path.replace('%name%', urlName).replace('%chapter%', '([a-z0-9:/.-]+)'));
-		console.log(reg);
-
 		const match = url.match(reg);
-		console.log(match);
 
 		return match[1];
 	}
