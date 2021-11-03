@@ -17,19 +17,19 @@ export default function Home() {
 
 	
 	const fetchMangas = () =>
-		fetch(process.env.REACT_APP_API_URI + 'api/manga')
+		fetch('http://127.0.0.1:5000/api/manga') // TODO: process.env.REACT_APP_API_URI
 			.then(raw => raw.json())
 			.catch(console.error);
 
 
 	const fetchSingles = () =>
-		fetch(process.env.REACT_APP_API_URI + 'api/single')
+		fetch('http://127.0.0.1:5000/api/single') // TODO: process.env.REACT_APP_API_URI
 			.then(raw => raw.json())
 			.catch(console.error);
 
 
 	const fetchUpdates = () =>
-		fetch(process.env.REACT_APP_API_URI + 'api/getUpdates')
+		fetch('http://127.0.0.1:5000/api/getUpdates') // TODO: process.env.REACT_APP_API_URI
 			.then(raw => raw.json())
 			.catch(console.error);
 
