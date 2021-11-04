@@ -4,6 +4,10 @@
 	--main-color-focus: #40A4C6;
 }
 
+#root {
+	width: 100%;
+}
+
 
 * {
 	margin: 0;
