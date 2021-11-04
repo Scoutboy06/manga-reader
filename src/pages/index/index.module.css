@@ -18,7 +18,14 @@ body {
 
 .main {
 	margin: 10px 0;
-	padding: 15px 10px 80px;
+	padding: 15px 10px;
+}
+
+.main > section {
+	width: 100vw;
+	padding: 0 16px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 
 
@@ -67,8 +74,9 @@ body {
 
 
 .item {
-	width: 159px;
-	height: 209px;
+	/* width: 159px; */
+	/* height: 209px; */
+	aspect-ratio: 1 / 1.3;
 	margin: 10px 5px;
 	color: #fff;
 	display: inline-flex;
@@ -98,8 +106,10 @@ body {
 
 
 .img {
-	width: 159px;
-	height: 209px;
+	/* width: 159px;
+	height: 209px; */
+	width: 100%;
+	height: 100%;
 }
 
 .img img {
