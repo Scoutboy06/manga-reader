@@ -24,10 +24,10 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts NODE_OPTIONS=--openssl-legacy-provider start",
-    "build": "react-scripts NODE_OPTIONS=--openssl-legacy-provider build",
-    "test": "react-scripts NODE_OPTIONS=--openssl-legacy-provider test",
-    "eject": "react-scripts NODE_OPTIONS=--openssl-legacy-provider eject",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
+    "test": "react-scripts --openssl-legacy-provider test",
+    "eject": "react-scripts --openssl-legacy-provider eject",
     "backend": "node backend/server.js",
     "bdev": "nodemon backend/server.js"
   },
