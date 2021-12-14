@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-// import NewMangaOverlay from '../../components/NewMangaOverlay';
+import SearchMangaOverlay from '../../components/SearchMangaOverlay';
 import Loader from '../../components/Loader';
 
 import styles from './index.module.css';
@@ -12,24 +12,25 @@ export default function Home() {
 
 	const [ mangas, setMangas ] = useState([]);
 	const [ updates, setUpdates ] = useState([]);
+	const [ showOverlay, setShowOverlay ] = useState(false);
 
 	const [ isFetchingUpdates, setIsFetchingUpdates ] = useState(false);
 
 	
 	const fetchMangas = () =>
-		fetch(`${window.location.origin}/api/manga`)
+		fetch('api/manga')
 			.then(raw => raw.json())
 			.catch(console.error);
 
 
 	const fetchSingles = () =>
-		fetch(`${window.location.origin}/api/single`)
+		fetch('api/single')
 			.then(raw => raw.json())
 			.catch(console.error);
 
 
 	const fetchUpdates = () =>
-		fetch(`${window.location.origin}/api/getUpdates`)
+		fetch('api/getUpdates')
 			.then(raw => raw.json())
 			.catch(console.error);
 
@@ -84,11 +85,11 @@ export default function Home() {
 				))}
 			</section>
 
-			{/* <NewMangaOverlay /> */}
+			<SearchMangaOverlay visible={showOverlay} setVisibility={setShowOverlay} />
 
-			{/* <button className={styles.newManga}>
+			<button className={styles.newManga} onClick={() => setShowOverlay(true)}>
 				<img src="/icons/add-white-24dp.svg" alt="+" />
-			</button> */}
+			</button>
 		</main>
 	);
 }

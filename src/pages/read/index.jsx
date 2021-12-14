@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, /* useNavigate */ } from 'react-router-dom';
 
 import Loader from '../../components/Loader';
 
@@ -23,7 +23,7 @@ function Header({ chapters: { prev, curr, next }, isLoading, originalUrl, isTop 
 						className={styles.pagination}
 						disabled={isLoading || !originalUrl}
 					>
-						<img src="/icons/open_in_new_white_24dp.svg" alt="Open original" />
+						<img src={window.location.origin + "/icons/open_in_new_white_24dp.svg"} alt="Open original" />
 					</a>
 				</div>
 			)}
@@ -31,17 +31,17 @@ function Header({ chapters: { prev, curr, next }, isLoading, originalUrl, isTop 
 			<div className={styles.container}>
 
 				<Link to={prev || '#'} className={styles.pagination} disabled={isLoading || !prev}>
-					<img src="/icons/arrow_back-white-24dp.svg" alt="<-" />
+					<img src={window.location.origin + "/icons/arrow_back-white-24dp.svg"} alt="<-" />
 					<span>Prev</span>
 				</Link>
 
 				<Link to="/" className={styles.pagination}>
-					<img src="/icons/home-white-24dp.svg" alt="Home" />
+					<img src={window.location.origin + "/icons/home-white-24dp.svg"} alt="Home" />
 				</Link>
 
 				<Link to={next || '#'} className={styles.pagination} disabled={isLoading || !next}>
 					<span>Next</span>
-					<img src="/icons/arrow_forward-white-24dp.svg" alt="->" />
+					<img src={window.location.origin + "/icons/arrow_forward-white-24dp.svg"} alt="->" />
 				</Link>
 
 			</div>
@@ -53,6 +53,7 @@ function Header({ chapters: { prev, curr, next }, isLoading, originalUrl, isTop 
 
 
 export default function Read({ match, location }) {
+	// const navigate = useNavigate();
 
 	const [ chapters, setChapters ] = useState({
 		prev: null,
@@ -78,7 +79,9 @@ export default function Read({ match, location }) {
 		}).catch(console.error);
 
 	function keyPress(e) {
-		console.log(e);
+		// console.log(e.key);
+		// if(e.key === 'ArrowRight') navigate(chapters.next);
+		// else if(e.key === 'ArrowLeft') navigate(chapters.prev);
 	}
 
 
@@ -95,11 +98,10 @@ export default function Read({ match, location }) {
 			});
 			setImages(chaps.images);
 			setOriginalUrl(chaps.originalUrl);
-			console.log(chaps, chapters);
 
 			setIsLoading(false);
 
-			updateProgress()
+			updateProgress();
 		})();
 
 

@@ -22,7 +22,7 @@
 }
 
 
-.overlay.show {
+.overlay.visible {
 	opacity: 1;
 	visibility: visible;
 	transform: translate(-50%, -50%) scale(1);
@@ -39,34 +39,95 @@
 }
 
 
-
-.overlay header input {
+.inputContainer {
+	display: flex;
+	flex-direction: row;
 	width: calc(100% - 80px);
-	height: 2.4em;
-	padding: 0 3.5em 0 1em;
-	
+	height: 2.8em;
 	background: #333;
-	color: #eee;
-	font-family: inherit;
-	font-size: 1.1em;
-
-	border: 1px solid #333;
-	outline: 0;
+	/* border: 1px solid #333; */
+	/* border: 1px solid rgba(0,0,0,0.15); */
 	border-radius: 4px;
 	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
+	overflow: hidden;
+}
+
+
+
+.inputContainer input {
+	padding: 0 3.5em 0 1em;
+	
+	background: transparent;
+	border: none;
+	outline: 0;
+	color: #eee;
+	/* font-family: inherit; */
+	font-size: 1.1em;
+	/* display: inline-block; */
+	width: 100%;
+}
+
+.inputContainer input::placeholder {
+  color: #ababab;
+  opacity: 1;
+}
+
+.inputContainer button {
+	background: transparent;
+	border: 0;
+	outline: none;
+	height: 100%;
+	/* display: inline-block; */
+	opacity: .7;
+}
+
+.submitBtn,
+.resetBtn {
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+}
+
+.submitBtn {
+	width: 60px;
+}
+
+.resetBtn {
+	width: 25px;
+	opacity: .9;
+	margin-right: 5px;
+	/* margin-right: 3.2em; */
+	/* margin-right: 10px; */
+}
+
+/* .resetButton.visible {
+	visibility: visible;
+} */
+
+.inputContainer:hover .submitBtn {
+	background: #444;
+	opacity: 1;
 }
 
 
 
 
-.overlay content .title {
+
+
+
+
+
+
+
+
+.hostName {
 	color: #fff;
 	font-size: 1.2em;
 	margin: 5px 10px 15px 10px;
 }
 
 
-.overlay content .item {
+.mangaItem {
 	display: flex;
 
 	height: 120px;
@@ -81,40 +142,40 @@
 	transition: background .2s, box-shadow .2s;
 }
 
-.overlay content .item:hover {
+.mangaItem:hover {
 	background: #333;
 	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
 }
 
-.overlay content .item.selected {
+.mangaItem[selected] {
 	background: #444;
 }
 
 
-.overlay content .item .image {
+.mangaItemImageContainer {
 	display: inline-block;
 	height: 100%;
 	width: 83px;
 }
 
-.overlay content .item .image img {
+.mangaItemImageContainer img {
 	width: 100%;
 	height: 100%;
 }
 
 
-.overlay content .item .details {
+.mangaItemDetails {
 	display: inline-block;
 	margin: 10px 0 0 10px;
 }
 
-.overlay content .item .details span {
+.mangaItemDetails span {
 	display: block;
 	color: #fff;
 	margin: 7px 10px;
 }
 
-.overlay content .item .details span:not(:first-child) {
+.mangaItemDetails span:not(:first-child) {
 	color:#a1a1a1;
 	font-size: 13px;
 }
@@ -123,7 +184,17 @@
 
 
 
-.overlay footer {
+
+
+
+
+
+
+
+
+
+
+.footerContainer {
 	position: fixed;
 	left: 0;
 	bottom: 0;
@@ -139,7 +210,7 @@
 }
 
 
-.overlay footer button {
+.footerContainer button {
 	padding: 8px 15px;
 	margin: 0 10px;
 
@@ -154,13 +225,13 @@
 }
 
 
-.overlay footer button[type="submit"] {
+.footerContainer button[type="submit"] {
 	background: var(--main-color);
 	border-color: transparent;
 	margin-right: 20px;
 }
 
-.overlay footer button[type="submit"][disabled] {
+.footerContainer button[type="submit"][disabled] {
 	opacity: .6;
 	cursor: not-allowed;
 }
