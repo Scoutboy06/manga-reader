@@ -1,1 +1,0 @@
-NODE_ENV=development nodemon backend/server.js

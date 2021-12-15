@@ -24,9 +24,9 @@
 		"web-vitals": "^1.0.1"
 	},
 	"scripts": {
-		"start": "NODE_ENV=production node backend/server.js",
+		"start": "node backend/server.js",
 		"dev": "react-scripts start",
-		"bdev": "NODE_ENV=development nodemon backend/server.js",
+		"bdev": "nodemon backend/server.js",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject"
