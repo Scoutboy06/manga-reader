@@ -6,34 +6,27 @@ import Loader from '../../components/Loader';
 
 import styles from './index.module.css';
 
-
-
 export default function Home() {
+	const [mangas, setMangas] = useState([]);
+	const [updates, setUpdates] = useState([]);
+	const [showOverlay, setShowOverlay] = useState(false);
 
-	const [ mangas, setMangas ] = useState([]);
-	const [ updates, setUpdates ] = useState([]);
-	const [ showOverlay, setShowOverlay ] = useState(false);
+	const [isFetchingUpdates, setIsFetchingUpdates] = useState(false);
 
-	const [ isFetchingUpdates, setIsFetchingUpdates ] = useState(false);
-
-	
 	const fetchMangas = () =>
 		fetch('api/manga')
 			.then(raw => raw.json())
 			.catch(console.error);
-
 
 	const fetchSingles = () =>
 		fetch('api/single')
 			.then(raw => raw.json())
 			.catch(console.error);
 
-
-	const fetchUpdates = () =>
-		fetch('api/getUpdates')
+	const fetchUpdates = cache =>
+		fetch('api/getUpdates?' + (cache ? 'cache=true' : 'cache=false'))
 			.then(raw => raw.json())
 			.catch(console.error);
-
 
 	useEffect(() => {
 		async function fetchData() {
@@ -41,12 +34,11 @@ export default function Home() {
 			const s = await fetchSingles();
 
 			setMangas([...m, ...s]);
-			
+
 			setIsFetchingUpdates(true);
-			const u = await fetchUpdates();
+			const u = await fetchUpdates(true);
 			setUpdates(u);
 			setIsFetchingUpdates(false);
-
 		}
 
 		fetchData();
@@ -59,36 +51,41 @@ export default function Home() {
 			</header>
 
 			<section>
-				{mangas.length > 0 && mangas.map((manga, index) => (
-					<Link to={ `/${manga.urlName}/${manga.chapter}` } key={manga._id || index} className={styles.item}>
+				{mangas.length > 0 &&
+					mangas.map((manga, index) => (
+						<Link
+							to={`/${manga.urlName}/${manga.chapter}`}
+							key={manga._id || index}
+							className={styles.item}
+						>
+							{!isFetchingUpdates && updates[manga._id] && (
+								<div className={styles.updates}></div>
+							)}
 
-						{ !isFetchingUpdates && updates.indexOf(manga._id) > -1 && (
-							<div className={styles.updates}></div>
-						)}
+							{manga.subscribed && isFetchingUpdates && (
+								<div className={styles.loader}>
+									<Loader size={30} />
+								</div>
+							)}
 
-						{ manga.subscribed && isFetchingUpdates && (
-							<div className={styles.loader}>
-								<Loader size={30} />
+							<div className={styles.img}>
+								<img src={manga.coverUrl} alt='Img' />
 							</div>
-						)}
 
-						
-
-						<div className={styles.img}>
-							<img src={ manga.coverUrl } alt="Img" />
-						</div>
-
-						<footer>
-							<span>{ manga.name }</span>
-						</footer>
-					</Link>
-				))}
+							<footer>
+								<span>{manga.name}</span>
+							</footer>
+						</Link>
+					))}
 			</section>
 
-			<SearchMangaOverlay visible={showOverlay} setVisibility={setShowOverlay} />
+			<SearchMangaOverlay
+				visible={showOverlay}
+				setVisibility={setShowOverlay}
+			/>
 
 			<button className={styles.newManga} onClick={() => setShowOverlay(true)}>
-				<img src="/icons/add-white-24dp.svg" alt="+" />
+				<img src='/icons/add-white-24dp.svg' alt='+' />
 			</button>
 		</main>
 	);
