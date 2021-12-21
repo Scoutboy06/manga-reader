@@ -7,7 +7,6 @@
 
 .header {
 	width: 100%;
-	/* max-width: 90vw; */
 	display: flex;
 	flex-direction: column;
 	padding: 20px 5vw;
@@ -22,7 +21,6 @@
 .container {
 	display: flex;
 	justify-content: space-between;
-	/* text-align: center; */
 }
 
 .pagination {
@@ -32,6 +30,7 @@
 	justify-content: center;
 
 	border: 1px solid #222;
+	background: transparent;
 	border-radius: 4px;
 	font-family: inherit;
 	transition: box-shadow, background 0.2s;
@@ -76,14 +75,28 @@
 	min-width: 20vw;
 	margin: 10px 0;
 	padding: 15px 30px 20px;
+	transition: width 0.3s;
+}
+
+.main[data-isFullWidth='true'] .chapters {
+	padding: 0;
+	width: 100vw;
+	min-width: none;
+	max-width: none;
+	min-height: none;
 }
 
 .chapters img {
 	display: block;
-	/* min-height: 400px; */
 	max-width: 100%;
+	width: auto;
 	max-height: 140vh;
 	margin: 0 auto;
+}
+
+.main[data-isFullWidth='true'] .chapters img {
+	max-height: none;
+	width: 100%;
 }
 
 #alert {

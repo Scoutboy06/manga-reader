@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Link /* useNavigate */ } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Loader from '../../components/Loader';
 
 import styles from './index.module.css';
 
 export default function Read({ match, location }) {
-	// const navigate = useNavigate();
-
 	const [chapters, setChapters] = useState({
 		prev: null,
 		curr: match.params.chapter,
@@ -16,6 +14,8 @@ export default function Read({ match, location }) {
 	const [images, setImages] = useState([]);
 	const [originalUrl, setOriginalUrl] = useState();
 	const [isLoading, setIsLoading] = useState(false);
+
+	const [isFullWidth, setIsFullWidth] = useState(false);
 
 	const fetchChapters = () =>
 		fetch(
@@ -34,12 +34,6 @@ export default function Read({ match, location }) {
 			headers: { 'Content-Type': 'application/json' },
 		}).catch(console.error);
 
-	function keyPress(e) {
-		// console.log(e.key);
-		// if(e.key === 'ArrowRight') navigate(chapters.next);
-		// else if(e.key === 'ArrowLeft') navigate(chapters.prev);
-	}
-
 	useEffect(() => {
 		(async function () {
 			setIsLoading(true);
@@ -57,18 +51,25 @@ export default function Read({ match, location }) {
 
 			updateProgress();
 		})();
-
-		window.addEventListener('keypress', keyPress);
-
-		return () => {
-			window.removeEventListener('keypress', keyPress);
-		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [match.params]);
 
+	useEffect(() => {
+		// localStorage init
+		const width = localStorage.getItem('isFullWidth');
+		if (width) setIsFullWidth(width);
+		else setIsFullWidth(false);
+	}, []);
+
 	return (
-		<main className={styles.main}>
-			<Header isTop={true} chapters={chapters} originalUrl={originalUrl} />
+		<main className={styles.main} data-isFullWidth={isFullWidth}>
+			<Header
+				isTop={true}
+				chapters={chapters}
+				originalUrl={originalUrl}
+				isFullWidth={isFullWidth}
+				setIsFullWidth={setIsFullWidth}
+			/>
 
 			{isLoading && (
 				<div style={{ height: 100, marginTop: 30, marginBottom: 30 }}>
@@ -84,7 +85,11 @@ export default function Read({ match, location }) {
 				</section>
 			)}
 
-			<Header chapters={chapters} />
+			<Header
+				chapters={chapters}
+				isFullWidth={isFullWidth}
+				setIsFullWidth={setIsFullWidth}
+			/>
 		</main>
 	);
 }
@@ -94,6 +99,8 @@ function Header({
 	isLoading,
 	originalUrl,
 	isTop,
+	isFullWidth,
+	setIsFullWidth,
 }) {
 	return (
 		<header className={styles.header}>
@@ -113,6 +120,25 @@ function Header({
 							alt='Open original'
 						/>
 					</a>
+
+					<button
+						className={styles.pagination}
+						onClick={() => {
+							setIsFullWidth(!isFullWidth);
+							localStorage.setItem('isFullWidth', !isFullWidth);
+						}}
+					>
+						<img
+							src={
+								window.location.origin +
+								'/icons/' +
+								(isFullWidth
+									? 'close_fullscreen_white_24dp.svg'
+									: 'open_in_full_white_24dp.svg')
+							}
+							alt='Toggle full-width'
+						/>
+					</button>
 				</div>
 			)}
 
