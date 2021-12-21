@@ -5,7 +5,6 @@
 	flex-direction: column;
 }
 
-
 .header {
 	width: 100%;
 	/* max-width: 90vw; */
@@ -14,21 +13,17 @@
 	padding: 20px 5vw;
 }
 
-
 .title {
-	color: rgba(255, 255, 255, .7);
+	color: rgba(255, 255, 255, 0.7);
 	padding: 10px 0;
 	font-weight: 100;
 }
-
-
 
 .container {
 	display: flex;
 	justify-content: space-between;
 	/* text-align: center; */
 }
-
 
 .pagination {
 	text-decoration: none;
@@ -39,12 +34,12 @@
 	border: 1px solid #222;
 	border-radius: 4px;
 	font-family: inherit;
-	transition: box-shadow, background .2s;
+	transition: box-shadow, background 0.2s;
 	user-select: none;
 }
 
 .pagination[disabled] {
-	opacity: .3;
+	opacity: 0.3;
 	user-select: none;
 	pointer-events: none;
 }
@@ -55,20 +50,15 @@
 	cursor: pointer;
 }
 
-
-
-
 .pagination img {
 	padding: 5px 8px;
 }
-
 
 .pagination span {
 	color: #eee;
 	padding: 5px;
 	width: 50px;
 }
-
 
 .pagination:nth-child(1) span {
 	padding-right: 10px;
@@ -77,10 +67,6 @@
 .pagination:nth-child(3) span {
 	padding-left: 10px;
 }
-
-
-
-
 
 .chapters {
 	background: #222;
@@ -100,9 +86,6 @@
 	margin: 0 auto;
 }
 
-
-
-
 #alert {
 	position: fixed;
 	display: block;
@@ -112,7 +95,7 @@
 	width: auto;
 	padding: 10px 40px;
 	max-width: calc(100vw - 20px);
-	transition: top .3s;
+	transition: top 0.3s;
 }
 
 #alert.show {
@@ -123,9 +106,6 @@
 	background: #cf6679;
 	color: #000;
 }
-
-
-
 
 @media only screen and (max-width: 600px) {
 	.chapters {

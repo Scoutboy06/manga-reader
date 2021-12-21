@@ -1,10 +1,6 @@
 import mongoose from 'mongoose';
 
-
-
-
-
-const mangaSchema = mongoose.Schema(
+const MODEL_NAME = mongoose.Schema(
 	{
 		name: { type: String, required: true },
 		urlName: { type: String, required: true },
@@ -18,11 +14,10 @@ const mangaSchema = mongoose.Schema(
 		coverUrl: { type: String, required: true },
 	},
 	{
-		timestamps: false
+		timestamps: false,
 	}
 );
 
-
-const Manga = mongoose.model('Manga', mangaSchema);
+const Manga = mongoose.model('Manga', MODEL_NAME);
 
 export default Manga;

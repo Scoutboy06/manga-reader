@@ -9,7 +9,7 @@ import styles from './index.module.css';
 export default function Home() {
 	const [mangas, setMangas] = useState([]);
 	const [updates, setUpdates] = useState([]);
-	const [showOverlay, setShowOverlay] = useState(false);
+	const [showOverlay, setShowOverlay] = useState(true);
 
 	const [isFetchingUpdates, setIsFetchingUpdates] = useState(false);
 

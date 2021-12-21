@@ -16,11 +16,10 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 
-	transition: transform .3s ease-in-out;
+	transition: transform 0.3s ease-in-out;
 
 	padding: 0 10px 60px 10px;
 }
-
 
 .overlay.visible {
 	opacity: 1;
@@ -28,16 +27,14 @@
 	transform: translate(-50%, -50%) scale(1);
 }
 
-
 .overlay header {
 	width: 100%;
 	height: 80px;
-	
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
-
 
 .inputContainer {
 	display: flex;
@@ -52,11 +49,9 @@
 	overflow: hidden;
 }
 
-
-
 .inputContainer input {
 	padding: 0 3.5em 0 1em;
-	
+
 	background: transparent;
 	border: none;
 	outline: 0;
@@ -68,8 +63,8 @@
 }
 
 .inputContainer input::placeholder {
-  color: #ababab;
-  opacity: 1;
+	color: #ababab;
+	opacity: 1;
 }
 
 .inputContainer button {
@@ -78,7 +73,7 @@
 	outline: none;
 	height: 100%;
 	/* display: inline-block; */
-	opacity: .7;
+	opacity: 0.7;
 }
 
 .submitBtn,
@@ -94,7 +89,7 @@
 
 .resetBtn {
 	width: 25px;
-	opacity: .9;
+	opacity: 0.9;
 	margin-right: 5px;
 	/* margin-right: 3.2em; */
 	/* margin-right: 10px; */
@@ -109,23 +104,11 @@
 	opacity: 1;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 .hostName {
 	color: #fff;
 	font-size: 1.2em;
 	margin: 5px 10px 15px 10px;
 }
-
 
 .mangaItem {
 	display: flex;
@@ -139,7 +122,7 @@
 	border: 1px solid #333;
 	border-radius: 4px;
 	cursor: pointer;
-	transition: background .2s, box-shadow .2s;
+	transition: background 0.2s, box-shadow 0.2s;
 }
 
 .mangaItem:hover {
@@ -151,7 +134,6 @@
 	background: #444;
 }
 
-
 .mangaItemImageContainer {
 	display: inline-block;
 	height: 100%;
@@ -162,7 +144,6 @@
 	width: 100%;
 	height: 100%;
 }
-
 
 .mangaItemDetails {
 	display: inline-block;
@@ -176,23 +157,9 @@
 }
 
 .mangaItemDetails span:not(:first-child) {
-	color:#a1a1a1;
+	color: #a1a1a1;
 	font-size: 13px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .footerContainer {
 	position: fixed;
@@ -209,7 +176,6 @@
 	background: #2c2c2c;
 }
 
-
 .footerContainer button {
 	padding: 8px 15px;
 	margin: 0 10px;
@@ -224,14 +190,13 @@
 	cursor: pointer;
 }
 
-
-.footerContainer button[type="submit"] {
+.footerContainer button[type='submit'] {
 	background: var(--main-color);
 	border-color: transparent;
 	margin-right: 20px;
 }
 
-.footerContainer button[type="submit"][disabled] {
-	opacity: .6;
+.footerContainer button[type='submit'][disabled] {
+	opacity: 0.6;
 	cursor: not-allowed;
 }

@@ -4,9 +4,6 @@ import asyncHandler from 'express-async-handler';
 
 import Host from '../models/hostModel.js';
 
-
-
-
 // @desc	Create add a new host
 // @route	POST /api/host/createHost
 const createHost = asyncHandler(async (req, res) => {
@@ -34,31 +31,19 @@ const createHost = asyncHandler(async (req, res) => {
 	res.status(201).json(createdHost);
 });
 
-
-
-
 // @desc	Get a host by its name (domain)
 // @route	GET /api/host/:hostName
 const getHostByName = asyncHandler(async (req, res) => {
 	const { hostName } = req.params;
 
 	Host.findOne({ hostName }, (err, doc) => {
-		if(err) {
+		if (err) {
 			res.status(404);
 			throw new Error("Couldn't find host : " + hostName);
-		}
-		
-		else {
+		} else {
 			res.status(200).json(doc);
 		}
-	})
-
+	});
 });
 
-
-
-
-export {
-	createHost,
-	getHostByName,
-}
+export { createHost, getHostByName };

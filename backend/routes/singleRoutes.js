@@ -10,14 +10,9 @@ import {
 
 const router = express.Router();
 
+router.route('/').post(createSingle).get(getAllSingles);
 
-router.route('/')
-	.post(createSingle)
-	.get(getAllSingles);
-
-router.route('/:urlName')
-	.get(getSingleByUrlName)
-	.delete(deleteSingle);
+router.route('/:urlName').get(getSingleByUrlName).delete(deleteSingle);
 
 router.post('/updateProgress', updateProgress);
 

@@ -5,14 +5,17 @@ import HTMLParser from 'node-html-parser';
 import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 
+let updatesCache = {};
+const cacheKeepTime = 1000 * 60 * 60; // 60 minutes
+let lastCached = null;
+
 const getSubscribedUpdates = asyncHandler(async (req, res) => {
 	const cache = req.query.cache === 'false' ? false : true;
 
 	const subscribed = await Manga.find({ subscribed: true });
 
-	if (!(subscribed.length > 0)) {
+	if (!(subscribed.length > 0))
 		return res.status(404).send('No subscribed mangas');
-	}
 
 	if (lastCached && Date.now() - lastCached > cacheKeepTime) updatesCache = {};
 
@@ -30,10 +33,6 @@ const getSubscribedUpdates = asyncHandler(async (req, res) => {
 
 	res.json(updates);
 });
-
-let updatesCache = {};
-const cacheKeepTime = 1000 * 60 * 20; // 20 minutes
-let lastCached = null;
 
 async function mangaHasUpdates(manga, cache) {
 	if (!manga) return null;
@@ -58,4 +57,20 @@ async function mangaHasUpdates(manga, cache) {
 	return hasUpdates;
 }
 
-export { getSubscribedUpdates };
+const updateProgress = asyncHandler(async (req, res, next) => {
+	const { urlName, chapter } = req.body;
+
+	const manga = await Manga.findOne({ urlName });
+
+	if (!manga) {
+		next();
+		return;
+	}
+
+	manga.chapter = chapter;
+	await manga.save();
+
+	res.status(200).send(chapter);
+});
+
+export { getSubscribedUpdates, updateProgress };

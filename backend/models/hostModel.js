@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 
-
-
-const hostSchema = mongoose.Schema(
+const MODEL_NAME = mongoose.Schema(
 	{
 		hostName: { type: String, required: true },
 		path: { type: String, required: true },
@@ -19,13 +17,13 @@ const hostSchema = mongoose.Schema(
 				parent: { type: String, required: false },
 				img: {
 					selector: { type: String, required: false },
-					attribute: { type: String, required: false }
+					attribute: { type: String, required: false },
 				},
 				mangaName: { type: String, required: false },
 				latestChapter: { type: String, required: false },
 				latestUpdate: { type: String, required: false },
-				detailsPage: { type: String, required: false }
-			},	
+				detailsPage: { type: String, required: false },
+			},
 			nextChapter: { type: String, required: false },
 			required: false,
 		},
@@ -38,11 +36,10 @@ const hostSchema = mongoose.Schema(
 		needProxy: { type: Boolean, required: true },
 	},
 	{
-		timestamps: false
+		timestamps: false,
 	}
 );
 
-
-const Host = mongoose.model('Host', hostSchema);
+const Host = mongoose.model('Host', MODEL_NAME);
 
 export default Host;

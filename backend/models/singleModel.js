@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 
-
-
-const singleSchema = mongoose.Schema(
+const MODEL_NAME = mongoose.Schema(
 	{
 		name: { type: String, required: true },
 		urlName: { type: String, required: true },
@@ -10,7 +8,7 @@ const singleSchema = mongoose.Schema(
 		path: { type: String, required: true },
 		imgSelector: {
 			querySelector: { type: String, required: true },
-			attrSelector: { type: String, required: true},
+			attrSelector: { type: String, required: true },
 		},
 		chapterNameSelectors: {
 			parent: { type: String, required: true },
@@ -22,11 +20,10 @@ const singleSchema = mongoose.Schema(
 		coverUrl: { type: String, required: true },
 	},
 	{
-		timestamps: false
+		timestamps: false,
 	}
 );
 
-
-const Single = mongoose.model('Single', singleSchema);
+const Single = mongoose.model('Single', MODEL_NAME);
 
 export default Single;

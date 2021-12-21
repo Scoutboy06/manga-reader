@@ -1,13 +1,12 @@
 :root {
 	--main-color: #2596be;
 	--main-color-hover: #30b1e0;
-	--main-color-focus: #40A4C6;
+	--main-color-focus: #40a4c6;
 }
 
 #root {
 	width: 100%;
 }
-
 
 * {
 	margin: 0;
@@ -16,16 +15,15 @@
 }
 
 body {
-  margin: 0;
+	margin: 0;
 	/* max-width: calc(100vw - 22px); */
 	overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
-
 
 ::-webkit-scrollbar {
 	width: 16px;

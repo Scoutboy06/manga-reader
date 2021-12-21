@@ -24,10 +24,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors());
 
-app.use((req, res, next) => {
-	req.headers['if-none-match'] = 'no-match-for-this';
-	next();
-});
+// app.use((req, res, next) => {
+// 	req.headers['if-none-match'] = 'no-match-for-this';
+// 	next();
+// });
 
 app.use('/api/manga', mangaRoutes);
 app.use('/api/single', singleRoutes);
