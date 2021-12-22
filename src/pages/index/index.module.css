@@ -20,6 +20,16 @@ body {
 	padding: 15px 10px;
 }
 
+.main > header {
+	position: relative;
+}
+
+.main > header > button {
+	position: absolute;
+	right: 10px;
+	top: 0;
+}
+
 .main > section {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -123,4 +133,40 @@ body {
 .main .item > div > p {
 	margin: 0;
 	margin-bottom: 15px;
+}
+
+.button {
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	border: 1px solid #222;
+	background: transparent;
+	border-radius: 4px;
+	font-family: inherit;
+	transition: box-shadow, background 0.2s;
+	user-select: none;
+}
+
+.button[disabled] {
+	opacity: 0.3;
+	user-select: none;
+	pointer-events: none;
+}
+
+.button:not([disabled]):hover {
+	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
+	background: #303030;
+	cursor: pointer;
+}
+
+.button img {
+	padding: 5px 8px;
+}
+
+.button span {
+	color: #eee;
+	padding: 5px;
+	width: 50px;
 }

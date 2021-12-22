@@ -23,10 +23,17 @@ export default function Home() {
 			.then(raw => raw.json())
 			.catch(console.error);
 
-	const fetchUpdates = cache =>
-		fetch('api/getUpdates?' + (cache ? 'cache=true' : 'cache=false'))
+	const fetchUpdates = cache => {
+		setIsFetchingUpdates(true);
+
+		return fetch('api/getUpdates?' + (cache ? 'cache=true' : 'cache=false'))
 			.then(raw => raw.json())
+			.then(json => {
+				setIsFetchingUpdates(false);
+				setUpdates(json);
+			})
 			.catch(console.error);
+	};
 
 	useEffect(() => {
 		async function fetchData() {
@@ -35,10 +42,8 @@ export default function Home() {
 
 			setMangas([...m, ...s]);
 
-			setIsFetchingUpdates(true);
-			const u = await fetchUpdates(true);
-			setUpdates(u);
-			setIsFetchingUpdates(false);
+			await fetchUpdates(true);
+			// setIsFetchingUpdates(true);
 		}
 
 		fetchData();
@@ -48,6 +53,16 @@ export default function Home() {
 		<main className={styles.main}>
 			<header>
 				<h2 className={styles.title}>Choose manga</h2>
+				<button
+					className={styles.button}
+					disabled={isFetchingUpdates}
+					onClick={() => fetchUpdates(false)}
+				>
+					<img
+						src={window.location.origin + '/icons/refresh_white_24dp.svg'}
+						alt='Refresh'
+					/>
+				</button>
 			</header>
 
 			<section>
