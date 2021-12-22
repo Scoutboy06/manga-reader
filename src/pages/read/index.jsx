@@ -24,12 +24,13 @@ export default function Read({ match, location }) {
 			.then(res => res.json())
 			.catch(console.error);
 
-	const updateProgress = () =>
+	const updateProgress = isLast =>
 		fetch(window.location.origin + '/api/manga/updateProgress', {
 			method: 'POST',
 			body: JSON.stringify({
 				urlName: match.params.mangaName,
 				chapter: match.params.chapter,
+				isLast,
 			}),
 			headers: { 'Content-Type': 'application/json' },
 		}).catch(console.error);
@@ -55,7 +56,7 @@ export default function Read({ match, location }) {
 
 			setIsLoading(false);
 
-			updateProgress();
+			updateProgress(!chaps.nextPath);
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [match.params]);

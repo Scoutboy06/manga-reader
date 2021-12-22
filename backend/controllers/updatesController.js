@@ -11,25 +11,23 @@ let lastCached = null;
 
 const getSubscribedUpdates = asyncHandler(async (req, res) => {
 	const cache = req.query.cache === 'false' ? false : true;
-
 	const subscribed = await Manga.find({ subscribed: true });
 
 	if (!(subscribed.length > 0))
 		return res.status(404).send('No subscribed mangas');
-
 	if (lastCached && Date.now() - lastCached > cacheKeepTime) updatesCache = {};
-
 	if (cache && Object.keys(updatesCache).length > 0)
 		return res.json(updatesCache);
 
 	const updates = {};
 
-	if (cache) lastCached = Date.now();
-
 	for (const manga of subscribed) {
 		const hasUpdates = await mangaHasUpdates(manga, cache);
 		updates[manga._id] = hasUpdates;
 	}
+
+	lastCached = Date.now();
+	updatesCache = updates;
 
 	res.json(updates);
 });
@@ -58,14 +56,13 @@ async function mangaHasUpdates(manga, cache) {
 }
 
 const updateProgress = asyncHandler(async (req, res, next) => {
-	const { urlName, chapter } = req.body;
+	const { urlName, chapter, isLast } = req.body;
 
 	const manga = await Manga.findOne({ urlName });
 
-	if (!manga) {
-		next();
-		return;
-	}
+	if (!manga) return next();
+
+	updatesCache[manga._id] = !isLast;
 
 	manga.chapter = chapter;
 	await manga.save();
