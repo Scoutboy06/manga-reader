@@ -25,7 +25,7 @@ export default function Read({ match, location }) {
 			.catch(console.error);
 
 	const updateProgress = () =>
-		fetch(`${window.location.origin}/api/manga/updateProgress`, {
+		fetch(window.location.origin + '/api/manga/updateProgress', {
 			method: 'POST',
 			body: JSON.stringify({
 				urlName: match.params.mangaName,
@@ -33,6 +33,12 @@ export default function Read({ match, location }) {
 			}),
 			headers: { 'Content-Type': 'application/json' },
 		}).catch(console.error);
+
+	const storeFullWidthData = isFullWidth => {
+		const json = JSON.parse(localStorage.getItem('isFullWidth'));
+		json[match.params.mangaName] = isFullWidth;
+		localStorage.setItem('isFullWidth', JSON.stringify(json));
+	};
 
 	useEffect(() => {
 		(async function () {
@@ -56,10 +62,18 @@ export default function Read({ match, location }) {
 
 	useEffect(() => {
 		// localStorage init
-		const width = localStorage.getItem('isFullWidth');
+		const json = JSON.parse(localStorage.getItem('isFullWidth'));
+		if (!json) {
+			const data = {};
+			data[match.params.mangaName] = false;
+			localStorage.setItem('isFullWidth', JSON.stringify(data));
+			return;
+		}
+
+		const width = json[match.params.mangaName];
 		if (width) setIsFullWidth(width);
 		else setIsFullWidth(false);
-	}, []);
+	}, [match.params.mangaName]);
 
 	return (
 		<main className={styles.main} data-isFullWidth={isFullWidth}>
@@ -69,6 +83,7 @@ export default function Read({ match, location }) {
 				originalUrl={originalUrl}
 				isFullWidth={isFullWidth}
 				setIsFullWidth={setIsFullWidth}
+				storeFullWidthData={storeFullWidthData}
 			/>
 
 			{isLoading && (
@@ -89,6 +104,7 @@ export default function Read({ match, location }) {
 				chapters={chapters}
 				isFullWidth={isFullWidth}
 				setIsFullWidth={setIsFullWidth}
+				storeFullWidthData={storeFullWidthData}
 			/>
 		</main>
 	);
@@ -101,6 +117,7 @@ function Header({
 	isTop,
 	isFullWidth,
 	setIsFullWidth,
+	storeFullWidthData,
 }) {
 	return (
 		<header className={styles.header}>
@@ -124,8 +141,8 @@ function Header({
 					<button
 						className={styles.pagination}
 						onClick={() => {
+							storeFullWidthData(!isFullWidth);
 							setIsFullWidth(!isFullWidth);
-							localStorage.setItem('isFullWidth', !isFullWidth);
 						}}
 					>
 						<img

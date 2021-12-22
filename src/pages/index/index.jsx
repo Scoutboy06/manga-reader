@@ -23,16 +23,19 @@ export default function Home() {
 			.then(raw => raw.json())
 			.catch(console.error);
 
-	const fetchUpdates = cache => {
+	const fetchUpdates = async cache => {
 		setIsFetchingUpdates(true);
 
-		return fetch('api/getUpdates?' + (cache ? 'cache=true' : 'cache=false'))
-			.then(raw => raw.json())
-			.then(json => {
-				setIsFetchingUpdates(false);
-				setUpdates(json);
-			})
-			.catch(console.error);
+		try {
+			const raw = await fetch(
+				'api/getUpdates?' + (cache ? 'cache=true' : 'cache=false')
+			);
+			const json = await raw.json();
+			setIsFetchingUpdates(false);
+			setUpdates(json);
+		} catch (message) {
+			return console.error(message);
+		}
 	};
 
 	useEffect(() => {
