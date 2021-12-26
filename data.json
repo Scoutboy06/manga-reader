@@ -1,0 +1,174 @@
+[
+  {
+    "time": 517.819100022316,
+    "name": "Find subscribed mangas"
+  },
+  {
+    "groupName": "disasterscans.com - Marial Peak",
+    "data": [
+      {
+        "time": 50.824000000953674,
+        "name": "--- Find host"
+      },
+      {
+        "time": 1142.5924000740051,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 8.660399913787842,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 6.850000023841858,
+        "name": "--- Parse HTML"
+      }
+    ]
+  },
+  {
+    "groupName": "mangaread.org - TALES OF DEMONS AND GODS",
+    "data": [
+      {
+        "time": 64.7056999206543,
+        "name": "--- Find host"
+      },
+      {
+        "time": 2067.52329993248,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 71.2279999256134,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 35.645700097084045,
+        "name": "--- Parse HTML"
+      }
+    ]
+  },
+  {
+    "groupName": "mangaclash.com - Tonikaku Cawaii",
+    "data": [
+      {
+        "time": 96.06939995288849,
+        "name": "--- Find host"
+      },
+      {
+        "time": 366.5607999563217,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 60.56190001964569,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 8.812600016593933,
+        "name": "--- Parse HTML"
+      }
+    ]
+  },
+  {
+    "groupName": "mangaclash.com - Uzaki-chan wa Asobitai!",
+    "data": [
+      {
+        "time": 54.487200021743774,
+        "name": "--- Find host"
+      },
+      {
+        "time": 249.6340000629425,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 4.825099945068359,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 7.270099997520447,
+        "name": "--- Parse HTML"
+      }
+    ]
+  },
+  {
+    "groupName": "mangaclash.com - Dosanko Gyaru Is Mega Cute",
+    "data": [
+      {
+        "time": 53.83809995651245,
+        "name": "--- Find host"
+      },
+      {
+        "time": 301.1682999134064,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 274.1621000766754,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 5.830399990081787,
+        "name": "--- Parse HTML"
+      }
+    ]
+  },
+  {
+    "groupName": "mangaread.org - The Rising Of The Shield Hero",
+    "data": [
+      {
+        "time": 51.65190005302429,
+        "name": "--- Find host"
+      },
+      {
+        "time": 488.16860008239746,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 31.148599982261658,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 17.18500006198883,
+        "name": "--- Parse HTML"
+      }
+    ]
+  },
+  {
+    "groupName": "mangaread.org - Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen",
+    "data": [
+      {
+        "time": 60.51349997520447,
+        "name": "--- Find host"
+      },
+      {
+        "time": 2563.650400042534,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 310.3155999183655,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 11.805099964141846,
+        "name": "--- Parse HTML"
+      }
+    ]
+  },
+  {
+    "groupName": "mangaclash.com - Please Don’t Bully me, Nagatoro",
+    "data": [
+      {
+        "time": 59.43359994888306,
+        "name": "--- Find host"
+      },
+      {
+        "time": 277.6401000022888,
+        "name": "--- Fetch raw"
+      },
+      {
+        "time": 63.43149995803833,
+        "name": "--- Parse response"
+      },
+      {
+        "time": 12.942099928855896,
+        "name": "--- Parse HTML"
+      }
+    ]
+  }
+]
