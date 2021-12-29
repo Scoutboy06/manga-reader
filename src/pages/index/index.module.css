@@ -30,9 +30,61 @@ body {
 	top: 0;
 }
 
-.main > section {
+.main > section,
+.main > section:nth-child(3) > div {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.main > section:nth-child(3) {
+	border-radius: 0.3rem;
+	overflow: hidden;
+	margin-top: 20px;
+	padding: 0;
+	display: block;
+	width: 100%;
+	height: auto;
+	background: var(--background-layer-0);
+	border: 1px solid var(--background-layer-1);
+}
+
+.toggleFinshedMangasButton {
+	display: flex;
+	align-items: center;
+
+	width: 100%;
+	height: 50px;
+	margin: 0;
+	padding: 5px 12px;
+	background: var(--background-layer-0);
+	border: 0;
+	outline: none;
+	/* align-content: center; */
+
+	color: #fff;
+	font-size: 1.5rem;
+	text-align: left;
+
+	transition: background 0.3s;
+	cursor: pointer;
+}
+
+.toggleFinshedMangasButton:hover {
+	background: var(--background-layer-1);
+}
+
+.toggleFinshedMangasButton:active {
+	background: var(--background-layer-2);
+}
+
+.toggleFinshedMangasButton span {
+	display: inline-block;
+	width: 60px;
+}
+
+.toggleFinshedMangasButton img {
+	display: inline-block;
+	transition: transform 0.1s;
 }
 
 .newManga {
@@ -70,103 +122,4 @@ body {
 .newManga img {
 	width: 45%;
 	height: 45%;
-}
-
-.item {
-	/* width: 159px; */
-	/* height: 209px; */
-	aspect-ratio: 1 / 1.45;
-	margin: 10px 5px;
-	color: #fff;
-	display: inline-flex;
-	flex-direction: column;
-	cursor: pointer;
-	box-sizing: border-box;
-	position: relative;
-}
-
-.updates {
-	position: absolute;
-	top: -5px;
-	right: -5px;
-	width: 20px;
-	height: 20px;
-	background: rgb(219, 8, 8);
-	border-radius: 50%;
-}
-
-.loader {
-	position: absolute;
-	right: -10px;
-	top: -10px;
-	width: 30px;
-	height: 30px;
-}
-
-.img {
-	width: 100%;
-	height: 100%;
-	text-align: center;
-	overflow: hidden;
-}
-
-.img img {
-	height: 100%;
-}
-
-.main .item footer {
-	background: rgba(0, 0, 0, 0.6);
-	padding: 3px 5px;
-	overflow: hidden;
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
-
-.main .item footer span {
-	white-space: nowrap;
-	font-size: 14px;
-	color: #b5b5b5;
-}
-
-.main .item > div > p {
-	margin: 0;
-	margin-bottom: 15px;
-}
-
-.button {
-	text-decoration: none;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-
-	border: 1px solid #222;
-	background: transparent;
-	border-radius: 4px;
-	font-family: inherit;
-	transition: box-shadow, background 0.2s;
-	user-select: none;
-}
-
-.button[disabled] {
-	opacity: 0.3;
-	user-select: none;
-	pointer-events: none;
-}
-
-.button:not([disabled]):hover {
-	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
-	background: #303030;
-	cursor: pointer;
-}
-
-.button img {
-	padding: 5px 8px;
-}
-
-.button span {
-	color: #eee;
-	padding: 5px;
-	width: 50px;
 }

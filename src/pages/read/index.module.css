@@ -68,7 +68,7 @@
 }
 
 .chapters {
-	background: #222;
+	background: var(--background-layer-1);
 	width: auto;
 	max-width: 90vw;
 	min-height: 50vh;

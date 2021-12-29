@@ -18,6 +18,7 @@ const MODEL_NAME = mongoose.Schema(
 		// subscribed: { type: Boolean, required: false, default: false },
 		needProxy: { type: Boolean, required: false, default: false },
 		coverUrl: { type: String, required: true },
+		finished: { type: Boolean, required: false, default: false },
 	},
 	{
 		timestamps: false,

@@ -130,7 +130,7 @@ function Header({
 						href={originalUrl}
 						target='_blank'
 						rel='nofollow noreferrer noopener'
-						className={styles.pagination}
+						className='button'
 						disabled={isLoading || !originalUrl}
 					>
 						<img
@@ -140,7 +140,7 @@ function Header({
 					</a>
 
 					<button
-						className={styles.pagination}
+						className='button'
 						onClick={() => {
 							storeFullWidthData(!isFullWidth);
 							setIsFullWidth(!isFullWidth);
@@ -161,11 +161,7 @@ function Header({
 			)}
 
 			<div className={styles.container}>
-				<Link
-					to={prev || '#'}
-					className={styles.pagination}
-					disabled={isLoading || !prev}
-				>
+				<Link to={prev || '#'} className='button' disabled={isLoading || !prev}>
 					<img
 						src={window.location.origin + '/icons/arrow_back-white-24dp.svg'}
 						alt='<-'
@@ -173,18 +169,14 @@ function Header({
 					<span>Prev</span>
 				</Link>
 
-				<Link to='/' className={styles.pagination}>
+				<Link to='/' className='button'>
 					<img
 						src={window.location.origin + '/icons/home-white-24dp.svg'}
 						alt='Home'
 					/>
 				</Link>
 
-				<Link
-					to={next || '#'}
-					className={styles.pagination}
-					disabled={isLoading || !next}
-				>
+				<Link to={next || '#'} className='button' disabled={isLoading || !next}>
 					<span>Next</span>
 					<img
 						src={window.location.origin + '/icons/arrow_forward-white-24dp.svg'}

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
+import MangaCard from '../../components/MangaCard';
 import SearchMangaOverlay from '../../components/SearchMangaOverlay';
-import Loader from '../../components/Loader';
 
 import styles from './index.module.css';
 
@@ -10,6 +9,7 @@ export default function Home() {
 	const [mangas, setMangas] = useState([]);
 	const [updates, setUpdates] = useState([]);
 	const [showOverlay, setShowOverlay] = useState(false);
+	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
 
 	const [isFetchingUpdates, setIsFetchingUpdates] = useState(false);
 
@@ -57,7 +57,7 @@ export default function Home() {
 			<header>
 				<h2 className={styles.title}>Choose manga</h2>
 				<button
-					className={styles.button}
+					className='button'
 					disabled={isFetchingUpdates}
 					onClick={() => fetchUpdates(false)}
 				>
@@ -70,31 +70,48 @@ export default function Home() {
 
 			<section>
 				{mangas.length > 0 &&
-					mangas.map((manga, index) => (
-						<Link
-							to={`/${manga.urlName}/${manga.chapter}`}
-							key={manga._id || index}
-							className={styles.item}
-						>
-							{!isFetchingUpdates && updates[manga._id] && (
-								<div className={styles.updates}></div>
-							)}
+					mangas.map(
+						manga =>
+							!manga.finished && (
+								<MangaCard
+									key={manga._id}
+									manga={manga}
+									isFetchingUpdates={isFetchingUpdates}
+									updates={updates}
+								/>
+							)
+					)}
+			</section>
 
-							{manga.subscribed && isFetchingUpdates && (
-								<div className={styles.loader}>
-									<Loader size={30} />
-								</div>
-							)}
+			<section className={styles.section2}>
+				<button
+					onClick={() => setShowFinishedMangas(!showFinishedMangas)}
+					className={styles.toggleFinshedMangasButton}
+				>
+					<span>{showFinishedMangas ? 'Hide' : 'Show'} </span>
+					<img
+						src='icons/expand_more_white_24dp.svg'
+						alt='v'
+						width={30}
+						style={{ transform: `rotate(${showFinishedMangas ? 0 : -90}deg)` }}
+					/>
+				</button>
 
-							<div className={styles.img}>
-								<img src={manga.coverUrl} alt='Img' />
-							</div>
-
-							<footer>
-								<span>{manga.name}</span>
-							</footer>
-						</Link>
-					))}
+				<div>
+					{mangas.length > 0 &&
+						showFinishedMangas &&
+						mangas.map(
+							manga =>
+								manga.finished && (
+									<MangaCard
+										key={manga._id}
+										manga={manga}
+										isFetchingUpdates={isFetchingUpdates}
+										updates={updates}
+									/>
+								)
+						)}
+				</div>
 			</section>
 
 			<SearchMangaOverlay

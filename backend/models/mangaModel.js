@@ -12,6 +12,7 @@ const MODEL_NAME = mongoose.Schema(
 			mangaName: { type: String, required: true },
 		},
 		coverUrl: { type: String, required: true },
+		finished: { type: Boolean, required: false, default: false },
 	},
 	{
 		timestamps: false,
