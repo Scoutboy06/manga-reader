@@ -2,8 +2,6 @@ import asyncHandler from 'express-async-handler';
 import fetch from 'node-fetch';
 import HTMLParser from 'node-html-parser';
 
-import Performance from '../performance.js';
-
 import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 
