@@ -4,16 +4,21 @@ import HTMLParser from 'node-html-parser';
 
 import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
+import User from '../models/userModel.js';
 
 // @desc	Create a new manga
-// @route	POST /api/manga
-const createManga = asyncHandler(async (req, res) => {
+// @route	POST /api/mangas?userId=...
+export const createManga = asyncHandler(async (req, res) => {
+	const { userId } = req.query;
+
+	const user = await User.findById(userId);
+	if (!user) throw new Error(404);
+
 	const {
 		name,
 		urlName,
 		chapter,
-		lastChapter,
-		subscribed = false,
+		subscribed,
 		host,
 		coverUrl,
 	} = req.body;
@@ -22,61 +27,55 @@ const createManga = asyncHandler(async (req, res) => {
 		name,
 		urlName,
 		chapter,
-		lastChapter,
 		subscribed,
 		host,
 		coverUrl,
+		ownerId: userId,
 	});
 
 	const createdManga = await manga.save();
+
+	user.mangas.push(createdManga._id);
+	await user.save();
+
 	res.status(201).json(createdManga);
 });
 
-// @desc	Get info about a manga
-// @route	GET /api/manga/:urlName
-const getMangaByUrlName = asyncHandler(async (req, res) => {
-	const { urlName } = req.params;
+// @desc	Delete a manga
+// @route	DELETE /api/mangas/:_id
+export const deleteManga = asyncHandler(async (req, res) => {
+	const manga = await Manga.findById(req.params._id);
+	if (!manga) throw new Error(404);
 
-	Manga.findOne({ urlName }, (err, data) => {
-		if (err) {
-			res.status(500);
-			throw new Error('An error occured');
-		} else {
-			res.json(data);
-		}
-	});
+	const user = await User.findById(manga.ownerId);
+	if (!user) throw new Error(500);
+
+	user.mangas.splice(user.mangas.indexOf(manga._id), 1);
+
+	await user.save();
+	await manga.remove();
+	res.json({ message: 'Manga removed from library' });
 });
 
-// @desc	Delete a manga
-// @route	DELETE /api/manga/:urlName
-const deleteManga = asyncHandler(async (req, res) => {
-	const { urlName } = req.headers;
+// @desc	Get info about a manga
+// @route	GET /api/mangas/:urlName
+export const getMangaByUrlName = asyncHandler(async (req, res) => {
+	const { urlName } = req.params;
 
 	const manga = await Manga.findOne({ urlName });
+	if (!manga) throw new Error(404);
 
-	if (manga) {
-		await manga.remove();
-		res.json({ message: 'Manga removed from library' });
-	} else {
-		res.status(404);
-		throw new Error('Manga not found');
-	}
+	res.status(200).json(manga);
 });
 
 // @desc	Get images from a chapter
-// @route	GET /api/manga/:urlName/:chapter
-const getImageUrls = asyncHandler(async (req, res, next) => {
+// @route	GET /api/mangas/:urlName/:chapter
+export const getImageUrls = asyncHandler(async (req, res) => {
 	const { urlName, chapter } = req.params;
 
 	const manga = await Manga.findOne({ urlName });
-	if (!manga) {
-		next();
-		return;
-	}
 
-	const host = await Host.findOne({
-		hostName: manga.host.hostName,
-	});
+	const host = await Host.findById(manga.hostId);
 
 	let url = host.path.replace('%name%', urlName).replace('%chapter%', chapter);
 
@@ -140,19 +139,22 @@ const getImageUrls = asyncHandler(async (req, res, next) => {
 		images: srcs,
 	};
 
-	res.send(data);
+	res.json(data);
 });
 
+
+
+
 // @desc	Get a list of all mangas
-// @route	GET /api/manga
-const getAllMangas = asyncHandler(async (req, res) => {
+// @route	GET /api/mangas
+export const getAllMangas = asyncHandler(async (req, res) => {
 	const keyword = req.query.keyword
 		? {
-				name: {
-					$regex: req.query.keyword,
-					$options: 'i',
-				},
-		  }
+			name: {
+				$regex: req.query.keyword,
+				$options: 'i',
+			},
+		}
 		: {};
 
 	const mangas = await Manga.find({ ...keyword });
@@ -160,7 +162,7 @@ const getAllMangas = asyncHandler(async (req, res) => {
 	res.json(mangas);
 });
 
-const updateAttributeSelector = asyncHandler(async (req, res) => {
+export const updateAttributeSelector = asyncHandler(async (req, res) => {
 	const { hostId, newSelector } = req.body;
 
 	const host = await Host.findById(hostId);
@@ -170,11 +172,3 @@ const updateAttributeSelector = asyncHandler(async (req, res) => {
 	res.status(200).json(savedHost);
 });
 
-export {
-	getMangaByUrlName,
-	createManga,
-	deleteManga,
-	getImageUrls,
-	getAllMangas,
-	updateAttributeSelector,
-};

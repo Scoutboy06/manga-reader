@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loader from '../../components/Loader';
+import Title from '../../components/Title';
 
-import styles from './index.module.css';
+import styles from './read.module.css';
 
 export default function Read({ match, location }) {
 	const [chapters, setChapters] = useState({
@@ -19,13 +20,13 @@ export default function Read({ match, location }) {
 
 	const fetchChapters = () =>
 		fetch(
-			`${window.location.origin}/api/manga/${match.params.mangaName}/${match.params.chapter}`
+			`${window.location.origin}/api/mangas/${match.params.mangaName}/${match.params.chapter}`
 		)
 			.then(res => res.json())
 			.catch(console.error);
 
 	const updateProgress = isLast =>
-		fetch(window.location.origin + '/api/manga/updateProgress', {
+		fetch(window.location.origin + '/api/mangas/updateProgress', {
 			method: 'POST',
 			body: JSON.stringify({
 				urlName: match.params.mangaName,
@@ -77,7 +78,9 @@ export default function Read({ match, location }) {
 	}, [match.params.mangaName]);
 
 	return (
-		<main className={styles.main} data-isFullWidth={isFullWidth}>
+		<main className={styles.main} data-isfullwidth={isFullWidth}>
+			<Title>{match.params.chapter + ' - ' + match.params.mangaName}</Title>
+
 			<Header
 				isTop={true}
 				chapters={chapters}
@@ -95,9 +98,10 @@ export default function Read({ match, location }) {
 
 			{!isLoading && (
 				<section className={styles.chapters}>
-					{images.map((image, index) => (
-						<img src={image} key={index} alt='Failed to load' />
-					))}
+					{images &&
+						images.map((image, index) => (
+							<img src={image} key={index} alt='Failed to load' />
+						))}
 				</section>
 			)}
 
@@ -161,7 +165,11 @@ function Header({
 			)}
 
 			<div className={styles.container}>
-				<Link to={prev || '#'} className='button' disabled={isLoading || !prev}>
+				<Link
+					to={prev || '#'}
+					className='button icon-left'
+					disabled={isLoading || !prev}
+				>
 					<img
 						src={window.location.origin + '/icons/arrow_back-white-24dp.svg'}
 						alt='<-'
@@ -176,7 +184,11 @@ function Header({
 					/>
 				</Link>
 
-				<Link to={next || '#'} className='button' disabled={isLoading || !next}>
+				<Link
+					to={next || '#'}
+					className='button icon-right'
+					disabled={isLoading || !next}
+				>
 					<span>Next</span>
 					<img
 						src={window.location.origin + '/icons/arrow_forward-white-24dp.svg'}

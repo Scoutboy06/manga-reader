@@ -11,6 +11,54 @@
 	position: relative;
 }
 
+.optionsButton {
+	position: absolute;
+	left: 5px;
+	top: 5px;
+	width: 30px;
+	height: 30px;
+	border-radius: 0.2rem;
+	background: var(--bg-01dp);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+.item:hover .optionsButton,
+.item:focus-within .optionsButton {
+	opacity: 1;
+}
+
+.optionsButton > div:not(.optionsTooltip) {
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background: #fff;
+	margin: 0 2px;
+}
+
+.optionsTooltip {
+	position: absolute;
+	top: 40px;
+	left: 5px;
+	display: flex;
+	flex-direction: column;
+	width: 200px;
+	background: var(--bg-02dp);
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.3s;
+	font-size: 0.9em;
+}
+
+.optionsButton:focus-within ~ .optionsTooltip,
+.optionsTooltip:focus-within {
+	opacity: 1;
+	visibility: visible;
+}
+
 .updates {
 	position: absolute;
 	top: -5px;

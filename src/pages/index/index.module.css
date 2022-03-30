@@ -1,13 +1,3 @@
-body {
-	background: #121212;
-	width: 100vw;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-		Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
 .title {
 	color: rgba(255, 255, 255, 0.7);
 	padding-bottom: 10px;
@@ -21,13 +11,34 @@ body {
 }
 
 .main > header {
-	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: 0 5px;
 }
 
-.main > header > button {
-	position: absolute;
-	right: 10px;
-	top: 0;
+.profileDropdown {
+	position: relative;
+	width: 50px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	background: none;
+	border: none;
+}
+
+.profileDropdown img {
+	width: 30px;
+	height: 30px;
+	pointer-events: none;
+}
+
+.profileDropdown svg {
+	fill: #fff;
+	width: 20px;
+	height: 20px;
+	transition: transform 0.15s;
 }
 
 .main > section,
@@ -44,8 +55,12 @@ body {
 	display: block;
 	width: 100%;
 	height: auto;
-	background: var(--background-layer-0);
-	border: 1px solid var(--background-layer-1);
+	background: var(--bg-00dp);
+	border: 1px solid var(--bg-01dp);
+}
+
+.main > section:nth-child(3) > div {
+	border-top: 1px solid var(--bg-01dp);
 }
 
 .toggleFinshedMangasButton {
@@ -56,7 +71,7 @@ body {
 	height: 50px;
 	margin: 0;
 	padding: 5px 12px;
-	background: var(--background-layer-0);
+	background: var(--bg-00dp);
 	border: 0;
 	outline: none;
 	/* align-content: center; */
@@ -70,16 +85,16 @@ body {
 }
 
 .toggleFinshedMangasButton:hover {
-	background: var(--background-layer-1);
+	background: var(--bg-01dp);
 }
 
 .toggleFinshedMangasButton:active {
-	background: var(--background-layer-2);
+	background: var(--bg-02dp);
 }
 
 .toggleFinshedMangasButton span {
 	display: inline-block;
-	width: 60px;
+	/* width: 95px; */
 }
 
 .toggleFinshedMangasButton img {
@@ -122,4 +137,55 @@ body {
 .newManga img {
 	width: 45%;
 	height: 45%;
+}
+
+.profilesMain {
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.profilesMain .title {
+	margin-bottom: 30px;
+}
+
+.profiles {
+	display: flex;
+}
+
+.profile {
+	margin-right: 2vw;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.profile img,
+.profile svg {
+	height: 10vw;
+	width: 10vw;
+	max-height: 200px;
+	max-width: 200px;
+	min-height: 84px;
+	min-width: 84px;
+	border-radius: 4px;
+	border: 0.15em solid transparent;
+	fill: grey;
+}
+
+.profile p {
+	font-size: 1.3vw;
+	color: grey;
+}
+
+.profile:hover img,
+.profile:hover svg {
+	border-color: #e5e5e5;
+}
+
+.profile:hover p {
+	color: #e5e5e5;
 }

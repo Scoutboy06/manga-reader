@@ -3,9 +3,16 @@
 	--main-color-hover: #30b1e0;
 	--main-color-focus: #40a4c6;
 
-	--background-layer-0: #121212;
-	--background-layer-1: #222;
-	--background-layer-2: #303030;
+	--bg-00dp: #121212;
+	--bg-01dp: #1e1e1e;
+	--bg-02dp: #232323;
+	--bg-03dp: #252525;
+	--bg-04dp: #272727;
+	--bg-06dp: #2c2c2c;
+	--bg-08dp: #2f2f2f;
+	--bg-12dp: #333;
+	--bg-16dp: #353535;
+	--bg-24dp: #383838;
 }
 
 #root {
@@ -27,6 +34,7 @@ body {
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--bg-00dp);
 }
 
 ::-webkit-scrollbar {
@@ -76,7 +84,18 @@ iframe {
 }
 
 .button span {
-	color: #eee;
-	padding: 5px;
+	color: #fff;
 	width: 50px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 0pt;
+}
+
+.button.icon-left img {
+	padding-right: 0px;
+}
+
+.button.icon-right img {
+	padding-left: 0px;
 }

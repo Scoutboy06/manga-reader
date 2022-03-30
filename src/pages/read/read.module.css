@@ -68,7 +68,7 @@
 }
 
 .chapters {
-	background: var(--background-layer-1);
+	background: var(--bg-01dp);
 	width: auto;
 	max-width: 90vw;
 	min-height: 50vh;
@@ -78,7 +78,7 @@
 	transition: width 0.3s;
 }
 
-.main[data-isFullWidth='true'] .chapters {
+.main[data-isfullwidth='true'] .chapters {
 	padding: 0;
 	width: 100vw;
 	min-width: none;
@@ -94,7 +94,7 @@
 	margin: 0 auto;
 }
 
-.main[data-isFullWidth='true'] .chapters img {
+.main[data-isfullwidth='true'] .chapters img {
 	max-height: none;
 	width: 100%;
 }

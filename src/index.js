@@ -3,9 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
+import ProfileContext from './contexts/ProfileContext';
+
 ReactDOM.render(
 	<React.StrictMode>
-		<App />
+		<ProfileContext>
+			<App />
+		</ProfileContext>
 	</React.StrictMode>,
 	document.getElementById('root')
 );

@@ -5,14 +5,11 @@ const MODEL_NAME = mongoose.Schema(
 		name: { type: String, required: true },
 		urlName: { type: String, required: true },
 		chapter: { type: String, required: true },
-		// lastChapter: { type: String, required: false },
 		subscribed: { type: Boolean, required: false, default: false },
-		host: {
-			hostName: { type: String, required: true },
-			mangaName: { type: String, required: true },
-		},
+		hostId: { type: mongoose.Types.ObjectId, ref: 'Host', required: true },
 		coverUrl: { type: String, required: true },
 		finished: { type: Boolean, required: false, default: false },
+		ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
 	},
 	{
 		timestamps: false,

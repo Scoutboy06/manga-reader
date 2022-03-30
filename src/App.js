@@ -1,20 +1,21 @@
 import {
-	BrowserRouter as Router,
+	BrowserRouter,
 	Switch,
-	Route /* Link */,
+	Route,
+	Redirect,
 } from 'react-router-dom';
 
-import Home from './pages/index';
+import Index from './pages/index';
 import Read from './pages/read';
 
 export default function App() {
 	return (
-		<Router>
+		<BrowserRouter>
 			<Switch>
-				<Route exact path='/' component={Home} />
-
-				<Route exact path='/:mangaName/:chapter' component={Read} />
+				<Route exact path='/' component={Index} />
+				<Route exact path='/read/:mangaName/:chapter' component={Read} />
+				<Redirect to="/" />
 			</Switch>
-		</Router>
+		</BrowserRouter>
 	);
 }
