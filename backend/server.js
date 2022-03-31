@@ -13,7 +13,7 @@ import imageRoutes from './routes/imageRoutes.js';
 import singleRoutes from './routes/singleRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import testController from './controllers/test.js';
-import { getSubscribedUpdates } from './controllers/updatesController.js';
+import { getMangaUpdates } from './controllers/updatesController.js';
 
 const __dirname = path.resolve();
 dotenv.config({ path: '.env' });
@@ -39,7 +39,7 @@ app.use('/api/image', imageRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/test', testController);
 
-app.get('/api/getUpdates', getSubscribedUpdates);
+app.get('/api/getUpdates', getMangaUpdates);
 
 if (process.env.NODE_ENV === 'production') {
 	app.use('/', express.static(path.join(__dirname, 'build')));

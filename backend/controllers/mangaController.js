@@ -141,34 +141,3 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 
 	res.json(data);
 });
-
-
-
-
-// @desc	Get a list of all mangas
-// @route	GET /api/mangas
-export const getAllMangas = asyncHandler(async (req, res) => {
-	const keyword = req.query.keyword
-		? {
-			name: {
-				$regex: req.query.keyword,
-				$options: 'i',
-			},
-		}
-		: {};
-
-	const mangas = await Manga.find({ ...keyword });
-
-	res.json(mangas);
-});
-
-export const updateAttributeSelector = asyncHandler(async (req, res) => {
-	const { hostId, newSelector } = req.body;
-
-	const host = await Host.findById(hostId);
-	host.imgSelector.attrSelector = newSelector;
-	const savedHost = await host.save();
-
-	res.status(200).json(savedHost);
-});
-

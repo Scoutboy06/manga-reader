@@ -1,41 +1,49 @@
 import asyncHandler from 'express-async-handler';
 import fetch from 'node-fetch';
 import HTMLParser from 'node-html-parser';
+import mcache from 'memory-cache';
 
 import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 
-let updatesCache = {};
-const cacheKeepTime = 1000 * 60 * 60; // 60 minutes
-let lastCached = null;
+const updatesCache = new mcache.Cache();
 
-const getSubscribedUpdates = asyncHandler(async (req, res) => {
+
+export const getMangaUpdates = asyncHandler(async (req, res) => {
 	const cache = req.query.cache === 'false' ? false : true;
-	const subscribed = await Manga.find({ subscribed: true });
-
-	if (!(subscribed.length > 0))
-		return res.status(404).send('No subscribed mangas');
-	if (lastCached && Date.now() - lastCached > cacheKeepTime) updatesCache = {};
-	if (cache && Object.keys(updatesCache).length > 0)
-		return res.json(updatesCache);
+	const rawMangaIds = req.query.mangas.split(',');
+	const mangas = await Manga.find({ _id: { $in: rawMangaIds } });
 
 	const updates = {};
 
-	for (const manga of subscribed) {
+	for (let mangaIndex = 0; mangaIndex < mangas.length; mangaIndex++) {
+		const manga = mangas[mangaIndex];
+
+		if (!manga) {
+			updates[rawMangaIds[mangaIndex]] = null;
+			continue;
+		}
+
+		if (cache) {
+			const cachedValue = updatesCache.get(manga._id);
+			console.log(cachedValue);
+			if (cachedValue !== undefined) {
+				updates[manga._id] = cachedValue;
+				continue;
+			}
+		}
+
+
 		const hasUpdates = await mangaHasUpdates(manga, cache);
+		updatesCache.put(manga._id, hasUpdates, 1000 * 60 * 60);
 		updates[manga._id] = hasUpdates;
 	}
-
-	lastCached = Date.now();
-	updatesCache = updates;
 
 	res.json(updates);
 });
 
 async function mangaHasUpdates(manga, cache) {
-	if (!manga) return null;
-
-	const host = await Host.findOne({ hostName: manga.host.hostName });
+	const host = await Host.findById(manga.hostId);
 
 	const url = encodeURI(
 		host.path
@@ -55,19 +63,15 @@ async function mangaHasUpdates(manga, cache) {
 	return hasUpdates;
 }
 
-const updateProgress = asyncHandler(async (req, res, next) => {
+export const updateProgress = asyncHandler(async (req, res, next) => {
 	const { urlName, chapter, isLast } = req.body;
 
 	const manga = await Manga.findOne({ urlName });
-
 	if (!manga) return next();
 
 	updatesCache[manga._id] = !isLast;
-
 	manga.chapter = chapter;
-	await manga.save();
 
+	await manga.save();
 	res.status(200).send(chapter);
 });
-
-export { getSubscribedUpdates, updateProgress };

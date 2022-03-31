@@ -25,16 +25,19 @@ export default function Library() {
 	const fetchUpdates = async cache => {
 		setIsFetchingUpdates(true);
 
-		try {
-			const raw = await fetch(
-				'api/getUpdates?' + (cache ? 'cache=true' : 'cache=false')
-			);
-			const json = await raw.json();
-			setIsFetchingUpdates(false);
-			setUpdates(json);
-		} catch (err) {
-			return console.error(err);
-		}
+		const raw = await fetch(
+			'api/getUpdates?' +
+				new URLSearchParams({
+					cache,
+					mangas: mangas
+						.filter(manga => manga.subscribed)
+						.map(manga => manga._id),
+				})
+		);
+		const json = await raw.json();
+
+		setIsFetchingUpdates(false);
+		setUpdates(json);
 	};
 
 	useEffect(() => {
@@ -45,7 +48,7 @@ export default function Library() {
 			const json = await raw.json();
 
 			setMangas(json);
-			// fetchUpdates(true);
+			fetchUpdates(true);
 		}
 
 		if (profileData?.currentProfile?._id) fetchData();

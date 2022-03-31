@@ -4,18 +4,15 @@ import {
 	createManga,
 	deleteManga,
 	getImageUrls,
-	getAllMangas,
-	updateAttributeSelector,
 } from '../controllers/mangaController.js';
 
 import { updateProgress } from '../controllers/updatesController.js';
 
 const router = express.Router();
 
-router.route('/').post(createManga).get(getAllMangas);
+router.route('/').post(createManga);
 router.route('/:_id').get(getMangaByUrlName).delete(deleteManga);
 router.post('/updateProgress', updateProgress);
-router.route('/:urlName/:chapter').get(getImageUrls);
-router.put('/updateAttributeSelector', updateAttributeSelector);
+router.get('/:urlName/:chapter', getImageUrls);
 
 export default router;
