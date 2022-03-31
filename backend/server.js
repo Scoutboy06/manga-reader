@@ -12,7 +12,7 @@ import searchRoutes from './routes/searchRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
 import singleRoutes from './routes/singleRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import testController from './controllers/test.js';
+// import testController from './controllers/test.js';
 import { getMangaUpdates } from './controllers/updatesController.js';
 
 const __dirname = path.resolve();
@@ -37,7 +37,7 @@ app.use('/api/host', hostRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/image', imageRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/test', testController);
+// app.use('/api/test', testController);
 
 app.get('/api/getUpdates', getMangaUpdates);
 
