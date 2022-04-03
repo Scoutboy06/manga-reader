@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import MangaCard from '../../components/MangaCard';
 import SearchMangaOverlay from '../../components/SearchMangaOverlay';
@@ -11,6 +11,7 @@ import { ProfileContext } from '../../contexts/ProfileContext';
 import styles from './index.module.css';
 
 export default function Library() {
+	const history = useHistory();
 	const [profileData, profileActions] = useContext(ProfileContext);
 
 	const [mangas, setMangas] = useState([]);
@@ -40,59 +41,31 @@ export default function Library() {
 		setUpdates(json);
 	};
 
-	useEffect(() => {
-		async function fetchData() {
-			const raw = await fetch(
-				`api/users/${profileData.currentProfile._id}/mangas`
-			);
-			const json = await raw.json();
-
-			setMangas(json);
-			fetchUpdates(true);
-		}
-
-		if (profileData?.currentProfile?._id) fetchData();
-	}, [profileData]);
-
-	if (!profileData.currentProfile) {
-		return (
-			<main className={styles.profilesMain}>
-				<Title>Choose a profile</Title>
-
-				<h1 className={styles.title}>Choose a profile</h1>
-
-				<div className={styles.profiles}>
-					{profileData.profiles.map((profile, index) => (
-						<div
-							key={index}
-							className={styles.profile}
-							onClick={() => {
-								console.log(profile);
-								profileActions.selectProfile(profile);
-							}}
-						>
-							<img src={profile.imageUrl} alt='' />
-							<p key={index}>{profile.name}</p>
-						</div>
-					))}
-
-					<div className={styles.profile} onClick={() => alert('Coming soon')}>
-						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-							<path d='M0 0h24v24H0V0z' fill='none' />
-							<path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H8c-.55 0-1-.45-1-1s.45-1 1-1h3V8c0-.55.45-1 1-1s1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1z' />
-						</svg>
-						<p>Add a profile</p>
-					</div>
-				</div>
-			</main>
+	const fetchData = async () => {
+		const res = await fetch(
+			`api/users/${profileData.currentProfile._id}/mangas`
 		);
-	}
+		const json = await res.json();
+		setMangas(json);
+	};
+
+	useEffect(() => {
+		if (profileData.isLoading) return;
+		else if (!profileData.currentProfile?._id) history.push('/');
+		else fetchData();
+	}, [history, profileData]);
+
+	useEffect(() => {
+		if (mangas.length > 0) fetchUpdates(true);
+	}, [mangas]);
+
+	if (!profileData.currentProfile) return null;
 
 	return (
 		<main className={styles.main}>
 			<Title>Choose a manga</Title>
 
-			<header>
+			<header className={styles.header}>
 				<button
 					className={styles.profileDropdown}
 					onClick={() => setShowProfileDropdown(true)}

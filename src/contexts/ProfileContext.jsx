@@ -4,14 +4,18 @@ export const ProfileContext = createContext();
 
 export default function Provider(props) {
 	const [profiles, setProfiles] = useState();
-	const [currentProfile, setCurrentProfile] = useState([]);
+	const [currentProfile, setCurrentProfile] = useState();
+	const [isLoading, setIsLoading] = useState(true);
 
 	const actions = {
 		selectProfile: profile => {
 			setCurrentProfile(profile);
 			sessionStorage.setItem('currentProfile', profile._id);
 		},
-		deselectProfile: () => setCurrentProfile(null),
+		deselectProfile: () => {
+			setCurrentProfile(null);
+			sessionStorage.removeItem('currentProfile');
+		},
 	};
 
 	useEffect(() => {
@@ -24,12 +28,15 @@ export default function Provider(props) {
 						profile => profile._id === sessionStorage.getItem('currentProfile')
 					) || null
 				);
+				setIsLoading(false);
 			})
 			.catch(console.error);
 	}, []);
 
 	return (
-		<ProfileContext.Provider value={[{ currentProfile, profiles }, actions]}>
+		<ProfileContext.Provider
+			value={[{ currentProfile, profiles, isLoading }, actions]}
+		>
 			{props.children}
 		</ProfileContext.Provider>
 	);

@@ -3,17 +3,19 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
-// import { createProxyMiddleware } from 'http-proxy-middleware';
+
 import connectDB from './config/db.js';
+
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+
 import mangaRoutes from './routes/mangaRoutes.js';
 import hostRoutes from './routes/hostRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import imageRoutes from './routes/imageRoutes.js';
-import singleRoutes from './routes/singleRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-// import testController from './controllers/test.js';
+
 import { getMangaUpdates } from './controllers/updatesController.js';
+
 
 const __dirname = path.resolve();
 dotenv.config({ path: '.env' });
@@ -32,7 +34,6 @@ app.use(cors());
 // });
 
 app.use('/api/mangas', mangaRoutes);
-app.use('/api/single', singleRoutes);
 app.use('/api/host', hostRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/image', imageRoutes);

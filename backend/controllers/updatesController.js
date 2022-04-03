@@ -26,8 +26,7 @@ export const getMangaUpdates = asyncHandler(async (req, res) => {
 
 		if (cache) {
 			const cachedValue = updatesCache.get(manga._id);
-			console.log(cachedValue);
-			if (cachedValue !== undefined) {
+			if (cachedValue !== null) {
 				updates[manga._id] = cachedValue;
 				continue;
 			}
@@ -69,7 +68,7 @@ export const updateProgress = asyncHandler(async (req, res, next) => {
 	const manga = await Manga.findOne({ urlName });
 	if (!manga) return next();
 
-	updatesCache[manga._id] = !isLast;
+	if (manga.subscribed) updatesCache.put(manga._id, !isLast);
 	manga.chapter = chapter;
 
 	await manga.save();
