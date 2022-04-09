@@ -57,7 +57,7 @@ async function mangaHasUpdates(manga, cache) {
 	const nextBtn = document.querySelector(host.chapterNameSelectors.next);
 
 	const hasUpdates = !!nextBtn;
-	if (cache) updatesCache[manga._id] = hasUpdates;
+	if (cache) updatesCache.put(manga._id, hasUpdates);
 
 	return hasUpdates;
 }
