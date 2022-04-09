@@ -11,6 +11,12 @@
 	position: relative;
 }
 
+.item svg {
+	fill: #fff;
+	width: 24px;
+	height: 24px;
+}
+
 .optionsButton {
 	position: absolute;
 	left: 5px;

@@ -87,7 +87,7 @@ export default function NewMangaOverlay({ visible, setVisibility }) {
 				<form onSubmit={formSubmit} className={styles.inputContainer}>
 					<input
 						type='text'
-						placeholder='Search Manga...'
+						placeholder='Search for a manga...'
 						value={inputText}
 						onChange={e => setInputText(e.target.value)}
 						autoCapitalize='off'
