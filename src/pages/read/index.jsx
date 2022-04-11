@@ -29,9 +29,9 @@ export default function Read({ match, location }) {
 	const fetchChapters = () =>
 		fetchAPI(`/api/mangas/${match.params.mangaName}/${match.params.chapter}`);
 
-	const updateProgress = isLast =>
+	const updateProgress = (isLast, mangaId) =>
 		fetchAPI(
-			`/api/mangas/${mangaMeta._id}/updateProgress?userId=${profileData.currentProfile._id}`,
+			`/api/mangas/${mangaId}/updateProgress?userId=${profileData.currentProfile._id}`,
 			{
 				method: 'PUT',
 				body: JSON.stringify({
@@ -57,9 +57,17 @@ export default function Read({ match, location }) {
 		(async function () {
 			setIsLoading(true);
 
+			if (profileData.isLoading) return;
+
+			let meta;
 			if (!mangaMeta) {
-				const meta = await getMangaInfo();
+				meta = await getMangaInfo();
 				setMangaMeta(meta);
+			} else {
+				meta = mangaMeta;
+			}
+
+			if (!match.params.chapter) {
 				history.push(`/read/${match.params.mangaName}/${meta.chapter}`);
 				return;
 			}
@@ -76,10 +84,10 @@ export default function Read({ match, location }) {
 
 			setIsLoading(false);
 
-			updateProgress(!chaps.nextPath);
+			updateProgress(!chaps.nextPath, meta._id);
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [match.params]);
+	}, [match.params, profileData.isLoading]);
 
 	useEffect(() => {
 		// localStorage init
@@ -145,7 +153,7 @@ function Header({
 }) {
 	return (
 		<header className={styles.header}>
-			{isTop && <h2 className={styles.title}>{curr}</h2>}
+			{isTop && <h2 className={styles.title}>{curr || ' '}</h2>}
 
 			{isTop && (
 				<div className={styles.container} style={{ marginBottom: 30 }}>
