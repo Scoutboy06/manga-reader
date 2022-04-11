@@ -72,5 +72,5 @@ export const updateProgress = asyncHandler(async (req, res, next) => {
 	manga.chapter = chapter;
 
 	await manga.save();
-	res.status(200).send(chapter);
+	res.status(200).send({ chapter });
 });

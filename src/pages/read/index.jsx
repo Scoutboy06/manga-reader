@@ -37,7 +37,7 @@ export default function Read({ match, location }) {
 			}),
 		}).catch(res => {
 			console.error(res);
-			window.alert(`Error ${res.status}: ${res.statusText}`);
+			// window.alert(`Error ${res.status}: ${res.statusText}`);
 		});
 
 	const storeFullWidthData = isFullWidth => {
@@ -51,6 +51,7 @@ export default function Read({ match, location }) {
 			setIsLoading(true);
 
 			const chaps = await fetchChapters();
+			console.log(chaps);
 			setChapters({
 				prev: chaps.prevPath,
 				curr: match.params.chapter,
