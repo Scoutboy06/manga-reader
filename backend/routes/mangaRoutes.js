@@ -11,8 +11,8 @@ import { updateProgress } from '../controllers/updatesController.js';
 const router = express.Router();
 
 router.post('/', createManga);
-router.post('/updateProgress', updateProgress);
 router.delete('/:_id', deleteManga);
+router.put('/:_id/updateProgress', updateProgress);
 router.get('/:urlName', getMangaByUrlName);
 router.get('/:urlName/:chapter', getImageUrls);
 

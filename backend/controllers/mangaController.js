@@ -58,11 +58,12 @@ export const deleteManga = asyncHandler(async (req, res) => {
 });
 
 // @desc	Get info about a manga
-// @route	GET /api/mangas/:urlName
+// @route	GET /api/mangas/:urlName?userId=...
 export const getMangaByUrlName = asyncHandler(async (req, res) => {
 	const { urlName } = req.params;
+	const { userId } = req.query;
 
-	const manga = await Manga.findOne({ urlName });
+	const manga = await Manga.findOne({ urlName, ownerId: userId });
 	if (!manga) throw new Error(404);
 
 	res.status(200).json(manga);

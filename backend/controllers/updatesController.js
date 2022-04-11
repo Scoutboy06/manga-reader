@@ -63,14 +63,18 @@ async function mangaHasUpdates(manga, cache) {
 }
 
 export const updateProgress = asyncHandler(async (req, res, next) => {
-	const { urlName, chapter, isLast } = req.body;
+	const { _id } = req.params;
+	const { userId } = req.query;
+	const { chapter, isLast } = req.body;
 
-	const manga = await Manga.findOne({ urlName });
+	if (!(_id && userId && chapter && isLast !== undefined)) throw new Error(400);
+
+	const manga = await Manga.findById(_id);
 	if (!manga) return next();
 
 	if (manga.subscribed) updatesCache.put(manga._id, !isLast);
 	manga.chapter = chapter;
-
 	await manga.save();
+
 	res.status(200).send({ chapter });
 });
