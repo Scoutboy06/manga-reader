@@ -7,36 +7,42 @@ import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
 // @desc	Create a new manga
-// @route	POST /api/mangas?userId=...
+// @route	POST /api/mangas
 export const createManga = asyncHandler(async (req, res) => {
-	const { userId } = req.query;
+	const {
+		hostName,
+		mangaUrlName,
+		subscribed,
+		userId,
+	} = req.body;
 
 	const user = await User.findById(userId);
 	if (!user) throw new Error(404);
 
-	const {
-		name,
-		urlName,
-		chapter,
-		subscribed,
-		host,
-		coverUrl,
-	} = req.body;
+	const host = await Host.findOne({ hostName });
+	if (!host) throw new Error(404);
+
+	const raw = await fetch(host.detailsPage.replace('%name%', mangaUrlName));
+	const html = await raw.text();
+	const document = HTMLParser.parse(html);
+
+	const name = document.querySelector('.post-title h1').textContent;
+	const coverEl = document.querySelector('.summary_image a img');
+	const coverUrl = coverEl.getAttribute('data-src')
+		|| coverEl.getAttribute('data-srcset')
+		|| coverEl.getAttribute('src');
 
 	const manga = new Manga({
 		name,
-		urlName,
-		chapter,
+		urlName: mangaUrlName,
+		chapter: 'chapter-1',
 		subscribed,
-		host,
+		hostId: host._id,
 		coverUrl,
-		ownerId: userId,
+		ownerId: user._id,
 	});
 
 	const createdManga = await manga.save();
-
-	user.mangas.push(createdManga._id);
-	await user.save();
 
 	res.status(201).json(createdManga);
 });
@@ -47,12 +53,6 @@ export const deleteManga = asyncHandler(async (req, res) => {
 	const manga = await Manga.findById(req.params._id);
 	if (!manga) throw new Error(404);
 
-	const user = await User.findById(manga.ownerId);
-	if (!user) throw new Error(500);
-
-	user.mangas.splice(user.mangas.indexOf(manga._id), 1);
-
-	await user.save();
 	await manga.remove();
 	res.json({ message: 'Manga removed from library' });
 });

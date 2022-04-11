@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import fetchAPI from '../../functions/fetchAPI';
 
 import MangaCard from '../../components/MangaCard';
-import SearchMangaOverlay from '../../components/SearchMangaOverlay';
+import NewMangaPopup from '../../components/NewMangaPopup';
 import PopupOverlay from '../../components/PopupOverlay';
 import Title from '../../components/Title';
 import ContextMenu from '../../components/Dropdown';
@@ -15,7 +16,7 @@ export default function Library() {
 	const history = useHistory();
 	const [profileData, profileActions] = useContext(ProfileContext);
 
-	const [mangas, setMangas] = useState([]);
+	const [mangas, setMangas] = useState();
 	const [updates, setUpdates] = useState([]);
 	const [showOverlay, setShowOverlay] = useState(false);
 	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
@@ -27,7 +28,7 @@ export default function Library() {
 	const fetchUpdates = async cache => {
 		setIsFetchingUpdates(true);
 
-		const raw = await fetch(
+		fetchAPI(
 			'api/getUpdates?' +
 				new URLSearchParams({
 					cache,
@@ -35,19 +36,24 @@ export default function Library() {
 						.filter(manga => manga.subscribed)
 						.map(manga => manga._id),
 				})
-		);
-		const json = await raw.json();
-
-		setIsFetchingUpdates(false);
-		setUpdates(json);
+		)
+			.then(json => {
+				setIsFetchingUpdates(false);
+				setUpdates(json);
+			})
+			.catch(res => {
+				console.error(res);
+				window.alert(`Error ${res.status}: ${res.statusText}`);
+			});
 	};
 
 	const fetchData = async () => {
-		const res = await fetch(
-			`api/users/${profileData.currentProfile._id}/mangas`
-		);
-		const json = await res.json();
-		setMangas(json);
+		fetchAPI(`api/users/${profileData.currentProfile._id}/mangas`)
+			.then(setMangas)
+			.catch(res => {
+				console.error(res);
+				window.alert(`Error ${res.status}: ${res.statusText}`);
+			});
 	};
 
 	useEffect(() => {
@@ -57,7 +63,7 @@ export default function Library() {
 	}, [history, profileData]);
 
 	useEffect(() => {
-		if (mangas.length > 0) fetchUpdates(true);
+		if (mangas && mangas.length > 0) fetchUpdates(true);
 	}, [mangas]);
 
 	if (!profileData.currentProfile) return null;
@@ -129,19 +135,19 @@ export default function Library() {
 
 					<h2 className={styles.title}>Choose a manga</h2>
 					<button
-						className='button'
+						className={styles.reloadButton + ' button'}
 						disabled={isFetchingUpdates}
 						onClick={() => fetchUpdates(false)}
 					>
-						<img
-							src={window.location.origin + '/icons/refresh_white_24dp.svg'}
-							alt='Refresh'
-						/>
+						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+							<path d='M0 0h24v24H0V0z' fill='none' />
+							<path d='M17.65 6.35c-1.63-1.63-3.94-2.57-6.48-2.31-3.67.37-6.69 3.35-7.1 7.02C3.52 15.91 7.27 20 12 20c3.19 0 5.93-1.87 7.21-4.56.32-.67-.16-1.44-.9-1.44-.37 0-.72.2-.88.53-1.13 2.43-3.84 3.97-6.8 3.31-2.22-.49-4.01-2.3-4.48-4.52C5.31 9.44 8.26 6 12 6c1.66 0 3.14.69 4.22 1.78l-1.51 1.51c-.63.63-.19 1.71.7 1.71H19c.55 0 1-.45 1-1V6.41c0-.89-1.08-1.34-1.71-.71l-.64.65z' />
+						</svg>
 					</button>
 				</header>
 
-				<section>
-					{mangas.length > 0 &&
+				<section className={styles.section1}>
+					{mangas &&
 						mangas.map(
 							manga =>
 								!manga.finished && (
@@ -155,23 +161,26 @@ export default function Library() {
 						)}
 				</section>
 
-				<section className={styles.section2}>
+				<section className={styles.section2} data-show={showFinishedMangas}>
 					<button
 						onClick={() => setShowFinishedMangas(!showFinishedMangas)}
 						className={styles.toggleFinshedMangasButton}
 					>
 						<span>Completed</span>
-						<img
-							src='/icons/expand_more_white_24dp.svg'
-							alt='v'
-							width={30}
+						<svg
+							xmlns='http://www.w3.org/2000/svg'
+							viewBox='0 0 24 24'
+							width='30px'
 							style={{
 								transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
 							}}
-						/>
+						>
+							<path d='M24 24H0V0h24v24z' fill='none' opacity='.87' />
+							<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
+						</svg>
 					</button>
 
-					{mangas.length > 0 && showFinishedMangas && (
+					{mangas && (
 						<div>
 							{mangas.map(
 								manga =>
@@ -201,25 +210,8 @@ export default function Library() {
 				setVisibility={setShowOverlay}
 				title='Search for a new manga'
 			>
-				<NewMangaPopup />
+				<NewMangaPopup setVisibility={setShowOverlay} />
 			</PopupOverlay>
 		</>
-	);
-}
-
-function NewMangaPopup() {
-	return (
-		<div>
-			<form>
-				<input
-					type='text'
-					placeholder='Search for a manga...'
-					// value={inputText}
-					// onChange={e => setInputText(e.target.value)}
-					autoCapitalize='off'
-					autoCorrect='off'
-				/>
-			</form>
-		</div>
 	);
 }

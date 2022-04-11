@@ -78,8 +78,15 @@ iframe {
 	cursor: pointer;
 }
 
-.button img {
+.button img,
+.button svg {
 	padding: 5px 8px;
+}
+
+.button svg {
+	fill: #fff;
+	/* width: 40px; */
+	height: 100%;
 }
 
 .button span {
@@ -97,4 +104,12 @@ iframe {
 
 .button.icon-right img {
 	padding-left: 0px;
+}
+
+svg {
+	fill: #fff;
+}
+
+.hidden {
+	visibility: hidden;
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import fetchAPI from '../../functions/fetchAPI';
 
 import Loader from '../../components/Loader';
 import Title from '../../components/Title';
@@ -19,22 +20,25 @@ export default function Read({ match, location }) {
 	const [isFullWidth, setIsFullWidth] = useState(false);
 
 	const fetchChapters = () =>
-		fetch(
-			`${window.location.origin}/api/mangas/${match.params.mangaName}/${match.params.chapter}`
-		)
-			.then(res => res.json())
-			.catch(console.error);
+		fetchAPI(
+			`/api/mangas/${match.params.mangaName}/${match.params.chapter}`
+		).catch(res => {
+			console.error(res);
+			window.alert(`Error ${res.status}: ${res.statusText}`);
+		});
 
 	const updateProgress = isLast =>
-		fetch(window.location.origin + '/api/mangas/updateProgress', {
+		fetchAPI('/api/mangas/updateProgress', {
 			method: 'POST',
 			body: JSON.stringify({
 				urlName: match.params.mangaName,
 				chapter: match.params.chapter,
 				isLast,
 			}),
-			headers: { 'Content-Type': 'application/json' },
-		}).catch(console.error);
+		}).catch(res => {
+			console.error(res);
+			window.alert(`Error ${res.status}: ${res.statusText}`);
+		});
 
 	const storeFullWidthData = isFullWidth => {
 		const json = JSON.parse(localStorage.getItem('isFullWidth'));

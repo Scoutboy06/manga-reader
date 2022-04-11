@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext } from 'react';
+import fetchAPI from '../functions/fetchAPI';
 
 export const ProfileContext = createContext();
 
@@ -19,8 +20,7 @@ export default function Provider(props) {
 	};
 
 	useEffect(() => {
-		fetch('/api/users')
-			.then(res => res.json())
+		fetchAPI('/api/users')
 			.then(profiles => {
 				setProfiles(profiles);
 				setCurrentProfile(
@@ -30,7 +30,10 @@ export default function Provider(props) {
 				);
 				setIsLoading(false);
 			})
-			.catch(console.error);
+			.catch(res => {
+				console.error(res);
+				window.alert(`Error ${res.status}: ${res.statusText}`);
+			});
 	}, []);
 
 	return (

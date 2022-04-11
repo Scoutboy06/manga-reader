@@ -23,7 +23,7 @@
 	top: 5px;
 	width: 30px;
 	height: 30px;
-	border-radius: 0.2rem;
+	border-radius: 0.2em;
 	background: var(--bg-01dp);
 	display: flex;
 	align-items: center;
@@ -102,9 +102,8 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-}
-
-.item footer span {
+	overflow: hidden;
+	text-overflow: ellipsis;
 	white-space: nowrap;
 	font-size: 14px;
 	color: #b5b5b5;

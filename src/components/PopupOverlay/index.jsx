@@ -11,24 +11,23 @@ export default function PopupOverlay({
 	const [isVisible, setIsVisible] = useState(isShown);
 	// const [showContent, setShowContent] = useState(isShown);
 
-	const hide = e => {
-		if (e?.key && e.key !== 'Escape') return;
-		setVisibility(false);
+	const keydownHandler = e => {
+		if (e.key === 'Escape') setVisibility(false);
 	};
 
 	useEffect(() => {
 		if (isShown) {
 			setIsVisible(true);
 			document.body.style.overflow = 'hidden';
-			window.addEventListener('keydown', hide);
+			window.addEventListener('keydown', keydownHandler);
 		} else {
 			setIsVisible(false);
 			document.body.style.overflow = '';
-			window.removeEventListener('keydown', hide);
+			window.removeEventListener('keydown', keydownHandler);
 		}
 
 		return () => {
-			window.removeEventListener('keydown', hide);
+			window.removeEventListener('keydown', keydownHandler);
 		};
 	}, [isShown]);
 
@@ -38,13 +37,16 @@ export default function PopupOverlay({
 				className={styles.blackContainer}
 				data-show={isVisible}
 				onClick={e => {
-					if (e.nativeEvent.path.length === 6) hide();
+					if (e.nativeEvent.path.length === 6) setVisibility(false);
 				}}
 			>
 				<div className={styles.container}>
 					<div className={styles.header}>
 						<h5>{title}</h5>
-						<button className={styles.closeBtn} onClick={hide}>
+						<button
+							className={styles.closeBtn}
+							onClick={() => setVisibility(false)}
+						>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								viewBox='0 0 24 24'

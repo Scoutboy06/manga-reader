@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Loader from '../Loader';
 import ContextMenu from '../Dropdown';
+import fetchAPI from '../../functions/fetchAPI';
 
 import styles from './MangaCard.module.css';
 
@@ -36,17 +37,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				<ContextMenu
 					items={[
 						{
-							action: () => alert('Coming soon'),
-							icon: (
-								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-									<path d='M0 0h24v24H0V0z' fill='none' />
-									<path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z' />
-								</svg>
-							),
-							content: 'Info',
-						},
-						{
-							action: () => alert('Coming soon'),
+							action: () => {},
 							icon: (
 								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 									<path d='M0 0h24v24H0V0z' fill='none' />
@@ -54,19 +45,49 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 								</svg>
 							),
 							content: 'Edit metadata',
+							disabled: true,
 						},
 						{
-							action: () => alert('Coming soon'),
+							action: () => {},
 							icon: (
 								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 									<path d='M0 0h24v24H0V0z' fill='none' />
-									<path d='M17.65 6.35c-1.63-1.63-3.94-2.57-6.48-2.31-3.67.37-6.69 3.35-7.1 7.02C3.52 15.91 7.27 20 12 20c3.19 0 5.93-1.87 7.21-4.56.32-.67-.16-1.44-.9-1.44-.37 0-.72.2-.88.53-1.13 2.43-3.84 3.97-6.8 3.31-2.22-.49-4.01-2.3-4.48-4.52C5.31 9.44 8.26 6 12 6c1.66 0 3.14.69 4.22 1.78l-1.51 1.51c-.63.63-.19 1.71.7 1.71H19c.55 0 1-.45 1-1V6.41c0-.89-1.08-1.34-1.71-.71l-.64.65z' />
+									<path d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02z' />
 								</svg>
 							),
-							content: 'Refresh',
+							content: 'Edit images',
+							disabled: true,
 						},
+						'divider',
 						{
-							action: () => alert('Coming soon'),
+							action: () => {},
+							icon: (
+								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+									<path d='M0 0h24v24H0V0z' fill='none' />
+									<path d='M9 16.2l-3.5-3.5c-.39-.39-1.01-.39-1.4 0-.39.39-.39 1.01 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7c.39-.39.39-1.01 0-1.4-.39-.39-1.01-.39-1.4 0L9 16.2z' />
+								</svg>
+							),
+							content: 'Set to completed',
+							disabled: true,
+						},
+						'divider',
+						{
+							action: () => {
+								if (
+									window.confirm(
+										'Are you sure you want to delete this manga? The action cannot be undone.'
+									)
+								) {
+									fetchAPI('/api/mangas/' + manga._id, {
+										method: 'DELETE',
+									})
+										.then(() => window.location.reload())
+										.catch(res => {
+											console.error(res);
+											window.alert(`Error ${res.status}: ${res.statusText}`);
+										});
+								}
+							},
 							icon: (
 								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 									<path d='M0 0h24v24H0V0z' fill='none' />
@@ -93,9 +114,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				<img src={manga.coverUrl} alt='Img' />
 			</div>
 
-			<footer>
-				<span>{manga.name}</span>
-			</footer>
+			<footer>{manga.name}</footer>
 		</Link>
 	);
 }

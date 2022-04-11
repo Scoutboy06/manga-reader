@@ -18,6 +18,10 @@
 	margin-bottom: 5px;
 }
 
+.reloadButton {
+	height: 34px;
+}
+
 .profileDropdown {
 	position: relative;
 	width: 50px;
@@ -42,26 +46,30 @@
 	transition: transform 0.15s;
 }
 
-.main > section,
-.main > section:nth-child(3) > div {
+.section1,
+.section2 > div {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
 }
 
-.main > section:nth-child(3) {
-	border-radius: 0.3rem;
-	overflow: hidden;
+.section2 {
+	border-radius: 0.3em;
 	margin-top: 20px;
 	padding: 0;
 	display: block;
 	width: 100%;
-	height: auto;
+	height: max-content;
 	background: var(--bg-00dp);
 	border: 1px solid var(--bg-01dp);
 }
 
-.main > section:nth-child(3) > div {
+.section2 > div {
 	border-top: 1px solid var(--bg-01dp);
+	display: none;
+}
+
+.section2[data-show='true'] > div {
+	display: grid;
 }
 
 .toggleFinshedMangasButton {
@@ -75,7 +83,7 @@
 	background: var(--bg-00dp);
 	border: 0;
 	outline: none;
-	/* align-content: center; */
+	border-radius: 0.1em;
 
 	color: #fff;
 	font-size: 1.5rem;
@@ -83,6 +91,11 @@
 
 	transition: background 0.3s;
 	cursor: pointer;
+}
+
+.section2[data-show='true'] .toggleFinshedMangasButton {
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 .toggleFinshedMangasButton:hover {
@@ -93,13 +106,7 @@
 	background: var(--bg-02dp);
 }
 
-.toggleFinshedMangasButton span {
-	display: inline-block;
-	/* width: 95px; */
-}
-
-.toggleFinshedMangasButton img {
-	display: inline-block;
+.toggleFinshedMangasButton svg {
 	transition: transform 0.1s;
 }
 
