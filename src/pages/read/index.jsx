@@ -104,6 +104,11 @@ export default function Read({ match, location }) {
 		else setIsFullWidth(false);
 	}, [match.params.mangaName]);
 
+	if (!profileData.isLoading && !profileData.currentProfile) {
+		history.push('/');
+		return null;
+	}
+
 	return (
 		<main className={styles.main} data-isfullwidth={isFullWidth}>
 			<Title>{match.params.chapter + ' - ' + match.params.mangaName}</Title>
