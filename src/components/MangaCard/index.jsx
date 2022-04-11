@@ -11,7 +11,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 
 	return (
 		<Link
-			to={`/read/${manga.urlName}/${manga.chapter}`}
+			to={`/read/${manga.urlName}`} // /${manga.chapter}
 			className={styles.item}
 			onContextMenu={e => {
 				e.preventDefault();

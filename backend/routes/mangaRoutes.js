@@ -10,9 +10,10 @@ import { updateProgress } from '../controllers/updatesController.js';
 
 const router = express.Router();
 
-router.route('/').post(createManga);
-router.route('/:_id').get(getMangaByUrlName).delete(deleteManga);
+router.post('/', createManga);
 router.post('/updateProgress', updateProgress);
+router.delete('/:_id', deleteManga);
+router.get('/:urlName', getMangaByUrlName);
 router.get('/:urlName/:chapter', getImageUrls);
 
 export default router;

@@ -15,6 +15,7 @@ export default function App() {
 			<Switch>
 				<Route exact path='/' component={Profiles} />
 				<Route exact path='/library' component={Index} />
+				<Route exact path='/read/:mangaName/' component={Read} />
 				<Route exact path='/read/:mangaName/:chapter' component={Read} />
 				<Redirect to="/" />
 			</Switch>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
 
 import Loader from '../../components/Loader';
@@ -8,14 +9,17 @@ import Title from '../../components/Title';
 import styles from './read.module.css';
 
 export default function Read({ match, location }) {
+	const history = useHistory();
+
 	const [chapters, setChapters] = useState({
 		prev: null,
 		curr: match.params.chapter,
 		next: null,
 	});
-	const [images, setImages] = useState([]);
+	const [images, setImages] = useState();
 	const [originalUrl, setOriginalUrl] = useState();
 	const [isLoading, setIsLoading] = useState(false);
+	const [mangaMeta, setMangaMeta] = useState();
 
 	const [isFullWidth, setIsFullWidth] = useState(false);
 
@@ -29,7 +33,7 @@ export default function Read({ match, location }) {
 
 	const updateProgress = isLast =>
 		fetchAPI('/api/mangas/updateProgress', {
-			method: 'POST',
+			method: 'POSTa',
 			body: JSON.stringify({
 				urlName: match.params.mangaName,
 				chapter: match.params.chapter,
@@ -37,8 +41,10 @@ export default function Read({ match, location }) {
 			}),
 		}).catch(res => {
 			console.error(res);
-			// window.alert(`Error ${res.status}: ${res.statusText}`);
+			window.alert(`Error ${res.status}: ${res.statusText}`);
 		});
+
+	const getMangaInfo = () => fetchAPI('/api/mangas/' + match.params.mangaName);
 
 	const storeFullWidthData = isFullWidth => {
 		const json = JSON.parse(localStorage.getItem('isFullWidth'));
@@ -49,6 +55,13 @@ export default function Read({ match, location }) {
 	useEffect(() => {
 		(async function () {
 			setIsLoading(true);
+
+			if (!match.params.chapter) {
+				const meta = await getMangaInfo();
+				setMangaMeta(meta);
+				history.push(`/read/${match.params.mangaName}/${meta.chapter}`);
+				return;
+			}
 
 			const chaps = await fetchChapters();
 			console.log(chaps);
