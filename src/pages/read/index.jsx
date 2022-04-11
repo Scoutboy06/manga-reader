@@ -24,24 +24,16 @@ export default function Read({ match, location }) {
 	const [isFullWidth, setIsFullWidth] = useState(false);
 
 	const fetchChapters = () =>
-		fetchAPI(
-			`/api/mangas/${match.params.mangaName}/${match.params.chapter}`
-		).catch(res => {
-			console.error(res);
-			window.alert(`Error ${res.status}: ${res.statusText}`);
-		});
+		fetchAPI(`/api/mangas/${match.params.mangaName}/${match.params.chapter}`);
 
 	const updateProgress = isLast =>
 		fetchAPI('/api/mangas/updateProgress', {
-			method: 'POSTa',
+			method: 'POST',
 			body: JSON.stringify({
 				urlName: match.params.mangaName,
 				chapter: match.params.chapter,
 				isLast,
 			}),
-		}).catch(res => {
-			console.error(res);
-			window.alert(`Error ${res.status}: ${res.statusText}`);
 		});
 
 	const getMangaInfo = () => fetchAPI('/api/mangas/' + match.params.mangaName);
@@ -56,7 +48,7 @@ export default function Read({ match, location }) {
 		(async function () {
 			setIsLoading(true);
 
-			if (!match.params.chapter) {
+			if (!mangaMeta) {
 				const meta = await getMangaInfo();
 				setMangaMeta(meta);
 				history.push(`/read/${match.params.mangaName}/${meta.chapter}`);

@@ -12,8 +12,12 @@ export default function fetchAPI(url, options) {
 		}
 	}
 
-	return fetch(url, fetchOptions).then(res => {
-		if (!res.ok) throw new Error(res);
-		return res.json();
-	});
+	return fetch(url, fetchOptions)
+		.then(res => {
+			if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+			return res.json();
+		}).catch(err => {
+			console.error(err);
+			window.alert(err);
+		});
 }

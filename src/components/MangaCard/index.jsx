@@ -80,12 +80,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 								) {
 									fetchAPI('/api/mangas/' + manga._id, {
 										method: 'DELETE',
-									})
-										.then(() => window.location.reload())
-										.catch(res => {
-											console.error(res);
-											window.alert(`Error ${res.status}: ${res.statusText}`);
-										});
+									}).then(() => window.location.reload());
 								}
 							},
 							icon: (

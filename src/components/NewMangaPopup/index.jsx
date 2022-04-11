@@ -32,15 +32,10 @@ export default function NewMangaPopup({ setVisibility }) {
 		setPayload();
 		setIsLoading(true);
 
-		fetchAPI('/api/search?mangaName=' + inputText)
-			.then(json => {
-				setIsLoading(false);
-				setPayload(json);
-			})
-			.catch(res => {
-				console.error(res);
-				window.alert(`Error ${res.status}: ${res.statusText}`);
-			});
+		fetchAPI('/api/search?mangaName=' + inputText).then(json => {
+			setIsLoading(false);
+			setPayload(json);
+		});
 	};
 
 	const handleSelectEl = (e, hostIndex, mangaIndex) => {
@@ -69,12 +64,7 @@ export default function NewMangaPopup({ setVisibility }) {
 				subscribed: isSubscribed,
 				userId: profileData.currentProfile._id,
 			}),
-		})
-			.then(() => window.location.reload())
-			.catch(res => {
-				console.error(res);
-				window.alert(`Error ${res.status}: ${res.statusText}`);
-			});
+		}).then(() => window.location.reload());
 	};
 
 	return (

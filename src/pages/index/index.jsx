@@ -36,24 +36,16 @@ export default function Library() {
 						.filter(manga => manga.subscribed)
 						.map(manga => manga._id),
 				})
-		)
-			.then(json => {
-				setIsFetchingUpdates(false);
-				setUpdates(json);
-			})
-			.catch(res => {
-				console.error(res);
-				window.alert(`Error ${res.status}: ${res.statusText}`);
-			});
+		).then(json => {
+			setIsFetchingUpdates(false);
+			setUpdates(json);
+		});
 	};
 
 	const fetchData = async () => {
-		fetchAPI(`api/users/${profileData.currentProfile._id}/mangas`)
-			.then(setMangas)
-			.catch(res => {
-				console.error(res);
-				window.alert(`Error ${res.status}: ${res.statusText}`);
-			});
+		fetchAPI(`api/users/${profileData.currentProfile._id}/mangas`).then(
+			setMangas
+		);
 	};
 
 	useEffect(() => {

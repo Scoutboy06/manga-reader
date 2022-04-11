@@ -20,20 +20,15 @@ export default function Provider(props) {
 	};
 
 	useEffect(() => {
-		fetchAPI('/api/users')
-			.then(profiles => {
-				setProfiles(profiles);
-				setCurrentProfile(
-					profiles.find(
-						profile => profile._id === sessionStorage.getItem('currentProfile')
-					) || null
-				);
-				setIsLoading(false);
-			})
-			.catch(res => {
-				console.error(res);
-				window.alert(`Error ${res.status}: ${res.statusText}`);
-			});
+		fetchAPI('/api/users').then(profiles => {
+			setProfiles(profiles);
+			setCurrentProfile(
+				profiles.find(
+					profile => profile._id === sessionStorage.getItem('currentProfile')
+				) || null
+			);
+			setIsLoading(false);
+		});
 	}, []);
 
 	return (
