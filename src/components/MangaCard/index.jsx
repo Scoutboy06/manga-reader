@@ -29,28 +29,30 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 	};
 
 	return (
-		<>
-			<div
-				className={styles.card}
-				onClick={() => history.push('/read/' + manga.urlName)}
-				onContextMenu={e => {
-					e.preventDefault();
-					optionsBtn.current.click();
-					optionsBtn.current.focus();
-				}}
-			>
-				<div className={styles.cardBox}>
-					<div className={styles.cardContent}>
-						<div className={styles.cardPadder}></div>
+		<div
+			className={styles.card}
+			onClick={() => history.push('/read/' + manga.urlName)}
+			onContextMenu={e => {
+				e.preventDefault();
+				optionsBtn.current.click();
+				optionsBtn.current.focus();
+			}}
+		>
+			<div className={styles.cardBox}>
+				<div className={styles.cardContent}>
+					<div className={styles.cardPadder}></div>
 
+					<div
+						className={styles.imageContainer}
+						style={{ backgroundImage: `url(${manga.coverUrl})` }}
+					></div>
+
+					<div className={styles.cardOverlay}>
 						<div
-							className={styles.imageContainer}
-							style={{ backgroundImage: `url(${manga.coverUrl})` }}
-						></div>
-
-						<div className={styles.cardOverlay}>
+							className={styles.actionButtons}
+							onClick={e => e.stopPropagation()}
+						>
 							<button
-								className={styles.optionsButton}
 								ref={optionsBtn}
 								onClick={updateOptionsPos}
 								onBlur={() => setShowTooltip(false)}
@@ -60,23 +62,45 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 									<path d='M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z' />
 								</svg>
 							</button>
+
+							<button
+								onClick={() => {
+									if (
+										window.confirm(
+											'Are you sure you want to perform this action?'
+										)
+									) {
+										fetchAPI(`/api/mangas/${manga._id}/finished`, {
+											method: 'PUT',
+											body: JSON.stringify({ isFinished: !manga.finished }),
+										}).then(() => window.location.reload());
+									}
+								}}
+								data-finished={manga.finished}
+							>
+								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+									<path d='M0 0h24v24H0V0z' fill='none' />
+									<path d='M9 16.2l-3.5-3.5c-.39-.39-1.01-.39-1.4 0-.39.39-.39 1.01 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7c.39-.39.39-1.01 0-1.4-.39-.39-1.01-.39-1.4 0L9 16.2z' />
+								</svg>
+							</button>
 						</div>
-
-						{!isFetchingUpdates && updates[manga._id] && (
-							<div className={styles.updates}></div>
-						)}
-
-						{manga.subscribed && isFetchingUpdates && (
-							<div className={styles.loader}>
-								<Loader size={30} />
-							</div>
-						)}
 					</div>
-					<div className={styles.details}>
-						<p className={styles.mangaName}>{manga.name}</p>
-					</div>
+
+					{!isFetchingUpdates && updates[manga._id] && (
+						<div className={styles.updates}></div>
+					)}
+
+					{manga.subscribed && isFetchingUpdates && (
+						<div className={styles.loader}>
+							<Loader size={30} />
+						</div>
+					)}
+				</div>
+				<div className={styles.details}>
+					<p className={styles.mangaName}>{manga.name}</p>
 				</div>
 			</div>
+
 			<ContextMenu
 				items={[
 					{
@@ -99,18 +123,6 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 							</svg>
 						),
 						content: 'Edit images',
-						disabled: true,
-					},
-					'divider',
-					{
-						action: () => {},
-						icon: (
-							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-								<path d='M0 0h24v24H0V0z' fill='none' />
-								<path d='M9 16.2l-3.5-3.5c-.39-.39-1.01-.39-1.4 0-.39.39-.39 1.01 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7c.39-.39.39-1.01 0-1.4-.39-.39-1.01-.39-1.4 0L9 16.2z' />
-							</svg>
-						),
-						content: 'Set to completed',
 						disabled: true,
 					},
 					'divider',
@@ -138,6 +150,6 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				cursorPos={optionsPos}
 				isShown={showTooltip}
 			/>
-		</>
+		</div>
 	);
 }

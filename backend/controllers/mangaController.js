@@ -57,6 +57,22 @@ export const deleteManga = asyncHandler(async (req, res) => {
 	res.json({ message: 'Manga removed from library' });
 });
 
+// @desc	Update if the manga is finished (reading) or not
+// @route PUT /api/mangas/:_id/finished
+export const updateFinished = asyncHandler(async (req, res) => {
+	const { isFinished } = req.body;
+	if (isFinished === undefined) throw new Error(400);
+
+	const manga = await Manga.findById(req.params._id);
+	if (!manga) throw new Error(404);
+
+	manga.finished = isFinished;
+	if (!isFinished) manga.subscribed = false;
+	await manga.save();
+
+	res.status(200).json({ _id: manga._id, isFinished });
+});
+
 // @desc	Get info about a manga
 // @route	GET /api/mangas/:urlName?userId=...
 export const getMangaByUrlName = asyncHandler(async (req, res) => {

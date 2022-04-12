@@ -52,10 +52,12 @@ export default function Library() {
 		if (profileData.isLoading) return;
 		else if (!profileData.currentProfile?._id) history.push('/');
 		else fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [history, profileData]);
 
 	useEffect(() => {
 		if (mangas && mangas.length > 0) fetchUpdates(true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mangas]);
 
 	if (!profileData.currentProfile) return null;

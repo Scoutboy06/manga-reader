@@ -55,6 +55,49 @@
 	user-select: none;
 }
 
+.actionButtons {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	/* height: 2.5em; */
+	/* width: max-content; */
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+.actionButtons button {
+	box-sizing: content-box;
+	height: 1.5em;
+	width: 1.5em;
+	border-radius: 50%;
+	background-color: transparent;
+	display: grid;
+	place-items: center;
+	padding: 0.5em;
+	transition: background-color 0.2s, opacity 0.2s;
+	border: 0;
+	outline: none;
+	cursor: pointer;
+	font-size: 1em;
+}
+
+.actionButtons button:hover {
+	background-color: rgba(0, 164, 220, 0.2);
+}
+
+.actionButtons button:nth-child(1) svg {
+	fill: #fff;
+	transition: fill 0.2s;
+}
+
+.actionButtons button:hover svg {
+	fill: #00a4dc;
+}
+
+.actionButtons button[data-finished='true'] svg {
+	fill: #c33;
+}
+
 .details {
 	text-align: center;
 	width: 100%;
@@ -73,38 +116,6 @@
 
 .details p:hover {
 	text-decoration: underline;
-}
-
-.optionsButton {
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	border-radius: 50%;
-	width: 1.5em;
-	height: 1.5em;
-	background-color: transparent;
-	display: grid;
-	place-items: center;
-	padding: 0.5em;
-	transition: background-color 0.2s, opacity 0.2s;
-	box-sizing: content-box;
-	border: 0;
-	outline: none;
-	cursor: pointer;
-	font-size: 1em;
-}
-
-.optionsButton:hover {
-	background: rgba(0, 164, 220, 0.2);
-}
-
-.optionsButton svg {
-	fill: #fff;
-	transition: fill 0.2s;
-}
-
-.optionsButton:hover svg {
-	fill: #00a4dc;
 }
 
 .updates {
