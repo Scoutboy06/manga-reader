@@ -46,10 +46,14 @@
 	transition: transform 0.15s;
 }
 
+.section1 {
+	margin-top: 30px;
+}
+
 .section1,
 .section2 > div {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .section2 {
@@ -69,7 +73,7 @@
 }
 
 .section2[data-show='true'] > div {
-	display: grid;
+	display: flex;
 }
 
 .toggleFinshedMangasButton {

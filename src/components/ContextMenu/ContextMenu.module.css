@@ -1,12 +1,18 @@
 .tooltip {
-	position: absolute;
+	position: fixed;
 	background: var(--bg-03dp);
 	width: max-content;
-	top: 30px;
-	left: 20px;
 	z-index: 999;
 	cursor: auto;
 	padding: 5px 0;
+	max-height: calc(100vh - 2em);
+	overflow-y: auto;
+	/* transition: transform 0.1s linear; */
+	transform: scale(0);
+}
+
+.tooltip[data-isshown='true'] {
+	transform: scale(1);
 }
 
 .item {
@@ -55,6 +61,8 @@
 
 .icon svg,
 .icon img {
+	width: 24px;
+	height: 24px;
 	margin-right: 10px;
 }
 

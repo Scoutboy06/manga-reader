@@ -1,76 +1,118 @@
-.item {
-	/* width: 159px; */
-	/* height: 209px; */
-	aspect-ratio: 1 / 1.45;
-	margin: 10px 5px;
+.card {
+	width: calc(100% / 3);
 	color: #fff;
 	display: inline-flex;
 	flex-direction: column;
 	cursor: pointer;
 	box-sizing: border-box;
 	position: relative;
+	background: transparent;
+	border: 0;
+	outline: none;
 }
 
-.item svg {
-	fill: #fff;
-	width: 24px;
-	height: 24px;
+.cardBox {
+	/* margin: 0.6em 1.2em 1.8em 0; */
+	margin: 0.6em 0.6em 1.8em 0.6em;
+	position: relative;
+	height: 100%;
+}
+
+.cardContent {
+	position: relative;
+}
+
+.cardPadder {
+	padding-bottom: 150%;
+	box-shadow: 0 0.0725em 0.29em 0 rgb(0 0 0 / 37%);
+}
+
+.imageContainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	overflow: hidden;
+	background-position: 50%;
+	background-size: cover;
+}
+
+.cardOverlay {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	opacity: 0;
+	user-select: none;
+	transition: opacity 0.2s;
+}
+
+.card:hover .cardOverlay {
+	opacity: 1;
+	user-select: none;
+}
+
+.details {
+	text-align: center;
+	width: 100%;
+	padding: 0.06em 0.5em;
+	padding-top: 0.25em;
+}
+
+.details p {
+	color: #ddd;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 1em;
+}
+
+.details p:hover {
+	text-decoration: underline;
 }
 
 .optionsButton {
 	position: absolute;
-	left: 5px;
-	top: 5px;
-	width: 30px;
-	height: 30px;
-	border-radius: 0.2em;
-	background: var(--bg-01dp);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	opacity: 0;
-	transition: opacity 0.3s;
-}
-
-.item:hover .optionsButton,
-.item:focus-within .optionsButton {
-	opacity: 1;
-}
-
-.optionsButton > div:not(.optionsTooltip) {
-	width: 3px;
-	height: 3px;
+	right: 0;
+	bottom: 0;
 	border-radius: 50%;
-	background: #fff;
-	margin: 0 2px;
+	width: 1.5em;
+	height: 1.5em;
+	background-color: transparent;
+	display: grid;
+	place-items: center;
+	padding: 0.5em;
+	transition: background-color 0.2s, opacity 0.2s;
+	box-sizing: content-box;
+	border: 0;
+	outline: none;
+	cursor: pointer;
+	font-size: 1em;
 }
 
-.optionsTooltip {
-	position: absolute;
-	top: 40px;
-	left: 5px;
-	display: flex;
-	flex-direction: column;
-	width: 200px;
-	background: var(--bg-02dp);
-	visibility: hidden;
-	opacity: 0;
-	transition: opacity 0.3s;
-	font-size: 0.9em;
+.optionsButton:hover {
+	background: rgba(0, 164, 220, 0.2);
 }
 
-.optionsButton:focus-within ~ .optionsTooltip,
-.optionsTooltip:focus-within {
-	opacity: 1;
-	visibility: visible;
+.optionsButton svg {
+	fill: #fff;
+	transition: fill 0.2s;
+}
+
+.optionsButton:hover svg {
+	fill: #00a4dc;
 }
 
 .updates {
 	position: absolute;
-	top: -5px;
-	right: -5px;
-	width: 20px;
-	height: 20px;
+	top: -0.3em;
+	right: -0.3em;
+	width: 1.2em;
+	height: 1.2em;
 	background: rgb(219, 8, 8);
 	border-radius: 50%;
 }
@@ -83,33 +125,44 @@
 	height: 30px;
 }
 
-.img {
-	width: 100%;
-	height: 100%;
-	text-align: center;
-	overflow: hidden;
+@media (min-width: 43.75em) {
+	.card {
+		width: calc(100% / 4);
+	}
 }
 
-.img img {
-	height: 100%;
+@media (min-width: 50em) {
+	.card {
+		width: calc(100% / 5);
+	}
 }
 
-.item footer {
-	background: rgba(0, 0, 0, 0.6);
-	padding: 3px 5px;
-	overflow: hidden;
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-size: 14px;
-	color: #b5b5b5;
+@media (min-width: 75em) {
+	.card {
+		width: calc(100% / 6);
+	}
 }
 
-.item > div > p {
-	margin: 0;
-	margin-bottom: 15px;
+@media (min-width: 87.5em) {
+	.card {
+		width: calc(100% / 7);
+	}
+}
+
+@media (min-width: 100em) {
+	.card {
+		width: calc(100% / 8);
+	}
+}
+
+@media (min-width: 120em) {
+	.card {
+		width: calc(100% / 9);
+	}
+}
+
+@media (min-width: 131.5em) {
+	.card {
+		width: calc(100% / 10);
+	}
 }

@@ -6,7 +6,7 @@ import MangaCard from '../../components/MangaCard';
 import NewMangaPopup from '../../components/NewMangaPopup';
 import PopupOverlay from '../../components/PopupOverlay';
 import Title from '../../components/Title';
-import ContextMenu from '../../components/Dropdown';
+import ContextMenu from '../../components/ContextMenu';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 
@@ -122,6 +122,7 @@ export default function Library() {
 										action: () => profileActions.deselectProfile(),
 									},
 								]}
+								pos={{ x: 20, y: 60 }}
 							/>
 						)}
 					</button>
