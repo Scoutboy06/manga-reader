@@ -24,7 +24,8 @@
 	font-size: 16px;
 }
 
-.item[disabled] {
+.item[disabled],
+.item[disabled] * {
 	cursor: not-allowed;
 }
 

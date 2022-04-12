@@ -106,6 +106,7 @@ export default function Library() {
 												Profile
 											</Link>
 										),
+										disabled: true,
 									},
 									{
 										icon: (
