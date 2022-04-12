@@ -12,7 +12,8 @@
 }
 
 .dropdown {
-	position: absoulte;
+	position: absolute;
+	display: block;
 }
 
 .tooltip[data-isshown='true'] {

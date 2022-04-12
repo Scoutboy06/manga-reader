@@ -6,7 +6,7 @@ import MangaCard from '../../components/MangaCard';
 import NewMangaPopup from '../../components/NewMangaPopup';
 import PopupOverlay from '../../components/PopupOverlay';
 import Title from '../../components/Title';
-import ContextMenu from '../../components/ContextMenu';
+import Dropdown from '../../components/Dropdown';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 
@@ -68,7 +68,7 @@ export default function Library() {
 				<header className={styles.header}>
 					<button
 						className={styles.profileDropdown}
-						onClick={() => setShowProfileDropdown(true)}
+						onClick={() => setShowProfileDropdown(bool => !bool)}
 						onBlur={() => setShowProfileDropdown(false)}
 					>
 						<img src={profileData.currentProfile.imageUrl} alt='Profile' />
@@ -80,10 +80,9 @@ export default function Library() {
 							<path d='M24 24H0V0h24v24z' fill='none' opacity='.87' />
 							<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
 						</svg>
-
 						{/* {true && ( */}
 						{showProfileDropdown && (
-							<ContextMenu
+							<Dropdown
 								items={[
 									...profileData.profiles.map(profile => ({
 										icon: <img src={profile.imageUrl} alt='Profile' />,
@@ -122,7 +121,7 @@ export default function Library() {
 										action: () => profileActions.deselectProfile(),
 									},
 								]}
-								pos={{ x: 20, y: 60 }}
+								pos={{ x: 5, y: 35 }}
 							/>
 						)}
 					</button>

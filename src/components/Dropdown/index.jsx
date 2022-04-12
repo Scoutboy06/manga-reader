@@ -1,12 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-
 import styles from '../ContextMenu/ContextMenu.module.css';
 
 export default function ContextMenu({ items, isShown, pos }) {
 	return (
 		<div
 			className={styles.dropdown}
-			data-isshown={isShown}
 			style={{
 				left: pos.x,
 				top: pos.y,
