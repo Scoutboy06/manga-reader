@@ -68,7 +68,7 @@ export default function Read({ match, location }) {
 			}
 
 			if (!match.params.chapter) {
-				history.push(`/read/${match.params.mangaName}/${meta.chapter}`);
+				history.replace(`/read/${match.params.mangaName}/${meta.chapter}`);
 				return;
 			}
 
