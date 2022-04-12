@@ -1,4 +1,5 @@
-.tooltip {
+.tooltip,
+.dropdown {
 	position: fixed;
 	background: var(--bg-03dp);
 	width: max-content;
@@ -7,12 +8,15 @@
 	padding: 5px 0;
 	max-height: calc(100vh - 2em);
 	overflow-y: auto;
-	/* transition: transform 0.1s linear; */
-	transform: scale(0);
+	display: none;
+}
+
+.dropdown {
+	position: absoulte;
 }
 
 .tooltip[data-isshown='true'] {
-	transform: scale(1);
+	display: block;
 }
 
 .item {
