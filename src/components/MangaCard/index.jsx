@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import Loader from '../Loader';
 import ContextMenu from '../ContextMenu';
@@ -33,6 +33,22 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 		});
 	};
 
+	const handleWindowClick = e => {
+		const path = e.path.reverse();
+
+		if (path[12] !== optionsBtn.current) {
+			setShowTooltip(false);
+		}
+	};
+
+	useEffect(() => {
+		window.addEventListener('mousedown', handleWindowClick);
+
+		return () => {
+			window.removeEventListener('mousedown', handleWindowClick);
+		};
+	}, []);
+
 	return (
 		<div
 			className={styles.card}
@@ -57,11 +73,8 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 							className={styles.actionButtons}
 							onClick={e => e.stopPropagation()}
 						>
-							<button
-								ref={optionsBtn}
-								onClick={updateOptionsPos}
-								onBlur={() => setShowTooltip(false)}
-							>
+							{/* <button ref={optionsBtn}> */}
+							<button ref={optionsBtn} onClick={updateOptionsPos}>
 								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 									<path d='M0 0h24v24H0V0z' fill='none' />
 									<path d='M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z' />
