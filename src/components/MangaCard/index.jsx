@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import Loader from '../Loader';
 import ContextMenu from '../ContextMenu';
 import fetchAPI from '../../functions/fetchAPI';
+import parseChapterName from '../../functions/parseChapterName';
 
 import styles from './MangaCard.module.css';
 
@@ -102,7 +103,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				</div>
 				<div className={styles.details}>
 					<p>{manga.name}</p>
-					<span>{manga.chapter}</span>
+					<span>{parseChapterName(manga.chapter)}</span>
 				</div>
 			</div>
 
