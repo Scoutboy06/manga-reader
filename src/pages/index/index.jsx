@@ -7,6 +7,7 @@ import NewMangaPopup from '../../components/NewMangaPopup';
 import PopupOverlay from '../../components/PopupOverlay';
 import Title from '../../components/Title';
 import Dropdown from '../../components/Dropdown';
+import BlurContainer from '../../components/BlurContainer';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 
@@ -68,9 +69,9 @@ export default function Library() {
 				<Title>Choose a manga</Title>
 
 				<header className={styles.header}>
-					<button
+					<BlurContainer
 						className={styles.profileDropdown}
-						onClick={() => setShowProfileDropdown(bool => !bool)}
+						onClick={() => setShowProfileDropdown(true)}
 						onBlur={() => setShowProfileDropdown(false)}
 					>
 						<img src={profileData.currentProfile.imageUrl} alt='Profile' />
@@ -119,7 +120,7 @@ export default function Library() {
 							pos={{ x: 0, y: 35 }}
 							isShown={showProfileDropdown}
 						/>
-					</button>
+					</BlurContainer>
 
 					<h2 className={styles.title}>Choose a manga</h2>
 					<button

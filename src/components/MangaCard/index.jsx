@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import Loader from '../Loader';
 import ContextMenu from '../ContextMenu';
+import BlurContainer from '../BlurContainer';
 import fetchAPI from '../../functions/fetchAPI';
 import parseChapterName from '../../functions/parseChapterName';
 
@@ -13,19 +14,16 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [optionsPos, setOptionsPos] = useState({ x: 0, y: 0, offset: 0 });
 	const optionsBtn = useRef();
+	const contextMenu = useRef();
 
 	const updateOptionsPos = e => {
 		e.preventDefault();
 		e.stopPropagation();
 
-		let shouldShow;
-		setShowTooltip(bool => {
-			shouldShow = !bool;
-			return !bool;
-		});
-		if (!shouldShow) return;
+		setShowTooltip(bool => !bool);
 
 		const { height, x, y } = optionsBtn.current.getBoundingClientRect();
+
 		setOptionsPos({
 			x: x + height / 2,
 			y: y + height / 2,
@@ -33,21 +31,18 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 		});
 	};
 
-	const handleWindowClick = e => {
+	const blurHandler = e => {
+		e.preventDefault();
+		e.stopPropagation();
+
 		const path = e.path.reverse();
 
-		if (path[12] !== optionsBtn.current) {
+		if (path[8] !== contextMenu.current) {
 			setShowTooltip(false);
+			return true;
 		}
+		return false;
 	};
-
-	useEffect(() => {
-		window.addEventListener('mousedown', handleWindowClick);
-
-		return () => {
-			window.removeEventListener('mousedown', handleWindowClick);
-		};
-	}, []);
 
 	return (
 		<div
@@ -73,13 +68,17 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 							className={styles.actionButtons}
 							onClick={e => e.stopPropagation()}
 						>
-							{/* <button ref={optionsBtn}> */}
-							<button ref={optionsBtn} onClick={updateOptionsPos}>
+							<BlurContainer
+								element={{ slug: 'button' }}
+								_ref={optionsBtn}
+								onClick={updateOptionsPos}
+								onBlur={blurHandler}
+							>
 								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 									<path d='M0 0h24v24H0V0z' fill='none' />
 									<path d='M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z' />
 								</svg>
-							</button>
+							</BlurContainer>
 
 							<button
 								onClick={() => {
@@ -169,6 +168,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				cursorPos={optionsPos}
 				isShown={showTooltip}
 				offset={optionsPos.offset}
+				_ref={contextMenu}
 			/>
 		</div>
 	);

@@ -2,14 +2,22 @@ import { useState, useEffect, useRef } from 'react';
 
 import styles from './ContextMenu.module.css';
 
-export default function ContextMenu({ items, cursorPos, offset, isShown }) {
+export default function ContextMenu({
+	items,
+	cursorPos,
+	offset,
+	isShown,
+	_ref,
+}) {
 	const [pos, setPos] = useState({ x: 0, y: 0 });
 	const parentEl = useRef();
 
 	useEffect(() => {
 		if (!cursorPos || !isShown) return;
 
-		const { width, height } = parentEl.current.getBoundingClientRect();
+		const { width, height } = (
+			_ref.current || parentEl.current
+		).getBoundingClientRect();
 		let x = cursorPos.x - offset;
 		let y = cursorPos.y + offset;
 
@@ -17,7 +25,7 @@ export default function ContextMenu({ items, cursorPos, offset, isShown }) {
 		if (y + height > window.innerHeight) y = cursorPos.y - offset - height;
 
 		setPos({ x, y });
-	}, [items, cursorPos, isShown, offset]);
+	}, [items, cursorPos, isShown, offset, _ref]);
 
 	return (
 		<div
@@ -27,8 +35,11 @@ export default function ContextMenu({ items, cursorPos, offset, isShown }) {
 				left: pos.x,
 				top: pos.y,
 			}}
-			onClick={e => e.preventDefault()}
-			ref={parentEl}
+			onClick={e => {
+				e.preventDefault();
+				e.stopPropagation();
+			}}
+			ref={_ref || parentEl}
 		>
 			{items.map((item, index) => {
 				if (item === null) return null;
