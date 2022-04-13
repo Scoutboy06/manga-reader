@@ -1,6 +1,5 @@
 .tooltip,
 .dropdown {
-	position: fixed;
 	background: var(--bg-03dp);
 	width: max-content;
 	z-index: 999;
@@ -8,16 +7,23 @@
 	padding: 5px 0;
 	max-height: calc(100vh - 2em);
 	overflow-y: auto;
-	display: none;
+	/* display: none; */
+	visibility: hidden;
+}
+
+.tooltip {
+	position: fixed;
+	/* position: absolute; */
 }
 
 .dropdown {
 	position: absolute;
-	display: block;
 }
 
-.tooltip[data-isshown='true'] {
-	display: block;
+.tooltip[data-isshown='true'],
+.dropdown[data-isshown='true'] {
+	/* display: block; */
+	visibility: visible;
 }
 
 .item {

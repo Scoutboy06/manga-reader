@@ -2,42 +2,30 @@ import { useState, useEffect, useRef } from 'react';
 
 import styles from './ContextMenu.module.css';
 
-export default function ContextMenu({
-	items,
-	cursorPos,
-	pos: fixedPos,
-	isShown,
-}) {
+export default function ContextMenu({ items, cursorPos, offset, isShown }) {
 	const [pos, setPos] = useState({ x: 0, y: 0 });
 	const parentEl = useRef();
 
 	useEffect(() => {
-		if (!cursorPos) return;
+		if (!cursorPos || !isShown) return;
 
 		const { width, height } = parentEl.current.getBoundingClientRect();
-		let x = cursorPos.x - window.scrollX + 2;
-		let y = cursorPos.y - window.scrollY + 2;
-		// console.log('------------------');
-		// console.log(x, y);
-		// console.log(width, height);
+		let x = cursorPos.x - offset;
+		let y = cursorPos.y + offset;
 
-		if (x < 0) x = 5;
-		else if (x + width > window.innerWidth) x = window.innerWidth - width - 5;
-
-		if (y < 0) y = 5;
-		else if (y + height > window.innerHeight)
-			y = window.innerHeight - height - 5;
+		if (x + width > window.innerWidth) x = cursorPos.x - width + offset;
+		if (y + height > window.innerHeight) y = cursorPos.y - offset - height;
 
 		setPos({ x, y });
-	}, [cursorPos]);
+	}, [cursorPos, isShown, offset]);
 
 	return (
 		<div
 			className={styles.tooltip}
 			data-isshown={isShown}
 			style={{
-				left: fixedPos?.x || pos.x,
-				top: fixedPos?.y || pos.y,
+				left: pos.x,
+				top: pos.y,
 			}}
 			onClick={e => e.preventDefault()}
 			ref={parentEl}

@@ -10,7 +10,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 	const history = useHistory();
 
 	const [showTooltip, setShowTooltip] = useState(false);
-	const [optionsPos, setOptionsPos] = useState({ x: 0, y: 0 });
+	const [optionsPos, setOptionsPos] = useState({ x: 0, y: 0, offset: 0 });
 	const optionsBtn = useRef();
 
 	const updateOptionsPos = e => {
@@ -25,7 +25,11 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 		if (!shouldShow) return;
 
 		const { height, x, y } = optionsBtn.current.getBoundingClientRect();
-		setOptionsPos({ x, y: y + height });
+		setOptionsPos({
+			x: x + height / 2,
+			y: y + height / 2,
+			offset: height / 2,
+		});
 	};
 
 	return (
@@ -97,7 +101,8 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 					)}
 				</div>
 				<div className={styles.details}>
-					<p className={styles.mangaName}>{manga.name}</p>
+					<p>{manga.name}</p>
+					<span>{manga.chapter}</span>
 				</div>
 			</div>
 
@@ -149,6 +154,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				]}
 				cursorPos={optionsPos}
 				isShown={showTooltip}
+				offset={optionsPos.offset}
 			/>
 		</div>
 	);

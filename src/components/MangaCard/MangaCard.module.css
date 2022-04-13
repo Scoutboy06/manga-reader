@@ -9,6 +9,7 @@
 	background: transparent;
 	border: 0;
 	outline: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .cardBox {
@@ -59,13 +60,11 @@
 	position: absolute;
 	right: 0;
 	bottom: 0;
-	/* height: 2.5em; */
-	/* width: max-content; */
 	display: flex;
 	flex-direction: row-reverse;
 }
 
-.actionButtons button {
+.actionButtons > button {
 	box-sizing: content-box;
 	height: 1.5em;
 	width: 1.5em;
@@ -81,31 +80,35 @@
 	font-size: 1em;
 }
 
-.actionButtons button:hover {
+.actionButtons > button:hover {
 	background-color: rgba(0, 164, 220, 0.2);
 }
 
-.actionButtons button:nth-child(1) svg {
+.actionButtons > button:nth-child(1) > svg {
 	fill: #fff;
 	transition: fill 0.2s;
 }
 
-.actionButtons button:hover svg {
+.actionButtons > button:hover > svg {
 	fill: #00a4dc;
 }
 
-.actionButtons button[data-finished='true'] svg {
+.actionButtons > button[data-finished='true'] > svg {
 	fill: #c33;
 }
 
 .details {
 	text-align: center;
 	width: 100%;
+}
+
+.details p,
+.details span {
 	padding: 0.06em 0.5em;
-	padding-top: 0.25em;
 }
 
 .details p {
+	padding-top: 0.24em;
 	color: #ddd;
 	width: 100%;
 	overflow: hidden;
@@ -116,6 +119,15 @@
 
 .details p:hover {
 	text-decoration: underline;
+}
+
+.details span {
+	color: rgba(255, 255, 255, 0.5);
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 0.85em;
 }
 
 .updates {
