@@ -6,6 +6,8 @@ import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
+import chapterNameToChapter from '../functions/chapterNameToChapter.js';
+
 // @desc	Create a new manga
 // @route	POST /api/mangas
 export const createManga = asyncHandler(async (req, res) => {
@@ -91,22 +93,22 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 	const { urlName, chapter } = req.params;
 
 	const manga = await Manga.findOne({ urlName });
-
+	if (!manga) throw new Error(404);
 	const host = await Host.findById(manga.hostId);
+	if (!host) throw new Error(404);
 
 	let url = host.path.replace('%name%', urlName).replace('%chapter%', chapter);
 
 	const raw = await fetch(url);
 	const html = await raw.text();
-
 	const document = HTMLParser.parse(html);
 
 	const images = document.querySelectorAll(host.imgSelector.querySelector);
-	let srcs = [];
+	const srcs = [];
 
 	for (const img of images) {
-		// let src = img.getAttribute(host.imgSelector.attrSelector).trim();
-		let src = img.getAttribute(host.imgSelector.attrSelector);
+		// let src = img.getAttribute(host.imgSelector.attrSelector);
+		let src = img.getAttribute('data-src') || img.getAttribute('data-setsrc') || img.getAttribute('src');
 
 		if (!src) {
 			res.status(507).json({
@@ -126,6 +128,8 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 
 		srcs.push(src);
 	}
+
+	if (srcs.length === 0) throw new Error(404);
 
 	const parent = document.querySelector(host.chapterNameSelectors.parent);
 	const prevBtn = parent.querySelector(host.chapterNameSelectors.prev);
@@ -149,12 +153,13 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 	const prevPath = getPrevAndNextLinks(prevBtn);
 	const nextPath = getPrevAndNextLinks(nextBtn);
 
-	const data = {
+	const chapterTitle = chapterNameToChapter(document.querySelector('#chapter-heading').textContent.trim());
+
+	res.json({
 		prevPath,
 		nextPath,
 		originalUrl: url,
 		images: srcs,
-	};
-
-	res.json(data);
+		chapterTitle,
+	});
 });

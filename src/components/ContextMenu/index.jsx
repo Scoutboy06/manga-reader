@@ -17,7 +17,7 @@ export default function ContextMenu({ items, cursorPos, offset, isShown }) {
 		if (y + height > window.innerHeight) y = cursorPos.y - offset - height;
 
 		setPos({ x, y });
-	}, [cursorPos, isShown, offset]);
+	}, [items, cursorPos, isShown, offset]);
 
 	return (
 		<div

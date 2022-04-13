@@ -18,6 +18,7 @@ export default function Read({ match, location }) {
 		prev: null,
 		curr: match.params.chapter,
 		next: null,
+		title: null,
 	});
 	const [images, setImages] = useState();
 	const [originalUrl, setOriginalUrl] = useState();
@@ -78,6 +79,7 @@ export default function Read({ match, location }) {
 				prev: chaps.prevPath,
 				curr: match.params.chapter,
 				next: chaps.nextPath,
+				title: chaps.chapterTitle,
 			});
 			setImages(chaps.images);
 			setOriginalUrl(chaps.originalUrl);
@@ -148,7 +150,7 @@ export default function Read({ match, location }) {
 }
 
 function Header({
-	chapters: { prev, curr, next },
+	chapters: { prev, curr, next, title },
 	isLoading,
 	originalUrl,
 	isTop,
@@ -158,7 +160,7 @@ function Header({
 }) {
 	return (
 		<header className={styles.header}>
-			{isTop && <h2 className={styles.title}>{curr || ' '}</h2>}
+			{isTop && <h2 className={styles.title}>{title}</h2>}
 
 			{isTop && (
 				<div className={styles.container} style={{ marginBottom: 30 }}>
