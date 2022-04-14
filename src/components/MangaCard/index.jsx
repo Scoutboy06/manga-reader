@@ -16,9 +16,9 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 	const optionsBtn = useRef();
 	const contextMenu = useRef();
 
-	const updateOptionsPos = e => {
-		e.preventDefault();
-		e.stopPropagation();
+	const optionsButtonClickHandler = e => {
+		if (e.cancelable) e.preventDefault();
+		if (e.cancelBubble) e.stopPropagation();
 
 		setShowTooltip(bool => !bool);
 
@@ -31,16 +31,15 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 		});
 	};
 
-	const blurHandler = e => {
-		e.preventDefault();
-		e.stopPropagation();
-
-		const path = e.path.reverse();
-
-		if (path[8] !== contextMenu.current) {
+	const optinosButtonBlurHandler = e => {
+		const path = e.composedPath();
+		if (path.indexOf(contextMenu.current) === -1) {
 			setShowTooltip(false);
 			return true;
 		}
+		if (e.cancelable) e.preventDefault();
+		if (e.cancelBubble) e.stopPropagation();
+
 		return false;
 	};
 
@@ -71,8 +70,8 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 							<BlurContainer
 								element={{ slug: 'button' }}
 								_ref={optionsBtn}
-								onClick={updateOptionsPos}
-								onBlur={blurHandler}
+								onClick={optionsButtonClickHandler}
+								onBlur={optinosButtonBlurHandler}
 							>
 								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 									<path d='M0 0h24v24H0V0z' fill='none' />

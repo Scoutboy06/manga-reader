@@ -14,10 +14,14 @@ export default function BlurContainer({
 
 	const checkBlurHandler = e => {
 		if (onBlur) {
-			if (e.path.indexOf(_ref?.current || containerRef.current) === -1) {
+			const path = e.composedPath();
+
+			if (path.indexOf(_ref?.current || containerRef.current) === -1) {
 				const shallRemoveListener = onBlur(e);
-				if (shallRemoveListener !== true) {
+
+				if (shallRemoveListener === true) {
 					window.removeEventListener('mousedown', checkBlurHandler);
+					window.removeEventListener('touchstart', checkBlurHandler);
 					hasMouseDownListener.current = false;
 				}
 			}
@@ -27,6 +31,7 @@ export default function BlurContainer({
 	useEffect(() => {
 		return () => {
 			window.removeEventListener('mousedown', checkBlurHandler);
+			window.removeEventListener('touchstart', checkBlurHandler);
 		};
 	}, []);
 
@@ -37,6 +42,7 @@ export default function BlurContainer({
 				onClick(e);
 				if (onBlur && !hasMouseDownListener.current) {
 					window.addEventListener('mousedown', checkBlurHandler);
+					window.addEventListener('touchstart', checkBlurHandler);
 					hasMouseDownListener.current = true;
 				}
 			}}
