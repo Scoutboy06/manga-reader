@@ -10,11 +10,11 @@ import Host from '../models/hostModel.js';
 const search = asyncHandler(async (req, res) => {
 	const keyword = req.query.mangaName
 		? {
-				name: {
-					$regex: req.query.mangaName,
-					$options: 'i',
-				},
-		  }
+			name: {
+				$regex: req.query.mangaName,
+				$options: 'i',
+			},
+		}
 		: {};
 
 	const noProxyHosts = await Host.find({ needProxy: false });
@@ -28,7 +28,6 @@ const search = asyncHandler(async (req, res) => {
 			'%searchTerm%',
 			req.query.mangaName
 		);
-		console.log(url);
 
 		const raw = await fetch(url);
 		const html = await raw.text();
@@ -72,13 +71,6 @@ const search = asyncHandler(async (req, res) => {
 
 			const urlName = detailsPageSplit[urlNameIndex];
 
-			// console.log(mangaName)
-			// console.log(imgUrl)
-			// console.log(latestChapter)
-			// console.log(latestUpdate)
-			// console.log(detailsPage)
-			// console.log(urlName);
-
 			hostData['mangas'].push({
 				mangaName,
 				imgUrl,
@@ -90,7 +82,6 @@ const search = asyncHandler(async (req, res) => {
 		}
 
 		data.push(hostData);
-		// console.log(hostData)
 	}
 
 	res.status(200).json(data);
@@ -108,7 +99,7 @@ const search = asyncHandler(async (req, res) => {
 					imgUrl: String,
 					latestChapter: String,
 					latestUpdate: String,
-          // urlName: 
+					// urlName: 
 				}
 			]
 		}

@@ -3,23 +3,24 @@ import { Link, useHistory } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
 
 import MangaCard from '../../components/MangaCard';
-import NewMangaPopup from '../../components/NewMangaPopup';
-import PopupOverlay from '../../components/PopupOverlay';
+import NewMangaPopup from '../../components/Popups/NewMangaPopup';
+// import PopupOverlay from '../../components/PopupOverlay';
 import Title from '../../components/Title';
 import Dropdown from '../../components/Dropdown';
 import BlurContainer from '../../components/BlurContainer';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
+import { PopupContext } from '../../contexts/PopupContext';
 
 import styles from './index.module.css';
 
 export default function Library() {
 	const history = useHistory();
 	const [profileData, profileActions] = useContext(ProfileContext);
+	const [popupState, popupActions] = useContext(PopupContext);
 
 	const [mangas, setMangas] = useState();
 	const [updates, setUpdates] = useState([]);
-	const [showOverlay, setShowOverlay] = useState(false);
 	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
 
 	const [isFetchingUpdates, setIsFetchingUpdates] = useState(false);
@@ -188,19 +189,16 @@ export default function Library() {
 
 				<button
 					className={styles.newManga}
-					onClick={() => setShowOverlay(true)}
+					onClick={() => {
+						popupActions.createPopup({
+							title: 'Search for a new manga',
+							content: NewMangaPopup,
+						});
+					}}
 				>
 					<img src='/icons/add-white-24dp.svg' alt='+' />
 				</button>
 			</main>
-
-			<PopupOverlay
-				isShown={showOverlay}
-				setVisibility={setShowOverlay}
-				title='Search for a new manga'
-			>
-				<NewMangaPopup setVisibility={setShowOverlay} />
-			</PopupOverlay>
 		</>
 	);
 }

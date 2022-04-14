@@ -74,7 +74,6 @@ export default function Read({ match, location }) {
 			}
 
 			const chaps = await fetchChapters();
-			console.log(chaps);
 			setChapters({
 				prev: chaps.prevPath,
 				curr: match.params.chapter,

@@ -9,8 +9,10 @@ import Profiles from './pages/profiles';
 import Index from './pages/index';
 import Read from './pages/read';
 
+import PopupCreator from './components/PopupCreator';
+
 export default function App() {
-	return (
+	return <>
 		<BrowserRouter>
 			<Switch>
 				<Route exact path='/' component={Profiles} />
@@ -20,5 +22,6 @@ export default function App() {
 				<Redirect to="/" />
 			</Switch>
 		</BrowserRouter>
-	);
+		<PopupCreator />
+	</>;
 }

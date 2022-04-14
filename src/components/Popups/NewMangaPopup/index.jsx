@@ -1,12 +1,12 @@
 import { useState, useContext } from 'react';
-import { ProfileContext } from '../../contexts/ProfileContext';
-import fetchAPI from '../../functions/fetchAPI';
+import { ProfileContext } from '../../../contexts/ProfileContext';
+import fetchAPI from '../../../functions/fetchAPI';
 
-import Loader from '../Loader';
+import Loader from '../../Loader';
 
 import styles from './NewMangaPopup.module.css';
 
-export default function NewMangaPopup({ setVisibility }) {
+export default function NewMangaPopup({ closePopup }) {
 	const [profileData] = useContext(ProfileContext);
 
 	const [inputText, setInputText] = useState('');
@@ -55,7 +55,6 @@ export default function NewMangaPopup({ setVisibility }) {
 
 	const addSubmit = () => {
 		if (!selectedData) return;
-		console.log({ ...selectedData, subscribed: isSubscribed });
 
 		fetchAPI('/api/mangas', {
 			method: 'POST',
@@ -162,13 +161,7 @@ export default function NewMangaPopup({ setVisibility }) {
 					</label>
 				</div>
 				<div>
-					<button
-						type='reset'
-						onClick={() => {
-							reset();
-							setVisibility(false);
-						}}
-					>
+					<button type='reset' onClick={() => closePopup()}>
 						Cancel
 					</button>
 					<button type='submit' onClick={addSubmit} disabled={!selectedData}>

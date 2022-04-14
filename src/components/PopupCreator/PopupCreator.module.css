@@ -1,62 +1,45 @@
-@keyframes blackContainerIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-
-@keyframes blackContainerOut {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0;
-	}
-}
-
 @keyframes contentIn {
 	from {
-		transform: scale(0);
+		transform: translate(-50%, -50%) scale(0);
 	}
 	to {
-		transform: scale(1);
+		transform: translate(-50%, -50%) scale(1);
 	}
 }
 
 @keyframes contentOut {
 	from {
-		transform: scale(1);
+		transform: translate(-50%, -50%) scale(1);
 	}
 	to {
-		transform: scale(0);
+		transform: translate(-50%, -50%) scale(0);
 	}
 }
 
 .blackContainer {
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.85);
 	position: fixed;
 	top: 0;
+	right: 0;
+	bottom: 0;
 	left: 0;
-	display: grid;
-	place-items: center;
 	z-index: 10000;
+	background-color: rgba(0, 0, 0, 0.85);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s;
 }
 
 .blackContainer[data-show='true'] {
-	animation: blackContainerIn 0.1s linear forwards;
+	opacity: 1;
 	pointer-events: all;
 }
 
-.blackContainer[data-show='false'] {
-	animation: blackContainerOut 0.1s linear forwards 0.2s;
-	pointer-events: none;
-}
-
 .container {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
 	width: 500px;
 	height: 600px;
 	background-color: var(--bg-00dp);
@@ -67,12 +50,11 @@
 	overflow: hidden;
 }
 
-.blackContainer[data-show='true'] .container {
-	/* animation: contentIn 0.2s cubic-bezier(0.3, 0.88, 0.62, 1.11) forwards; */
+.container[data-show='true'] {
 	animation: contentIn 0.2s ease-in-out forwards;
 }
 
-.blackContainer[data-show='false'] .container {
+.container[data-show='false'] {
 	animation: contentOut 0.2s ease-in-out forwards;
 }
 
