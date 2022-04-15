@@ -170,7 +170,8 @@
 	background-color: var(--bg-02dp);
 }
 
-.footer button {
+.footer button[type='submit'],
+.footer button[type='reset'] {
 	padding: 6px 10px;
 	margin: 0 5px;
 	background-color: transparent;
@@ -200,13 +201,13 @@
 
 .subscribed {
 	color: #fff;
+	display: flex;
+	align-items: center;
 }
 
-/* @media screen and (max-width: 28em) {
-	.container {
-		height: calc(100vh - 8em);
-	}
-} */
+.subscribed label {
+	margin-right: 5px;
+}
 
 @media screen and (max-height: 43em) {
 	.container {

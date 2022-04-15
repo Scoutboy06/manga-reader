@@ -26,7 +26,6 @@
 }
 
 body {
-	/* max-width: calc(100vw - 22px); */
 	overflow-x: hidden;
 	line-height: 1.35;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -54,6 +53,14 @@ body {
 
 iframe {
 	display: none !important;
+}
+
+svg {
+	fill: #fff;
+}
+
+.hidden {
+	visibility: hidden;
 }
 
 .button {
@@ -89,7 +96,6 @@ iframe {
 
 .button svg {
 	fill: #fff;
-	/* width: 40px; */
 	height: 100%;
 }
 
@@ -110,10 +116,34 @@ iframe {
 	padding-left: 0px;
 }
 
-svg {
-	fill: #fff;
+.checkbox {
+	width: 3em;
+	height: 1em;
+	border-radius: 999em;
+	border: 0;
+	outline: none;
+	background-color: var(--bg-24dp);
+	position: relative;
+	cursor: pointer;
+	transition: background-color 0.1s linear;
 }
 
-.hidden {
-	visibility: hidden;
+.checkbox[data-ischecked='true'] {
+	background-color: var(--main-color);
+}
+
+.checkbox::after {
+	content: '';
+	width: 1.5em;
+	height: 1.5em;
+	background-color: rgb(202, 202, 202);
+	border-radius: 50%;
+	position: absolute;
+	left: 0;
+	top: -0.25em;
+	transition: left 0.1s ease-in-out;
+}
+
+.checkbox[data-ischecked='true']::after {
+	left: calc(100% - 1.5em);
 }

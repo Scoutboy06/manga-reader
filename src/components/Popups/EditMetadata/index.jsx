@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import fetchAPI from '../../../functions/fetchAPI.js';
 
 import styles from './EditMetadata.module.css';
@@ -36,24 +37,26 @@ export default function EditMetadata({ closePopup, data: manga }) {
 
 				<div className={styles.formGroup}>
 					<label htmlFor='subscribed'>Subscribed:</label>
-					<input
-						type='checkbox'
+					<button
+						type='button'
+						className='checkbox'
 						name='subscribed'
 						id='subscribed'
-						checked={subscribed}
-						onChange={() => setSubscribed(bool => !bool)}
-					/>
+						data-ischecked={subscribed}
+						onClick={() => setSubscribed(bool => !bool)}
+					></button>
 				</div>
 
 				<div className={styles.formGroup}>
 					<label htmlFor='finished'>Finished reading:</label>
-					<input
-						type='checkbox'
+					<button
+						type='button'
+						className='checkbox'
 						name='finished'
 						id='finished'
-						checked={finished}
-						onChange={() => setFinished(bool => !bool)}
-					/>
+						data-ischecked={finished}
+						onClick={() => setFinished(bool => !bool)}
+					></button>
 				</div>
 			</main>
 

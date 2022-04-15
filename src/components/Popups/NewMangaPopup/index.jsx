@@ -149,16 +149,15 @@ export default function NewMangaPopup({ closePopup }) {
 			</main>
 
 			<footer className={styles.footer}>
-				<div>
-					<label className={styles.subscribed}>
-						Subscribed &nbsp;
-						<input
-							type='checkbox'
-							id='subscribed'
-							checked={isSubscribed}
-							onChange={() => setIsSubscribed(bool => !bool)}
-						/>
-					</label>
+				<div className={styles.subscribed}>
+					<label htmlFor='subscribed'>Subscribed:</label>
+					<button
+						className='checkbox'
+						type='button'
+						id='subscribed'
+						data-ischecked={isSubscribed}
+						onClick={() => setIsSubscribed(bool => !bool)}
+					></button>
 				</div>
 				<div>
 					<button type='reset' onClick={() => closePopup()}>
