@@ -1,15 +1,21 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+
 import Loader from '../Loader';
 import ContextMenu from '../ContextMenu';
 import BlurContainer from '../BlurContainer';
+import EditMetadata from '../Popups/EditMetadata';
+
 import fetchAPI from '../../functions/fetchAPI';
 import parseChapterName from '../../functions/parseChapterName';
+
+import { PopupContext } from '../../contexts/PopupContext';
 
 import styles from './MangaCard.module.css';
 
 export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 	const history = useHistory();
+	const [popupState, popupActions] = useContext(PopupContext);
 
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [optionsPos, setOptionsPos] = useState({ x: 0, y: 0, offset: 0 });
@@ -121,7 +127,12 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 			<ContextMenu
 				items={[
 					{
-						action: () => {},
+						action: () =>
+							popupActions.createPopup({
+								title: 'Edit metadata',
+								content: EditMetadata,
+								data: manga,
+							}),
 						icon: (
 							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 								<path d='M0 0h24v24H0V0z' fill='none' />
@@ -129,7 +140,6 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 							</svg>
 						),
 						content: 'Edit metadata',
-						disabled: true,
 					},
 					{
 						action: () => {},

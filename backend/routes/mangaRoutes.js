@@ -1,9 +1,10 @@
 import express from 'express';
 import {
-	getMangaByUrlName,
 	createManga,
-	updateFinished,
+	updateManga,
 	deleteManga,
+	updateFinished,
+	getMangaByUrlName,
 	getImageUrls,
 } from '../controllers/mangaController.js';
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post('/', createManga);
 router.delete('/:_id', deleteManga);
+router.put('/:_id', updateManga);
 router.put('/:_id/finished', updateFinished);
 router.put('/:_id/updateProgress', updateProgress);
 router.get('/:urlName', getMangaByUrlName);

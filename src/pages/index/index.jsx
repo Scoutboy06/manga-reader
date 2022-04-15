@@ -156,7 +156,7 @@ export default function Library() {
 						onClick={() => setShowFinishedMangas(!showFinishedMangas)}
 						className={styles.toggleFinshedMangasButton}
 					>
-						<span>Completed</span>
+						<span>Finished reading</span>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
 							viewBox='0 0 24 24'

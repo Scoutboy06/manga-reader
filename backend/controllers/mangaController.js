@@ -49,6 +49,23 @@ export const createManga = asyncHandler(async (req, res) => {
 	res.status(201).json(createdManga);
 });
 
+// @desc	Update manga
+// @route	PUT /api/mangas/:_id
+export const updateManga = asyncHandler(async (req, res) => {
+	const { _id } = req.params;
+
+	const manga = await Manga.findById(_id);
+	if (!manga) throw new Error(404);
+
+	for (const key of Object.keys(req.body)) {
+		if (key === '_id') continue;
+		manga[key] = req.body[key];
+	}
+
+	await manga.save();
+	res.status(201).json(manga);
+});
+
 // @desc	Delete a manga
 // @route	DELETE /api/mangas/:_id
 export const deleteManga = asyncHandler(async (req, res) => {

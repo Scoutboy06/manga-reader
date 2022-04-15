@@ -48,7 +48,10 @@ export default function PopupCreator() {
 						</button>
 					</div>
 					<div className={styles.content}>
-						<popup.content closePopup={() => actions.closePopup(popupIndex)} />
+						<popup.content
+							closePopup={() => actions.closePopup(popupIndex)}
+							data={popup.data}
+						/>
 					</div>
 				</div>
 			))}

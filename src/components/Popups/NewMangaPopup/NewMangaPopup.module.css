@@ -1,6 +1,7 @@
 .container {
-	width: 100%;
-	height: calc(600px - 8em);
+	width: 500px;
+	height: 550px;
+	max-width: 100%;
 	overflow: hidden scroll;
 }
 
@@ -201,13 +202,13 @@
 	color: #fff;
 }
 
-@media screen and (max-width: 450px) {
+/* @media screen and (max-width: 28em) {
 	.container {
 		height: calc(100vh - 8em);
 	}
-}
+} */
 
-@media screen and (max-height: 600px) {
+@media screen and (max-height: 43em) {
 	.container {
 		height: calc(100vh - 10em);
 	}
