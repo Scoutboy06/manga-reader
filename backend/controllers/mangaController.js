@@ -58,7 +58,7 @@ export const updateManga = asyncHandler(async (req, res) => {
 	if (!manga) throw new Error(404);
 
 	for (const key of Object.keys(req.body)) {
-		if (key === '_id') continue;
+		if (key === '_id' || key === 'originalName' || key === 'originalCoverUrl') continue;
 		manga[key] = req.body[key];
 	}
 

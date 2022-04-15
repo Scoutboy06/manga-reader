@@ -15,6 +15,7 @@ import imageRoutes from './routes/imageRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
 import { getMangaUpdates } from './controllers/updatesController.js';
+// import testController from './controllers/test.js';
 
 
 const __dirname = path.resolve();

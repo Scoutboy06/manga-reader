@@ -13,6 +13,18 @@
 	padding-bottom: 7em;
 }
 
+.main > a {
+	color: #bbb;
+	display: block;
+	width: max-content;
+	margin-bottom: 1em;
+}
+
+.main > p {
+	color: #bbb;
+	margin-bottom: 0.5em;
+}
+
 .formGroup {
 	width: 100%;
 	display: flex;
@@ -44,6 +56,39 @@
 
 .formGroup input:focus {
 	border-color: var(--main-color);
+}
+
+.formGroup button:not([type='checkbox']) {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	font-size: 1em;
+	color: #bbb;
+	text-decoration: underline;
+	cursor: pointer;
+	width: max-content;
+	margin-top: 0.2em;
+}
+
+.imageContainer {
+	width: 12em;
+	height: 18em;
+	overflow: hidden;
+	/* background-position: 50%;
+	background-size: cover; */
+	/* display: grid;
+	place-items: center; */
+	position: relative;
+}
+
+.imageContainer img {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	object-fit: cover;
 }
 
 .footer {

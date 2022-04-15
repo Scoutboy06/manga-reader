@@ -72,7 +72,7 @@ export default function Library() {
 				<header className={styles.header}>
 					<BlurContainer
 						className={styles.profileDropdown}
-						onClick={() => setShowProfileDropdown(true)}
+						onClick={() => setShowProfileDropdown(bool => !bool)}
 						onBlur={() => setShowProfileDropdown(false)}
 					>
 						<img src={profileData.currentProfile.imageUrl} alt='Profile' />
