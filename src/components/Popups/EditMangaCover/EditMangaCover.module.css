@@ -131,9 +131,9 @@
 	}
 }
 
-@media screen and (max-height: 43em) and (min-width: 40em) {
+@media screen and (max-height: 50em) and (min-width: 40em) {
 	.main {
-		max-height: calc(100vh - 11em);
+		max-height: calc(100vh - 6em);
 	}
 }
 
