@@ -20,6 +20,7 @@
 }
 
 .container {
+	height: 2.3em;
 	display: flex;
 	justify-content: space-between;
 }
@@ -50,7 +51,18 @@
 	cursor: pointer;
 }
 
-.pagination img {
+.header button,
+.header a {
+	height: 100%;
+}
+
+.header button svg,
+.header a svg {
+	height: 100%;
+	padding: 5px;
+}
+
+.pagination.icon svg {
 	padding: 5px 8px;
 }
 

@@ -115,11 +115,13 @@ svg {
 	line-height: 0pt;
 }
 
-.button.icon-left img {
+.button.icon-left img,
+.button.icon-left svg {
 	padding-right: 0px;
 }
 
-.button.icon-right img {
+.button.icon-right img,
+.button.icon-right svg {
 	padding-left: 0px;
 }
 

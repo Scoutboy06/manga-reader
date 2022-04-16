@@ -170,10 +170,10 @@ function Header({
 						className='button'
 						disabled={isLoading || !originalUrl}
 					>
-						<img
-							src={window.location.origin + '/icons/open_in_new_white_24dp.svg'}
-							alt='Open original'
-						/>
+						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+							<path d='M0 0h24v24H0V0z' fill='none' />
+							<path d='M18 19H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h5c.55 0 1-.45 1-1s-.45-1-1-1H5c-1.11 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6c0-.55-.45-1-1-1s-1 .45-1 1v5c0 .55-.45 1-1 1zM14 4c0 .55.45 1 1 1h2.59l-9.13 9.13c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L19 6.41V9c0 .55.45 1 1 1s1-.45 1-1V4c0-.55-.45-1-1-1h-5c-.55 0-1 .45-1 1z' />
+						</svg>
 					</a>
 
 					<button
@@ -183,16 +183,17 @@ function Header({
 							setIsFullWidth(!isFullWidth);
 						}}
 					>
-						<img
-							src={
-								window.location.origin +
-								'/icons/' +
-								(isFullWidth
-									? 'close_fullscreen_white_24dp.svg'
-									: 'open_in_full_white_24dp.svg')
-							}
-							alt='Toggle full-width'
-						/>
+						{isFullWidth ? (
+							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+								<rect fill='none' height='24' width='24' />
+								<path d='M21.29,4.12l-4.59,4.59l1.59,1.59c0.63,0.63,0.18,1.71-0.71,1.71H13c-0.55,0-1-0.45-1-1V6.41c0-0.89,1.08-1.34,1.71-0.71 l1.59,1.59l4.59-4.59c0.39-0.39,1.02-0.39,1.41,0v0C21.68,3.1,21.68,3.73,21.29,4.12z M4.12,21.29l4.59-4.59l1.59,1.59 c0.63,0.63,1.71,0.18,1.71-0.71V13c0-0.55-0.45-1-1-1H6.41c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-4.59,4.59 c-0.39,0.39-0.39,1.02,0,1.41l0,0C3.1,21.68,3.73,21.68,4.12,21.29z' />
+							</svg>
+						) : (
+							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+								<rect fill='none' height='24' width='24' />
+								<path d='M21,8.59V4c0-0.55-0.45-1-1-1h-4.59c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-10,10l-1.59-1.59C4.08,14.08,3,14.52,3,15.41 V20c0,0.55,0.45,1,1,1h4.59c0.89,0,1.34-1.08,0.71-1.71l-1.59-1.59l10-10l1.59,1.59C19.92,9.92,21,9.48,21,8.59z' />
+							</svg>
+						)}
 					</button>
 				</div>
 			)}
@@ -203,18 +204,18 @@ function Header({
 					className='button icon-left'
 					disabled={isLoading || !prev}
 				>
-					<img
-						src={window.location.origin + '/icons/arrow_back-white-24dp.svg'}
-						alt='<-'
-					/>
+					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+						<path d='M0 0h24v24H0V0z' fill='none' />
+						<path d='M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z' />
+					</svg>
 					<span>Prev</span>
 				</Link>
 
 				<Link to='/' className='button'>
-					<img
-						src={window.location.origin + '/icons/home-white-24dp.svg'}
-						alt='Home'
-					/>
+					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+						<path d='M0 0h24v24H0V0z' fill='none' />
+						<path d='M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z' />
+					</svg>
 				</Link>
 
 				<Link
@@ -223,10 +224,10 @@ function Header({
 					disabled={isLoading || !next}
 				>
 					<span>Next</span>
-					<img
-						src={window.location.origin + '/icons/arrow_forward-white-24dp.svg'}
-						alt='->'
-					/>
+					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+						<path d='M0 0h24v24H0V0z' fill='none' />
+						<path d='M5 13h11.17l-4.88 4.88c-.39.39-.39 1.03 0 1.42.39.39 1.02.39 1.41 0l6.59-6.59c.39-.39.39-1.02 0-1.41l-6.58-6.6c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L16.17 11H5c-.55 0-1 .45-1 1s.45 1 1 1z' />
+					</svg>
 				</Link>
 			</div>
 		</header>
