@@ -36,7 +36,7 @@ const MODEL_NAME = mongoose.Schema(
 		needProxy: { type: Boolean, required: true },
 	},
 	{
-		timestamps: false,
+		timestamps: true,
 	}
 );
 

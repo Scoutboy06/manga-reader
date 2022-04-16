@@ -1,13 +1,12 @@
 .container {
-	position: relative;
-	width: 100%;
-	height: 100%;
+	/* position: relative; */
+	/* width: 100%;
+	height: 100%; */
 }
 
 .main {
-	height: max-content;
+	max-height: calc(100vh - 6em);
 	width: 40em;
-	max-height: calc(100% - 5em);
 	overflow-y: scroll;
 	padding: 2em;
 	padding-bottom: 7em;
@@ -44,6 +43,19 @@
 
 .formGroup input:focus {
 	border-color: var(--main-color);
+}
+
+.formGroup button:not([name]),
+.toggleAdvanced {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	font-size: 1em;
+	color: #bbb;
+	text-decoration: underline;
+	cursor: pointer;
+	width: max-content;
+	margin-top: 0.2em;
 }
 
 .footer {

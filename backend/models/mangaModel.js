@@ -14,7 +14,7 @@ const MODEL_NAME = mongoose.Schema(
 		ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
 	},
 	{
-		timestamps: false,
+		timestamps: true,
 	}
 );
 
