@@ -1,0 +1,48 @@
+.main {
+	position: relative;
+	color: #bbb;
+}
+
+.header {
+	height: 4em;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.homeBtn {
+	position: absolute;
+	top: 1em;
+	left: 1em;
+	justify-self: left;
+	float: left;
+	background: var(--bg-00dp);
+}
+
+.homeBtn svg {
+	height: 2.5em;
+}
+
+.header button:not(.homeBtn) {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	color: #bbb;
+	font-size: 0.9em;
+	cursor: pointer;
+	transition: color 0.2s;
+	font-weight: bold;
+}
+
+.header button:not(.homeBtn):last-child {
+	margin-left: 1em;
+}
+
+.header button:not(.homeBtn):hover {
+	color: var(--main-color);
+}
+
+.header button[data-active='true'] {
+	color: #fff;
+}
