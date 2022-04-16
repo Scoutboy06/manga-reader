@@ -24,9 +24,12 @@ export default function EditMetadata({ closePopup, data: manga }) {
 			method: 'PUT',
 			body: JSON.stringify({
 				name,
+				urlName,
+				chapter,
 				subscribed,
-				ownerId,
 				hostId,
+				finished,
+				ownerId,
 			}),
 		}).then(() => window.location.reload());
 	};
