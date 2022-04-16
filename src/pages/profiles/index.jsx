@@ -12,7 +12,7 @@ export default function Profiles() {
 
 	useEffect(() => {
 		if (!profileData.isLoading && profileData?.currentProfile?._id)
-			history.push('/library');
+			history.replace('/library');
 	}, [history, profileData]);
 
 	if (profileData.isLoading || profileData?.currentProfile?._id) {
