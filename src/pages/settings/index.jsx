@@ -1,22 +1,25 @@
 import { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ProfileContext } from '../../contexts/ProfileContext';
-import { PopupContext } from '../../contexts/PopupContext';
+import ApplicationSettings from './ApplicationSettings';
+import ProfilesSettings from './ProfilesSettings';
+
+// import { ProfileContext } from '../../contexts/ProfileContext';
+// import { PopupContext } from '../../contexts/PopupContext';
 
 import styles from './settings.module.css';
 
 export default function Settings({ match, location }) {
 	const history = useHistory();
-	const [profileData, profileActions] = useContext(ProfileContext);
+	// const [profileData, profileActions] = useContext(ProfileContext);
 	// const [, popupActions] = useContext(PopupContext);
 
 	useEffect(() => {
-		if (!match.params.type) return history.replace('/settings/application');
+		if (!match.params.type) history.replace('/settings/application');
 	}, [history, match]);
 
 	return (
-		<main className={styles.main}>
+		<div className={styles.container}>
 			<header className={styles.header}>
 				<button
 					className={'button ' + styles.homeBtn}
@@ -43,9 +46,13 @@ export default function Settings({ match, location }) {
 				</button>
 			</header>
 
-			{JSON.stringify(match)}
-			<br />
-			{JSON.stringify(location)}
-		</main>
+			<main className={styles.main}>
+				{match.params.type === 'application' ? (
+					<ApplicationSettings />
+				) : match.params.type === 'profiles' ? (
+					<ProfilesSettings />
+				) : null}
+			</main>
+		</div>
 	);
 }
