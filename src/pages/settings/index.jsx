@@ -8,7 +8,7 @@ import styles from './settings.module.css';
 
 export default function Settings({ match, location }) {
 	const history = useHistory();
-	// const [profileData, profileActions] = useContext(ProfileContext);
+	const [profileData, profileActions] = useContext(ProfileContext);
 	// const [, popupActions] = useContext(PopupContext);
 
 	useEffect(() => {
