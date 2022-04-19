@@ -1,18 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 
 import ProfileContext from './contexts/ProfileContext';
 import PopupContext from './contexts/PopupContext';
 
-ReactDOM.render(
-	<React.StrictMode>
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(
+	<StrictMode>
 		<ProfileContext>
 			<PopupContext>
 				<App />
 			</PopupContext>
 		</ProfileContext>
-	</React.StrictMode>,
-	document.getElementById('root')
+	</StrictMode>
 );

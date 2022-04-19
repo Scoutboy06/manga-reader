@@ -12,7 +12,10 @@ export default function fetchAPI(url, options) {
 		}
 	}
 
-	return fetch(url, fetchOptions)
+	let API_URI = process.env.REACT_APP_API_URI;
+	if (url[0] !== '/') API_URI += '/';
+
+	return fetch(API_URI + url, fetchOptions)
 		.then(res => {
 			if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
 			return res.json();

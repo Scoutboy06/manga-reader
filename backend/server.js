@@ -19,7 +19,7 @@ import { getMangaUpdates } from './controllers/updatesController.js';
 
 
 const __dirname = path.resolve();
-dotenv.config({ path: '.env' });
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 connectDB();
 
@@ -43,24 +43,10 @@ app.use('/api/users', userRoutes);
 
 app.get('/api/getUpdates', getMangaUpdates);
 
-if (process.env.NODE_ENV === 'production') {
-	app.use('/', express.static(path.join(__dirname, 'build')));
-}
-
-app.use('*', express.static(path.join(__dirname, 'build/index.html')));
-
-// else if(process.env.NODE_ENV === 'development') {
-//   app.use('/', createProxyMiddleware({ target: `127.0.0.1:${process.env.PORT}/` }));
-// }
-
 app.use(notFound);
 app.use(errorHandler);
 
-let PORT;
-if (process.env.NODE_ENV === 'production') PORT = process.env.PORT;
-else if (process.env.NODE_ENV === 'development')
-	PORT = process.env.DEV_BACKEND_PORT;
-
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
 
 import MangaCard from '../../components/MangaCard';
@@ -14,7 +14,7 @@ import { PopupContext } from '../../contexts/PopupContext';
 import styles from './index.module.css';
 
 export default function Library() {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const [profileData, profileActions] = useContext(ProfileContext);
 	const [, popupActions] = useContext(PopupContext);
 
@@ -51,10 +51,10 @@ export default function Library() {
 
 	useEffect(() => {
 		if (profileData.isLoading) return;
-		else if (!profileData.currentProfile?._id) history.replace('/');
+		else if (!profileData.currentProfile?._id) navigate('/', { replace: true });
 		else fetchData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [history, profileData]);
+	}, [profileData]);
 
 	useEffect(() => {
 		if (mangas && mangas.length > 0) fetchUpdates(true);
@@ -94,7 +94,7 @@ export default function Library() {
 								'divider',
 								{
 									content: 'Profile settings',
-									action: () => history.push(`/settings/profiles`),
+									action: () => navigate(`/settings/profiles`),
 									icon: (
 										<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 											<path d='M10.67,13.02C10.45,13.01,10.23,13,10,13c-2.42,0-4.68,0.67-6.61,1.82C2.51,15.34,2,16.32,2,17.35V19c0,0.55,0.45,1,1,1 h8.26C10.47,18.87,10,17.49,10,16C10,14.93,10.25,13.93,10.67,13.02z' />
@@ -116,7 +116,7 @@ export default function Library() {
 								'divider',
 								{
 									content: 'App settings',
-									action: () => history.push('/settings/application'),
+									action: () => navigate('/settings/application'),
 									icon: (
 										<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 											<rect fill='none' height='24' width='24' />

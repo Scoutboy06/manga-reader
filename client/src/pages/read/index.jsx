@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
 
 import Loader from '../../components/Loader';
@@ -10,13 +10,14 @@ import { ProfileContext } from '../../contexts/ProfileContext';
 
 import styles from './read.module.css';
 
-export default function Read({ match, location }) {
-	const history = useHistory();
+export default function Read() {
+	const params = useParams();
+	const navigate = useNavigate();
 	const [profileData] = useContext(ProfileContext);
 
 	const [chapters, setChapters] = useState({
 		prev: null,
-		curr: match.params.chapter,
+		curr: params.chapter,
 		next: null,
 		title: null,
 	});
@@ -28,7 +29,7 @@ export default function Read({ match, location }) {
 	const [isFullWidth, setIsFullWidth] = useState(false);
 
 	const fetchChapters = () =>
-		fetchAPI(`/api/mangas/${match.params.mangaName}/${match.params.chapter}`);
+		fetchAPI(`/api/mangas/${params.mangaName}/${params.chapter}`);
 
 	const updateProgress = (isLast, mangaId) =>
 		fetchAPI(
@@ -36,8 +37,8 @@ export default function Read({ match, location }) {
 			{
 				method: 'PUT',
 				body: JSON.stringify({
-					// urlName: match.params.mangaName,
-					chapter: match.params.chapter,
+					// urlName: params.mangaName,
+					chapter: params.chapter,
 					isLast,
 				}),
 			}
@@ -45,12 +46,12 @@ export default function Read({ match, location }) {
 
 	const getMangaInfo = () =>
 		fetchAPI(
-			`/api/mangas/${match.params.mangaName}?userId=${profileData.currentProfile._id}`
+			`/api/mangas/${params.mangaName}?userId=${profileData.currentProfile._id}`
 		);
 
 	const storeFullWidthData = isFullWidth => {
 		const json = JSON.parse(localStorage.getItem('isFullWidth'));
-		json[match.params.mangaName] = isFullWidth;
+		json[params.mangaName] = isFullWidth;
 		localStorage.setItem('isFullWidth', JSON.stringify(json));
 	};
 
@@ -68,15 +69,17 @@ export default function Read({ match, location }) {
 				meta = mangaMeta;
 			}
 
-			if (!match.params.chapter) {
-				history.replace(`/read/${match.params.mangaName}/${meta.chapter}`);
+			if (!params.chapter) {
+				navigate(`/read/${params.mangaName}/${meta.chapter}`, {
+					replace: true,
+				});
 				return;
 			}
 
 			const chaps = await fetchChapters();
 			setChapters({
 				prev: chaps.prevPath,
-				curr: match.params.chapter,
+				curr: params.chapter,
 				next: chaps.nextPath,
 				title: chaps.chapterTitle,
 			});
@@ -88,31 +91,31 @@ export default function Read({ match, location }) {
 			updateProgress(!chaps.nextPath, meta._id);
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [match.params, profileData.isLoading]);
+	}, [params, profileData.isLoading]);
 
 	useEffect(() => {
 		// localStorage init
 		const json = JSON.parse(localStorage.getItem('isFullWidth'));
 		if (!json) {
 			const data = {};
-			data[match.params.mangaName] = false;
+			data[params.mangaName] = false;
 			localStorage.setItem('isFullWidth', JSON.stringify(data));
 			return;
 		}
 
-		const width = json[match.params.mangaName];
+		const width = json[params.mangaName];
 		if (width) setIsFullWidth(width);
 		else setIsFullWidth(false);
-	}, [match.params.mangaName]);
+	}, [params.mangaName]);
 
 	if (!profileData.isLoading && !profileData.currentProfile) {
-		history.push('/');
+		navigate('/');
 		return null;
 	}
 
 	return (
 		<main className={styles.main} data-isfullwidth={isFullWidth}>
-			<Title>{match.params.chapter + ' - ' + match.params.mangaName}</Title>
+			<Title>{params.chapter + ' - ' + params.mangaName}</Title>
 
 			<Header
 				isTop={true}

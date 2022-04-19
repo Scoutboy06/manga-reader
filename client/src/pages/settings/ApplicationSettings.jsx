@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useContext, useEffect, useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
 
 import Title from '../../components/Title';
 
@@ -11,11 +11,11 @@ import styles from './settings.module.css';
 const appIcons = ['/img/book_128.ico', '/img/rikka_square128.png'];
 
 export default function ApplicationSettings() {
-	const history = useHistory();
+	// const navigate = useNavigate();
 	// const [profileData, profileActions] = useContext(ProfileContext);
 	// const [, popupActions] = useContext(PopupContext);
 
-	const [appIcon, setAppIcon] = useState(appIcons[0]);
+	// const [appIcon, setAppIcon] = useState(appIcons[0]);
 
 	return (
 		<>

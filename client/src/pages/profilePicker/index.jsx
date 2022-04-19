@@ -1,23 +1,21 @@
 import { useEffect, useContext } from 'react';
 import { ProfileContext } from '../../contexts/ProfileContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Title from '../../components/Title';
 
 import styles from './Profiles.module.css';
 
 export default function Profiles() {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const [profileData, profileActions] = useContext(ProfileContext);
 
 	useEffect(() => {
 		if (!profileData.isLoading && profileData?.currentProfile?._id)
-			history.replace('/library');
-	}, [history, profileData]);
+			navigate('/library', { replace: true });
+	}, [navigate, profileData]);
 
-	if (profileData.isLoading || profileData?.currentProfile?._id) {
-		return null;
-	}
+	if (profileData.isLoading || profileData?.currentProfile?._id) return null;
 
 	return (
 		<main className={styles.profilesMain}>

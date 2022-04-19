@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ApplicationSettings from './ApplicationSettings';
 import ProfilesSettings from './ProfilesSettings';
@@ -9,21 +9,22 @@ import ProfilesSettings from './ProfilesSettings';
 
 import styles from './settings.module.css';
 
-export default function Settings({ match, location }) {
-	const history = useHistory();
+export default function Settings() {
+	const params = useParams();
+	const navigate = useNavigate();
 	// const [profileData, profileActions] = useContext(ProfileContext);
 	// const [, popupActions] = useContext(PopupContext);
 
 	useEffect(() => {
-		if (!match.params.type) history.replace('/settings/application');
-	}, [history, match]);
+		if (!params.type) navigate('/settings/application', { replace: true });
+	}, [navigate, params.type]);
 
 	return (
 		<div className={styles.container}>
 			<header className={styles.header}>
 				<button
 					className={'button ' + styles.homeBtn}
-					onClick={() => history.push('/library')}
+					onClick={() => navigate('/library')}
 				>
 					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 						<path d='M0 0h24v24H0V0z' fill='none' />
@@ -32,24 +33,24 @@ export default function Settings({ match, location }) {
 				</button>
 
 				<button
-					onClick={() => history.push('/settings/application')}
-					data-active={match.params.type === 'application'}
+					onClick={() => navigate('/settings/application')}
+					data-active={params.type === 'application'}
 				>
 					Application
 				</button>
 
 				<button
-					onClick={() => history.push('/settings/profiles')}
-					data-active={match.params.type === 'profiles'}
+					onClick={() => navigate('/settings/profiles')}
+					data-active={params.type === 'profiles'}
 				>
 					Profiles
 				</button>
 			</header>
 
 			<main className={styles.main}>
-				{match.params.type === 'application' ? (
+				{params.type === 'application' ? (
 					<ApplicationSettings />
-				) : match.params.type === 'profiles' ? (
+				) : params.type === 'profiles' ? (
 					<ProfilesSettings />
 				) : null}
 			</main>

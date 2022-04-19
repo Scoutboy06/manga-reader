@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import Loader from '../Loader';
 import ContextMenu from '../ContextMenu';
@@ -15,8 +15,8 @@ import { PopupContext } from '../../contexts/PopupContext';
 import styles from './MangaCard.module.css';
 
 export default function MangaCard({ manga, isFetchingUpdates, updates }) {
-	const history = useHistory();
-	const [popupState, popupActions] = useContext(PopupContext);
+	const navigate = useNavigate();
+	const [, popupActions] = useContext(PopupContext);
 
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [optionsPos, setOptionsPos] = useState({ x: 0, y: 0, offset: 0 });
@@ -53,7 +53,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 	return (
 		<div
 			className={styles.card}
-			onClick={() => history.push('/read/' + manga.urlName)}
+			onClick={() => navigate('/read/' + manga.urlName)}
 			onContextMenu={e => {
 				e.preventDefault();
 				optionsBtn.current.click();

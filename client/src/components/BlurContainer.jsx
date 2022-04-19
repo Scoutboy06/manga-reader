@@ -33,6 +33,7 @@ export default function BlurContainer({
 			window.removeEventListener('mousedown', checkBlurHandler);
 			window.removeEventListener('touchstart', checkBlurHandler);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
