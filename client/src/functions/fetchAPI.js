@@ -12,7 +12,8 @@ export default function fetchAPI(url, options) {
 		}
 	}
 
-	let API_URI = process.env.REACT_APP_API_URI;
+	const ENV = process.env.REACT_APP_ENV;
+	let API_URI = (ENV !== 'development' ? process.env.REACT_APP_API_URI : '');
 	if (url[0] !== '/') API_URI += '/';
 
 	return fetch(API_URI + url, fetchOptions)

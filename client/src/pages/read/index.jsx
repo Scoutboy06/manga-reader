@@ -160,6 +160,8 @@ function Header({
 	setIsFullWidth,
 	storeFullWidthData,
 }) {
+	const params = useParams();
+
 	return (
 		<header className={styles.header}>
 			{isTop && <h2 className={styles.title}>{title}</h2>}
@@ -203,7 +205,7 @@ function Header({
 
 			<div className={styles.container}>
 				<Link
-					to={prev || '#'}
+					to={`/read/${params.mangaName}/${prev}`}
 					className='button icon-left'
 					disabled={isLoading || !prev}
 				>
@@ -222,7 +224,7 @@ function Header({
 				</Link>
 
 				<Link
-					to={next || '#'}
+					to={`/read/${params.mangaName}/${next}`}
 					className='button icon-right'
 					disabled={isLoading || !next}
 				>
