@@ -36,11 +36,13 @@ export const createManga = asyncHandler(async (req, res) => {
 
 	const manga = new Manga({
 		name,
+		originalName: name,
 		urlName: mangaUrlName,
 		chapter: 'chapter-1',
 		subscribed,
 		hostId: host._id,
 		coverUrl,
+		originalCoverUrl: coverUrl,
 		ownerId: user._id,
 	});
 

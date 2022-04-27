@@ -7,7 +7,7 @@ import Head from '../../components/Head';
 
 import styles from './settings.module.css';
 
-const appIcons = ['/appIcons/book_128.png', '/appIcons/rikka_square128.png'];
+const appIcons = ['book_128.png', 'rikka_square128.png'];
 
 export default function ApplicationSettings() {
 	// const navigate = useNavigate();
@@ -44,7 +44,7 @@ export default function ApplicationSettings() {
 							onClick={() => setAppIcon(appIcons[index])}
 							key={index}
 						>
-							<img src={icon} alt='Failed to load' key={index} />
+							<img src={'/appIcons/' + icon} alt='Failed to load' key={index} />
 						</button>
 					))}
 				</div>
