@@ -1,10 +1,13 @@
+import { useContext } from 'react';
+
 import {
 	BrowserRouter,
-	// Switch,
 	Routes,
 	Route,
 	// Redirect,
 } from 'react-router-dom';
+
+import { SettingsContext } from './contexts/SettingsContext';
 
 import ProfilePicker from './pages/profilePicker';
 import Library from './pages/library';
@@ -12,8 +15,12 @@ import Read from './pages/read';
 import Settings from './pages/settings';
 
 import PopupCreator from './components/PopupCreator';
+import Head from './components/Head';
+
 
 export default function App() {
+	const [settings] = useContext(SettingsContext);
+
 	return <>
 		<BrowserRouter>
 			<Routes>
@@ -27,5 +34,30 @@ export default function App() {
 			</Routes>
 		</BrowserRouter>
 		<PopupCreator />
+		<Head>
+			<link
+				rel='icon'
+				id='icon'
+				href={`/appIcons/${settings.appIcon}.ico`}
+				type='image/ico'
+			/>
+			<link
+				rel='apple-touch-icon'
+				id='apple-touch-icon'
+				href={`/appIcons/${settings.appIcon}_128.png`}
+				type='image/png'
+			/>
+			<link
+				rel='apple-touch-startup-image'
+				id='apple-touch-startup-image'
+				href={`/appIcons/${settings.appIcon}_128.png`}
+				type='image/png'
+			/>
+			<meta
+				name='msapplication-TileImage'
+				id='msapplication-TileImage'
+				content={`/appIcons/${settings.appIcon}_128.png`}
+			/>
+		</Head>
 	</>;
 }

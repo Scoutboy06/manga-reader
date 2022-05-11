@@ -2,10 +2,7 @@ import { useEffect } from 'react';
 
 export default function Head({ children }) {
 	useEffect(() => {
-		const selectors = {
-			link: 'rel',
-			meta: 'name',
-		};
+		if (!children) return;
 
 		for (const child of children.length ? children : [children]) {
 			if (child.type === 'title') {
@@ -13,22 +10,22 @@ export default function Head({ children }) {
 				continue;
 			}
 
-			const elType = child.type;
-			const selector = selectors[elType];
-			const selProp = child.props[selector];
-			let el;
+			const el = document.head.querySelector(`${child.type}#${child.props.id}`);
 
-			if (selProp)
-				el = document.head.querySelector(`${elType}[${selector}='${selProp}']`);
-			if (!el) {
-				el = document.createElement(elType);
-				el.setAttribute(selector, selProp);
-				document.head.appendChild(el);
+			if (!child.props.id || !el) {
+				const createdEl = document.createElement(child.type);
+				for (const elKey of Object.keys(child.props)) {
+					if (elKey !== 'payload') {
+						createdEl.setAttribute(elKey, child.props[elKey]);
+					}
+				}
+				document.head.appendChild(createdEl);
+				return;
 			}
 
-			for (const propKey of Object.keys(child.props)) {
-				if (propKey === selector) continue;
-				el.setAttribute(propKey, child.props[propKey]);
+			// Assign all the element's props
+			for (const key of Object.keys(child.props)) {
+				el.setAttribute(key, child.props[key]);
 			}
 		}
 	}, [children]);

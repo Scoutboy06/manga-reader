@@ -2,7 +2,7 @@ import { useEffect, useContext } from 'react';
 import { ProfileContext } from '../../contexts/ProfileContext';
 import { useNavigate } from 'react-router-dom';
 
-import Title from '../../components/Title';
+import Head from '../../components/Head';
 
 import styles from './Profiles.module.css';
 
@@ -19,7 +19,9 @@ export default function Profiles() {
 
 	return (
 		<main className={styles.profilesMain}>
-			<Title>Choose a profile</Title>
+			<Head>
+				<title>Choose a profile</title>
+			</Head>
 
 			<h1 className={styles.title}>Choose a profile</h1>
 

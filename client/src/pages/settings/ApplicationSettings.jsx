@@ -1,38 +1,27 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import Head from '../../components/Head';
 
 // import { ProfileContext } from '../../contexts/ProfileContext';
 // import { PopupContext } from '../../contexts/PopupContext';
+import { SettingsContext } from '../../contexts/SettingsContext';
 
 import styles from './settings.module.css';
 
-const appIcons = ['book_128.png', 'rikka_square128.png'];
+const appIcons = ['rikka_square', 'book'];
 
 export default function ApplicationSettings() {
-	// const navigate = useNavigate();
-	// const [profileData, profileActions] = useContext(ProfileContext);
-	// const [, popupActions] = useContext(PopupContext);
-
-	const [appIcon, setAppIcon] = useState(appIcons[1]);
+	const [settings, settingsActions] = useContext(SettingsContext);
+	const [appIcon, setAppIcon] = useState(settings.appIcon);
 
 	const saveHandler = () => {
-		localStorage.setItem(
-			'settings',
-			JSON.stringify({
-				appIcon,
-			})
-		);
+		settingsActions.setAppIcon(appIcon);
 	};
 
 	return (
 		<>
 			<Head>
 				<title>Application settings</title>
-				<link rel='shortcut icon' href={appIcon} type='image/png' />
-				<link rel='apple-touch-icon' href={appIcon} type='image/png' />
-				<link rel='apple-touch-startup-image' href={appIcon} type='image/png' />
-				<meta name='msapplication-TileImage' content={appIcon} />
 			</Head>
 
 			<div className={styles.formGroup}>
@@ -41,10 +30,15 @@ export default function ApplicationSettings() {
 					{appIcons.map((icon, index) => (
 						<button
 							className={styles.appIcon}
-							onClick={() => setAppIcon(appIcons[index])}
+							onClick={() => setAppIcon(icon)}
 							key={index}
+							data-isselected={appIcon === icon}
 						>
-							<img src={'/appIcons/' + icon} alt='Failed to load' key={index} />
+							<img
+								src={`/appIcons/${icon}_128.png`}
+								alt='Failed to load'
+								key={index}
+							/>
 						</button>
 					))}
 				</div>

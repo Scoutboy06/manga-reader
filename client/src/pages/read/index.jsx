@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
 
 import Loader from '../../components/Loader';
-import Title from '../../components/Title';
+import Head from '../../components/Head';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 
@@ -115,7 +115,9 @@ export default function Read() {
 
 	return (
 		<main className={styles.main} data-isfullwidth={isFullWidth}>
-			<Title>{params.chapter + ' - ' + params.mangaName}</Title>
+			<Head>
+				<title>{params.chapter + ' - ' + params.mangaName}</title>
+			</Head>
 
 			<Header
 				isTop={true}

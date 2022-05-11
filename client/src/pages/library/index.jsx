@@ -4,7 +4,7 @@ import fetchAPI from '../../functions/fetchAPI';
 
 import MangaCard from '../../components/MangaCard';
 import NewMangaPopup from '../../components/Popups/NewMangaPopup';
-import Title from '../../components/Title';
+import Head from '../../components/Head';
 import Dropdown from '../../components/Dropdown';
 import BlurContainer from '../../components/BlurContainer';
 
@@ -66,7 +66,9 @@ export default function Library() {
 	return (
 		<>
 			<main className={styles.main}>
-				<Title>Choose a manga</Title>
+				<Head>
+					<title>Choose a manga</title>
+				</Head>
 
 				<header className={styles.header}>
 					<BlurContainer

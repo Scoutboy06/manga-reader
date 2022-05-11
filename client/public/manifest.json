@@ -2,17 +2,32 @@
 	"name": "Manga Reader",
 	"icons": [
 		{
-			"src": "/img/book_128.png",
+			"src": "/appIcons/book_16.ico",
+			"type": "image/ico",
+			"sizes": "16x16"
+		},
+		{
+			"src": "/appIcons/book_16.png",
+			"type": "image/png",
+			"sizes": "16x16"
+		},
+		{
+			"src": "/appIcons/book_72.png",
+			"type": "image/png",
+			"sizes": "72x72"
+		},
+		{
+			"src": "/appIcons/book_128.png",
 			"type": "image/png",
 			"sizes": "128x128"
 		},
 		{
-			"src": "/img/book_256.png",
+			"src": "/appIcons/book_144.png",
 			"type": "image/png",
-			"sizes": "256x256"
+			"sizes": "144x144"
 		},
 		{
-			"src": "/img/book_400.png",
+			"src": "/appIcons/book_400.png",
 			"type": "image/png",
 			"sizes": "400x400"
 		}
