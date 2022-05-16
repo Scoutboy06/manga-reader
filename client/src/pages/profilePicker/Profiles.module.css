@@ -19,7 +19,7 @@
 }
 
 .profile {
-	margin-right: 2vw;
+	margin: 0 0.2em;
 	text-align: center;
 	text-decoration: none;
 	cursor: pointer;
@@ -27,19 +27,15 @@
 
 .profile img,
 .profile svg {
-	height: 10vw;
-	width: 10vw;
-	max-height: 200px;
-	max-width: 200px;
-	min-height: 84px;
-	min-width: 84px;
-	border-radius: 4px;
+	width: 10em;
+	aspect-ratio: 1 / 1;
+	border-radius: 0.25em;
 	border: 0.15em solid transparent;
 	fill: grey;
 }
 
 .profile p {
-	font-size: 1.3vw;
+	font-size: 1.2em;
 	color: grey;
 }
 
@@ -50,4 +46,11 @@
 
 .profile:hover p {
 	color: #e5e5e5;
+}
+
+@media screen and (max-width: 26em) {
+	.profile img,
+	.profile svg {
+		width: 8em;
+	}
 }
