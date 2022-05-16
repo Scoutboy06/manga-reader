@@ -35,8 +35,11 @@
 	bottom: 0;
 	right: 0;
 	overflow: hidden;
-	background-position: 50%;
-	background-size: cover;
+}
+
+.imageContainer img {
+	height: 100%;
+	object-fit: cover;
 }
 
 .cardOverlay {

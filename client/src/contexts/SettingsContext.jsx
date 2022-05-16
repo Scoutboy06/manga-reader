@@ -3,9 +3,9 @@ import { createContext, useState, useEffect } from 'react';
 const initialState = (() => {
 	const settingsString = localStorage.getItem('settings');
 	if (settingsString === null) {
-		console.log(null);
-		localStorage.setItem('settings', '{}');
-		return {};
+		const initialSettings = { appIcon: 'rikka_square' };
+		localStorage.setItem('settings', JSON.stringify(initialSettings));
+		return initialSettings;
 	}
 	return JSON.parse(settingsString);
 })();

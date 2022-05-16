@@ -64,10 +64,9 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				<div className={styles.cardContent}>
 					<div className={styles.cardPadder}></div>
 
-					<div
-						className={styles.imageContainer}
-						style={{ backgroundImage: `url(${manga.coverUrl})` }}
-					></div>
+					<div className={styles.imageContainer}>
+						<img src={manga.coverUrl} alt={manga.name} loading='lazy' />
+					</div>
 
 					<div className={styles.cardOverlay}>
 						<div

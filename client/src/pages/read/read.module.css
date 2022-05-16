@@ -91,14 +91,6 @@
 	transition: width 0.3s;
 }
 
-.main[data-isfullwidth='true'] .chapters {
-	padding: 0;
-	width: 100vw;
-	min-width: none;
-	max-width: none;
-	min-height: none;
-}
-
 .chapters img {
 	display: block;
 	max-width: 100%;
@@ -107,9 +99,22 @@
 	margin: 0 auto;
 }
 
+.main[data-isfullwidth='true'] .chapters {
+	padding: 0;
+	width: 100vw;
+	min-width: none;
+	max-width: none;
+	min-height: none;
+}
+
 .main[data-isfullwidth='true'] .chapters img {
 	max-height: none;
 	width: 100%;
+}
+
+.imageContainer[data-isloaded='false'] {
+	height: 100vh;
+	width: 10px;
 }
 
 #alert {

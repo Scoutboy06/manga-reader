@@ -138,7 +138,20 @@ export default function Read() {
 				<section className={styles.chapters}>
 					{images &&
 						images.map((image, index) => (
-							<img src={image} key={index} alt='Failed to load' />
+							<div
+								className={styles.imageContainer}
+								key={index}
+								data-isloaded={false}
+							>
+								<img
+									src={image}
+									alt={chapters.title + ' - ' + (index + 1)}
+									loading='lazy'
+									onLoad={e =>
+										e.target.parentElement.setAttribute('data-isloaded', true)
+									}
+								/>
+							</div>
 						))}
 				</section>
 			)}
