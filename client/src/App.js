@@ -12,7 +12,7 @@ import {
 import { SettingsContext } from './contexts/SettingsContext';
 
 import ProfilePicker from './pages/profilePicker';
-// import Library from './pages/library';
+import Library from './pages/library';
 // import Read from './pages/read';
 // import Settings from './pages/settings';
 
@@ -20,7 +20,7 @@ import PopupCreator from './components/PopupCreator';
 import Head from './components/Head';
 
 // const ProfilePicker = lazy(() => import('./pages/profilePicker'));
-const Library = lazy(() => import('./pages/library'));
+// const Library = lazy(() => import('./pages/library'));
 const Read = lazy(() => import('./pages/read'));
 const Settings = lazy(() => import('./pages/settings'));
 
