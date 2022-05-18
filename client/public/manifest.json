@@ -3,5 +3,5 @@
 	"start_url": "/",
 	"background_color": "#121212",
 	"display": "standalone",
-	"theme_color": "#2596be"
+	"theme_color": "#121212"
 }
