@@ -20,7 +20,7 @@ export default function Head({ children }) {
 					}
 				}
 				document.head.appendChild(createdEl);
-				return;
+				continue;
 			}
 
 			// Assign all the element's props
