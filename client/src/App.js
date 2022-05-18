@@ -44,21 +44,14 @@ export default function App() {
 			<link
 				rel='apple-touch-icon'
 				id='apple-touch-icon'
-				// href={`/appIcons/${settings.appIcon}_256.png`}
-				href={`/appIcons/rikka_square_256.png`}
+				href={`/appIcons/${settings.appIcon}_256.png`}
 				type='image/png'
 			/>
-			{/* <link
-				rel='apple-touch-startup-image'
-				id='apple-touch-startup-image'
-				href={`/appIcons/rikka_square_256.png`}
-				type='image/png'
-			/> */}
-			{/* <meta
+			<meta
 				name='msapplication-TileImage'
 				id='msapplication-TileImage'
 				content={`/appIcons/${settings.appIcon}_128.png`}
-			/> */}
+			/>
 		</Head>
 	</>;
 }
