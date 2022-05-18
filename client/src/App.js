@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, lazy, Suspense } from 'react';
 
 import {
 	BrowserRouter,
@@ -7,16 +7,22 @@ import {
 	// Redirect,
 } from 'react-router-dom';
 
+// import Loader from './components/Loader';
+
 import { SettingsContext } from './contexts/SettingsContext';
 
 import ProfilePicker from './pages/profilePicker';
-import Library from './pages/library';
-import Read from './pages/read';
-import Settings from './pages/settings';
+// import Library from './pages/library';
+// import Read from './pages/read';
+// import Settings from './pages/settings';
 
 import PopupCreator from './components/PopupCreator';
 import Head from './components/Head';
 
+// const ProfilePicker = lazy(() => import('./pages/profilePicker'));
+const Library = lazy(() => import('./pages/library'));
+const Read = lazy(() => import('./pages/read'));
+const Settings = lazy(() => import('./pages/settings'));
 
 export default function App() {
 	const [settings] = useContext(SettingsContext);
@@ -25,12 +31,16 @@ export default function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route exact path='/' element={<ProfilePicker />} />
+
 				<Route exact path='/library' element={<Library />} />
-				<Route exact path='/read/:mangaName/' element={<Read />} />
-				<Route exact path='/read/:mangaName/:chapter' element={<Read />} />
-				<Route exact path='/settings/' element={<Settings />} />
-				<Route exact path='/settings/:type' element={<Settings />} />
-				{/* <Redirect to="/" /> */}
+
+				{/* fallback={<Loader size={90} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />} */}
+				<Route exact path='/read/:mangaName/' element={<Suspense><Read /></Suspense>} />
+
+				<Route exact path='/read/:mangaName/:chapter' element={<Suspense><Read /></Suspense>} />
+
+				<Route exact path='/settings/' element={<Suspense> <Settings /> </Suspense>} />
+				<Route exact path='/settings/:type' element={<Suspense> <Settings /> </Suspense>} />
 			</Routes>
 		</BrowserRouter>
 		<PopupCreator />
