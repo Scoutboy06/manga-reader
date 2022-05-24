@@ -9,6 +9,7 @@ import EditMangaCover from '../Popups/EditMangaCover';
 
 import fetchAPI from '../../functions/fetchAPI';
 import parseChapterName from '../../functions/parseChapterName';
+import isTouchScreen from '../../functions/isTouchScreen';
 
 import { PopupContext } from '../../contexts/PopupContext';
 
@@ -182,6 +183,34 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 						),
 						content: (manga.subscribed ? 'Disable' : 'Enable') + ' updates',
 					},
+					isTouchScreen()
+						? {
+								action: () => {
+									if (
+										window.confirm(
+											'Are you sure you want to perform this action?'
+										)
+									) {
+										fetchAPI(`/api/mangas/${manga._id}/finished`, {
+											method: 'PUT',
+											body: JSON.stringify({ isFinished: !manga.finished }),
+										}).then(() => window.location.reload());
+									}
+								},
+								icon: (
+									<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+										<path d='M0 0h24v24H0V0z' fill='none' />
+										<path
+											fill={manga.finished ? '#c33' : '#fff'}
+											d='M9 16.2l-3.5-3.5c-.39-.39-1.01-.39-1.4 0-.39.39-.39 1.01 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7c.39-.39.39-1.01 0-1.4-.39-.39-1.01-.39-1.4 0L9 16.2z'
+										/>
+									</svg>
+								),
+								content: manga.finished
+									? 'Set to uncompleted'
+									: 'Set to completed',
+						  }
+						: null,
 					'divider',
 					{
 						action: () => {
