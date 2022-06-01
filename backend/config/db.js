@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import chalk from 'chalk';
+// import dotenv from 'dotenv';
 
 // dotenv.config({ path: '.env.local' });
 // dotenv.config({ path: '.env' });
@@ -13,7 +14,7 @@ const connectDB = async () => {
 			useNewUrlParser: true,
 			// useCreateIndex: true,
 		});
-		console.log(`MongoDB Connected: ${conn.connection.host}`);
+		console.log(chalk.green(`MongoDB Connected: ${conn.connection.host}`));
 	} catch (err) {
 		console.error(`Error: ${err.message}`);
 		// console.error(err);
