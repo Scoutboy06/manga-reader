@@ -6,13 +6,13 @@ import {
 	Route,
 	// Redirect,
 } from 'react-router-dom';
-
-// import Loader from './components/Loader';
+import NProgress from 'nprogress';
 
 import { SettingsContext } from './contexts/SettingsContext';
 
 import PopupCreator from './components/PopupCreator';
 import Head from './components/Head';
+import Loader from './components/PageLoader';
 import isTouchScreen from './functions/isTouchScreen';
 
 
@@ -31,6 +31,7 @@ export default function App() {
 
 	useEffect(() => {
 		document.body.dataset.isTouchScreen = isTouchScreen();
+		NProgress.configure({ showSpinner: false });
 	}, []);
 
 	return <>
@@ -40,13 +41,13 @@ export default function App() {
 
 				<Route exact path='/library' element={<Library />} />
 
-				{/* fallback={<Loader size={90} style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} />} */}
-				<Route exact path='/read/:mangaName/' element={<Suspense><Read /></Suspense>} />
+				<Route exact path='/read/:mangaName/' element={<Suspense fallback={<Loader />}><Read /></Suspense>} />
 
-				<Route exact path='/read/:mangaName/:chapter' element={<Suspense><Read /></Suspense>} />
+				<Route exact path='/read/:mangaName/:chapter' element={<Suspense fallback={<Loader />}><Read /></Suspense>} />
 
-				<Route exact path='/settings/' element={<Suspense> <Settings /> </Suspense>} />
-				<Route exact path='/settings/:type' element={<Suspense> <Settings /> </Suspense>} />
+				<Route exact path='/settings/' element={<Suspense fallback={<Loader />}> <Settings /> </Suspense>} />
+
+				<Route exact path='/settings/:type' element={<Suspense fallback={<Loader />}> <Settings /> </Suspense>} />
 			</Routes>
 		</BrowserRouter>
 		<PopupCreator />
