@@ -6,27 +6,17 @@ const types = {
 	SET_VISIBILITY: 'SET_VISIBILITY',
 };
 
-const initialState = {
-	popups: [],
-};
+const initialState = [];
 
-const reducer = (state, action) => {
-	const popups = state.popups;
-
+const reducer = (popups, action) => {
 	switch (action.type) {
 		case types.CREATE_POPUP:
-			return {
-				...state,
-				popups: [...popups, { ...action.payload, isVisible: true }],
-			};
+			return [...popups, { ...action.payload, isVisible: true }];
 		case types.CLOSE_POPUP:
-			return {
-				...state,
-				popups: [
-					...popups.slice(0, action.index),
-					...popups.slice(action.index + 1, popups.length),
-				],
-			};
+			return [
+				...popups.slice(0, action.index),
+				...popups.slice(action.index + 1, popups.length),
+			];
 		case types.SET_VISIBILITY:
 			const popup = popups[action.index];
 			popup.isVisible = action.isVisible;
@@ -35,16 +25,16 @@ const reducer = (state, action) => {
 				popup,
 				...popups.slice(action.index + 1, popups.length),
 			];
-			return { ...state, popups: newPopups };
+			return newPopups;
 		default:
-			return state;
+			return popups;
 	}
 };
 
 export const PopupContext = createContext(initialState);
 
 export default function Provider({ children }) {
-	const [state, dispatch] = useReducer(reducer, initialState);
+	const [popups, dispatch] = useReducer(reducer, initialState);
 
 	const actions = {
 		createPopup: payload => {
@@ -52,7 +42,7 @@ export default function Provider({ children }) {
 				type: types.CREATE_POPUP,
 				payload,
 			});
-			return state.popups.length;
+			return popups.length;
 		},
 		closePopup: index => {
 			dispatch({
@@ -70,7 +60,7 @@ export default function Provider({ children }) {
 	};
 
 	return (
-		<PopupContext.Provider value={[state, actions]}>
+		<PopupContext.Provider value={[popups, actions]}>
 			{children}
 		</PopupContext.Provider>
 	);

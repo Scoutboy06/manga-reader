@@ -6,7 +6,6 @@ import {
 	Route,
 	// Redirect,
 } from 'react-router-dom';
-import NProgress from 'nprogress';
 
 import { SettingsContext } from './contexts/SettingsContext';
 
@@ -31,7 +30,6 @@ export default function App() {
 
 	useEffect(() => {
 		document.body.dataset.isTouchScreen = isTouchScreen();
-		NProgress.configure({ showSpinner: false });
 	}, []);
 
 	return <>

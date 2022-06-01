@@ -29,7 +29,7 @@ export default function ApplicationSettings() {
 				<div className={styles.appIcons}>
 					{appIcons.map((icon, index) => (
 						<button
-							className={styles.appIcon}
+							className={styles.item}
 							onClick={() => setAppIcon(icon)}
 							key={index}
 							data-isselected={appIcon === icon}

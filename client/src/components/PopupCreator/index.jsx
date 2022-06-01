@@ -5,30 +5,29 @@ import { PopupContext } from '../../contexts/PopupContext';
 import styles from './PopupCreator.module.css';
 
 export default function PopupCreator() {
-	const [state, actions] = useContext(PopupContext);
+	const [popups, actions] = useContext(PopupContext);
 	const [showBlackScreen, setShowBlackScreen] = useState(false);
 
 	useEffect(() => {
-		if (state.popups.length > 0) {
+		if (popups.length > 0) {
 			document.body.style.overflow = 'hidden';
 			setShowBlackScreen(true);
 		} else {
 			setShowBlackScreen(false);
 			document.body.style.overflow = '';
 		}
-	}, [state.popups]);
+	}, [popups]);
 
 	return (
 		<div className={styles.blackContainer} data-show={showBlackScreen}>
-			{state.popups.map((popup, popupIndex) => (
+			{popups.map((popup, popupIndex) => (
 				<div
 					className={styles.container}
 					key={popupIndex}
 					data-show={
 						popup.isVisible &&
-						(popupIndex === state.popups.length - 1 ||
-							(state.popups?.[popupIndex + 1] &&
-								!state.popups[popupIndex + 1].isVisible))
+						(popupIndex === popups.length - 1 ||
+							(popups?.[popupIndex + 1] && !popups[popupIndex + 1].isVisible))
 					}
 				>
 					<div className={styles.header}>

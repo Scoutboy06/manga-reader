@@ -7,6 +7,7 @@ const MODEL_NAME = mongoose.Schema(
 		// mangas: [
 		// 	{ type: mongoose.Types.ObjectId, ref: 'Manga' },
 		// ],
+		discordUserId: { type: String, required: false },
 	},
 	{
 		timestamps: true,
