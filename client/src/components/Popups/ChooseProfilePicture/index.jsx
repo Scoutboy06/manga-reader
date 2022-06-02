@@ -1,3 +1,68 @@
-export default function ChooseProfilePicture() {
-	return <p>Hello there!</p>;
+import { useRef } from 'react';
+import profilePictures from './profilePictures.js';
+
+import styles from './index.module.css';
+
+export default function ChooseProfilePicture({ callback }) {
+	const mainContainer = useRef();
+
+	const scrollImages = (index, direction) => {
+		// console.log(index, direction);
+		const seriesContainer = mainContainer.current.children[index];
+		const imagesContainer = seriesContainer.children[3];
+
+		const mainContainerWidth =
+			mainContainer.current.getBoundingClientRect().width;
+		const imagesContainerWidth = imagesContainer.getBoundingClientRect().width;
+
+		// Get the current position and caclulate the new one
+		const leftString = imagesContainer.style.left;
+		const prevScroll = Number(leftString.replace('px', ''));
+		let newScroll = prevScroll + direction * (160 + 8) * 4;
+		if (newScroll > 0) newScroll = 0;
+		else if (newScroll + imagesContainerWidth < mainContainerWidth)
+			newScroll = -imagesContainerWidth + mainContainerWidth;
+		imagesContainer.style.left = `${newScroll}px`;
+	};
+
+	return (
+		<div className={styles.mainContainer} ref={mainContainer}>
+			{profilePictures.map((series, seriesIndex) => (
+				<div className={styles.series} key={series.pathName}>
+					<h3>{series.name}</h3>
+
+					<button
+						className={[styles.pagination, styles.left].join(' ')}
+						onClick={() => scrollImages(seriesIndex, 1)}
+					>
+						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+							<path d='M24 24H0V0h24v24z' fill='none' />
+							<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
+						</svg>
+					</button>
+
+					<button
+						className={[styles.pagination, styles.right].join(' ')}
+						onClick={() => scrollImages(seriesIndex, -1)}
+					>
+						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
+							<path d='M24 24H0V0h24v24z' fill='none' />
+							<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
+						</svg>
+					</button>
+
+					<div className={styles.images} style={{ left: '0px' }}>
+						{series.images.map(image => (
+							<img
+								src={`/profilePictures/${series.pathName}/${image}`}
+								alt={image}
+								key={series.pathName + image}
+								loading='lazy'
+							/>
+						))}
+					</div>
+				</div>
+			))}
+		</div>
+	);
 }

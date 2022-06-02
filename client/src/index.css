@@ -1,4 +1,6 @@
 :root {
+	--text-color: #fff;
+
 	--main-color: #2596be; /* #00a4dc */
 	--main-color-hover: #30b1e0;
 	--main-color-focus: #40a4c6;
@@ -44,6 +46,17 @@ button {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
 		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+	color: var(--text-color);
 }
 
 ::-webkit-scrollbar {

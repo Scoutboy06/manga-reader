@@ -94,6 +94,7 @@
 .content {
 	width: 100%;
 	max-height: calc(100vh - 6em);
+	overflow: hidden auto;
 }
 
 @media screen and (max-width: 40em) {
