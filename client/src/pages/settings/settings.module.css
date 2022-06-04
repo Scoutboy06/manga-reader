@@ -10,7 +10,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background-color: var(--bg-02dp);
+	background-color: var(--bg-01dp);
 }
 
 .homeBtn {

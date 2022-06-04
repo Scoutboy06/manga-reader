@@ -54,11 +54,6 @@
 	transition: opacity 0.2s;
 }
 
-body[data-is-touch-screen='true'] .cardOverlay {
-	opacity: 1 !important;
-	background-color: transparent !important;
-}
-
 .card:hover .cardOverlay {
 	opacity: 1;
 	user-select: none;
@@ -70,11 +65,6 @@ body[data-is-touch-screen='true'] .cardOverlay {
 	bottom: 0;
 	display: flex;
 	flex-direction: row-reverse;
-}
-
-body[data-is-touch-screen='true'] .actionButtons {
-	right: 0.3em;
-	bottom: 0.3em;
 }
 
 .actionButtons > button {
@@ -95,35 +85,6 @@ body[data-is-touch-screen='true'] .actionButtons {
 	/* z-index: 3; */
 }
 
-body[data-is-touch-screen='true'] .actionButtons > button:not(:first-child) {
-	display: none;
-}
-
-body[data-is-touch-screen='true'] .actionButtons > button::after {
-	content: '';
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 100%;
-	height: 100%;
-	padding: 0.4em;
-	transform: translate(-50%, -50%);
-	border-radius: 50%;
-	background-color: var(--main-color);
-	opacity: 0;
-	/* z-index: 1; */
-}
-
-body[data-is-touch-screen='true'] .actionButtons > button:active::after {
-	opacity: 0.4;
-}
-
-body[data-is-touch-screen='true'] .actionButtons > button {
-	background-color: rgba(0, 0, 0, 0.7) !important;
-	margin-left: 0.4em;
-	padding: 0.3em;
-}
-
 .actionButtons > button:hover {
 	background-color: rgba(0, 164, 220, 0.2);
 }
@@ -134,17 +95,6 @@ body[data-is-touch-screen='true'] .actionButtons > button {
 }
 
 .actionButtons > button:hover > svg {
-	fill: var(--main-color);
-}
-
-body[data-is-touch-screen='true'] .actionButtons > button:nth-child(1) > svg {
-	fill: #fff;
-}
-
-body[data-is-touch-screen='true']
-	.actionButtons
-	> button:nth-child(1):focus
-	> svg {
 	fill: var(--main-color);
 }
 
@@ -201,6 +151,55 @@ body[data-is-touch-screen='true']
 	top: -10px;
 	width: 30px;
 	height: 30px;
+}
+
+@media (hover: none) {
+	.actionButtons > button:nth-child(1):focus > svg {
+		fill: var(--main-color);
+	}
+
+	.cardOverlay {
+		opacity: 1 !important;
+		background-color: transparent !important;
+	}
+
+	.actionButtons {
+		right: 0.3em;
+		bottom: 0.3em;
+	}
+
+	.actionButtons > button {
+		background-color: rgba(0, 0, 0, 0.7) !important;
+		margin-left: 0.4em;
+		padding: 0.3em;
+	}
+
+	.actionButtons > button:not(:first-child) {
+		display: none;
+	}
+
+	.actionButtons > button::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 100%;
+		height: 100%;
+		padding: 0.4em;
+		transform: translate(-50%, -50%);
+		border-radius: 50%;
+		background-color: var(--main-color);
+		opacity: 0;
+		/* z-index: 1; */
+	}
+
+	.actionButtons > button:active::after {
+		opacity: 0.4;
+	}
+
+	.actionButtons > button:nth-child(1) > svg {
+		fill: #fff;
+	}
 }
 
 @media (min-width: 18em) {

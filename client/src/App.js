@@ -1,4 +1,4 @@
-import { useContext, lazy, Suspense, useEffect } from 'react';
+import { useContext, lazy, Suspense } from 'react';
 
 import {
 	BrowserRouter,
@@ -12,7 +12,6 @@ import { SettingsContext } from './contexts/SettingsContext';
 import PopupCreator from './components/PopupCreator';
 import Head from './components/Head';
 import Loader from './components/PageLoader';
-import isTouchScreen from './functions/isTouchScreen';
 
 
 import ProfilePicker from './pages/profilePicker';
@@ -35,10 +34,6 @@ const Read = lazy(() => import('./pages/read'));
 export default function App() {
 	const [settings] = useContext(SettingsContext);
 
-	useEffect(() => {
-		document.body.dataset.isTouchScreen = isTouchScreen();
-	}, []);
-
 	return <>
 		<BrowserRouter>
 			<Routes>
@@ -57,9 +52,6 @@ export default function App() {
 						<Route path=':_id' element={<Profile />} />
 					</Route>
 				</Route>
-
-
-				{/* <Route exact path='/settings/profiles/:_id' element={<Suspense fallback={<Loader />}> <Settings /> </Suspense>} /> */}
 			</Routes>
 		</BrowserRouter>
 

@@ -23,29 +23,6 @@ const profilePictures = [
 		],
 	},
 	{
-		name: 'Blue Period',
-		pathName: 'blue_period',
-		images: [
-			'0.jpg',
-			'1.jpg',
-			'2.jpg',
-			'3.jpg',
-			'4.png',
-			'5.png',
-		],
-	},
-	{
-		name: 'Rascal Does Not Dream of Bunny Girl Senpai',
-		pathName: 'bunny_girl',
-		images: [
-			'0.jpg',
-			'1.jpg',
-			'2.jpg',
-			'3.jpg',
-			'4.png',
-		],
-	},
-	{
 		name: 'Demon Slayer',
 		pathName: 'demon_slayer',
 		images: [
@@ -67,6 +44,20 @@ const profilePictures = [
 		],
 	},
 	{
+		name: 'My Dress-Up Darling',
+		pathName: 'my_dress_up_darling',
+		images: [
+			'0.png',
+			'1.jpg',
+			'2.png',
+			'3.png',
+			'4.jpg',
+			'5.png',
+			'6.png',
+			'7.png',
+		],
+	},
+	{
 		name: 'Horimiya',
 		pathName: 'horimiya',
 		images: [
@@ -85,39 +76,6 @@ const profilePictures = [
 		],
 	},
 	{
-		name: 'Kaguya-sama: Love Is War',
-		pathName: 'love_is_war',
-		images: [
-			'0.png',
-			'1.png',
-			'2.jpg',
-			'3.png',
-		],
-	},
-	{
-		name: 'My Dress-Up Darling',
-		pathName: 'my_dress_up_darling',
-		images: [
-			'0.png',
-			'1.jpg',
-			'2.png',
-			'3.png',
-			'4.jpg',
-			'5.png',
-			'6.png',
-			'7.png',
-		],
-	},
-	// {
-	// 	name: 'Don\'t Toy With Me, Miss Nagatoro',
-	// 	pathName: 'nagatoro',
-	// 	images: [
-	// 		'0.jpg',
-	// 		'1.jpg',
-	// 		'2.jpg',
-	// 	],
-	// },
-	{
 		name: 'Solo Leveling',
 		pathName: 'solo_leveling',
 		images: [
@@ -133,6 +91,48 @@ const profilePictures = [
 			'9.png',
 		],
 	},
+	{
+		name: 'Rascal Does Not Dream of Bunny Girl Senpai',
+		pathName: 'bunny_girl',
+		images: [
+			'0.jpg',
+			'1.jpg',
+			'2.jpg',
+			'3.jpg',
+			'4.png',
+		],
+	},
+	{
+		name: 'Blue Period',
+		pathName: 'blue_period',
+		images: [
+			'0.jpg',
+			'1.jpg',
+			'2.jpg',
+			'3.jpg',
+			'4.png',
+			'5.png',
+		],
+	},
+	{
+		name: 'Kaguya-sama: Love Is War',
+		pathName: 'love_is_war',
+		images: [
+			'0.png',
+			'1.png',
+			'2.jpg',
+			'3.png',
+		],
+	},
+	// {
+	// 	name: 'Don\'t Toy With Me, Miss Nagatoro',
+	// 	pathName: 'nagatoro',
+	// 	images: [
+	// 		'0.jpg',
+	// 		'1.jpg',
+	// 		'2.jpg',
+	// 	],
+	// },
 	// {
 	// 	name: 'Uzaki-chan Wants to Hang Out!',
 	// 	pathName: 'uzaki_chan',

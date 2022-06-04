@@ -3,11 +3,8 @@ import { useNavigate, useLocation, Outlet, NavLink } from 'react-router-dom';
 import styles from './settings.module.css';
 
 export default function Settings() {
-	// const params = useParams();
 	const location = useLocation();
 	const navigate = useNavigate();
-
-	// console.log(location);
 
 	return (
 		<div className={styles.container}>
@@ -16,7 +13,6 @@ export default function Settings() {
 					className={'button ' + styles.homeBtn}
 					onClick={() => {
 						const path = location.pathname.slice(1).split('/');
-						console.log(path);
 
 						if (path.length === 2) {
 							navigate('/library');
