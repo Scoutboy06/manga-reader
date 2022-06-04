@@ -50,6 +50,7 @@ export default function PopupCreator() {
 						<popup.content
 							closePopup={() => actions.closePopup(popupIndex)}
 							data={popup.data}
+							callback={popup.callback}
 						/>
 					</div>
 				</div>

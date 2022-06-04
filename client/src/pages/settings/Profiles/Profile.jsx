@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
+import fetchAPI from '../../../functions/fetchAPI';
+
 import ChooseProfilePicture from '../../../components/Popups/ChooseProfilePicture';
 import { PopupContext } from '../../../contexts/PopupContext';
 import { ProfileContext } from '../../../contexts/ProfileContext';
@@ -14,11 +16,22 @@ export default function Profile() {
 	const [, popupActions] = useContext(PopupContext);
 
 	const [username, setUsername] = useState('');
+	const [profilePicture, setProfilePicture] = useState();
 	const [discordUserId, setDiscordUserId] = useState('');
 	const [currentProfile, setCurrentProfile] = useState();
 
 	const saveHandler = () => {
-		console.log('Save...');
+		console.log('Saving...');
+		fetchAPI(`/api/users/${currentProfile._id}`, {
+			method: 'PUT',
+			body: JSON.stringify({
+				name: username,
+				imageUrl: profilePicture,
+				discordUserId,
+			}),
+		})
+			.then(console.log)
+			.catch(console.error);
 	};
 
 	useEffect(() => {
@@ -26,6 +39,7 @@ export default function Profile() {
 		setCurrentProfile(currProfile);
 		setUsername(currProfile.name);
 		setDiscordUserId(currProfile.discordUserId || '');
+		setProfilePicture(currProfile.imageUrl);
 	}, [params._id, profiles]);
 
 	if (!currentProfile) return null;
@@ -46,7 +60,7 @@ export default function Profile() {
 			<div className={styles.formGroup}>
 				<label>Current profile picture:</label>
 				<img
-					src={currentProfile.imageUrl}
+					src={profilePicture}
 					width={200}
 					height={200}
 					alt={currentProfile.name}
@@ -56,6 +70,7 @@ export default function Profile() {
 						popupActions.createPopup({
 							title: 'Change profile picture',
 							content: ChooseProfilePicture,
+							callback: imgSrc => setProfilePicture(imgSrc),
 						});
 					}}
 				>

@@ -22,17 +22,24 @@
 	transition: left 0.2s ease-in-out;
 }
 
-.images img {
+.images button {
+	background-color: transparent;
 	margin-right: 8px;
 	cursor: pointer;
 	width: 160px;
 	height: 160px;
 	border-radius: 0.25em;
 	border: 0.15em solid transparent;
+	overflow: hidden;
+}
+
+.images img {
+	width: 100%;
+	height: 100%;
 	-webkit-user-drag: none;
 }
 
-.images img:hover {
+.images button:hover {
 	border-color: #e5e5e5;
 }
 

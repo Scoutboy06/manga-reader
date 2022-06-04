@@ -3,7 +3,7 @@ import profilePictures from './profilePictures.js';
 
 import styles from './index.module.css';
 
-export default function ChooseProfilePicture({ callback }) {
+export default function ChooseProfilePicture({ callback, closePopup }) {
 	const mainContainer = useRef();
 
 	const scrollImages = (index, direction) => {
@@ -23,6 +23,11 @@ export default function ChooseProfilePicture({ callback }) {
 		else if (newScroll + imagesContainerWidth < mainContainerWidth)
 			newScroll = -imagesContainerWidth + mainContainerWidth;
 		imagesContainer.style.left = `${newScroll}px`;
+	};
+
+	const selectHandler = imgSrc => {
+		callback(imgSrc);
+		closePopup();
 	};
 
 	return (
@@ -53,12 +58,18 @@ export default function ChooseProfilePicture({ callback }) {
 
 					<div className={styles.images} style={{ left: '0px' }}>
 						{series.images.map(image => (
-							<img
-								src={`/profilePictures/${series.pathName}/${image}`}
-								alt={image}
+							<button
 								key={series.pathName + image}
-								loading='lazy'
-							/>
+								onClick={() =>
+									selectHandler(`/profilePictures/${series.pathName}/${image}`)
+								}
+							>
+								<img
+									src={`/profilePictures/${series.pathName}/${image}`}
+									alt={image}
+									loading='lazy'
+								/>
+							</button>
 						))}
 					</div>
 				</div>
