@@ -22,24 +22,27 @@
 	height: 2.5em;
 }
 
-.header button:not(.homeBtn) {
+.navlink {
 	background-color: transparent;
 	border: 0;
 	outline: none;
-	color: rgb(160, 160, 160);
+	color: #a0a0a0;
 	font-size: 0.9em;
 	cursor: pointer;
 	transition: color 0.2s;
 	font-weight: bold;
 	margin: 0 0.5em;
+	text-decoration: none;
 }
 
-.header button:not(.homeBtn):hover {
-	color: var(--main-color);
-}
-
-.header button[data-active='true'] {
+.navlink:global(.active) {
 	color: #fff;
+}
+
+@media (hover: hover) {
+	.navlink:hover {
+		color: var(--main-color);
+	}
 }
 
 .main {

@@ -1,30 +1,30 @@
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
-import ApplicationSettings from './ApplicationSettings';
-import ProfilesSettings from './ProfilesSettings';
-
-// import { ProfileContext } from '../../contexts/ProfileContext';
-// import { PopupContext } from '../../contexts/PopupContext';
+import { useNavigate, useLocation, Outlet, NavLink } from 'react-router-dom';
 
 import styles from './settings.module.css';
 
 export default function Settings() {
-	const params = useParams();
+	// const params = useParams();
+	const location = useLocation();
 	const navigate = useNavigate();
-	// const [profileData, profileActions] = useContext(ProfileContext);
-	// const [, popupActions] = useContext(PopupContext);
 
-	useEffect(() => {
-		if (!params.type) navigate('/settings/application', { replace: true });
-	}, [navigate, params.type]);
+	// console.log(location);
 
 	return (
 		<div className={styles.container}>
 			<header className={styles.header}>
 				<button
 					className={'button ' + styles.homeBtn}
-					onClick={() => navigate('/library')}
+					onClick={() => {
+						const path = location.pathname.slice(1).split('/');
+						console.log(path);
+
+						if (path.length === 2) {
+							navigate('/library');
+						} else {
+							const newPath = path.slice(0, path.length - 1);
+							navigate('/' + newPath.join('/'));
+						}
+					}}
 				>
 					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 						<path d='M0 0h24v24H0V0z' fill='none' />
@@ -32,27 +32,17 @@ export default function Settings() {
 					</svg>
 				</button>
 
-				<button
-					onClick={() => navigate('/settings/application')}
-					data-active={params.type === 'application'}
-				>
+				<NavLink to='/settings/application' className={styles.navlink}>
 					Application
-				</button>
+				</NavLink>
 
-				<button
-					onClick={() => navigate('/settings/profiles')}
-					data-active={params.type === 'profiles'}
-				>
+				<NavLink to='/settings/profiles' className={styles.navlink}>
 					Profiles
-				</button>
+				</NavLink>
 			</header>
 
 			<main className={styles.main}>
-				{params.type === 'application' ? (
-					<ApplicationSettings />
-				) : params.type === 'profiles' ? (
-					<ProfilesSettings />
-				) : null}
+				<Outlet />
 			</main>
 		</div>
 	);
