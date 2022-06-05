@@ -10,6 +10,7 @@ import {
 import { SettingsContext } from './contexts/SettingsContext';
 
 import PopupCreator from './components/PopupCreator';
+import AlertCreator from './components/AlertCreator';
 import Head from './components/Head';
 import Loader from './components/PageLoader';
 
@@ -56,6 +57,8 @@ export default function App() {
 		</BrowserRouter>
 
 		<PopupCreator />
+
+		<AlertCreator />
 
 		<Head>
 			<link

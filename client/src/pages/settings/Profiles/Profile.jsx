@@ -4,8 +4,10 @@ import { useParams } from 'react-router-dom';
 import fetchAPI from '../../../functions/fetchAPI';
 
 import ChooseProfilePicture from '../../../components/Popups/ChooseProfilePicture';
+
 import { PopupContext } from '../../../contexts/PopupContext';
 import { ProfileContext } from '../../../contexts/ProfileContext';
+import { AlertContext } from '../../../contexts/AlertContext';
 
 import styles from '../settings.module.css';
 
@@ -14,6 +16,7 @@ export default function Profile() {
 
 	const [{ profiles }] = useContext(ProfileContext);
 	const [, popupActions] = useContext(PopupContext);
+	const [, alertActions] = useContext(AlertContext);
 
 	const [username, setUsername] = useState('');
 	const [profilePicture, setProfilePicture] = useState();
@@ -21,7 +24,6 @@ export default function Profile() {
 	const [currentProfile, setCurrentProfile] = useState();
 
 	const saveHandler = () => {
-		console.log('Saving...');
 		fetchAPI(`/api/users/${currentProfile._id}`, {
 			method: 'PUT',
 			body: JSON.stringify({
@@ -30,7 +32,11 @@ export default function Profile() {
 				discordUserId,
 			}),
 		})
-			.then(console.log)
+			.then(() => {
+				alertActions.createAlert({
+					text: 'Your profile has been updated',
+				});
+			})
 			.catch(console.error);
 	};
 

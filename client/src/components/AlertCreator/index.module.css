@@ -1,0 +1,62 @@
+.alert {
+	position: fixed;
+	color: #121212;
+	bottom: -100px;
+	left: var(--padding);
+	background-color: var(--text-color);
+	width: max-content;
+	min-width: 344px;
+	max-width: calc(100vw - var(--padding) * 2);
+	height: max-content;
+	min-height: 48px;
+	border-radius: 0.4em;
+	display: flex;
+	justify-content: space-between;
+	animation: animateOut 0.15s ease-in forwards;
+}
+
+.alert:global(.visible) {
+	bottom: var(--padding);
+	animation: animateIn 0.15s ease-in forwards;
+}
+
+.text {
+	color: var(--bg-00dp);
+	margin: 16px;
+}
+
+.actionButton {
+	color: #1d7797;
+	background-color: transparent;
+	border: 0;
+	font-size: inherit;
+	cursor: pointer;
+	margin: 8px;
+	padding: 8px;
+	transition: background-color 0.15s;
+	border-radius: 0.2em;
+}
+
+.actionButton:focus {
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+@keyframes animateIn {
+	from {
+		bottom: -100px;
+	}
+
+	to {
+		bottom: var(--padding);
+	}
+}
+
+@keyframes animateOut {
+	from {
+		bottom: var(--padding);
+	}
+
+	to {
+		bottom: -100px;
+	}
+}

@@ -5,6 +5,7 @@ import Head from '../../components/Head';
 // import { ProfileContext } from '../../contexts/ProfileContext';
 // import { PopupContext } from '../../contexts/PopupContext';
 import { SettingsContext } from '../../contexts/SettingsContext';
+import { AlertContext } from '../../contexts/AlertContext';
 
 import styles from './settings.module.css';
 
@@ -12,10 +13,14 @@ const appIcons = ['rikka_square', 'book'];
 
 export default function ApplicationSettings() {
 	const [settings, settingsActions] = useContext(SettingsContext);
+	const [, alertActions] = useContext(AlertContext);
 	const [appIcon, setAppIcon] = useState(settings.appIcon);
 
 	const saveHandler = () => {
 		settingsActions.setAppIcon(appIcon);
+		alertActions.createAlert({
+			text: 'Your settings has been updated',
+		});
 	};
 
 	return (
