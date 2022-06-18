@@ -19,7 +19,7 @@
 	display: flex;
 	position: absolute;
 	top: 2em;
-	transition: left 0.2s ease-in-out;
+	transition: left 0.3s ease-in-out;
 }
 
 .images button {

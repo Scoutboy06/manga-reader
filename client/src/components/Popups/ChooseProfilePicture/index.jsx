@@ -15,10 +15,14 @@ export default function ChooseProfilePicture({ callback, closePopup }) {
 			mainContainer.current.getBoundingClientRect().width;
 		const imagesContainerWidth = imagesContainer.getBoundingClientRect().width;
 
+		if (imagesContainerWidth <= mainContainerWidth) return;
+
+		const scrollMultiplier = Math.min(Math.floor(mainContainerWidth / 160), 4);
+
 		// Get the current position and caclulate the new one
 		const leftString = imagesContainer.style.left;
 		const prevScroll = Number(leftString.replace('px', ''));
-		let newScroll = prevScroll + direction * (160 + 8) * 4;
+		let newScroll = prevScroll + direction * (160 + 8) * scrollMultiplier;
 		if (newScroll > 0) newScroll = 0;
 		else if (newScroll + imagesContainerWidth < mainContainerWidth)
 			newScroll = -imagesContainerWidth + mainContainerWidth;
