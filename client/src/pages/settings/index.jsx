@@ -15,7 +15,7 @@ export default function Settings() {
 						const path = location.pathname.slice(1).split('/');
 
 						if (path.length === 2) {
-							navigate('/library');
+							navigate('/');
 						} else {
 							const newPath = path.slice(0, path.length - 1);
 							navigate('/' + newPath.join('/'));

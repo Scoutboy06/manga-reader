@@ -2,8 +2,6 @@ import { useState, useContext } from 'react';
 
 import Head from '../../components/Head';
 
-// import { ProfileContext } from '../../contexts/ProfileContext';
-// import { PopupContext } from '../../contexts/PopupContext';
 import { SettingsContext } from '../../contexts/SettingsContext';
 import { AlertContext } from '../../contexts/AlertContext';
 

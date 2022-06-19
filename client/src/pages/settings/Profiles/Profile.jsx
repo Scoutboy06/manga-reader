@@ -41,11 +41,13 @@ export default function Profile() {
 	};
 
 	useEffect(() => {
-		const currProfile = profiles.find(profile => profile._id === params._id);
-		setCurrentProfile(currProfile);
-		setUsername(currProfile.name);
-		setDiscordUserId(currProfile.discordUserId || '');
-		setProfilePicture(currProfile.imageUrl);
+		const selectedProfile = profiles.find(
+			profile => profile._id === params._id
+		);
+		setCurrentProfile(selectedProfile);
+		setUsername(selectedProfile.name);
+		setDiscordUserId(selectedProfile.discordUserId || '');
+		setProfilePicture(selectedProfile.imageUrl);
 	}, [params._id, profiles]);
 
 	if (!currentProfile) return null;

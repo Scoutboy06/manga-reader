@@ -43,27 +43,18 @@ export default function Library() {
 		});
 	};
 
-	const fetchData = async () => {
+	useEffect(() => {
 		fetchAPI(
 			`api/users/${profileData.currentProfile._id}/mangas`,
 			{},
 			true
 		).then(setMangas);
-	};
-
-	useEffect(() => {
-		if (profileData.isLoading) return;
-		else if (!profileData.currentProfile?._id) navigate('/', { replace: true });
-		else fetchData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [profileData]);
 
 	useEffect(() => {
 		if (mangas && mangas.length > 0) fetchUpdates(true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mangas]);
-
-	if (!profileData.currentProfile) return null;
 
 	return (
 		<>

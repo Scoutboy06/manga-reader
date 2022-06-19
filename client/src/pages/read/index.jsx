@@ -55,8 +55,6 @@ export default function Read() {
 		(async function () {
 			setIsLoading(true);
 
-			if (profileData.isLoading) return;
-
 			let meta;
 			if (!mangaMeta) {
 				meta = await getMangaInfo();
@@ -72,7 +70,7 @@ export default function Read() {
 				return;
 			}
 
-			if (params.chapter === chapters.curr) {
+			if (params.chapter === chapters.curr && mangaMeta) {
 				setIsLoading(false);
 				return;
 			}
@@ -82,6 +80,7 @@ export default function Read() {
 				{},
 				true
 			);
+
 			setChapters({
 				prev: chaps.prevPath,
 				curr: params.chapter,
@@ -90,7 +89,6 @@ export default function Read() {
 			});
 			setImages(chaps.images);
 			setOriginalUrl(chaps.originalUrl);
-
 			setIsLoading(false);
 
 			updateProgress(!chaps.nextPath, meta._id);
