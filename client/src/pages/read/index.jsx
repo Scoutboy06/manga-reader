@@ -142,7 +142,7 @@ export default function Read() {
 						width:
 							imageScale === 'pageWidth'
 								? 'calc(100vw - 16px)'
-								: `calc((90vw) * ${imageScale})`,
+								: `calc(70vw * ${imageScale})`,
 					}}
 				>
 					{images &&
