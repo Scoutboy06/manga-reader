@@ -1,6 +1,18 @@
+import { useState } from 'react';
+
 import styles from '../ContextMenu/ContextMenu.module.css';
 
-export default function Dropdown({ items, isShown, pos, size = '' }) {
+export default function Dropdown({
+	items,
+	isShown,
+	pos,
+	size = '',
+	showSelected = false,
+}) {
+	const [selectedIndex, setSelectedIndex] = useState(
+		items.findIndex(item => item?.default)
+	);
+
 	return (
 		<div
 			className={`${styles.dropdown} ${isShown ? 'visible' : ''} ${size}`}
@@ -22,8 +34,16 @@ export default function Dropdown({ items, isShown, pos, size = '' }) {
 						key={index}
 						onClick={() => {
 							if (item.action && !item.disabled) item.action();
+							setSelectedIndex(index);
 						}}
-						className={styles.item}
+						className={
+							styles.item +
+							(showSelected &&
+							((selectedIndex === undefined && item.default) ||
+								selectedIndex === index)
+								? ' selected'
+								: '')
+						}
 						disabled={item?.disabled ? true : false}
 					>
 						{item?.icon && <div className={styles.icon}>{item.icon}</div>}

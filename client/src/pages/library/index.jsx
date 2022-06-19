@@ -44,9 +44,11 @@ export default function Library() {
 	};
 
 	const fetchData = async () => {
-		fetchAPI(`api/users/${profileData.currentProfile._id}/mangas`).then(
-			setMangas
-		);
+		fetchAPI(
+			`api/users/${profileData.currentProfile._id}/mangas`,
+			{},
+			true
+		).then(setMangas);
 	};
 
 	useEffect(() => {

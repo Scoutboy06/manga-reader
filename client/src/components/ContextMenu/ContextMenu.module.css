@@ -52,7 +52,8 @@
 	fill: currentColor;
 }
 
-.item:not([disabled]):hover {
+.item:not([disabled]):hover,
+.item:not([disabled]):global(.selected) {
 	background: var(--bg-24dp);
 }
 
@@ -74,8 +75,3 @@
 	height: 24px;
 	margin-right: 10px;
 }
-
-/* .icon svg {
-	width: 100%;
-	height: 100%;
-} */

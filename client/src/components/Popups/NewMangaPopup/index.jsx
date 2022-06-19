@@ -32,7 +32,7 @@ export default function NewMangaPopup({ closePopup }) {
 		setPayload();
 		setIsLoading(true);
 
-		fetchAPI('/api/search?mangaName=' + inputText).then(json => {
+		fetchAPI('/api/search?mangaName=' + inputText, {}, true).then(json => {
 			setIsLoading(false);
 			setPayload(json);
 		});

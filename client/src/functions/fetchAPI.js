@@ -1,4 +1,8 @@
-export default function fetchAPI(url, options) {
+import cache from 'memory-cache';
+
+export default async function fetchAPI(url, options = {}, useCache = false) {
+	if (useCache && cache.get(url)) return cache.get(url);
+
 	let fetchOptions = {
 		...options,
 		headers: {
@@ -16,12 +20,15 @@ export default function fetchAPI(url, options) {
 	let API_URI = (ENV !== 'development' ? process.env.REACT_APP_API_URI : '');
 	if (url[0] !== '/') API_URI += '/';
 
-	return fetch(API_URI + url, fetchOptions)
-		.then(res => {
-			if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-			return res.json();
-		}).catch(err => {
-			console.error(err);
-			window.alert(err);
-		});
+	try {
+		const res = await fetch(API_URI + url, fetchOptions);
+		const json = await res.json();
+
+		if (useCache) cache.put(url, json);
+
+		return json;
+	} catch (err) {
+		console.error(err);
+		window.alert(err);
+	}
 }

@@ -7,7 +7,6 @@ export default function ChooseProfilePicture({ callback, closePopup }) {
 	const mainContainer = useRef();
 
 	const scrollImages = (index, direction) => {
-		// console.log(index, direction);
 		const seriesContainer = mainContainer.current.children[index];
 		const imagesContainer = seriesContainer.children[3];
 

@@ -1,4 +1,5 @@
 .container {
+	background-color: transparent;
 	border: 1px solid #222;
 	/* border: 1px solid rgb(168, 168, 168); */
 	border-radius: 4px;
@@ -10,14 +11,11 @@
 
 	padding: 0 5px 0 8px;
 	position: relative;
-}
-
-.container > span {
-	margin-right: 5px;
+	outline: none;
 }
 
 .container > svg {
-	width: 20px;
+	width: 30px;
 	transition: transform 0.1s ease-out;
 }
 

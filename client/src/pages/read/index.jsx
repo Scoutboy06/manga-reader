@@ -8,6 +8,7 @@ import Head from '../../components/Head';
 import Select from '../../components/Select';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
+import { SettingsContext } from '../../contexts/SettingsContext';
 
 import styles from './read.module.css';
 
@@ -15,6 +16,7 @@ export default function Read() {
 	const params = useParams();
 	const navigate = useNavigate();
 	const [profileData] = useContext(ProfileContext);
+	const [settings, settingsActions] = useContext(SettingsContext);
 
 	const [chapters, setChapters] = useState({
 		prev: null,
@@ -27,10 +29,7 @@ export default function Read() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [mangaMeta, setMangaMeta] = useState();
 
-	const [imageScale, setImageScale] = useState(1);
-
-	const fetchChapters = () =>
-		fetchAPI(`/api/mangas/${params.mangaName}/${params.chapter}`);
+	const [imageScale, setImageScale] = useState(settings.imageScale);
 
 	const updateProgress = (isLast, mangaId) =>
 		fetchAPI(
@@ -47,13 +46,10 @@ export default function Read() {
 
 	const getMangaInfo = () =>
 		fetchAPI(
-			`/api/mangas/${params.mangaName}?userId=${profileData.currentProfile._id}`
+			`/api/mangas/${params.mangaName}?userId=${profileData.currentProfile._id}`,
+			{},
+			true
 		);
-
-	const updateImageWidth = percent => {
-		const defaultWidth = window.innerWidth - 100;
-		setImageScale(defaultWidth * percent);
-	};
 
 	useEffect(() => {
 		(async function () {
@@ -76,7 +72,16 @@ export default function Read() {
 				return;
 			}
 
-			const chaps = await fetchChapters();
+			if (params.chapter === chapters.curr) {
+				setIsLoading(false);
+				return;
+			}
+
+			const chaps = await fetchAPI(
+				`/api/mangas/${params.mangaName}/${params.chapter}`,
+				{},
+				true
+			);
 			setChapters({
 				prev: chaps.prevPath,
 				curr: params.chapter,
@@ -94,22 +99,8 @@ export default function Read() {
 	}, [params, profileData.isLoading]);
 
 	useEffect(() => {
-		// localStorage init
-		// const json = JSON.parse(localStorage.getItem('isFullWidth'));
-		// if (!json) {
-		// 	const data = {};
-		// 	data[params.mangaName] = false;
-		// 	localStorage.setItem('isFullWidth', JSON.stringify(data));
-		// 	return;
-		// }
-		// const width = json[params.mangaName];
-		// if (width) setIsFullWidth(width);
-		// else setIsFullWidth(false);
-	}, [params.mangaName]);
-
-	useEffect(() => {
-		console.log(imageScale);
-	}, [imageScale]);
+		settingsActions.setImageScale(imageScale);
+	}, [imageScale, settingsActions]);
 
 	if (!profileData.isLoading && !profileData.currentProfile) {
 		navigate('/');
@@ -127,6 +118,7 @@ export default function Read() {
 				chapters={chapters}
 				originalUrl={originalUrl}
 				setImageScale={setImageScale}
+				imageScale={imageScale}
 			/>
 
 			{isLoading && (
@@ -176,8 +168,10 @@ function Header({
 	originalUrl,
 	isTop,
 	setImageScale,
+	imageScale,
 }) {
 	const params = useParams();
+	const [settings] = useContext(SettingsContext);
 
 	return (
 		<header className={styles.header}>
@@ -199,21 +193,34 @@ function Header({
 					</a>
 
 					<Select
+						value={imageScale}
 						onChange={({ value }) =>
-							setImageScale(
-								value === 'pageWidth' ? 'pageWidth' : Number(value) / 100
-							)
+							setImageScale(value === 'pageWidth' ? 'pageWidth' : value)
 						}
 					>
 						<option value='pageWidth'>Page width</option>
 						<hr />
-						<option value='50'>50%</option>
-						<option value='75'>75%</option>
-						<option value='90'>90%</option>
-						<option value='100'>100%</option>
-						<option value='125'>125%</option>
-						<option value='150'>150%</option>
-						<option value='200'>200%</option>
+						<option value={0.5} default={settings.imageScale === 0.5}>
+							50%
+						</option>
+						<option value={0.75} default={settings.imageScale === 0.75}>
+							75%
+						</option>
+						<option value={0.9} default={settings.imageScale === 0.9}>
+							90%
+						</option>
+						<option value={1.0} default={settings.imageScale === 1}>
+							100%
+						</option>
+						<option value={1.25} default={settings.imageScale === 1.25}>
+							125%
+						</option>
+						<option value={1.5} default={settings.imageScale === 1.5}>
+							150%
+						</option>
+						<option value={2.0} default={settings.imageScale === 2}>
+							200%
+						</option>
 					</Select>
 				</div>
 			)}
