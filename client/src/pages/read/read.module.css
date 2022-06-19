@@ -1,12 +1,8 @@
 .main {
-	width: calc(100vw - 10px);
-	display: flex;
-	align-items: center;
-	flex-direction: column;
+	width: calc(100vw - 16px);
 }
 
 .header {
-	width: 100%;
 	display: flex;
 	flex-direction: column;
 	padding: 20px 5vw;
@@ -82,33 +78,15 @@
 
 .chapters {
 	background: var(--bg-01dp);
-	width: auto;
-	max-width: 90vw;
-	min-height: 50vh;
-	min-width: 20vw;
-	margin: 10px 0;
-	padding: 15px 30px 20px;
+	margin: 10px auto;
 	transition: width 0.3s;
 }
 
+.imageContainer {
+	width: 100%;
+}
+
 .chapters img {
-	display: block;
-	max-width: 100%;
-	width: auto;
-	max-height: 140vh;
-	margin: 0 auto;
-}
-
-.main[data-isfullwidth='true'] .chapters {
-	padding: 0;
-	width: 100vw;
-	min-width: none;
-	max-width: none;
-	min-height: none;
-}
-
-.main[data-isfullwidth='true'] .chapters img {
-	max-height: none;
 	width: 100%;
 }
 
@@ -117,31 +95,10 @@
 	width: 10px;
 }
 
-#alert {
-	position: fixed;
-	display: block;
-	top: -100%;
-	left: 50%;
-	transform: translateX(-50%);
-	width: auto;
-	padding: 10px 40px;
-	max-width: calc(100vw - 20px);
-	transition: top 0.3s;
-}
-
-#alert.show {
-	top: 5px;
-}
-
-#alert.error {
-	background: #cf6679;
-	color: #000;
-}
-
-@media only screen and (max-width: 600px) {
+/* @media only screen and (max-width: 600px) {
 	.chapters {
 		padding: 0;
 		max-width: 100vw;
 		width: 100vw;
 	}
-}
+} */

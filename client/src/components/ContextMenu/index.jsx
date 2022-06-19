@@ -29,8 +29,7 @@ export default function ContextMenu({
 
 	return (
 		<div
-			className={styles.tooltip}
-			data-isshown={isShown}
+			className={`${styles.tooltip}${isShown ? ' visible' : ''}`}
 			style={{
 				left: pos.x,
 				top: pos.y,
@@ -57,7 +56,7 @@ export default function ContextMenu({
 						className={styles.item}
 						disabled={item?.disabled ? true : false}
 					>
-						{item.icon && <div className={styles.icon}>{item.icon}</div>}
+						{item?.icon && <div className={styles.icon}>{item.icon}</div>}
 						<span className={styles.text}>{item?.content || item}</span>
 					</div>
 				);

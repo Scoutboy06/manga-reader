@@ -1,10 +1,9 @@
 import styles from '../ContextMenu/ContextMenu.module.css';
 
-export default function Dropdown({ items, isShown, pos }) {
+export default function Dropdown({ items, isShown, pos, size = '' }) {
 	return (
 		<div
-			className={styles.dropdown}
-			data-isshown={isShown}
+			className={`${styles.dropdown} ${isShown ? 'visible' : ''} ${size}`}
 			style={{
 				left: pos.x,
 				top: pos.y,
@@ -27,7 +26,7 @@ export default function Dropdown({ items, isShown, pos }) {
 						className={styles.item}
 						disabled={item?.disabled ? true : false}
 					>
-						{item.icon && <div className={styles.icon}>{item.icon}</div>}
+						{item?.icon && <div className={styles.icon}>{item.icon}</div>}
 						<span className={styles.text}>{item?.content || item}</span>
 					</div>
 				);

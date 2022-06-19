@@ -5,6 +5,7 @@ import fetchAPI from '../../functions/fetchAPI';
 
 import Loader from '../../components/Loader';
 import Head from '../../components/Head';
+import Select from '../../components/Select';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 
@@ -26,7 +27,7 @@ export default function Read() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [mangaMeta, setMangaMeta] = useState();
 
-	const [isFullWidth, setIsFullWidth] = useState(false);
+	const [imageScale, setImageScale] = useState(1);
 
 	const fetchChapters = () =>
 		fetchAPI(`/api/mangas/${params.mangaName}/${params.chapter}`);
@@ -49,10 +50,9 @@ export default function Read() {
 			`/api/mangas/${params.mangaName}?userId=${profileData.currentProfile._id}`
 		);
 
-	const storeFullWidthData = isFullWidth => {
-		const json = JSON.parse(localStorage.getItem('isFullWidth'));
-		json[params.mangaName] = isFullWidth;
-		localStorage.setItem('isFullWidth', JSON.stringify(json));
+	const updateImageWidth = percent => {
+		const defaultWidth = window.innerWidth - 100;
+		setImageScale(defaultWidth * percent);
 	};
 
 	useEffect(() => {
@@ -95,18 +95,21 @@ export default function Read() {
 
 	useEffect(() => {
 		// localStorage init
-		const json = JSON.parse(localStorage.getItem('isFullWidth'));
-		if (!json) {
-			const data = {};
-			data[params.mangaName] = false;
-			localStorage.setItem('isFullWidth', JSON.stringify(data));
-			return;
-		}
-
-		const width = json[params.mangaName];
-		if (width) setIsFullWidth(width);
-		else setIsFullWidth(false);
+		// const json = JSON.parse(localStorage.getItem('isFullWidth'));
+		// if (!json) {
+		// 	const data = {};
+		// 	data[params.mangaName] = false;
+		// 	localStorage.setItem('isFullWidth', JSON.stringify(data));
+		// 	return;
+		// }
+		// const width = json[params.mangaName];
+		// if (width) setIsFullWidth(width);
+		// else setIsFullWidth(false);
 	}, [params.mangaName]);
+
+	useEffect(() => {
+		console.log(imageScale);
+	}, [imageScale]);
 
 	if (!profileData.isLoading && !profileData.currentProfile) {
 		navigate('/');
@@ -114,7 +117,7 @@ export default function Read() {
 	}
 
 	return (
-		<main className={styles.main} data-isfullwidth={isFullWidth}>
+		<main className={styles.main}>
 			<Head>
 				<title>{params.chapter + ' - ' + params.mangaName}</title>
 			</Head>
@@ -123,9 +126,7 @@ export default function Read() {
 				isTop={true}
 				chapters={chapters}
 				originalUrl={originalUrl}
-				isFullWidth={isFullWidth}
-				setIsFullWidth={setIsFullWidth}
-				storeFullWidthData={storeFullWidthData}
+				setImageScale={setImageScale}
 			/>
 
 			{isLoading && (
@@ -135,7 +136,15 @@ export default function Read() {
 			)}
 
 			{!isLoading && (
-				<section className={styles.chapters}>
+				<section
+					className={styles.chapters}
+					style={{
+						width:
+							imageScale === 'pageWidth'
+								? 'calc(100vw - 16px)'
+								: `calc((90vw) * ${imageScale})`,
+					}}
+				>
 					{images &&
 						images.map((image, index) => (
 							<div
@@ -156,12 +165,7 @@ export default function Read() {
 				</section>
 			)}
 
-			<Header
-				chapters={chapters}
-				isFullWidth={isFullWidth}
-				setIsFullWidth={setIsFullWidth}
-				storeFullWidthData={storeFullWidthData}
-			/>
+			<Header chapters={chapters} />
 		</main>
 	);
 }
@@ -171,9 +175,7 @@ function Header({
 	isLoading,
 	originalUrl,
 	isTop,
-	isFullWidth,
-	setIsFullWidth,
-	storeFullWidthData,
+	setImageScale,
 }) {
 	const params = useParams();
 
@@ -196,25 +198,23 @@ function Header({
 						</svg>
 					</a>
 
-					<button
-						className='button'
-						onClick={() => {
-							storeFullWidthData(!isFullWidth);
-							setIsFullWidth(!isFullWidth);
-						}}
+					<Select
+						onChange={({ value }) =>
+							setImageScale(
+								value === 'pageWidth' ? 'pageWidth' : Number(value) / 100
+							)
+						}
 					>
-						{isFullWidth ? (
-							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-								<rect fill='none' height='24' width='24' />
-								<path d='M21.29,4.12l-4.59,4.59l1.59,1.59c0.63,0.63,0.18,1.71-0.71,1.71H13c-0.55,0-1-0.45-1-1V6.41c0-0.89,1.08-1.34,1.71-0.71 l1.59,1.59l4.59-4.59c0.39-0.39,1.02-0.39,1.41,0v0C21.68,3.1,21.68,3.73,21.29,4.12z M4.12,21.29l4.59-4.59l1.59,1.59 c0.63,0.63,1.71,0.18,1.71-0.71V13c0-0.55-0.45-1-1-1H6.41c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-4.59,4.59 c-0.39,0.39-0.39,1.02,0,1.41l0,0C3.1,21.68,3.73,21.68,4.12,21.29z' />
-							</svg>
-						) : (
-							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-								<rect fill='none' height='24' width='24' />
-								<path d='M21,8.59V4c0-0.55-0.45-1-1-1h-4.59c-0.89,0-1.34,1.08-0.71,1.71l1.59,1.59l-10,10l-1.59-1.59C4.08,14.08,3,14.52,3,15.41 V20c0,0.55,0.45,1,1,1h4.59c0.89,0,1.34-1.08,0.71-1.71l-1.59-1.59l10-10l1.59,1.59C19.92,9.92,21,9.48,21,8.59z' />
-							</svg>
-						)}
-					</button>
+						<option value='pageWidth'>Page width</option>
+						<hr />
+						<option value='50'>50%</option>
+						<option value='75'>75%</option>
+						<option value='90'>90%</option>
+						<option value='100'>100%</option>
+						<option value='125'>125%</option>
+						<option value='150'>150%</option>
+						<option value='200'>200%</option>
+					</Select>
 				</div>
 			)}
 

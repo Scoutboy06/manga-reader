@@ -13,16 +13,14 @@
 
 .tooltip {
 	position: fixed;
-	/* position: absolute; */
 }
 
 .dropdown {
 	position: absolute;
 }
 
-.tooltip[data-isshown='true'],
-.dropdown[data-isshown='true'] {
-	/* display: block; */
+.tooltip:global(.visible),
+.dropdown:global(.visible) {
 	visibility: visible;
 }
 
@@ -32,13 +30,13 @@
 	transition: background 0.15s;
 	display: flex;
 	align-items: center;
+	font-size: 16px;
 }
 
-.item,
-.item * {
-	color: #fff;
-	text-decoration: none;
-	font-size: 16px;
+.tooltip:global(.small) .item,
+.dropdown:global(.small) .item {
+	font-size: 14px;
+	padding: 7px 20px 7px 15px;
 }
 
 .item[disabled],
