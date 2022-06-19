@@ -40,7 +40,7 @@ export default function ChooseProfilePicture({ callback, closePopup }) {
 					<h3>{series.name}</h3>
 
 					<button
-						className={[styles.pagination, styles.left].join(' ')}
+						className={styles.pagination + ' left'}
 						onClick={() => scrollImages(seriesIndex, 1)}
 					>
 						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
@@ -50,7 +50,7 @@ export default function ChooseProfilePicture({ callback, closePopup }) {
 					</button>
 
 					<button
-						className={[styles.pagination, styles.right].join(' ')}
+						className={styles.pagination + ' right'}
 						onClick={() => scrollImages(seriesIndex, -1)}
 					>
 						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>

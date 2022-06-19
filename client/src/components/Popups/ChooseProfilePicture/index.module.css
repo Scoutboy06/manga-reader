@@ -44,7 +44,7 @@
 }
 
 .pagination {
-	height: 12em;
+	height: 160px;
 	width: 4em;
 	position: absolute;
 	bottom: 0;
@@ -56,15 +56,19 @@
 	z-index: 2;
 }
 
-.pagination.left svg {
-	transform: rotate(90deg);
+.pagination:global(.left) {
+	left: -1em;
 }
 
-.pagination.right {
+.pagination:global(.right) {
 	right: 0px;
 }
 
-.pagination.right svg {
+.pagination:global(.left) svg {
+	transform: rotate(90deg);
+}
+
+.pagination:global(.right) svg {
 	transform: rotate(-90deg);
 }
 
