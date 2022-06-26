@@ -47,7 +47,7 @@ export default function Library() {
 		fetchAPI(
 			`api/users/${profileData.currentProfile._id}/mangas`,
 			{},
-			true
+			false
 		).then(setMangas);
 	}, [profileData]);
 
