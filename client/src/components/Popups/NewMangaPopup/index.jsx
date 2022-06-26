@@ -43,7 +43,9 @@ export default function NewMangaPopup({ closePopup }) {
 			selectedEl.removeAttribute('selected');
 		}
 
-		const el = e.nativeEvent.path.reverse()[11];
+		const path = e.composedPath();
+
+		const el = path.reverse()[11];
 		el.setAttribute('selected', '');
 		setSelectedEl(el);
 
