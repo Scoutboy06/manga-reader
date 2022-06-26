@@ -26,6 +26,8 @@ export const getMangaUpdates = asyncHandler(async (req, res) => {
 	res.json(updates);
 });
 
+// @desc	Update the chapter the user is currently on
+// @route	POST /api/mangas/:_id/updateProgress
 export const updateProgress = asyncHandler(async (req, res) => {
 	const { _id } = req.params;
 	const { chapter, isLast } = req.body;

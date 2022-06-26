@@ -31,33 +31,17 @@ export default function Read() {
 
 	const [imageScale, setImageScale] = useState(settings.imageScale);
 
-	const updateProgress = (isLast, mangaId) =>
-		fetchAPI(
-			`/api/mangas/${mangaId}/updateProgress?userId=${profileData.currentProfile._id}`,
-			{
-				method: 'PUT',
-				body: JSON.stringify({
-					// urlName: params.mangaName,
-					chapter: params.chapter,
-					isLast,
-				}),
-			}
-		);
-
-	const getMangaInfo = () =>
-		fetchAPI(
-			`/api/mangas/${params.mangaName}?userId=${profileData.currentProfile._id}`,
-			{},
-			true
-		);
-
 	useEffect(() => {
 		(async function () {
 			setIsLoading(true);
 
 			let meta;
 			if (!mangaMeta) {
-				meta = await getMangaInfo();
+				meta = await fetchAPI(
+					`/api/mangas/${params.mangaName}?userId=${profileData.currentProfile._id}`,
+					{},
+					true
+				);
 				setMangaMeta(meta);
 			} else {
 				meta = mangaMeta;
@@ -91,7 +75,14 @@ export default function Read() {
 			setOriginalUrl(chaps.originalUrl);
 			setIsLoading(false);
 
-			updateProgress(!chaps.nextPath, meta._id);
+			fetchAPI(`/api/mangas/${meta._id}/updateProgress`, {
+				method: 'PUT',
+				body: JSON.stringify({
+					// userId: profileData.currentProfile._id,
+					chapter: params.chapter,
+					isLast: !chaps.nextPath,
+				}),
+			});
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params, profileData.isLoading]);
