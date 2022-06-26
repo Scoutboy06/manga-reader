@@ -20,7 +20,7 @@ export default function NewMangaPopup({ closePopup }) {
 	const reset = () => {
 		setInputText('');
 		setIsLoading(false);
-		setPayload();
+		// setPayload();
 		setIsSubscribed(true);
 		setSelectedData();
 		setSelectedEl();
@@ -43,7 +43,7 @@ export default function NewMangaPopup({ closePopup }) {
 			selectedEl.removeAttribute('selected');
 		}
 
-		const path = e.composedPath();
+		const path = e.nativeEvent.composedPath();
 
 		const el = path.reverse()[11];
 		el.setAttribute('selected', '');
@@ -116,10 +116,10 @@ export default function NewMangaPopup({ closePopup }) {
 					!isLoading &&
 					payload.map((host, hostIndex) => (
 						<div key={hostIndex}>
-							<div className={styles.hostName}>{host.hostName}</div>
+							<h2 className={styles.hostName}>{host.hostName}</h2>
 
 							{host.mangas.map((manga, mangaIndex) => (
-								<div
+								<button
 									key={manga.urlName}
 									className={styles.mangaItem}
 									onClick={e => handleSelectEl(e, hostIndex, mangaIndex)}
@@ -135,16 +135,19 @@ export default function NewMangaPopup({ closePopup }) {
 										<span>{manga.latestUpdate}</span>
 									</div>
 
-									<button
+									<a
 										className={styles.openSource + ' button'}
-										onClick={() => window.open(manga.detailsPage, '_blank')}
+										// onClick={() => window.open(manga.detailsPage, '_blank')}
+										href={manga.detailsPage}
+										target='_blank'
+										rel='nofollow noreferrer noopener'
 									>
 										<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 											<path d='M0 0h24v24H0V0z' fill='none' />
 											<path d='M18 19H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h5c.55 0 1-.45 1-1s-.45-1-1-1H5c-1.11 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6c0-.55-.45-1-1-1s-1 .45-1 1v5c0 .55-.45 1-1 1zM14 4c0 .55.45 1 1 1h2.59l-9.13 9.13c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L19 6.41V9c0 .55.45 1 1 1s1-.45 1-1V4c0-.55-.45-1-1-1h-5c-.55 0-1 .45-1 1z' />
 										</svg>
-									</button>
-								</div>
+									</a>
+								</button>
 							))}
 						</div>
 					))}

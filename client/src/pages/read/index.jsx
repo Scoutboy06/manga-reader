@@ -78,7 +78,6 @@ export default function Read() {
 			fetchAPI(`/api/mangas/${meta._id}/updateProgress`, {
 				method: 'PUT',
 				body: JSON.stringify({
-					// userId: profileData.currentProfile._id,
 					chapter: params.chapter,
 					isLast: !chaps.nextPath,
 				}),
