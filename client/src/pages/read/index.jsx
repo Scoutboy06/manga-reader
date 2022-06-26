@@ -100,13 +100,8 @@ export default function Read() {
 		settingsActions.setImageScale(imageScale);
 	}, [imageScale, settingsActions]);
 
-	if (!profileData.isLoading && !profileData.currentProfile) {
-		navigate('/');
-		return null;
-	}
-
 	return (
-		<main className={styles.main}>
+		<>
 			<Head>
 				<title>{params.chapter + ' - ' + params.mangaName}</title>
 			</Head>
@@ -130,9 +125,7 @@ export default function Read() {
 					className={styles.chapters}
 					style={{
 						width:
-							imageScale === 'pageWidth'
-								? 'calc(100vw - 16px)'
-								: `calc(70vw * ${imageScale})`,
+							imageScale === 'pageWidth' ? '100%' : `calc(70% * ${imageScale})`,
 					}}
 				>
 					{images &&
@@ -156,7 +149,7 @@ export default function Read() {
 			)}
 
 			<Header chapters={chapters} />
-		</main>
+		</>
 	);
 }
 
