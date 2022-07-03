@@ -26,3 +26,5 @@ yarn-error.log*
 *.bat
 /backend/controllers/test.js
 /client/public/old_manifest.json
+
+git_webhook.js
