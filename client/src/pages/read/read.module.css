@@ -80,6 +80,7 @@
 
 .imageContainer {
 	width: 100%;
+	display: flex;
 }
 
 .chapters img {
