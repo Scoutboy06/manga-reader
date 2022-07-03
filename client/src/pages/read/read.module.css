@@ -73,7 +73,6 @@
 }
 
 .chapters {
-	background: var(--bg-01dp);
 	margin: 10px auto;
 	transition: width 0.3s;
 }
@@ -92,10 +91,16 @@
 	width: 10px;
 }
 
-/* @media only screen and (max-width: 600px) {
-	.chapters {
-		padding: 0;
-		max-width: 100vw;
-		width: 100vw;
-	}
-} */
+.progressContainer {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.75);
+	padding: 0.1em 0.8em;
+	border-radius: 0.3em 0.3em 0 0;
+	font-size: 0.9em;
+}
+
+.progressContainer span:not(:last-child) {
+	margin-right: 1em;
+}
