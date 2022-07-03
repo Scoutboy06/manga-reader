@@ -40,7 +40,7 @@ export default function Read() {
 				meta = await fetchAPI(
 					`/api/mangas/${params.mangaName}?userId=${profileData.currentProfile._id}`,
 					{},
-					true
+					false
 				);
 				setMangaMeta(meta);
 			} else {
