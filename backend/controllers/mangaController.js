@@ -6,7 +6,7 @@ import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
-import chapterNameToChapter from '../functions/chapterNameToChapter.js';
+import getChapterNumber from '../functions/getChapterNumber.js';
 
 // @desc	Create a new manga
 // @route	POST /api/mangas
@@ -172,7 +172,7 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 	const prevPath = getPrevAndNextLinks(prevBtn);
 	const nextPath = getPrevAndNextLinks(nextBtn);
 
-	const chapterTitle = chapterNameToChapter(document.querySelector('#chapter-heading').textContent.trim());
+	const chapterTitle = getChapterNumber(document.querySelector('#chapter-heading').textContent.trim());
 
 	res.json({
 		prevPath,

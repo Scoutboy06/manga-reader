@@ -47,10 +47,10 @@ export default function parseArguments() {
 	}
 
 	if (shallCheckUpdates) {
-		console.log(chalk.blue(`Updates checker is activated with a delay of ${intervalDelay} minutes.`));
+		console.log(chalk.blue(`Updates checker is activated with an interval of ${intervalDelay} minutes.`));
 
-		checkUpdates();
 		setInterval(checkUpdates, 1000 * 60 * intervalDelay); // minutes to milliseconds
+		checkUpdates();
 
 		async function checkUpdates() {
 			console.log(chalk.yellow('Checking updates...'));
@@ -76,14 +76,14 @@ export default function parseArguments() {
 			// Send update messages to Discord Webhook
 			await Promise.all(updatesArray.map((data, index) => new Promise(async (resolve, reject) => {
 				try {
-					// await sendDiscordWebhookUpdate(data.manga);
+					await sendDiscordWebhookUpdate(data.manga);
 					resolve(data.manga);
 				} catch (err) {
 					reject(err);
 				}
 			})));
 
-			console.log(chalk.yellow('Successfully sent all Discord Webhook updates'));
+			console.log(chalk.green('Successfully sent all Discord Webhook updates'));
 		}
 	}
 }

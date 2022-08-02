@@ -21,6 +21,10 @@ import userRoutes from './routes/userRoutes.js';
 import { getMangaUpdates } from './controllers/updatesController.js';
 // import testController from './controllers/test.js';
 
+import Manga from './models/mangaModel.js';
+import sendDiscordWebhookUpdate from './functions/sendDiscordWebhookUpdate.js';
+import asyncHandler from 'express-async-handler';
+
 const __dirname = path.resolve();
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -38,6 +42,24 @@ app.use('/api/search', searchRoutes);
 app.use('/api/image', imageRoutes);
 app.use('/api/users', userRoutes);
 // app.use('/api/test', testController);
+
+app.use('/api/dc/:_id', asyncHandler(async (req, res) => {
+	const { _id } = req.params;
+	const manga = await Manga.findById(_id);
+	if (!manga) throw new Error(404);
+	await sendDiscordWebhookUpdate(manga);
+	res.json(manga);
+}));
+
+app.use('/api/test', asyncHandler(async (req, res) => {
+	const mangas = await Manga.find({});
+	const updatedMangas = await Promise.all(mangas.map(manga => new Promise(async (resolve, reject) => {
+		manga.lastUpdatePingedChapter = manga.chapter;
+		await manga.save();
+		resolve(manga);
+	})));
+	res.json(updatedMangas);
+}));
 
 app.get('/api/getUpdates', getMangaUpdates);
 
