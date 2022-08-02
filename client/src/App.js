@@ -21,6 +21,8 @@ import Settings from './pages/settings';
 const Application = lazy(() => import('./pages/settings/Application'));
 const Profiles = lazy(() => import('./pages/settings/Profiles'));
 const Profile = lazy(() => import('./pages/settings/Profiles/Profile'));
+const Hosts = lazy(() => import('./pages/settings/Hosts'));
+const Host = lazy(() => import('./pages/settings/Hosts/Host'));
 const Read = lazy(() => import('./pages/read'));
 
 export default function App() {
@@ -47,6 +49,10 @@ export default function App() {
 
 						<Route path='profiles' element={<Suspense fallback={<Loader />}><Profiles /></Suspense>}>
 							<Route path=':_id' element={<Profile />} />
+						</Route>
+
+						<Route path='hosts' element={<Suspense fallback={<Loader />}><Hosts /></Suspense>}>
+							<Route path=':_id' element={<Host />} />
 						</Route>
 					</Route>
 

@@ -1,4 +1,6 @@
-import { useNavigate, useLocation, Outlet, NavLink } from 'react-router-dom';
+import { useNavigate, useLocation, Outlet } from 'react-router-dom';
+
+import Navbar from '../../components/Navbar';
 
 import styles from './settings.module.css';
 
@@ -28,13 +30,11 @@ export default function Settings() {
 					</svg>
 				</button>
 
-				<NavLink to='/settings/application' className={styles.navlink}>
-					Application
-				</NavLink>
-
-				<NavLink to='/settings/profiles' className={styles.navlink}>
-					Profiles
-				</NavLink>
+				<Navbar>
+					<a href='/settings/application'>Application</a>
+					<a href='/settings/hosts'>Hosts</a>
+					<a href='/settings/profiles'>Profiles</a>
+				</Navbar>
 			</header>
 
 			<main className={styles.main}>
