@@ -1,12 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import fetchAPI from '../../functions/fetchAPI';
+import { useNavigate, Outlet } from 'react-router-dom';
 
-import MangaCard from '../../components/MangaCard';
 import NewMangaPopup from '../../components/Popups/NewMangaPopup';
-import Head from '../../components/Head';
 import Dropdown from '../../components/Dropdown';
 import BlurContainer from '../../components/BlurContainer';
+import Navbar from '../../components/Navbar';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 import { PopupContext } from '../../contexts/PopupContext';
@@ -18,51 +16,11 @@ export default function Library() {
 	const [profileData, profileActions] = useContext(ProfileContext);
 	const [, popupActions] = useContext(PopupContext);
 
-	const [mangas, setMangas] = useState();
-	const [updates, setUpdates] = useState([]);
-	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
-
-	const [isFetchingUpdates, setIsFetchingUpdates] = useState(false);
-
 	const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-
-	const fetchUpdates = async cache => {
-		setIsFetchingUpdates(true);
-
-		fetchAPI(
-			'api/getUpdates?' +
-				new URLSearchParams({
-					cache,
-					mangas: mangas
-						.filter(manga => manga.subscribed)
-						.map(manga => manga._id),
-				})
-		).then(json => {
-			setIsFetchingUpdates(false);
-			setUpdates(json);
-		});
-	};
-
-	useEffect(() => {
-		fetchAPI(
-			`api/users/${profileData.currentProfile._id}/mangas`,
-			{},
-			false
-		).then(setMangas);
-	}, [profileData]);
-
-	useEffect(() => {
-		if (mangas && mangas.length > 0) fetchUpdates(true);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [mangas]);
 
 	return (
 		<>
 			<main className={styles.main}>
-				<Head>
-					<title>Choose a manga</title>
-				</Head>
-
 				<header className={styles.header}>
 					<BlurContainer
 						className={styles.profileDropdown}
@@ -125,69 +83,16 @@ export default function Library() {
 						/>
 					</BlurContainer>
 
-					<h2 className={styles.title}>Choose a manga</h2>
-					<button
-						className={styles.reloadButton + ' button'}
-						disabled={isFetchingUpdates}
-						onClick={() => fetchUpdates(false)}
-					>
-						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-							<path d='M0 0h24v24H0V0z' fill='none' />
-							<path d='M17.65 6.35c-1.63-1.63-3.94-2.57-6.48-2.31-3.67.37-6.69 3.35-7.1 7.02C3.52 15.91 7.27 20 12 20c3.19 0 5.93-1.87 7.21-4.56.32-.67-.16-1.44-.9-1.44-.37 0-.72.2-.88.53-1.13 2.43-3.84 3.97-6.8 3.31-2.22-.49-4.01-2.3-4.48-4.52C5.31 9.44 8.26 6 12 6c1.66 0 3.14.69 4.22 1.78l-1.51 1.51c-.63.63-.19 1.71.7 1.71H19c.55 0 1-.45 1-1V6.41c0-.89-1.08-1.34-1.71-.71l-.64.65z' />
-						</svg>
-					</button>
+					<Navbar>
+						<a href='/library/mangas'>Mangas</a>
+						<a href='/library/novels'>Novels</a>
+						<a href='/library/animes'>Animes</a>
+					</Navbar>
+
+					<div style={{ width: 50 }}></div>
 				</header>
 
-				<section className={styles.section1}>
-					{mangas &&
-						mangas.map(
-							manga =>
-								!manga.finished && (
-									<MangaCard
-										key={manga._id}
-										manga={manga}
-										isFetchingUpdates={isFetchingUpdates}
-										updates={updates}
-									/>
-								)
-						)}
-				</section>
-
-				<section className={styles.section2} data-show={showFinishedMangas}>
-					<button
-						onClick={() => setShowFinishedMangas(!showFinishedMangas)}
-						className={styles.toggleFinshedMangasButton}
-					>
-						<span>Finished reading</span>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							viewBox='0 0 24 24'
-							width='30px'
-							style={{
-								transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
-							}}
-						>
-							<path d='M24 24H0V0h24v24z' fill='none' opacity='.87' />
-							<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
-						</svg>
-					</button>
-
-					{mangas && (
-						<div>
-							{mangas.map(
-								manga =>
-									manga.finished && (
-										<MangaCard
-											key={manga._id}
-											manga={manga}
-											isFetchingUpdates={isFetchingUpdates}
-											updates={updates}
-										/>
-									)
-							)}
-						</div>
-					)}
-				</section>
+				<Outlet />
 
 				<button
 					className={styles.newManga}

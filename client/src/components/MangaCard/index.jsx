@@ -54,7 +54,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 	return (
 		<div
 			className={styles.card}
-			onClick={() => navigate('/read/' + manga.urlName)}
+			onClick={() => navigate('/read/manga/' + manga.urlName)}
 			onContextMenu={e => {
 				e.preventDefault();
 				optionsBtn.current.click();

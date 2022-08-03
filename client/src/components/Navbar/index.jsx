@@ -2,16 +2,16 @@ import { NavLink } from 'react-router-dom';
 
 import styles from './Navbar.module.css';
 
-export default function Navbar({ children }) {
+export default function Navbar({ children, className }) {
 	return (
-		<nav className={styles.navbar}>
-			{children.map((NavEl, i) => (
+		<nav className={styles.navbar + (className ? ' ' + className : '')}>
+			{children.map((el, i) => (
 				<NavLink
-					key={'NavEl_' + i}
-					to={NavEl.props.href}
+					key={'NavLink_' + i}
+					to={el.props.href}
 					className={styles.navlink}
 				>
-					{NavEl.props.children}
+					{el.props.children}
 				</NavLink>
 			))}
 		</nav>

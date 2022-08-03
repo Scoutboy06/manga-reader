@@ -8,7 +8,7 @@ export default function Hosts() {
 	return (
 		<>
 			<Head>
-				<title>Profile settings</title>
+				<title>Hosts settings</title>
 			</Head>
 
 			{params._id ? <Outlet /> : <h1>Hosts</h1>}

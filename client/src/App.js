@@ -4,6 +4,7 @@ import {
 	BrowserRouter,
 	Routes,
 	Route,
+	Navigate,
 } from 'react-router-dom';
 
 import { SettingsContext } from './contexts/SettingsContext';
@@ -17,13 +18,24 @@ import Loader from './components/PageLoader';
 import ProfilePicker from './pages/profilePicker';
 import Library from './pages/library';
 import Settings from './pages/settings';
+import Read from './pages/read';
 
+// Library
+const Mangas = lazy(() => import('./pages/library/Mangas'));
+const Novels = lazy(() => import('./pages/library/Novels'));
+const Animes = lazy(() => import('./pages/library/Animes'));
+
+// Read/watch
+const Manga = lazy(() => import('./pages/read/Manga'));
+const Novel = lazy(() => import('./pages/read/Novel'));
+const Anime = lazy(() => import('./pages/watch/Anime'));
+
+// Settings
 const Application = lazy(() => import('./pages/settings/Application'));
 const Profiles = lazy(() => import('./pages/settings/Profiles'));
 const Profile = lazy(() => import('./pages/settings/Profiles/Profile'));
 const Hosts = lazy(() => import('./pages/settings/Hosts'));
 const Host = lazy(() => import('./pages/settings/Hosts/Host'));
-const Read = lazy(() => import('./pages/read'));
 
 export default function App() {
 	const [settings] = useContext(SettingsContext);
@@ -38,11 +50,20 @@ export default function App() {
 				</Routes>
 			) : (currentProfile && !isLoading) && (
 				<Routes>
-					<Route exact path='/' element={<Library />} />
+					<Route path='library' element={<Library />}>
+						<Route path='mangas' element={<Suspense fallback={<Loader />}><Mangas /></Suspense>} />
+						<Route path='novels' element={<Suspense fallback={<Loader />}><Novels /></Suspense>} />
+						<Route path='animes' element={<Suspense fallback={<Loader />}><Animes /></Suspense>} />
+					</Route>
 
-					<Route exact path='/read/:mangaName/' element={<Suspense fallback={<Loader />}><Read /></Suspense>} />
+					<Route path='read' element={<Read />}>
+						<Route path='manga/:name/' element={<Suspense fallback={<Loader />}><Manga /></Suspense>}>
+							<Route path=':chapter' element={<div></div>} />
+						</Route>
+						<Route path='novel/:name/' element={<Suspense fallback={<Loader />}><Novel /></Suspense>} />
+					</Route>
 
-					<Route exact path='/read/:mangaName/:chapter' element={<Suspense fallback={<Loader />}><Read /></Suspense>} />
+					<Route path='watch/anime/:name' element={<Suspense fallback={<Loader />}><Anime /></Suspense>} />
 
 					<Route path='settings' element={<Settings />}>
 						<Route path='application' element={<Suspense fallback={<Loader />}><Application /></Suspense>} />
@@ -56,6 +77,7 @@ export default function App() {
 						</Route>
 					</Route>
 
+					{/* <Route path='*' element={<Navigate to='/library/mangas' replace />} /> */}
 				</Routes>
 			)}
 		</BrowserRouter>
