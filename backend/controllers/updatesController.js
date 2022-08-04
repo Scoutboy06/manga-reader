@@ -27,14 +27,14 @@ export const getMangaUpdates = asyncHandler(async (req, res) => {
 });
 
 // @desc	Update the chapter the user is currently on
-// @route	POST /api/mangas/:_id/updateProgress
+// @route	POST /mangas/:mangaId/updateProgress
 export const updateProgress = asyncHandler(async (req, res) => {
-	const { _id } = req.params;
+	const { mangaId } = req.params;
 	const { chapter, isLast } = req.body;
 
-	if (!(_id && chapter && isLast !== undefined)) throw new Error(400);
+	if (!(mangaId && chapter && isLast !== undefined)) throw new Error(400);
 
-	const manga = await Manga.findById(_id);
+	const manga = await Manga.findById(mangaId);
 
 	if (manga.subscribed) updatesCache.put(manga._id, !isLast);
 	manga.chapter = chapter;

@@ -19,11 +19,9 @@ export default function Mangas() {
 	const [profileData] = useContext(ProfileContext);
 
 	useEffect(() => {
-		fetchAPI(
-			`api/users/${profileData.currentProfile._id}/mangas`,
-			{},
-			true
-		).then(setMangas);
+		fetchAPI(`/users/${profileData.currentProfile._id}/mangas`, {}, true).then(
+			setMangas
+		);
 	}, [profileData.currentProfile]);
 
 	useEffect(() => {
@@ -31,15 +29,13 @@ export default function Mangas() {
 			setIsFetchingUpdates(true);
 
 			fetchAPI(
-				'api/getUpdates?' +
+				'/getUpdates?' +
 					new URLSearchParams({
 						cache,
 						mangas: mangas
 							.filter(manga => manga.subscribed)
 							.map(manga => manga._id),
-					}),
-				{},
-				true
+					})
 			).then(json => {
 				setIsFetchingUpdates(false);
 				setUpdates(json);

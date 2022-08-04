@@ -20,7 +20,7 @@ export default function Provider(props) {
 	};
 
 	useEffect(() => {
-		fetchAPI('/api/users').then(profiles => {
+		fetchAPI('/users').then(profiles => {
 			setProfiles(profiles);
 			setCurrentProfile(
 				profiles.find(

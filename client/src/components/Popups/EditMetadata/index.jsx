@@ -20,8 +20,8 @@ export default function EditMetadata({ closePopup, data: manga }) {
 	const submitHandler = e => {
 		e.preventDefault();
 
-		fetchAPI('/api/mangas/' + manga._id, {
-			method: 'PUT',
+		fetchAPI(`/mangas/${manga._id}`, {
+			method: 'PATCH',
 			body: JSON.stringify({
 				name,
 				urlName,

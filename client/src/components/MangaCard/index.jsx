@@ -93,9 +93,9 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 											'Are you sure you want to perform this action?'
 										)
 									) {
-										fetchAPI(`/api/mangas/${manga._id}/finished`, {
-											method: 'PUT',
-											body: JSON.stringify({ isFinished: !manga.finished }),
+										fetchAPI(`/mangas/${manga._id}`, {
+											method: 'PATCH',
+											body: JSON.stringify({ finished: !manga.finished }),
 										}).then(() => window.location.reload());
 									}
 								}}
@@ -164,8 +164,8 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 							if (
 								window.confirm('Are you sure you want to perform this action?')
 							) {
-								fetchAPI(`/api/mangas/${manga._id}/`, {
-									method: 'PUT',
+								fetchAPI(`/mangas/${manga._id}`, {
+									method: 'PATCH',
 									body: JSON.stringify({ subscribed: !manga.subscribed }),
 								}).then(() => window.location.reload());
 							}
@@ -191,9 +191,9 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 											'Are you sure you want to perform this action?'
 										)
 									) {
-										fetchAPI(`/api/mangas/${manga._id}/finished`, {
-											method: 'PUT',
-											body: JSON.stringify({ isFinished: !manga.finished }),
+										fetchAPI(`/mangas/${manga._id}`, {
+											method: 'PATCH',
+											body: JSON.stringify({ finished: !manga.finished }),
 										}).then(() => window.location.reload());
 									}
 								},
@@ -219,7 +219,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 									'Are you sure you want to delete this manga? The action cannot be undone.'
 								)
 							) {
-								fetchAPI('/api/mangas/' + manga._id, {
+								fetchAPI(`/mangas/${manga._id}`, {
 									method: 'DELETE',
 								}).then(() => window.location.reload());
 							}

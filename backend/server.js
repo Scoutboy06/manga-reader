@@ -12,14 +12,9 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 import parseArguments from './functions/parseArguments.js';
 
-import mangaRoutes from './routes/mangaRoutes.js';
-import hostRoutes from './routes/hostRoutes.js';
-import searchRoutes from './routes/searchRoutes.js';
-import imageRoutes from './routes/imageRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+import router from './router.js';
 
 import { getMangaUpdates } from './controllers/updatesController.js';
-// import testController from './controllers/test.js';
 
 import Manga from './models/mangaModel.js';
 import sendDiscordWebhookUpdate from './functions/sendDiscordWebhookUpdate.js';
@@ -31,17 +26,13 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 connectDB();
 
 const app = express();
-
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+	app.use(morgan('dev'));
+}
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/mangas', mangaRoutes);
-app.use('/api/host', hostRoutes);
-app.use('/api/search', searchRoutes);
-app.use('/api/image', imageRoutes);
-app.use('/api/users', userRoutes);
-// app.use('/api/test', testController);
+app.use('/api/', router);
 
 app.use('/api/dc/:_id', asyncHandler(async (req, res) => {
 	const { _id } = req.params;

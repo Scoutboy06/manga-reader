@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import fetch from 'node-fetch';
 
 // @desc	Create add a new host
-// @route	GET /api/image/*
+// @route	GET /image/*
 const getImageFromUrl = asyncHandler(async (req, res) => {
 	const imgUrl =
 		(req.params['0'].startsWith('https://') ? '' : 'https://') +

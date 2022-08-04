@@ -6,7 +6,7 @@ import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 
 // @desc	Search for new mangas
-// @route	GET /api/search
+// @route	GET /search
 const search = asyncHandler(async (req, res) => {
 	const keyword = req.query.mangaName
 		? {

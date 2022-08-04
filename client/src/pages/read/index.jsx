@@ -41,15 +41,19 @@ export default function Read() {
 			hasInit.current = true;
 			setIsLoading(true);
 
-			const meta = await fetchAPI(
-				`/api/mangas/${params.name}?userId=${profileData.currentProfile._id}`,
+			const meta = await await fetchAPI(
+				`/users/${profileData.currentProfile._id}/mangas?` +
+					new URLSearchParams({
+						query: params.name,
+						limit: 1,
+					}),
 				{},
 				false
 			);
-			setMetadata(meta);
+			setMetadata(meta[0]);
 
 			if (!params.chapter) {
-				navigate(`/mangas/${params.name}/${meta.chapter}`, {
+				navigate(`/mangas/${params.name}/${meta[0].chapter}`, {
 					replace: true,
 				});
 			}
@@ -68,7 +72,7 @@ export default function Read() {
 			setIsLoading(true);
 
 			const chapMeta = await fetchAPI(
-				`/api/mangas/${params.name}/${params.chapter}`,
+				`/mangas/${metadata._id}/${params.chapter}`,
 				{},
 				true
 			);
@@ -77,8 +81,8 @@ export default function Read() {
 			setIsLoading(false);
 
 			// Sync chapter with server
-			fetchAPI(`/api/mangas/${metadata._id}/updateProgress`, {
-				method: 'PUT',
+			fetchAPI(`/mangas/${metadata._id}/updates`, {
+				method: 'PATCH',
 				body: JSON.stringify({
 					chapter: params.chapter,
 					isLast: !chapMeta.nextPath,

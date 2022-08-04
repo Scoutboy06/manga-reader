@@ -6,7 +6,7 @@ import Manga from '../models/mangaModel.js';
 
 
 // @desc	Create a new user
-// @route	POST /api/users
+// @route	POST /users
 export const createUser = asyncHandler(async (req, res) => {
 	const user = new User(req.body);
 
@@ -16,7 +16,7 @@ export const createUser = asyncHandler(async (req, res) => {
 
 
 // @desc	Delete a user
-// @route	DELETE /api/users/:_id
+// @route	DELETE /users/:_id
 // TODO: Remove all mangas in the user's library
 export const deleteUser = asyncHandler(async (req, res) => {
 	const user = await User.findById(req.params._id);
@@ -30,9 +30,9 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
 
 // @desc	Update user
-// @route	PUT /api/users/:_id
+// @route	PUT /users/:userId
 export const updateUser = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.params._id);
+	const user = await User.findById(req.params.userId);
 
 	if (!user) throw new Error(404);
 
@@ -46,17 +46,17 @@ export const updateUser = asyncHandler(async (req, res) => {
 
 
 // @desc	Get all users
-// @route GET /api/users
+// @route GET /users
 export const getAllUsers = asyncHandler(async (req, res) => {
 	const users = await User.find();
 	res.status(200).json(users);
 });
 
 
-// @desc	Get all user's data
-// @route	GET /api/users/:_id
-export const getUserData = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.params._id);
+// @desc	Get a user by id
+// @route	GET /users/:userId
+export const getUserById = asyncHandler(async (req, res) => {
+	const user = await User.findById(req.params.userId);
 
 	if (user) res.status(200).json(user);
 	else throw new Error(404);
@@ -64,10 +64,11 @@ export const getUserData = asyncHandler(async (req, res) => {
 
 
 // @desc	Get user's manga list
-// @route	GET /api/users/:_id/mangas
+// @route	GET /users/:userId/mangas
 export const getUserMangas = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.params._id);
-	if (!user) throw new Error(404);
+	const { userId } = req.params;
+	const user = await User.findById(userId);
+	if (!user) res.status(400).json({ error: 'Not found' });
 
 	const mangas = await Manga.find({ ownerId: user._id });
 	res.status(200).json(mangas);

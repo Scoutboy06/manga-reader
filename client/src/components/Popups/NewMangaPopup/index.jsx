@@ -32,7 +32,7 @@ export default function NewMangaPopup({ closePopup }) {
 		setPayload();
 		setIsLoading(true);
 
-		fetchAPI('/api/search?mangaName=' + inputText, {}, true).then(json => {
+		fetchAPI(`/search?mangaName=${inputText}`, {}, true).then(json => {
 			setIsLoading(false);
 			setPayload(json);
 		});
@@ -58,7 +58,7 @@ export default function NewMangaPopup({ closePopup }) {
 	const addSubmit = () => {
 		if (!selectedData) return;
 
-		fetchAPI('/api/mangas', {
+		fetchAPI('/mangas', {
 			method: 'POST',
 			body: JSON.stringify({
 				...selectedData,

@@ -24,8 +24,8 @@ export default function Profile() {
 	const [currentProfile, setCurrentProfile] = useState();
 
 	const saveHandler = () => {
-		fetchAPI(`/api/users/${currentProfile._id}`, {
-			method: 'PUT',
+		fetchAPI(`/users/${currentProfile._id}`, {
+			method: 'PATCH',
 			body: JSON.stringify({
 				name: username,
 				imageUrl: profilePicture,

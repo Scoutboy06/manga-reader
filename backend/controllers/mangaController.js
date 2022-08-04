@@ -6,16 +6,65 @@ import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
+import { updatesCache } from '../functions/mangaHasUpdates.js';
 import getChapterNumber from '../functions/getChapterNumber.js';
 
+// @desc	Get all of the user's mangas, with search functionality
+// @route	GET /users/:userId/mangas
+export const getUserMangas = asyncHandler(async (req, res) => {
+	const { userId } = req.params;
+	const { limit = Infinity, skip = 0, query = '' } = req.query;
+
+	const keyword = query
+		? {
+			urlName: {
+				$regex: query,
+				$options: 'i',
+			},
+		} : {};
+
+	const user = await User.findById(userId);
+	if (!user) return res.status(404).json({ error: 'No user found' });
+
+	const mangas = await Manga.find({ ownerId: user._id, ...keyword })
+		.limit(limit)
+		.skip(skip);
+
+	res.json(mangas);
+});
+
+// @desc	Get a manga by id
+// @route	GET /mangas/:mangaId
+export const getMangaById = asyncHandler(async (req, res) => {
+	const { mangaId } = req.params;
+	const manga = await Manga.findById(mangaId);
+	if (!manga) return res.status(404).json({ error: 'Not found' });
+	res.json(manga);
+});
+
+// @desc	Get a manga by name
+// @route	GET /users/:userId/mangas/:mangaName
+export const getMangaByName = asyncHandler(async (req, res) => {
+	const { userId, mangaName } = req.params;
+
+	// const user = await User.findById(userId);
+	// if (!user) return res.status(404).json({ error: 'User not found' });
+
+	const manga = Manga.findOne({ ownerId: userId, urlName: mangaName });
+	if (!manga) return res.status(404).json({ error: 'Manga not found' });
+
+	res.json(manga);
+});
+
 // @desc	Create a new manga
-// @route	POST /api/mangas
+// @route	POST /users/:userId/mangas
 export const createManga = asyncHandler(async (req, res) => {
+	const { userId } = req.params;
+
 	const {
 		hostName,
-		mangaUrlName,
+		urlName,
 		subscribed,
-		userId,
 	} = req.body;
 
 	const user = await User.findById(userId);
@@ -24,11 +73,12 @@ export const createManga = asyncHandler(async (req, res) => {
 	const host = await Host.findOne({ hostName });
 	if (!host) throw new Error(404);
 
-	const raw = await fetch(host.detailsPage.replace('%name%', mangaUrlName));
+
+	const raw = await fetch(host.detailsPage.replace('%name%', urlName));
 	const html = await raw.text();
 	const document = HTMLParser.parse(html);
 
-	const name = document.querySelector('.post-title h1').textContent;
+	const name = document.querySelector('.post-title h1').textContent.trim();
 	const coverEl = document.querySelector('.summary_image a img');
 	const coverUrl = coverEl.getAttribute('data-src')
 		|| coverEl.getAttribute('data-srcset')
@@ -37,7 +87,7 @@ export const createManga = asyncHandler(async (req, res) => {
 	const manga = new Manga({
 		name,
 		originalName: name,
-		urlName: mangaUrlName,
+		urlName: urlName,
 		chapter: 'chapter-1',
 		subscribed,
 		hostId: host._id,
@@ -52,15 +102,25 @@ export const createManga = asyncHandler(async (req, res) => {
 });
 
 // @desc	Update manga
-// @route	PUT /api/mangas/:_id
+// @route	PATCH /mangas/:mangaId
 export const updateManga = asyncHandler(async (req, res) => {
-	const { _id } = req.params;
+	const { mangaId } = req.params;
 
-	const manga = await Manga.findById(_id);
-	if (!manga) throw new Error(404);
+	const manga = await Manga.findById(mangaId);
+	if (!manga) {
+		res.status(404);
+		throw new Error('Manga not found');
+	}
 
 	for (const key of Object.keys(req.body)) {
-		if (key === '_id' || key === 'originalName' || key === 'originalCoverUrl') continue;
+		if (key === '_id' || key === 'originalName' || key === 'originalCoverUrl') {
+			continue;
+		} else if (key === 'isLast') {
+			const isLast = !req.body.isLast;
+			if (manga.subscribed) updatesCache.put(manga._id, !isLast);
+			continue;
+		}
+
 		manga[key] = req.body[key];
 	}
 
@@ -69,54 +129,30 @@ export const updateManga = asyncHandler(async (req, res) => {
 });
 
 // @desc	Delete a manga
-// @route	DELETE /api/mangas/:_id
+// @route	DELETE /mangas/:mangaId
 export const deleteManga = asyncHandler(async (req, res) => {
-	const manga = await Manga.findById(req.params._id);
-	if (!manga) throw new Error(404);
+	const { mangaId } = req.params;
+
+	const manga = await Manga.findById(mangaId);
+	if (!manga) res.status(404).json({ error: 'Not found' });
 
 	await manga.remove();
-	res.json({ message: 'Manga removed from library' });
-});
-
-// @desc	Update if the manga is finished (reading) or not
-// @route PUT /api/mangas/:_id/finished
-export const updateFinished = asyncHandler(async (req, res) => {
-	const { isFinished } = req.body;
-	if (isFinished === undefined) throw new Error(400);
-
-	const manga = await Manga.findById(req.params._id);
-	if (!manga) throw new Error(404);
-
-	manga.finished = isFinished;
-	if (!isFinished) manga.subscribed = false;
-	await manga.save();
-
-	res.status(200).json({ _id: manga._id, isFinished });
-});
-
-// @desc	Get info about a manga
-// @route	GET /api/mangas/:urlName?userId=...
-export const getMangaByUrlName = asyncHandler(async (req, res) => {
-	const { urlName } = req.params;
-	const { userId } = req.query;
-
-	const manga = await Manga.findOne({ urlName, ownerId: userId });
-	if (!manga) throw new Error(404);
-
-	res.status(200).json(manga);
+	res.json({ message: `Manga ${manga.name} was removed from library` });
 });
 
 // @desc	Get images from a chapter
-// @route	GET /api/mangas/:urlName/:chapter
+// @route	GET /mangas/:mangaId/:chapter
 export const getImageUrls = asyncHandler(async (req, res) => {
-	const { urlName, chapter } = req.params;
+	const { mangaId, chapter } = req.params;
 
-	const manga = await Manga.findOne({ urlName });
-	if (!manga) throw new Error(404);
+	const manga = await Manga.findById(mangaId);
+	if (!manga) {
+		res.status(404);
+		throw new Error('Manga not found')
+	}
 	const host = await Host.findById(manga.hostId);
-	if (!host) throw new Error(404);
 
-	let url = host.path.replace('%name%', urlName).replace('%chapter%', chapter);
+	let url = host.path.replace('%name%', manga.urlName).replace('%chapter%', chapter);
 
 	const raw = await fetch(url);
 	const html = await raw.text();
@@ -142,7 +178,7 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 		src = src.trim();
 
 		// if(host.needProxy) {
-		// 	src = 'http://127.0.0.1:5000/api/image/' + src;
+		// 	src = 'http://127.0.0.1:5000/image/' + src;
 		// }
 
 		srcs.push(src);
@@ -162,7 +198,7 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 
 		const url = btn.getAttribute('href');
 		const reg = RegExp(
-			path.replace('%name%', urlName).replace('%chapter%', '([a-z0-9:/.-]+)')
+			path.replace('%name%', manga.urlName).replace('%chapter%', '([a-z0-9:/.-]+)')
 		);
 		const match = url.match(reg);
 

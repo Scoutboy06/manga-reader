@@ -21,8 +21,8 @@ export default function EditMangaCover({ closePopup, data: manga }) {
 	);
 
 	const submitHandler = () => {
-		fetchAPI('/api/mangas/' + manga._id, {
-			method: 'PUT',
+		fetchAPI(`/mangas/${manga._id}`, {
+			method: 'PATCH',
 			body: JSON.stringify({ coverUrl: renderedUrl }),
 		}).then(() => window.location.reload());
 	};
