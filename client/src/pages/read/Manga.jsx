@@ -1,37 +1,20 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useOutletContext } from 'react-router-dom';
 
-import fetchAPI from '../../functions/fetchAPI';
 import getChapterNumber from '../../functions/getChapterNumber';
 
 import Loader from '../../components/Loader';
-import Head from '../../components/Head';
-import Select from '../../components/Select';
 
-import { ProfileContext } from '../../contexts/ProfileContext';
 import { SettingsContext } from '../../contexts/SettingsContext';
 
 import styles from './read.module.css';
 
 export default function Manga() {
 	const params = useParams();
-	const navigate = useNavigate();
-	const [profileData] = useContext(ProfileContext);
-	const [settings, settingsActions] = useContext(SettingsContext);
+	const [{ contentWidth }] = useContext(SettingsContext);
+	const { isLoading, content: images } = useOutletContext();
 
-	const [chapters, setChapters] = useState({
-		prev: null,
-		curr: params.chapter,
-		next: null,
-		title: null,
-	});
-	const [images, setImages] = useState();
-	const [originalUrl, setOriginalUrl] = useState();
-	const [isLoading, setIsLoading] = useState(false);
-	const [mangaMeta, setMangaMeta] = useState();
 	const [imageScrollProgress, setImageScrollProgress] = useState('-');
-	const [imageScale, setImageScale] = useState(settings.imageScale);
 
 	const imagesContainerRef = useRef();
 	const imageSizes = useRef([]);
@@ -51,6 +34,8 @@ export default function Manga() {
 	};
 
 	const setImagesTopCoords = (start = 0, end = images.length) => {
+		if (!images) return;
+
 		for (let i = start; i < end; i++) {
 			const el = imagesContainerRef.current.children[i];
 			const { y } = el.getBoundingClientRect();
@@ -81,63 +66,14 @@ export default function Manga() {
 	}, [images]);
 
 	useEffect(() => {
-		(async function () {
-			setIsLoading(true);
+		const ANIMATION_DURATION = 300;
 
-			let meta;
-			if (!mangaMeta) {
-				meta = await fetchAPI(
-					`/api/mangas/${params.name}?userId=${profileData.currentProfile._id}`,
-					{},
-					false
-				);
-				setMangaMeta(meta);
-			} else {
-				meta = mangaMeta;
-			}
-
-			if (!params.chapter) {
-				navigate(`/read/manga/${params.name}/${meta.chapter}`, {
-					replace: true,
-				});
-				return;
-			}
-
-			if (params.chapter === chapters.curr && mangaMeta) {
-				setIsLoading(false);
-				return;
-			}
-
-			const chaps = await fetchAPI(
-				`/api/mangas/${params.name}/${params.chapter}`,
-				{},
-				true
-			);
-
-			setChapters({
-				prev: chaps.prevPath,
-				curr: params.chapter,
-				next: chaps.nextPath,
-				title: chaps.chapterTitle,
-			});
-			setImages(chaps.images);
-			setOriginalUrl(chaps.originalUrl);
-			setIsLoading(false);
-
-			fetchAPI(`/api/mangas/${meta._id}/updateProgress`, {
-				method: 'PUT',
-				body: JSON.stringify({
-					chapter: params.chapter,
-					isLast: !chaps.nextPath,
-				}),
-			});
-		})();
+		setTimeout(() => {
+			setImagesTopCoords();
+			scrollHandler();
+		}, ANIMATION_DURATION + 50);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [params, profileData.isLoading]);
-
-	useEffect(() => {
-		settingsActions.setImageScale(imageScale);
-	}, [imageScale, settingsActions]);
+	}, [contentWidth]);
 
 	return (
 		<>
@@ -145,7 +81,9 @@ export default function Manga() {
 				className={styles.chapters}
 				style={{
 					width:
-						imageScale === 'pageWidth' ? '100%' : `calc(70% * ${imageScale})`,
+						contentWidth === 'pageWidth'
+							? '100%'
+							: `calc(70% * ${contentWidth})`,
 				}}
 				ref={imagesContainerRef}
 			>
@@ -162,9 +100,9 @@ export default function Manga() {
 									key={index}
 									data-isloaded={false}
 								>
+									{/* eslint-disable-next-line jsx-a11y/alt-text */}
 									<img
 										src={image}
-										alt={chapters.title + ' - ' + (index + 1)}
 										loading='lazy'
 										onLoad={e => imageLoadHandler(e, index)}
 									/>
@@ -175,7 +113,7 @@ export default function Manga() {
 			</section>
 
 			<div className={styles.progressContainer}>
-				<span>Ch. {getChapterNumber(chapters.curr)}</span>
+				<span>Ch. {getChapterNumber(params.chapter)}</span>
 				<span>
 					{imageScrollProgress || '-'} / {images?.length || '-'}
 				</span>

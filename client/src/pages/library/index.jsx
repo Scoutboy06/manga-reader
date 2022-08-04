@@ -84,9 +84,9 @@ export default function Library() {
 					</BlurContainer>
 
 					<Navbar>
-						<a href='/library/mangas'>Mangas</a>
-						<a href='/library/novels'>Novels</a>
-						<a href='/library/animes'>Animes</a>
+						<a href='/mangas'>Mangas</a>
+						<a href='/novels'>Novels</a>
+						<a href='/animes'>Animes</a>
 					</Navbar>
 
 					<div style={{ width: 50 }}></div>

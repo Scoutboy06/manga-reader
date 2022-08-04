@@ -18,34 +18,35 @@ export default function Mangas() {
 
 	const [profileData] = useContext(ProfileContext);
 
-	const fetchUpdates = async cache => {
-		setIsFetchingUpdates(true);
-
-		fetchAPI(
-			'api/getUpdates?' +
-				new URLSearchParams({
-					cache,
-					mangas: mangas
-						.filter(manga => manga.subscribed)
-						.map(manga => manga._id),
-				})
-		).then(json => {
-			setIsFetchingUpdates(false);
-			setUpdates(json);
-		});
-	};
-
 	useEffect(() => {
 		fetchAPI(
 			`api/users/${profileData.currentProfile._id}/mangas`,
 			{},
-			false
+			true
 		).then(setMangas);
-	}, [profileData]);
+	}, [profileData.currentProfile]);
 
 	useEffect(() => {
+		async function fetchUpdates(cache) {
+			setIsFetchingUpdates(true);
+
+			fetchAPI(
+				'api/getUpdates?' +
+					new URLSearchParams({
+						cache,
+						mangas: mangas
+							.filter(manga => manga.subscribed)
+							.map(manga => manga._id),
+					}),
+				{},
+				true
+			).then(json => {
+				setIsFetchingUpdates(false);
+				setUpdates(json);
+			});
+		}
+
 		if (mangas && mangas.length > 0) fetchUpdates(true);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [mangas]);
 
 	return (

@@ -50,20 +50,23 @@ export default function App() {
 				</Routes>
 			) : (currentProfile && !isLoading) && (
 				<Routes>
-					<Route path='library' element={<Library />}>
+					<Route element={<Library />}>
 						<Route path='mangas' element={<Suspense fallback={<Loader />}><Mangas /></Suspense>} />
 						<Route path='novels' element={<Suspense fallback={<Loader />}><Novels /></Suspense>} />
 						<Route path='animes' element={<Suspense fallback={<Loader />}><Animes /></Suspense>} />
+						<Route path='*' element={<Navigate to='mangas' replace />} />
 					</Route>
 
-					<Route path='read' element={<Read />}>
-						<Route path='manga/:name/' element={<Suspense fallback={<Loader />}><Manga /></Suspense>}>
+					<Route element={<Read />}>
+						<Route path='mangas/:name/' element={<Suspense fallback={<Loader />}><Manga /></Suspense>}>
 							<Route path=':chapter' element={<div></div>} />
 						</Route>
-						<Route path='novel/:name/' element={<Suspense fallback={<Loader />}><Novel /></Suspense>} />
+						<Route path='novels/:name/' element={<Suspense fallback={<Loader />}><Novel /></Suspense>}>
+							<Route path=':chapter' element={<div></div>} />
+						</Route>
 					</Route>
 
-					<Route path='watch/anime/:name' element={<Suspense fallback={<Loader />}><Anime /></Suspense>} />
+					<Route path='anime/:name' element={<Suspense fallback={<Loader />}><Anime /></Suspense>} />
 
 					<Route path='settings' element={<Settings />}>
 						<Route path='application' element={<Suspense fallback={<Loader />}><Application /></Suspense>} />

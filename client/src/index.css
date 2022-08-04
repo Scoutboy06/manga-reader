@@ -78,9 +78,9 @@ span {
 	background-color: #bbb;
 }
 
-iframe {
+/* iframe {
 	display: none !important;
-}
+} */
 
 svg {
 	fill: #fff;

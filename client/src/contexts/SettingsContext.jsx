@@ -3,8 +3,12 @@ import { createContext, useState, useEffect } from 'react';
 const initialState = (() => {
 	const settingsString = localStorage.getItem('settings');
 	if (settingsString === null) {
-		const initialSettings = { appIcon: 'rikka_square', imageScale: 1 };
+		const initialSettings = {
+			contentWidth: 1.0,
+			appIcon: 'rikka_square',
+		};
 		localStorage.setItem('settings', JSON.stringify(initialSettings));
+		console.log(initialSettings);
 		return initialSettings;
 	}
 	return JSON.parse(settingsString);
@@ -24,22 +28,22 @@ function updateSettings(values) {
 
 export default function Provider({ children }) {
 	const [appIcon, setAppIcon] = useState(initialState.appIcon);
-	const [imageScale, setImageScale] = useState(initialState.imageScale);
+	const [contentWidth, setContentWidth] = useState(initialState.contentWidth);
 
 	useEffect(() => {
 		updateSettings({
 			appIcon,
-			imageScale,
+			contentWidth,
 		});
-	}, [appIcon, imageScale]);
+	}, [appIcon, contentWidth]);
 
 	const actions = {
 		setAppIcon,
-		setImageScale,
+		setContentWidth,
 	};
 
 	return (
-		<SettingsContext.Provider value={[{ appIcon, imageScale }, actions]}>
+		<SettingsContext.Provider value={[{ appIcon, contentWidth }, actions]}>
 			{children}
 		</SettingsContext.Provider>
 	);
