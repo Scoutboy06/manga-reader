@@ -95,11 +95,13 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 									) {
 										fetchAPI(`/mangas/${manga._id}`, {
 											method: 'PATCH',
-											body: JSON.stringify({ finished: !manga.finished }),
+											body: JSON.stringify({
+												hasFinishedReading: !manga.hasFinishedReading,
+											}),
 										}).then(() => window.location.reload());
 									}
 								}}
-								data-finished={manga.finished}
+								data-hasfinishedreading={manga.hasFinishedReading}
 							>
 								<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 									<path d='M0 0h24v24H0V0z' fill='none' />
@@ -113,7 +115,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 						<div className={styles.updates}></div>
 					)}
 
-					{manga.subscribed && isFetchingUpdates && (
+					{manga.isSubscribed && isFetchingUpdates && (
 						<div className={styles.loader}>
 							<Loader size={30} />
 						</div>
@@ -121,7 +123,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 				</div>
 				<div className={styles.details}>
 					<p>{manga.name}</p>
-					<span>{parseChapterName(manga.chapter)}</span>
+					<span>{parseChapterName(manga.currentChapter)}</span>
 				</div>
 			</div>
 
@@ -166,11 +168,11 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 							) {
 								fetchAPI(`/mangas/${manga._id}`, {
 									method: 'PATCH',
-									body: JSON.stringify({ subscribed: !manga.subscribed }),
+									body: JSON.stringify({ isSubscribed: !manga.isSubscribed }),
 								}).then(() => window.location.reload());
 							}
 						},
-						icon: manga.subscribed ? (
+						icon: manga.isSubscribed ? (
 							<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 								<path d='M0 0h24v24H0z' fill='none' />
 								<path d='M20 18.69L7.84 6.14 5.27 3.49 4 4.76l2.8 2.8v.01c-.52.99-.8 2.16-.8 3.42v5l-2 2v1h13.73l2 2L21 19.72l-1-1.03zM12 22c1.11 0 2-.89 2-2h-4c0 1.11.89 2 2 2zm6-7.32V11c0-3.08-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68c-.15.03-.29.08-.42.12-.1.03-.2.07-.3.11h-.01c-.01 0-.01 0-.02.01-.23.09-.46.2-.68.31 0 0-.01 0-.01.01L18 14.68z' />
@@ -181,7 +183,7 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 								<path d='M7.58 4.08L6.15 2.65C3.75 4.48 2.17 7.3 2.03 10.5h2c.15-2.65 1.51-4.97 3.55-6.42zm12.39 6.42h2c-.15-3.2-1.73-6.02-4.12-7.85l-1.42 1.43c2.02 1.45 3.39 3.77 3.54 6.42zM18 11c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2v-5zm-6 11c.14 0 .27-.01.4-.04.65-.14 1.18-.58 1.44-1.18.1-.24.15-.5.15-.78h-4c.01 1.1.9 2 2.01 2z' />
 							</svg>
 						),
-						content: (manga.subscribed ? 'Disable' : 'Enable') + ' updates',
+						content: (manga.isSubscribed ? 'Disable' : 'Enable') + ' updates',
 					},
 					isTouchScreen()
 						? {
@@ -193,7 +195,9 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 									) {
 										fetchAPI(`/mangas/${manga._id}`, {
 											method: 'PATCH',
-											body: JSON.stringify({ finished: !manga.finished }),
+											body: JSON.stringify({
+												hasFinishedReading: !manga.hasFinishedReading,
+											}),
 										}).then(() => window.location.reload());
 									}
 								},
@@ -201,12 +205,12 @@ export default function MangaCard({ manga, isFetchingUpdates, updates }) {
 									<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
 										<path d='M0 0h24v24H0V0z' fill='none' />
 										<path
-											fill={manga.finished ? '#c33' : '#fff'}
+											fill={manga.hasFinishedReading ? '#c33' : '#fff'}
 											d='M9 16.2l-3.5-3.5c-.39-.39-1.01-.39-1.4 0-.39.39-.39 1.01 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7c.39-.39.39-1.01 0-1.4-.39-.39-1.01-.39-1.4 0L9 16.2z'
 										/>
 									</svg>
 								),
-								content: manga.finished
+								content: manga.hasFinishedReading
 									? 'Set to uncompleted'
 									: 'Set to completed',
 						  }

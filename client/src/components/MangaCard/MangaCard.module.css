@@ -99,7 +99,7 @@
 	fill: var(--main-color);
 }
 
-.actionButtons > button[data-finished='true'] > svg {
+.actionButtons > button[data-hasfinishedreading='true'] > svg {
 	fill: #c33;
 }
 

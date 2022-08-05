@@ -10,11 +10,13 @@ export default function EditMetadata({ closePopup, data: manga }) {
 	const [name, setName] = useState(manga.name);
 
 	const [urlName, setUrlName] = useState(manga.urlName);
-	const [chapter, setChapter] = useState(manga.chapter);
-	const [subscribed, setSubscribed] = useState(manga.subscribed);
+	const [currentChapter, setCurrentChapter] = useState(manga.currentChapter);
+	const [isSubscribed, setIsSubscribed] = useState(manga.isSubscribed);
 	const [hostId, setHostId] = useState(manga.hostId);
 
-	const [finished, setFinished] = useState(manga.finished);
+	const [hasFinishedReading, setHasFinishedReading] = useState(
+		manga.hasFinishedReading
+	);
 	const [ownerId, setOwnerId] = useState(manga.ownerId);
 
 	const submitHandler = e => {
@@ -25,10 +27,10 @@ export default function EditMetadata({ closePopup, data: manga }) {
 			body: JSON.stringify({
 				name,
 				urlName,
-				chapter,
-				subscribed,
+				currentChapter,
+				isSubscribed,
 				hostId,
-				finished,
+				hasFinishedReading,
 				ownerId,
 			}),
 		}).then(() => window.location.reload());
@@ -52,26 +54,26 @@ export default function EditMetadata({ closePopup, data: manga }) {
 				</div>
 
 				<div className={styles.formGroup}>
-					<label htmlFor='subscribed'>Subscribed:</label>
+					<label htmlFor='isSubscribed'>Subscribed:</label>
 					<button
 						type='button'
 						className='checkbox'
-						name='subscribed'
-						id='subscribed'
-						data-ischecked={subscribed}
-						onClick={() => setSubscribed(bool => !bool)}
+						name='isSubscribed'
+						id='isSubscribed'
+						data-ischecked={isSubscribed}
+						onClick={() => setIsSubscribed(bool => !bool)}
 					></button>
 				</div>
 
 				<div className={styles.formGroup}>
-					<label htmlFor='finished'>Finished reading:</label>
+					<label htmlFor='hasFinishedReading'>Finished reading:</label>
 					<button
 						type='button'
 						className='checkbox'
-						name='finished'
-						id='finished'
-						data-ischecked={finished}
-						onClick={() => setFinished(bool => !bool)}
+						name='hasFinishedReading'
+						id='hasFinishedReading'
+						data-ischecked={hasFinishedReading}
+						onClick={() => setHasFinishedReading(bool => !bool)}
 					></button>
 				</div>
 
@@ -99,13 +101,13 @@ export default function EditMetadata({ closePopup, data: manga }) {
 						</div>
 
 						<div className={styles.formGroup}>
-							<label htmlFor='chapter'>Chapter:</label>
+							<label htmlFor='currentChapter'>Current chapter:</label>
 							<input
 								type='text'
-								name='chapter'
-								id='chapter'
-								value={chapter}
-								onChange={e => setChapter(e.target.value)}
+								name='currentChapter'
+								id='currentChapter'
+								value={currentChapter}
+								onChange={e => setCurrentChapter(e.target.value)}
 							/>
 						</div>
 

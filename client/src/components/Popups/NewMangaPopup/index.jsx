@@ -51,21 +51,27 @@ export default function NewMangaPopup({ closePopup }) {
 
 		setSelectedData({
 			hostName: payload[hostIndex].hostName,
-			mangaUrlName: payload[hostIndex].mangas[mangaIndex].urlName,
+			urlName: payload[hostIndex].mangas[mangaIndex].urlName,
 		});
 	};
 
 	const addSubmit = () => {
 		if (!selectedData) return;
 
-		fetchAPI('/mangas', {
+		fetchAPI(`/users/${profileData.currentProfile._id}/mangas`, {
 			method: 'POST',
 			body: JSON.stringify({
 				...selectedData,
-				subscribed: isSubscribed,
+				isSubscribed,
 				userId: profileData.currentProfile._id,
 			}),
-		}).then(() => window.location.reload());
+		})
+			.then(res => {
+				if (res.ok) window.location.reload();
+				return res.json();
+				// console.log(res);
+			})
+			.then(console.log);
 	};
 
 	return (

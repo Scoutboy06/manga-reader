@@ -5,6 +5,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
+import fetch from 'node-fetch'
 
 import connectDB from './config/db.js';
 
@@ -17,13 +18,15 @@ import router from './router.js';
 import { getMangaUpdates } from './controllers/updatesController.js';
 
 import Manga from './models/mangaModel.js';
+import Host from './models/hostModel.js';
+
 import sendDiscordWebhookUpdate from './functions/sendDiscordWebhookUpdate.js';
 import asyncHandler from 'express-async-handler';
 
 const __dirname = path.resolve();
 dotenv.config({ path: path.join(__dirname, '.env') });
 
-connectDB();
+const db = connectDB();
 
 const app = express();
 if (process.env.NODE_ENV === 'development') {
@@ -42,14 +45,9 @@ app.use('/api/dc/:_id', asyncHandler(async (req, res) => {
 	res.json(manga);
 }));
 
+
 app.use('/api/test', asyncHandler(async (req, res) => {
-	const mangas = await Manga.find({});
-	const updatedMangas = await Promise.all(mangas.map(manga => new Promise(async (resolve, reject) => {
-		manga.lastUpdatePingedChapter = manga.chapter;
-		await manga.save();
-		resolve(manga);
-	})));
-	res.json(updatedMangas);
+	res.json({ hello: 'there' });
 }));
 
 app.get('/api/getUpdates', getMangaUpdates);

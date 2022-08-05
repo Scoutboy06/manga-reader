@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from 'react';
-// import { useNavigate, Outlet } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
 
 import Head from '../../components/Head';
@@ -33,7 +32,7 @@ export default function Mangas() {
 					new URLSearchParams({
 						cache,
 						mangas: mangas
-							.filter(manga => manga.subscribed)
+							.filter(manga => manga.isSubscribed)
 							.map(manga => manga._id),
 					})
 			).then(json => {
@@ -54,7 +53,7 @@ export default function Mangas() {
 			<section className={styles.section1}>
 				{mangas.map(
 					manga =>
-						!manga.finished && (
+						!manga.hasFinishedReading && (
 							<MangaCard
 								key={manga._id}
 								manga={manga}
@@ -65,30 +64,30 @@ export default function Mangas() {
 				)}
 			</section>
 
-			<section className={styles.section2} data-show={showFinishedMangas}>
-				<button
-					onClick={() => setShowFinishedMangas(!showFinishedMangas)}
-					className={styles.toggleFinshedMangasButton}
-				>
-					<span>Finished reading</span>
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						viewBox='0 0 24 24'
-						width='30px'
-						style={{
-							transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
-						}}
+			{mangas && (
+				<section className={styles.section2} data-show={showFinishedMangas}>
+					<button
+						onClick={() => setShowFinishedMangas(!showFinishedMangas)}
+						className={styles.toggleFinshedMangasButton}
 					>
-						<path d='M24 24H0V0h24v24z' fill='none' opacity='.87' />
-						<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
-					</svg>
-				</button>
+						<span>Finished reading</span>
+						<svg
+							xmlns='http://www.w3.org/2000/svg'
+							viewBox='0 0 24 24'
+							width='30px'
+							style={{
+								transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
+							}}
+						>
+							<path d='M24 24H0V0h24v24z' fill='none' opacity='.87' />
+							<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
+						</svg>
+					</button>
 
-				{mangas && (
 					<div>
 						{mangas.map(
 							manga =>
-								manga.finished && (
+								manga.hasFinishedReading && (
 									<MangaCard
 										key={manga._id}
 										manga={manga}
@@ -98,8 +97,8 @@ export default function Mangas() {
 								)
 						)}
 					</div>
-				)}
-			</section>
+				</section>
+			)}
 		</>
 	);
 }

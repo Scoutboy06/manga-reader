@@ -64,14 +64,20 @@ export const createManga = asyncHandler(async (req, res) => {
 	const {
 		hostName,
 		urlName,
-		subscribed,
+		isSubscribed,
 	} = req.body;
 
 	const user = await User.findById(userId);
-	if (!user) throw new Error(404);
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
 
 	const host = await Host.findOne({ hostName });
-	if (!host) throw new Error(404);
+	if (!host) {
+		res.status(404);
+		throw new Error('Host not found : ' + hostName);
+	}
 
 
 	const raw = await fetch(host.detailsPage.replace('%name%', urlName));
@@ -80,19 +86,43 @@ export const createManga = asyncHandler(async (req, res) => {
 
 	const name = document.querySelector('.post-title h1').textContent.trim();
 	const coverEl = document.querySelector('.summary_image a img');
-	const coverUrl = coverEl.getAttribute('data-src')
-		|| coverEl.getAttribute('data-srcset')
-		|| coverEl.getAttribute('src');
+	const coverUrl = (
+		coverEl.getAttribute('data-src') ||
+		coverEl.getAttribute('data-srcset') ||
+		coverEl.getAttribute('src')
+	).trim();
+
+	const chapters = (() => {
+		const containerEl = document.querySelector('ul.main.version-chap');
+		const chapterEls = containerEl.querySelectorAll('li > a');
+
+		const chapterData = chapterEls.map(el => {
+			const name = el.textContent.trim();
+
+			const href = el.getAttribute('href').trim().split('/');
+			const urlName = href[href.length - 2];
+
+			return { name, urlName };
+		});
+
+		return chapterData.reverse();
+	})();
 
 	const manga = new Manga({
 		name,
 		originalName: name,
 		urlName: urlName,
-		chapter: 'chapter-1',
-		subscribed,
-		hostId: host._id,
+
+		chapters,
+		currentChapter: chapters[0].urlName,
+
+		// lastUpdatePingedChapter: null
+		isSubscribed,
+
 		coverUrl,
-		originalCoverUrl: coverUrl,
+		originalCoverUrl: coverUrl.trim(),
+
+		hostId: host._id,
 		ownerId: user._id,
 	});
 

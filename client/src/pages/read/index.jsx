@@ -26,11 +26,19 @@ export default function Read() {
 
 	const paginate = dir => {
 		window.scrollTo(0, 0);
+		const { chapters } = metadata;
+
+		const currentChapter = chapters.find(
+			chapter => chapter.urlName === params.chapter
+		);
+		const currentChapterIndex = chapters.indexOf(currentChapter);
 
 		if (dir === -1) {
-			navigate(`/mangas/${metadata.urlName}/${chapterMeta.prevPath}`);
+			const prevChapter = chapters[currentChapterIndex - 1];
+			navigate(`/mangas/${metadata.urlName}/${prevChapter.urlName}`);
 		} else if (dir === 1) {
-			navigate(`/mangas/${metadata.urlName}/${chapterMeta.nextPath}`);
+			const nextChapter = chapters[currentChapterIndex + 1];
+			navigate(`/mangas/${metadata.urlName}/${nextChapter.urlName}`);
 		}
 	};
 
@@ -53,7 +61,7 @@ export default function Read() {
 			setMetadata(meta[0]);
 
 			if (!params.chapter) {
-				navigate(`/mangas/${params.name}/${meta[0].chapter}`, {
+				navigate(`/mangas/${params.name}/${meta[0].currentChapter}`, {
 					replace: true,
 				});
 			}
