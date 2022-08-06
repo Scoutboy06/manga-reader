@@ -18,7 +18,7 @@ export default function Mangas() {
 	const [profileData] = useContext(ProfileContext);
 
 	useEffect(() => {
-		fetchAPI(`/users/${profileData.currentProfile._id}/mangas`, {}, true).then(
+		fetchAPI(`/users/${profileData.currentProfile._id}/mangas`, {}, false).then(
 			setMangas
 		);
 	}, [profileData.currentProfile]);
@@ -64,41 +64,39 @@ export default function Mangas() {
 				)}
 			</section>
 
-			{mangas && (
-				<section className={styles.section2} data-show={showFinishedMangas}>
-					<button
-						onClick={() => setShowFinishedMangas(!showFinishedMangas)}
-						className={styles.toggleFinshedMangasButton}
+			<section className={styles.section2} data-show={showFinishedMangas}>
+				<button
+					onClick={() => setShowFinishedMangas(!showFinishedMangas)}
+					className={styles.toggleFinshedMangasButton}
+				>
+					<span>Finished reading</span>
+					<svg
+						xmlns='http://www.w3.org/2000/svg'
+						viewBox='0 0 24 24'
+						width='30px'
+						style={{
+							transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
+						}}
 					>
-						<span>Finished reading</span>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							viewBox='0 0 24 24'
-							width='30px'
-							style={{
-								transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
-							}}
-						>
-							<path d='M24 24H0V0h24v24z' fill='none' opacity='.87' />
-							<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
-						</svg>
-					</button>
+						<path d='M24 24H0V0h24v24z' fill='none' opacity='.87' />
+						<path d='M15.88 9.29L12 13.17 8.12 9.29c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.39-.39.39-1.02 0-1.41-.39-.38-1.03-.39-1.42 0z' />
+					</svg>
+				</button>
 
-					<div>
-						{mangas.map(
-							manga =>
-								manga.hasFinishedReading && (
-									<MangaCard
-										key={manga._id}
-										manga={manga}
-										isFetchingUpdates={isFetchingUpdates}
-										updates={updates}
-									/>
-								)
-						)}
-					</div>
-				</section>
-			)}
+				<div>
+					{mangas.map(
+						manga =>
+							manga.hasFinishedReading && (
+								<MangaCard
+									key={manga._id}
+									manga={manga}
+									isFetchingUpdates={isFetchingUpdates}
+									updates={updates}
+								/>
+							)
+					)}
+				</div>
+			</section>
 		</>
 	);
 }

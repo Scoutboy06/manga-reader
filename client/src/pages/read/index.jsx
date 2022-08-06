@@ -26,26 +26,25 @@ export default function Read() {
 
 	const paginate = dir => {
 		window.scrollTo(0, 0);
-		const { chapters } = metadata;
+		// const { chapters } = metadata;
 
-		const currentChapter = chapters.find(
-			chapter => chapter.urlName === params.chapter
-		);
-		const currentChapterIndex = chapters.indexOf(currentChapter);
+		// const currentChapter = chapters.find(
+		// 	chapter => chapter.urlName === params.chapter
+		// );
+		// const currentChapterIndex = chapters.indexOf(currentChapter);
 
 		if (dir === -1) {
-			const prevChapter = chapters[currentChapterIndex - 1];
-			navigate(`/mangas/${metadata.urlName}/${prevChapter.urlName}`);
+			// const prevChapter = chapters[currentChapterIndex - 1];
+			navigate(`/mangas/${metadata.urlName}/${chapterMeta.prevPath}`);
 		} else if (dir === 1) {
-			const nextChapter = chapters[currentChapterIndex + 1];
-			navigate(`/mangas/${metadata.urlName}/${nextChapter.urlName}`);
+			// const nextChapter = chapters[currentChapterIndex + 1];
+			navigate(`/mangas/${metadata.urlName}/${chapterMeta.nextPath}`);
 		}
 	};
 
 	// Init
 	useEffect(() => {
 		async function init() {
-			console.log('Init');
 			hasInit.current = true;
 			setIsLoading(true);
 

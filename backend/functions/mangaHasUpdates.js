@@ -19,7 +19,7 @@ export default async function mangaHasUpdates(manga, cache) {
 	const url = encodeURI(
 		host.path
 			.replace('%name%', manga.urlName)
-			.replace('%chapter%', manga.chapter)
+			.replace('%chapter%', manga.currentChapter)
 	);
 
 	const raw = await fetch(url);
