@@ -1,0 +1,77 @@
+import { useState, useRef, useEffect } from 'react';
+
+import styles from './HorizontalScrollContainer.module.css';
+
+export default function HorizontalScrollContainer({ children, title }) {
+	const [canScrollTo, setCanScrollTo] = useState({
+		left: false,
+		right: false,
+	});
+
+	const scrollContainerEl = useRef();
+
+	const scroll = dir => {
+		// const { width: firstChildWidth } =
+		// 	scrollContainerEl.current.childNodes[0].getBoundingClientRect();
+		const firstChildWidth = scrollContainerEl.current.childNodes[0].offsetWidth;
+
+		const { scrollLeft } = scrollContainerEl.current;
+
+		scrollContainerEl.current.scroll({
+			left: scrollLeft + dir * firstChildWidth,
+			behavior: 'smooth',
+		});
+	};
+
+	const scrollHandler = e => {
+		const container = e.target;
+		const { offsetWidth, scrollLeft, scrollWidth } = container;
+
+		const newCanScroll = {
+			left: scrollLeft > 0,
+			right: offsetWidth + scrollLeft < scrollWidth,
+		};
+
+		if (newCanScroll !== canScrollTo) {
+			setCanScrollTo(newCanScroll);
+		}
+	};
+
+	const resizeHandler = () => {
+		scrollHandler({ target: scrollContainerEl.current });
+	};
+
+	useEffect(() => {
+		const container = scrollContainerEl.current;
+		container.addEventListener('scroll', scrollHandler);
+		window.addEventListener('resize', resizeHandler);
+
+		scrollHandler({ target: container });
+
+		return () => {
+			container.addEventListener('scroll', scrollHandler);
+			window.addEventListener('resize', resizeHandler);
+		};
+	}, []);
+
+	return (
+		<div style={{ width: '100%' }}>
+			<div className={styles.top}>
+				{title && title}
+				<div className={styles.buttons}>
+					<button onClick={() => scroll(-1)} disabled={!canScrollTo.left}>
+						<i className='icon'>chevron_left</i>
+					</button>
+
+					<button onClick={() => scroll(1)} disabled={!canScrollTo.right}>
+						<i className='icon'>chevron_right</i>
+					</button>
+				</div>
+			</div>
+
+			<div className={styles.scrollContainer} ref={scrollContainerEl}>
+				{children}
+			</div>
+		</div>
+	);
+}

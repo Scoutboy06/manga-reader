@@ -1,0 +1,53 @@
+.top {
+	display: flex;
+	/* flex-direction: row; */
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+.buttons button {
+	width: 45px;
+	height: 45px;
+	background-color: transparent;
+	color: #fff;
+	border: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.2s;
+	cursor: pointer;
+}
+
+.buttons button:not([disabled]):hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.buttons button[disabled] {
+	color: #333;
+	cursor: auto;
+}
+
+.scrollContainer {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	overflow-x: scroll;
+
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	scroll-snap-type: x mandatory;
+}
+
+.scrollContainer::-webkit-scrollbar {
+	display: none;
+}
+
+.scrollContainer > * {
+	scroll-snap-align: start;
+	flex-shrink: 0;
+}
