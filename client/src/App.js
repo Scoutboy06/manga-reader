@@ -24,11 +24,12 @@ import Read from './pages/read';
 const Mangas = lazy(() => import('./pages/library/Mangas'));
 const Novels = lazy(() => import('./pages/library/Novels'));
 const Animes = lazy(() => import('./pages/library/Animes'));
+const Anime = lazy(() => import('./pages/library/Animes/Anime'));
 
 // Read/watch
 const Manga = lazy(() => import('./pages/read/Manga'));
 const Novel = lazy(() => import('./pages/read/Novel'));
-const Anime = lazy(() => import('./pages/watch/Anime'));
+const Watch = lazy(() => import('./pages/watch'));
 
 // Settings
 const Application = lazy(() => import('./pages/settings/Application'));
@@ -66,7 +67,8 @@ export default function App() {
 						</Route>
 					</Route>
 
-					<Route path='anime/:name' element={<Suspense fallback={<Loader />}><Anime /></Suspense>} />
+					<Route path='animes/:name' element={<Suspense fallback={<Loader />}><Anime /></Suspense>} />
+					<Route path='watch/:name' element={<Suspense fallback={<Loader />}><Watch /></Suspense>} />
 
 					<Route path='settings' element={<Settings />}>
 						<Route path='application' element={<Suspense fallback={<Loader />}><Application /></Suspense>} />

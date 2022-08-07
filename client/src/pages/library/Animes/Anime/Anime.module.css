@@ -1,0 +1,129 @@
+.navbar {
+	background-color: #202020;
+	width: 100%;
+	height: 64px;
+	padding: 15px;
+}
+
+.buttonContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.button {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	border: 0;
+	background-color: transparent;
+	color: #fff;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	transition: background-color 0.2s;
+}
+
+.button:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.mainContainer {
+	width: 100%;
+	padding: 60px;
+	display: flex;
+	flex-direction: row;
+	gap: 60px;
+}
+
+.imageContainer {
+	width: 40%;
+	align-self: flex-start;
+	border-radius: 15px;
+	overflow: hidden;
+}
+
+.imageContainer img {
+	width: 100%;
+}
+
+.dataContainer {
+	width: 100%;
+}
+
+.titleContainer {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #323232;
+	margin-bottom: 20px;
+}
+
+.titleContainer h1 {
+	font-weight: 500;
+}
+
+.description {
+	color: rgba(255, 255, 255, 0.8);
+}
+
+.miscData {
+	color: #fff;
+	text-align: left;
+	margin: 20px 0;
+}
+
+.miscData tr th {
+	font-weight: normal;
+	padding-bottom: 5px;
+}
+
+.miscData tr th:nth-child(1) {
+	padding-right: 40px;
+	white-space: nowrap;
+	vertical-align: top;
+	font-weight: bold;
+}
+
+.nextUp {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+}
+
+.nextUp p {
+	font-size: 24px;
+	line-height: 1;
+}
+
+.episodes {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	gap: 7px;
+	flex-wrap: wrap;
+}
+
+.episodes > p {
+	width: 100%;
+	font-size: 24px;
+	border-bottom: 1px solid #323232;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+.episode {
+	text-decoration: none;
+	color: #fff;
+	padding: 7px 15px;
+	background-color: #2a2a2a;
+	border-radius: 7px;
+}
+
+.episode:global(.completed) {
+	background-color: #0d5914;
+}

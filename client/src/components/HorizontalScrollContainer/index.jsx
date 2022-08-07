@@ -11,8 +11,6 @@ export default function HorizontalScrollContainer({ children, title }) {
 	const scrollContainerEl = useRef();
 
 	const scroll = dir => {
-		// const { width: firstChildWidth } =
-		// 	scrollContainerEl.current.childNodes[0].getBoundingClientRect();
 		const firstChildWidth = scrollContainerEl.current.childNodes[0].offsetWidth;
 
 		const { scrollLeft } = scrollContainerEl.current;
