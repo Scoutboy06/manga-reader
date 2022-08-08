@@ -47,8 +47,8 @@ export default function HorizontalScrollContainer({ children, title }) {
 		scrollHandler({ target: container });
 
 		return () => {
-			container.addEventListener('scroll', scrollHandler);
-			window.addEventListener('resize', resizeHandler);
+			container.removeEventListener('scroll', scrollHandler);
+			window.removeEventListener('resize', resizeHandler);
 		};
 	}, []);
 
