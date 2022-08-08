@@ -22,57 +22,57 @@ const data = {
 	episodes: [
 		{
 			number: 1,
-			url: 'episode-1',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-1',
 			status: 'completed',
 		},
 		{
 			number: 2,
-			url: 'episode-2',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-2',
 			status: 'completed',
 		},
 		{
 			number: 3,
-			url: 'episode-3',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-3',
 			status: 'completed',
 		},
 		{
 			number: 4,
-			url: 'episode-4',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-4',
 			status: null,
 		},
 		{
 			number: 5,
-			url: 'episode-5',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-5',
 			status: null,
 		},
 		{
 			number: 6,
-			url: 'episode-6',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-6',
 			status: null,
 		},
 		{
 			number: 7,
-			url: 'episode-7',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-7',
 			status: null,
 		},
 		{
 			number: 8,
-			url: 'episode-8',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-8',
 			status: null,
 		},
 		{
 			number: 9,
-			url: 'episode-9',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-9',
 			status: null,
 		},
 		{
 			number: 10,
-			url: 'episode-10',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-10',
 			status: null,
 		},
 		{
 			number: 11,
-			url: 'episode-11',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-11',
 			status: null,
 		},
 	],
@@ -143,10 +143,7 @@ export default function Anime() {
 					{nextEpisode && (
 						<div className={styles.nextUp}>
 							<p>Next up:</p>
-							<Link
-								to={`/watch/${data.urlName}/${nextEpisode.url}`}
-								className={styles.episode}
-							>
+							<Link to={`/watch/${nextEpisode.url}`} className={styles.episode}>
 								EP {nextEpisode.number}
 							</Link>
 						</div>
@@ -158,7 +155,7 @@ export default function Anime() {
 						{data.episodes.map(episode => (
 							<Link
 								key={'EP ' + episode.number}
-								to={`/watch/${data.urlName}/${episode.url}`}
+								to={`/watch/${episode.url}`}
 								className={
 									styles.episode +
 									(episode.status != null ? ' ' + episode.status : '')

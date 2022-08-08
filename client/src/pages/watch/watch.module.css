@@ -2,7 +2,10 @@
 	background-color: #202020;
 	width: 100%;
 	height: 64px;
-	padding: 15px 10px;
+	padding: 0 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .buttonContainer {
@@ -28,16 +31,19 @@
 	background-color: rgba(255, 255, 255, 0.1);
 }
 
+.mainContainer > *:not(.videoContainer) {
+	padding-left: 4vw;
+	padding-right: 4vw;
+}
+
 .videoContainer {
 	width: 100%;
 	height: 56.25vw;
-	/* min-height: 480px; */
-	max-height: calc(100vh - 180px);
-	/* max-height: calc(100vh - 169px); */
+	min-height: 260px;
+	max-height: calc(100vh - 220px);
 	background-color: #000;
-	/* display: grid;
-	place-items: center; */
-	text-align: center;
+	display: flex;
+	justify-content: center;
 }
 
 .videoContainer iframe,
@@ -55,7 +61,93 @@
 	.videoContainer iframe,
 	.videoContainer > div {
 		width: 100%;
-		height: max-content;
-		/* aspect-ratio: unset; */
+		height: 260px;
+	}
+}
+
+.paginationContainer {
+	display: flex;
+	justify-content: space-between;
+	padding-top: 15px;
+	padding-bottom: 10px;
+}
+
+.paginationContainer a {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: #00c2ff;
+}
+
+.paginationContainer a i {
+	transition: transform 0.2s;
+}
+
+.paginationContainer a:first-child:hover i {
+	transform: translateX(-5px);
+}
+.paginationContainer a:last-child:hover i {
+	transform: translateX(5px);
+}
+
+.titleContainer {
+	width: 92vw;
+	display: flex;
+	flex-direction: column;
+	padding: 0 0 10px 0 !important;
+
+	border-bottom: 1px solid #323232;
+	margin: 0 4vw;
+}
+
+.titleContainer > div {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.titleContainer h1,
+.titleContainer h3 {
+	font-weight: 500;
+}
+
+.episodes {
+	margin: 20px 0;
+	display: flex;
+	flex-direction: row;
+	gap: 7px;
+	flex-wrap: wrap;
+}
+
+.episodes > p {
+	width: 100%;
+	font-size: 24px;
+	margin-bottom: 10px;
+}
+
+.episode {
+	text-decoration: none;
+	color: #fff;
+	padding: 7px 15px;
+	background-color: #2a2a2a;
+	border-radius: 7px;
+}
+
+.episode:global(.completed) {
+	background-color: #0d5914;
+}
+
+.episode:global(.current) {
+	background-color: #0055a4;
+}
+
+@media (max-width: 500px) {
+	.titleContainer h1 {
+		font-size: 26px;
+	}
+	.titleContainer h1,
+	.titleContainer h3,
+	.episodes > p {
+		font-weight: 400;
 	}
 }

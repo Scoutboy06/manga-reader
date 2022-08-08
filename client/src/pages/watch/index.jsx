@@ -1,80 +1,101 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 import Head from '../../components/Head';
 
 import styles from './watch.module.css';
 
 const data = {
-	type: 'folder',
 	urlName: 'mushoku-tensei-isekai-ittara-honki-dasu',
-	imgUrl:
-		'https://gogocdn.net/cover/mushoku-tensei-isekai-ittara-honki-dasu.png',
 	title: 'Mushoku Tensei: Isekai Ittara Honki Dasu',
-	description:
-		'Killed while saving a stranger from a traffic collision, a 34-year-old NEET is reincarnated into a world of magic as Rudeus Greyrat, a newborn baby. With knowledge, experience, and regrets from his previous life retained, Rudeus vows to lead a fulfilling life and not repeat his past mistakes. Now gifted with a tremendous amount of magical power as well as the mind of a grown adult, Rudeus is seen as a genius in the making by his new parents. Soon, he finds himself studying under powerful warriors, such as his swordsman father and a mage named Roxy Migurdia—all in order to hone his apparent talents. But despite his innocent exterior, Rudeus is still a perverted otaku, who uses his wealth of knowledge to make moves on women whom he could never make in his previous life.',
-	miscData: {
-		Genres: ['Drama', 'Fantasy', 'Magic'].join(', '),
-		Released: '2021',
-		Status: 'Completed',
-		'Other names': [
-			'Mushoku Tensei: Jobless Reincarnation',
-			'無職転生 ～異世界行ったら本気だす～',
-		].join(', '),
-	},
+	gogoId: 'MTUwMjU4',
 	episodes: [
 		{
 			number: 1,
-			url: 'episode-1',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-1',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-1',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: 'completed',
 		},
 		{
 			number: 2,
-			url: 'episode-2',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-2',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-2',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: 'completed',
 		},
 		{
 			number: 3,
-			url: 'episode-3',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-3',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-3',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: 'completed',
 		},
 		{
 			number: 4,
-			url: 'episode-4',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-4',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-4',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 		{
 			number: 5,
-			url: 'episode-5',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-5',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-5',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 		{
 			number: 6,
-			url: 'episode-6',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-6',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-6',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 		{
 			number: 7,
-			url: 'episode-7',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-7',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-7',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 		{
 			number: 8,
-			url: 'episode-8',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-8',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-8',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 		{
 			number: 9,
-			url: 'episode-9',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-9',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-9',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 		{
 			number: 10,
-			url: 'episode-10',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-10',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-10',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 		{
 			number: 11,
-			url: 'episode-11',
+			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-11',
+			originalUrl:
+				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-11',
+			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
 			status: null,
 		},
 	],
@@ -84,10 +105,28 @@ export default function Anime() {
 	const navigate = useNavigate();
 	const params = useParams();
 
+	const [currentEpisode, setCurrentEpisode] = useState();
+	const [prevEpisode, setPrevEpisode] = useState();
+	const [nextEpisode, setNextEpisode] = useState();
+
+	useEffect(() => {
+		const curr = data.episodes.find(
+			episode => episode.url === params.episodeName
+		);
+		const prev = data.episodes[data.episodes.indexOf(curr) - 1];
+		const next = data.episodes[data.episodes.indexOf(curr) + 1];
+
+		setCurrentEpisode(curr);
+		setPrevEpisode(prev);
+		setNextEpisode(next);
+	}, [params]);
+
+	if (!currentEpisode) return 'Loading...';
+
 	return (
 		<>
 			<Head>
-				<title>{'Episode ' + params.episodeName.split('-')[1]}</title>
+				<title>{'Episode ' + currentEpisode.number}</title>
 			</Head>
 
 			<nav className={styles.navbar}>
@@ -100,13 +139,24 @@ export default function Anime() {
 					<button className={styles.button} onClick={() => navigate('/animes')}>
 						<i className='icon'>home</i>
 					</button>
+					<button className={styles.button}>
+						<i className='icon'>search</i>
+					</button>
+				</div>
+				<div className={styles.buttonContainer} style={{ height: '100%' }}>
+					<button className={styles.button}>
+						<i className='icon'>cast</i>
+					</button>
+					<button className={styles.button}>
+						<i className='icon'>airplay</i>
+					</button>
 				</div>
 			</nav>
 
-			<main>
+			<main className={styles.mainContainer}>
 				<div className={styles.videoContainer}>
 					<iframe
-						src='https://goload.io/streaming.php?id=MTUwMjU4&title=Mushoku+Tensei%3A+Isekai+Ittara+Honki+Dasu+Episode+1&typesub=SUB'
+						src={currentEpisode.videoUrl}
 						allowFullScreen={true}
 						frameBorder='0'
 						marginWidth='0'
@@ -115,6 +165,71 @@ export default function Anime() {
 						title='video'
 					></iframe>
 					{/* <div></div> */}
+				</div>
+
+				<div className={styles.paginationContainer}>
+					{prevEpisode ? (
+						<Link to={'/watch/' + prevEpisode.url}>
+							<i className='icon'>chevron_left</i> Episode {prevEpisode.number}
+						</Link>
+					) : (
+						<div></div>
+					)}
+					{nextEpisode ? (
+						<Link to={'/watch/' + nextEpisode.url}>
+							Episode {nextEpisode.number}
+							<i className='icon'>chevron_right</i>
+						</Link>
+					) : (
+						<div></div>
+					)}
+				</div>
+
+				<div className={styles.titleContainer}>
+					<h1>{data.title}</h1>
+
+					<div>
+						<h3>Episode {currentEpisode.number}</h3>
+
+						<div className={styles.buttonContainer}>
+							<button className={styles.button} title='Add to your favourites'>
+								<i className='icon'>favorite</i>
+							</button>
+							<button
+								className={styles.button}
+								title='Display in picture-in-picture mode'
+							>
+								<i className='icon'>picture_in_picture</i>
+							</button>
+							<button className={styles.button} title='Open source video'>
+								<i className='icon'>open_in_new</i>
+							</button>
+							<button className={styles.button} title='Share this video'>
+								<i className='icon'>share</i>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div className={styles.episodes}>
+					<p>Episodes</p>
+
+					{data.episodes.map(episode => (
+						<Link
+							key={'EP ' + episode.number}
+							to={`/watch/${episode.url}`}
+							className={
+								styles.episode +
+								(currentEpisode.number === episode.number
+									? ' current'
+									: episode.status != null
+									? ' ' + episode.status
+									: '')
+							}
+						>
+							EP {episode.number}
+						</Link>
+					))}
 				</div>
 			</main>
 		</>
