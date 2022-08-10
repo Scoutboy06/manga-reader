@@ -1,149 +1,71 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
+import useSWR from 'swr';
+import NProgress from 'nprogress';
 
 import Head from '../../components/Head';
 
-import styles from './watch.module.css';
+import fetchAPI, { fetcher } from '../../functions/fetchAPI.js';
 
-const data = {
-	urlName: 'mushoku-tensei-isekai-ittara-honki-dasu',
-	title: 'Mushoku Tensei: Isekai Ittara Honki Dasu',
-	gogoId: 'MTUwMjU4',
-	episodes: [
-		{
-			number: 1,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-1',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-1',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: 'completed',
-		},
-		{
-			number: 2,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-2',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-2',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: 'completed',
-		},
-		{
-			number: 3,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-3',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-3',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: 'completed',
-		},
-		{
-			number: 4,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-4',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-4',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-		{
-			number: 5,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-5',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-5',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-		{
-			number: 6,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-6',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-6',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-		{
-			number: 7,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-7',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-7',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-		{
-			number: 8,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-8',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-8',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-		{
-			number: 9,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-9',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-9',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-		{
-			number: 10,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-10',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-10',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-		{
-			number: 11,
-			url: 'mushoku-tensei-isekai-ittara-honki-dasu-episode-11',
-			originalUrl:
-				'https://gogoanime.gg/mushoku-tensei-isekai-ittara-honki-dasu-episode-11',
-			videoUrl: 'https://goload.io/streaming.php?id=MTUwMjU4',
-			status: null,
-		},
-	],
-};
+import styles from './watch.module.css';
 
 export default function Anime() {
 	const navigate = useNavigate();
 	const params = useParams();
 
-	const [currentEpisode, setCurrentEpisode] = useState();
+	const { data: animeMeta } = useSWR(`/animes/${params.name}`, fetcher);
+
+	const { data: currentEpisode } = useSWR(
+		`/animes/${params.name}/episode-${params.episodeNumber}`,
+		fetcher
+	);
+
 	const [prevEpisode, setPrevEpisode] = useState();
 	const [nextEpisode, setNextEpisode] = useState();
 
 	useEffect(() => {
-		const curr = data.episodes.find(
-			episode => episode.url === params.episodeName
-		);
-		const prev = data.episodes[data.episodes.indexOf(curr) - 1];
-		const next = data.episodes[data.episodes.indexOf(curr) + 1];
+		NProgress.start();
+	}, [currentEpisode]);
 
-		setCurrentEpisode(curr);
-		setPrevEpisode(prev);
-		setNextEpisode(next);
-	}, [params]);
+	useEffect(() => {
+		if (animeMeta) {
+			const { episodes } = animeMeta;
 
-	if (!currentEpisode) return 'Loading...';
+			const curr = episodes.find(
+				episode => episode.number === Number(params.episodeNumber)
+			);
+			const index = episodes.indexOf(curr);
+			const prev = episodes[index - 1];
+			const next = episodes[index + 1];
+
+			setPrevEpisode(prev);
+			setNextEpisode(next);
+		}
+	}, [animeMeta, currentEpisode, params.episodeNumber]);
 
 	return (
 		<>
 			<Head>
-				<title>{'Episode ' + currentEpisode.number}</title>
+				<title>
+					{currentEpisode ? 'Episode ' + currentEpisode?.number : ''}
+				</title>
 			</Head>
 
 			<nav className={styles.navbar}>
-				<div className={styles.buttonContainer} style={{ height: '100%' }}>
-					<button className={styles.button} onClick={() => navigate(-1)}>
+				<div className={styles.buttonContainer}>
+					<Link to={`/animes/${params.name}`} className={styles.button}>
 						<i className='icon' style={{ fontSize: 28 }}>
 							chevron_left
 						</i>
-					</button>
-					<button className={styles.button} onClick={() => navigate('/animes')}>
+					</Link>
+					<Link to='/animes' className={styles.button}>
 						<i className='icon'>home</i>
-					</button>
+					</Link>
 					<button className={styles.button}>
 						<i className='icon'>search</i>
 					</button>
 				</div>
-				<div className={styles.buttonContainer} style={{ height: '100%' }}>
+				<div className={styles.buttonContainer}>
 					<button className={styles.button}>
 						<i className='icon'>cast</i>
 					</button>
@@ -156,27 +78,28 @@ export default function Anime() {
 			<main className={styles.mainContainer}>
 				<div className={styles.videoContainer}>
 					<iframe
-						src={currentEpisode.videoUrl}
+						src={currentEpisode?.iframeSrc}
 						allowFullScreen={true}
 						frameBorder='0'
 						marginWidth='0'
 						marginHeight='0'
 						scrolling='no'
 						title='video'
+						onLoad={() => NProgress.done(true)}
 					></iframe>
 					{/* <div></div> */}
 				</div>
 
 				<div className={styles.paginationContainer}>
 					{prevEpisode ? (
-						<Link to={'/watch/' + prevEpisode.url}>
+						<Link to={`/animes/${params.name}/episode-${prevEpisode.number}`}>
 							<i className='icon'>chevron_left</i> Episode {prevEpisode.number}
 						</Link>
 					) : (
 						<div></div>
 					)}
 					{nextEpisode ? (
-						<Link to={'/watch/' + nextEpisode.url}>
+						<Link to={`/animes/${params.name}/episode-${nextEpisode.number}`}>
 							Episode {nextEpisode.number}
 							<i className='icon'>chevron_right</i>
 						</Link>
@@ -186,10 +109,10 @@ export default function Anime() {
 				</div>
 
 				<div className={styles.titleContainer}>
-					<h1>{data.title}</h1>
+					<h1>{animeMeta?.title}</h1>
 
 					<div>
-						<h3>Episode {currentEpisode.number}</h3>
+						<h3>Episode {currentEpisode?.number}</h3>
 
 						<div className={styles.buttonContainer}>
 							<button className={styles.button} title='Add to your favourites'>
@@ -201,7 +124,13 @@ export default function Anime() {
 							>
 								<i className='icon'>picture_in_picture</i>
 							</button>
-							<button className={styles.button} title='Open source video'>
+							<button
+								className={styles.button}
+								title='Open source video'
+								onClick={() =>
+									window.open(currentEpisode?.originalUrl, '_blank')
+								}
+							>
 								<i className='icon'>open_in_new</i>
 							</button>
 							<button className={styles.button} title='Share this video'>
@@ -214,22 +143,23 @@ export default function Anime() {
 				<div className={styles.episodes}>
 					<p>Episodes</p>
 
-					{data.episodes.map(episode => (
-						<Link
-							key={'EP ' + episode.number}
-							to={`/watch/${episode.url}`}
-							className={
-								styles.episode +
-								(currentEpisode.number === episode.number
-									? ' current'
-									: episode.status != null
-									? ' ' + episode.status
-									: '')
-							}
-						>
-							EP {episode.number}
-						</Link>
-					))}
+					{animeMeta &&
+						animeMeta.episodes.map(episode => (
+							<Link
+								key={'EP ' + episode.number}
+								to={`/animes/${params.name}/episode-${episode.number}`}
+								className={
+									styles.episode +
+									(currentEpisode?.number === episode.number
+										? ' current'
+										: episode.status != null
+										? ' ' + episode.status
+										: '')
+								}
+							>
+								EP {episode.number}
+							</Link>
+						))}
 				</div>
 			</main>
 		</>

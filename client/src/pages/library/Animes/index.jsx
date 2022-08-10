@@ -12,48 +12,93 @@ import styles from './Animes.module.css';
 const data = [
 	{
 		title: 'Continue watching',
+		type: 'video',
 		media: [
 			{
-				type: 'video',
-				urlName: 'vinland-saga',
-				imgUrl:
-					'http://192.168.0.10:8096/Items/a6f6552b0edce26a884791819c1fcbc5/Images/Backdrop?fillHeight=252&fillWidth=448&quality=96&tag=f6749854144fa5db41b1ac936562538d',
-				title: 'Vinland Saga',
-				subtitle: 'Episode 22',
+				_id: 'horimiya',
+				episodeNumber: 8,
+				imgUrl: 'https://gogocdn.net/cover/horimiya.png',
+				title: 'Horimiya',
+				subtitle: 'Episode 8',
 			},
 			{
-				type: 'video',
-				urlName: 'attack-on-titan',
-				imgUrl:
-					'http://192.168.0.10:8096/Items/fc2f886723745940cc9e11a9926048bb/Images/Backdrop?fillHeight=252&fillWidth=448&quality=96&tag=89dc508a15d56b8db91755130748a7ce',
-				title: 'Attack on Titan',
-				subtitle: 'Episode 12',
+				_id: 'kimetsu-no-yaiba',
+				episodeNumber: 4,
+				imgUrl: 'https://gogocdn.net/cover/kimetsu-no-yaiba.png',
+				title: 'Kimetsu no Yaiba',
+				subtitle: 'Episode 4',
+			},
+			{
+				_id: 'kanojo-okarishimasu-2nd-season',
+				episodeNumber: 1,
+				imgUrl: 'https://gogocdn.net/cover/kanojo-okarishimasu-2nd-season.png',
+				title: 'Kanojo, Okarishimasu 2nd Season',
+				subtitle: 'Episode 1',
 			},
 		],
 	},
 	{
 		title: 'Your favourites',
+		type: 'folder',
 		media: [
 			{
-				type: 'folder',
-				urlName: 'mushoku-tensei-isekai-ittara-honki-dasu',
+				_id: 'mushoku-tensei-isekai-ittara-honki-dasu',
 				imgUrl:
 					'https://gogocdn.net/cover/mushoku-tensei-isekai-ittara-honki-dasu.png',
 				title: 'Mushoku Tensei: Isekai Ittara Honki Dasu',
 			},
 			{
-				type: 'folder',
-				urlName: 'vinland-saga',
+				_id: 'shingeki-no-kyojin',
+				imgUrl: 'https://gogocdn.net/images/anime/Shingeki-no-Kyojin.jpg',
+				title: 'Shingeki no Kyojin',
+			},
+			{
+				_id: 'kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen',
 				imgUrl:
-					'http://192.168.0.10:8096/Items/a6f6552b0edce26a884791819c1fcbc5/Images/Primary?fillHeight=446&fillWidth=298&quality=96&tag=a422f65783c1a4a33486d198b4357f03',
+					'https://gogocdn.net/cover/kaguya-sama-wa-kokurasetai-tensai-tachi-no-renai-zunousen.png',
+				title: 'Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen',
+			},
+			{
+				_id: 'horimiya',
+				imgUrl: 'https://gogocdn.net/cover/horimiya.png',
+				title: 'Horimiya',
+			},
+			{
+				_id: 'death-note',
+				imgUrl: 'https://gogocdn.net/cover/death-note.png',
+				title: 'Death Note',
+			},
+			{
+				_id: 'spy-x-family',
+				imgUrl: 'https://gogocdn.net/cover/spy-x-family.png',
+				title: 'Spy x Family',
+			},
+			{
+				_id: 'vinland-saga',
+				imgUrl: 'https://gogocdn.net/cover/vinland-saga.png',
 				title: 'Vinland Saga',
 			},
 			{
-				type: 'folder',
-				urlName: 'horimiya',
+				_id: 'kimetsu-no-yaiba',
+				imgUrl: 'https://gogocdn.net/cover/kimetsu-no-yaiba.png',
+				title: 'Kimetsu no Yaiba',
+			},
+			{
+				_id: 'rezero-kara-hajimeru-isekai-seikatsu',
 				imgUrl:
-					'http://192.168.0.10:8096/Items/cf87d9f8f441020b5adb413a2e48436a/Images/Primary?fillHeight=411&fillWidth=274&quality=96&tag=963150a595208ee300bb56f0afb9057d',
-				title: 'Horimiya',
+					'https://gogocdn.net/cover/rezero-kara-hajimeru-isekai-seikatsu.jpg',
+				title: 'Re:Zero kara Hajimeru Isekai Seikatsu',
+			},
+			{
+				_id: 'seishun-buta-yarou-wa-bunny-girl-senpai-no-yume-wo-minai',
+				imgUrl:
+					'https://gogocdn.net/cover/seishun-buta-yarou-wa-bunny-girl-senpai-no-yume-wo-minai.png',
+				title: 'Seishun Buta Yarou wa Bunny Girl Senpai no Yume wo Minai',
+			},
+			{
+				_id: 'violet-evergarden',
+				imgUrl: 'https://gogocdn.net/cover/violet-evergarden.png',
+				title: 'Violet Evergarden',
 			},
 		],
 	},
@@ -75,16 +120,12 @@ export default function Animes() {
 						{section.media.map((media, j) => (
 							<MediaCard
 								key={`Card_${i}_${j}`}
-								type={media.type}
-								href={[
-									media.type === 'folder'
-										? '/animes'
-										: media.type === 'video'
-										? '/watch'
-										: '/',
-									media.urlName.startsWith('/') ? '' : '/',
-									media.urlName,
-								].join('')}
+								type={section.type}
+								href={`/animes/${media._id}${
+									section.type === 'video'
+										? `/episode-${media.episodeNumber}`
+										: ''
+								}`}
 								imgUrl={media.imgUrl}
 								title={media.title}
 								subtitle={media.subtitle}

@@ -67,8 +67,8 @@ export default function App() {
 						</Route>
 					</Route>
 
-					<Route path='animes/:name' element={<Suspense fallback={<Loader />}><Anime /></Suspense>} />
-					<Route path='watch/:episodeName' element={<Suspense fallback={<Loader />}><Watch /></Suspense>} />
+					<Route path='animes/:name' element={<Suspense fallback={<Loader onlyStart={true} />}><Anime /></Suspense>} />
+					<Route path='animes/:name/episode-:episodeNumber' element={<Suspense fallback={<Loader onlyStart={true} />}><Watch /></Suspense>} />
 
 					<Route path='settings' element={<Settings />}>
 						<Route path='application' element={<Suspense fallback={<Loader />}><Application /></Suspense>} />

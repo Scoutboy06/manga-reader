@@ -25,6 +25,7 @@
 	display: grid;
 	place-items: center;
 	transition: background-color 0.2s;
+	text-decoration: none;
 }
 
 .button:hover {

@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import NProgress from 'nprogress';
 
-export default function Loader() {
+export default function Loader({ onlyStart = false }) {
 	useEffect(() => {
 		NProgress.configure({ showSpinner: false });
 		NProgress.start();
 
 		return () => {
-			NProgress.done(true);
+			if (!onlyStart) NProgress.done(true);
 		};
 	}, []);
 

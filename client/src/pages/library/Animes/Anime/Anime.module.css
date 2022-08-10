@@ -2,7 +2,10 @@
 	background-color: #202020;
 	width: 100%;
 	height: 64px;
-	padding: 15px 10px;
+	padding: 0 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .buttonContainer {
@@ -22,6 +25,7 @@
 	display: grid;
 	place-items: center;
 	transition: background-color 0.2s;
+	text-decoration: none;
 }
 
 .button:hover {
@@ -73,18 +77,18 @@
 	color: rgba(255, 255, 255, 0.8);
 }
 
-.miscData {
+.misc {
 	color: #fff;
 	text-align: left;
 	margin: 20px 0;
 }
 
-.miscData tr th {
+.misc tr th {
 	font-weight: normal;
 	padding-bottom: 5px;
 }
 
-.miscData tr th:nth-child(1) {
+.misc tr th:nth-child(1) {
 	padding-right: 40px;
 	white-space: nowrap;
 	vertical-align: top;

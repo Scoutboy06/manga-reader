@@ -32,3 +32,5 @@ export default async function fetchAPI(url, options = {}, useCache = false) {
 		window.alert(err);
 	}
 }
+
+export const fetcher = url => fetchAPI(url, {}, false);

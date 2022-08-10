@@ -1,4 +1,8 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import NProgress from 'nprogress';
+
+import fetchAPI from '../../../../functions/fetchAPI.js';
 
 import styles from './Anime.module.css';
 
@@ -10,7 +14,7 @@ const data = {
 	title: 'Mushoku Tensei: Isekai Ittara Honki Dasu',
 	description:
 		'Killed while saving a stranger from a traffic collision, a 34-year-old NEET is reincarnated into a world of magic as Rudeus Greyrat, a newborn baby. With knowledge, experience, and regrets from his previous life retained, Rudeus vows to lead a fulfilling life and not repeat his past mistakes. Now gifted with a tremendous amount of magical power as well as the mind of a grown adult, Rudeus is seen as a genius in the making by his new parents. Soon, he finds himself studying under powerful warriors, such as his swordsman father and a mage named Roxy Migurdia—all in order to hone his apparent talents. But despite his innocent exterior, Rudeus is still a perverted otaku, who uses his wealth of knowledge to make moves on women whom he could never make in his previous life.',
-	miscData: {
+	miscanimeMeta: {
 		Genres: ['Drama', 'Fantasy', 'Magic'].join(', '),
 		Released: '2021',
 		Status: 'Completed',
@@ -79,21 +83,42 @@ const data = {
 };
 
 export default function Anime() {
+	const params = useParams();
 	const navigate = useNavigate();
 
-	const nextEpisode = data.episodes.find(episode => episode.status === null);
+	const [animeMeta, setAnimeMeta] = useState();
+	const [nextEpisode, setNextEpisode] = useState();
+
+	useEffect(() => {
+		async function fetchMeta() {
+			const meta = await fetchAPI(`/animes/${params.name}`);
+			const next = meta.episodes.find(episode => episode.status === null);
+
+			setAnimeMeta(meta);
+			setNextEpisode(next);
+
+			NProgress.done(false);
+		}
+
+		fetchMeta();
+	}, [params]);
+
+	if (!animeMeta) return null;
 
 	return (
 		<>
 			<nav className={styles.navbar}>
-				<div className={styles.buttonContainer} style={{ height: '100%' }}>
-					<button className={styles.button} onClick={() => navigate(-1)}>
+				<div className={styles.buttonContainer}>
+					<Link to={'/animes'} className={styles.button}>
 						<i className='icon' style={{ fontSize: 28 }}>
 							chevron_left
 						</i>
-					</button>
-					<button className={styles.button} onClick={() => navigate('/animes')}>
-						<i className='icon filled'>home</i>
+					</Link>
+					<Link to='/animes' className={styles.button}>
+						<i className='icon'>home</i>
+					</Link>
+					<button className={styles.button}>
+						<i className='icon'>search</i>
 					</button>
 				</div>
 			</nav>
@@ -101,12 +126,12 @@ export default function Anime() {
 			<main className={styles.mainContainer}>
 				<div className={styles.imageContainer}>
 					{/* eslint-disable-next-line jsx-a11y/alt-text */}
-					<img src={data.imgUrl} />
+					<img src={animeMeta.imgUrl} />
 				</div>
 
 				<div className={styles.dataContainer}>
 					<div className={styles.titleContainer}>
-						<h1>{data.title}</h1>
+						<h1>{animeMeta.title}</h1>
 
 						<div className={styles.buttonContainer}>
 							<button className={styles.button}>
@@ -127,23 +152,36 @@ export default function Anime() {
 						</div>
 					</div>
 
-					<p className={styles.description}>{data.description}</p>
+					<p className={styles.description}>{animeMeta.description}</p>
 
-					<table className={styles.miscData}>
+					<table className={styles.misc}>
 						<tbody>
-							{Object.keys(data.miscData).map((key, i) => (
-								<tr key={key}>
-									<th>{key}</th>
-									<th>{data.miscData[key]}</th>
-								</tr>
-							))}
+							<tr>
+								<th>Genres</th>
+								<th>{animeMeta.misc.genres}</th>
+							</tr>
+							<tr>
+								<th>Released</th>
+								<th>{animeMeta.misc.released}</th>
+							</tr>
+							<tr>
+								<th>Status</th>
+								<th>{animeMeta.misc.status}</th>
+							</tr>
+							<tr>
+								<th>Other names</th>
+								<th>{animeMeta.misc.otherNames}</th>
+							</tr>
 						</tbody>
 					</table>
 
 					{nextEpisode && (
 						<div className={styles.nextUp}>
 							<p>Next up:</p>
-							<Link to={`/watch/${nextEpisode.url}`} className={styles.episode}>
+							<Link
+								to={`/animes/${nextEpisode.url}`}
+								className={styles.episode}
+							>
 								EP {nextEpisode.number}
 							</Link>
 						</div>
@@ -152,10 +190,10 @@ export default function Anime() {
 					<div className={styles.episodes}>
 						<p>Episodes</p>
 
-						{data.episodes.map(episode => (
+						{animeMeta.episodes.map(episode => (
 							<Link
 								key={'EP ' + episode.number}
-								to={`/watch/${episode.url}`}
+								to={`/animes/${params.name}/episode-${episode.number}`}
 								className={
 									styles.episode +
 									(episode.status != null ? ' ' + episode.status : '')
