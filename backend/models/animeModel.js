@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const MODEL_NAME = mongoose.Schema(
 	{
 		_id: { type: String, required: true }, // _id === urlName
-		imgUrl: { type: String, required: true },
+		posterUrl: { type: String, required: true },
+		backdrop: String,
 		title: { type: String, required: true },
 		desciption: { type: String, required: true },
 		misc: {
@@ -16,7 +17,7 @@ const MODEL_NAME = mongoose.Schema(
 			{
 				number: { type: Number, required: true },
 				urlName: { type: String, required: true },
-				status: { type: String, required: false, default: '' }
+				status: { type: String, default: '' }
 			}
 		],
 	},

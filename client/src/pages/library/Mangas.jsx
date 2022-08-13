@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
-import fetchAPI from '../../functions/fetchAPI';
+import useSWR from 'swr';
+import fetchAPI, { fetcher } from '../../functions/fetchAPI';
 
 import Head from '../../components/Head';
 import MangaCard from '../../components/MangaCard';
@@ -11,40 +12,26 @@ import { PopupContext } from '../../contexts/PopupContext';
 import styles from './index.module.css';
 
 export default function Mangas() {
-	const [mangas, setMangas] = useState([]);
-	const [updates, setUpdates] = useState([]);
-	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
-	const [isFetchingUpdates, setIsFetchingUpdates] = useState(false);
-
 	const [profileData] = useContext(ProfileContext);
 	const [, popupActions] = useContext(PopupContext);
 
-	useEffect(() => {
-		fetchAPI(`/users/${profileData.currentProfile._id}/mangas`, {}, false).then(
-			setMangas
-		);
-	}, [profileData.currentProfile]);
-
-	useEffect(() => {
-		async function fetchUpdates(cache) {
-			setIsFetchingUpdates(true);
-
-			fetchAPI(
-				'/getUpdates?' +
-					new URLSearchParams({
-						cache,
-						mangas: mangas
-							.filter(manga => manga.isSubscribed)
-							.map(manga => manga._id),
-					})
-			).then(json => {
-				setIsFetchingUpdates(false);
-				setUpdates(json);
-			});
-		}
-
-		if (mangas && mangas.length > 0) fetchUpdates(true);
-	}, [mangas]);
+	// const [mangas, setMangas] = useState([]);
+	const { data: mangas } = useSWR(
+		`/users/${profileData.currentProfile._id}/mangas`
+	);
+	// const [updates, setUpdates] = useState([]);
+	const { data: updates, error: updatesError } = useSWR(
+		() =>
+			'/getUpdates?' +
+			new URLSearchParams({
+				cache: true,
+				mangas: mangas
+					.filter(manga => manga.isSubscribed)
+					.map(manga => manga._id),
+			})
+	);
+	const isFetchingUpdates = !updates && !updatesError;
+	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
 
 	return (
 		<>
@@ -53,17 +40,18 @@ export default function Mangas() {
 			</Head>
 
 			<section className={styles.section1}>
-				{mangas.map(
-					manga =>
-						!manga.hasFinishedReading && (
-							<MangaCard
-								key={manga._id}
-								manga={manga}
-								isFetchingUpdates={isFetchingUpdates}
-								updates={updates}
-							/>
-						)
-				)}
+				{mangas &&
+					mangas.map(
+						manga =>
+							!manga.hasFinishedReading && (
+								<MangaCard
+									key={manga._id}
+									manga={manga}
+									isFetchingUpdates={isFetchingUpdates}
+									updates={updates}
+								/>
+							)
+					)}
 			</section>
 
 			<section className={styles.section2} data-show={showFinishedMangas}>
@@ -86,17 +74,18 @@ export default function Mangas() {
 				</button>
 
 				<div>
-					{mangas.map(
-						manga =>
-							manga.hasFinishedReading && (
-								<MangaCard
-									key={manga._id}
-									manga={manga}
-									isFetchingUpdates={isFetchingUpdates}
-									updates={updates}
-								/>
-							)
-					)}
+					{mangas &&
+						mangas.map(
+							manga =>
+								manga.hasFinishedReading && (
+									<MangaCard
+										key={manga._id}
+										manga={manga}
+										isFetchingUpdates={isFetchingUpdates}
+										updates={updates}
+									/>
+								)
+						)}
 				</div>
 			</section>
 

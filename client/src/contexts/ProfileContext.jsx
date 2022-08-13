@@ -1,12 +1,12 @@
 import { useState, useEffect, createContext } from 'react';
-import fetchAPI from '../functions/fetchAPI';
+import useSWR from 'swr';
 
 export const ProfileContext = createContext();
 
 export default function Provider(props) {
-	const [profiles, setProfiles] = useState();
-	const [currentProfile, setCurrentProfile] = useState();
+	const { data: profiles, error } = useSWR('/users');
 	const [isLoading, setIsLoading] = useState(true);
+	const [currentProfile, setCurrentProfile] = useState();
 
 	const actions = {
 		selectProfile: profile => {
@@ -20,20 +20,19 @@ export default function Provider(props) {
 	};
 
 	useEffect(() => {
-		fetchAPI('/users').then(profiles => {
-			setProfiles(profiles);
+		if (profiles && !error) {
 			setCurrentProfile(
 				profiles.find(
 					profile => profile._id === sessionStorage.getItem('currentProfile')
 				) || null
 			);
 			setIsLoading(false);
-		});
-	}, []);
+		}
+	}, [profiles, error]);
 
 	return (
 		<ProfileContext.Provider
-			value={[{ currentProfile, profiles, isLoading }, actions]}
+			value={[{ currentProfile, profiles, isLoading, error }, actions]}
 		>
 			{props.children}
 		</ProfileContext.Provider>

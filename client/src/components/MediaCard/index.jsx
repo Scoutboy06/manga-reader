@@ -1,10 +1,4 @@
-// import { useState, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
-
-// import ContextMenu from '../ContextMenu';
-// import BlurContainer from '../BlurContainer';
-
-// import { PopupContext } from '../../contexts/PopupContext';
 
 import styles from './MediaCard.module.css';
 

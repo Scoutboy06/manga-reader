@@ -48,7 +48,7 @@ export default function Read() {
 			hasInit.current = true;
 			setIsLoading(true);
 
-			const meta = await await fetchAPI(
+			const meta = await fetchAPI(
 				`/users/${profileData.currentProfile._id}/mangas?` +
 					new URLSearchParams({
 						query: params.name,

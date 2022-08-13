@@ -1,4 +1,4 @@
-// import { useState, useEffect, useContext } from 'react';
+// import { useState, useEffect } from 'react';
 // import fetchAPI from '../../functions/fetchAPI';
 
 import Head from '../../../components/Head';
@@ -38,7 +38,7 @@ const data = [
 		],
 	},
 	{
-		title: 'Your favourites',
+		title: 'Your favorites',
 		type: 'folder',
 		media: [
 			{
