@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import NProgress from 'nprogress';
 import useSWR from 'swr';
 
+import Navbar from '../../../../components/navbars/Anime';
+
 import styles from './Anime.module.css';
 
 export default function Anime() {
@@ -25,21 +27,7 @@ export default function Anime() {
 
 	return (
 		<>
-			<nav className={styles.navbar}>
-				<div className={styles.buttonContainer}>
-					<Link to={'/animes'} className={styles.button}>
-						<i className='icon' style={{ fontSize: 28 }}>
-							chevron_left
-						</i>
-					</Link>
-					<Link to='/animes' className={styles.button}>
-						<i className='icon'>home</i>
-					</Link>
-					<button className={styles.button}>
-						<i className='icon'>search</i>
-					</button>
-				</div>
-			</nav>
+			<Navbar />
 
 			<main className={styles.mainContainer}>
 				<div className={styles.imageContainer}>
@@ -97,7 +85,7 @@ export default function Anime() {
 						<div className={styles.nextUp}>
 							<p>Next up:</p>
 							<Link
-								to={`/animes/${nextEpisode.url}`}
+								to={`/animes/${params.name}/episode-${nextEpisode.number}`}
 								className={styles.episode}
 							>
 								EP {nextEpisode.number}

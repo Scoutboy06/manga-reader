@@ -67,8 +67,10 @@ export default function App() {
 						</Route>
 					</Route>
 
-					<Route path='animes/:name' element={<Suspense fallback={<Loader onlyStart={true} />}><Anime /></Suspense>} />
-					<Route path='animes/:name/episode-:episodeNumber' element={<Suspense fallback={<Loader onlyStart={true} />}><Watch /></Suspense>} />
+					<Route path='animes'>
+						<Route path=':name' element={<Suspense fallback={<Loader onlyStart={true} />}><Anime /></Suspense>} />
+						<Route path=':name/episode-:episodeNumber' element={<Suspense fallback={<Loader showProgress={false} />}><Watch /></Suspense>} />
+					</Route>
 
 					<Route path='settings' element={<Settings />}>
 						<Route path='application' element={<Suspense fallback={<Loader />}><Application /></Suspense>} />
@@ -81,8 +83,6 @@ export default function App() {
 							<Route path=':_id' element={<Host />} />
 						</Route>
 					</Route>
-
-					{/* <Route path='*' element={<Navigate to='/library/mangas' replace />} /> */}
 				</Routes>
 			)}
 		</BrowserRouter>

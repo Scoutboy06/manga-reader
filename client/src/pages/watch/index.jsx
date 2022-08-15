@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import useSWR from 'swr';
 import NProgress from 'nprogress';
 
 import Head from '../../components/Head';
+import Navbar from '../../components/navbars/Anime';
 
-import fetchAPI, { fetcher } from '../../functions/fetchAPI.js';
+import { fetcher } from '../../functions/fetchAPI.js';
 
 import styles from './watch.module.css';
 
 export default function Anime() {
-	const navigate = useNavigate();
 	const params = useParams();
 
 	const { data: animeMeta } = useSWR(`/animes/${params.name}`, fetcher);
@@ -25,7 +25,7 @@ export default function Anime() {
 
 	useEffect(() => {
 		NProgress.start();
-	}, [currentEpisode]);
+	}, [params]);
 
 	useEffect(() => {
 		if (animeMeta) {
@@ -51,29 +51,7 @@ export default function Anime() {
 				</title>
 			</Head>
 
-			<nav className={styles.navbar}>
-				<div className={styles.buttonContainer}>
-					<Link to={`/animes/${params.name}`} className={styles.button}>
-						<i className='icon' style={{ fontSize: 28 }}>
-							chevron_left
-						</i>
-					</Link>
-					<Link to='/animes' className={styles.button}>
-						<i className='icon'>home</i>
-					</Link>
-					<button className={styles.button}>
-						<i className='icon'>search</i>
-					</button>
-				</div>
-				<div className={styles.buttonContainer}>
-					<button className={styles.button}>
-						<i className='icon'>cast</i>
-					</button>
-					<button className={styles.button}>
-						<i className='icon'>airplay</i>
-					</button>
-				</div>
-			</nav>
+			<Navbar />
 
 			<main className={styles.mainContainer}>
 				<div className={styles.videoContainer}>
@@ -85,7 +63,7 @@ export default function Anime() {
 						marginHeight='0'
 						scrolling='no'
 						title='video'
-						onLoad={() => NProgress.done(true)}
+						onLoad={() => NProgress.done()}
 					></iframe>
 					{/* <div></div> */}
 				</div>

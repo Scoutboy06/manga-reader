@@ -85,10 +85,10 @@
 }
 
 .paginationContainer a:first-child:hover i {
-	transform: translateX(-5px);
+	transform: translateX(-3px);
 }
 .paginationContainer a:last-child:hover i {
-	transform: translateX(5px);
+	transform: translateX(3px);
 }
 
 .titleContainer {
