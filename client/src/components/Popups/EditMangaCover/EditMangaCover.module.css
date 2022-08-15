@@ -2,13 +2,11 @@
 	position: relative;
 	width: 100%;
 	height: 100%;
+	overflow: hidden scroll;
 }
 
 .main {
-	height: max-content;
-	width: 40em;
-	max-height: calc(100% - 5em);
-	overflow-y: scroll;
+	width: 100%;
 	padding: 2em;
 	padding-bottom: 7em;
 }
@@ -74,10 +72,6 @@
 	width: 12em;
 	height: 18em;
 	overflow: hidden;
-	/* background-position: 50%;
-	background-size: cover; */
-	/* display: grid;
-	place-items: center; */
 	position: relative;
 }
 
@@ -121,7 +115,7 @@
 	background-color: var(--bg-24dp);
 }
 
-@media screen and (max-width: 40em) {
+/* @media screen and (max-width: 40em) {
 	.container {
 		height: calc(100vh - 4em);
 	}
@@ -129,13 +123,13 @@
 		max-width: 100vw;
 		max-height: calc(100vh - 9em);
 	}
-}
+} */
 
-@media screen and (max-height: 50em) and (min-width: 40em) {
+/* @media screen and (max-height: 50em) and (min-width: 40em) {
 	.main {
 		max-height: calc(100vh - 6em);
 	}
-}
+} */
 
 @media screen and (max-width: 23em) {
 	.footer button {

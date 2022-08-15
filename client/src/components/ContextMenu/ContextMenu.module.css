@@ -75,3 +75,7 @@
 	height: 24px;
 	margin-right: 10px;
 }
+
+.icon :global(.icon) {
+	margin-right: 10px;
+}

@@ -48,6 +48,7 @@ button {
 		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
 	font-size: 16px;
+	color: var(--text-color);
 }
 
 h1,
@@ -100,6 +101,7 @@ span {
 	direction: ltr;
 	-moz-font-feature-settings: 'liga';
 	-moz-osx-font-smoothing: grayscale;
+	color: inherit;
 }
 
 /* iframe {

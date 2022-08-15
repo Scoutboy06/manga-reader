@@ -1,9 +1,6 @@
 .container {
-	/* width: 500px; */
-	/* height: 550px; */
-	max-width: 100%;
-	height: 500px;
-	padding-bottom: 4.5em;
+	width: 100%;
+	height: 100%;
 	overflow: hidden scroll;
 }
 
@@ -22,13 +19,12 @@
 }
 
 .inputContainer input {
-	/* padding: 0 3.5em 0 1em; */
 	padding: 0 0.2em 0 1em;
 	background-color: transparent;
 	border: 0;
 	outline: none;
 	color: #eee;
-	font-size: 1.1em;
+	font-size: 16px;
 	width: 100%;
 }
 
@@ -52,20 +48,10 @@
 	place-items: center;
 }
 
-.submitBtn svg,
-.resetBtn svg {
-	width: 24px;
-	height: 24px;
-}
-
 .resetBtn {
-	width: 25px;
-	opacity: 0.9;
-	margin-right: 5px;
-}
-
-.resetBtn svg {
-	transform: rotate(45deg);
+	opacity: 1;
+	margin-right: 8px;
+	font-size: 20px;
 }
 
 .submitBtn {
@@ -79,6 +65,7 @@
 
 .main {
 	margin-top: 20px;
+	padding-bottom: 8em;
 	width: 100%;
 }
 
@@ -92,11 +79,9 @@
 
 .mangaItem {
 	background-color: transparent;
+	display: flex;
 	text-align: left;
 	position: relative;
-	display: grid;
-	grid-template-columns: auto 1fr;
-	grid-template-rows: 100%;
 	height: 120px;
 	width: 90%;
 	padding: 0 30px 0 0;
@@ -149,18 +134,28 @@
 
 .openSource {
 	position: absolute;
-	bottom: 5px;
-	right: 5px;
+	bottom: 0px;
+	right: 0px;
+	border-radius: 50%;
+	border: 0;
+	background-color: transparent;
+	color: #fff;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	transition: background-color 0.2s;
+	text-decoration: none;
+	width: 45px;
+	height: 45px;
+}
+
+.button {
+	width: 45px;
+	height: 45px;
 }
 
 .openSource:hover {
-	background-color: var(--bg-24dp) !important;
-}
-
-.openSource svg {
-	width: 36px;
-	height: 36px;
-	fill: #fff;
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
 .footer {
@@ -206,17 +201,10 @@
 }
 
 .subscribed {
-	color: #fff;
 	display: flex;
 	align-items: center;
 }
 
 .subscribed label {
 	margin-right: 5px;
-}
-
-@media screen and (max-height: 43em) {
-	.container {
-		height: calc(100vh - 10em);
-	}
 }
