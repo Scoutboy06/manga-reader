@@ -5,7 +5,7 @@
 }
 
 .section1 {
-	margin-top: 30px;
+	margin: 30px calc(var(--padding) - 0.6em) 0;
 }
 
 .section1,
@@ -19,10 +19,10 @@
 	margin-top: 20px;
 	padding: 0;
 	display: block;
-	width: 100%;
-	height: max-content;
+	width: calc(100% - 2 * var(--padding));
 	background: var(--bg-00dp);
 	border: 1px solid var(--bg-01dp);
+	margin: 0 auto;
 }
 
 .section2 > div {
@@ -68,7 +68,7 @@
 	background: var(--bg-02dp);
 }
 
-.toggleFinshedMangasButton svg {
+.toggleFinshedMangasButton i {
 	transition: transform 0.1s;
 }
 

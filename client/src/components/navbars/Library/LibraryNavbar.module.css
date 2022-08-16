@@ -1,7 +1,7 @@
 .navbar {
 	background-color: var(--bg-00dp);
 	display: flex;
-	padding: 10px;
+	padding: 10px var(--padding);
 	margin-bottom: 5px;
 	height: 65px;
 	align-items: center;

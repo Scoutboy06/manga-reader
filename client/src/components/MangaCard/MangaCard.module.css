@@ -83,24 +83,26 @@
 	cursor: pointer;
 	font-size: 1em;
 	position: relative;
-	/* z-index: 3; */
 }
 
 .actionButtons > button:hover {
 	background-color: rgba(0, 164, 220, 0.2);
 }
 
-.actionButtons > button:nth-child(1) > svg {
-	fill: #fff;
-	transition: fill 0.2s;
+.actionButtons > button > i {
+	transition: color 0.2s;
 }
 
-.actionButtons > button:hover > svg {
-	fill: var(--main-color);
+.actionButtons > button:nth-child(1) > i {
+	color: #fff;
 }
 
-.actionButtons > button[data-hasfinishedreading='true'] > svg {
-	fill: #c33;
+.actionButtons > button:hover > i {
+	color: var(--main-color);
+}
+
+.actionButtons > button[data-hasfinishedreading='true'] > i {
+	color: #c33;
 }
 
 .details {
@@ -155,8 +157,8 @@
 }
 
 @media (hover: none) {
-	.actionButtons > button:nth-child(1):focus > svg {
-		fill: var(--main-color);
+	.actionButtons > button:nth-child(1):focus > i {
+		color: var(--main-color);
 	}
 
 	.cardOverlay {
@@ -198,8 +200,8 @@
 		opacity: 0.4;
 	}
 
-	.actionButtons > button:nth-child(1) > svg {
-		fill: #fff;
+	.actionButtons > button:nth-child(1) > i {
+		color: #fff;
 	}
 }
 

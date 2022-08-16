@@ -2,7 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 
 import styles from './HorizontalScrollContainer.module.css';
 
-export default function HorizontalScrollContainer({ children, title }) {
+export default function HorizontalScrollContainer({
+	children,
+	title,
+	className = '',
+}) {
 	const [canScrollTo, setCanScrollTo] = useState({
 		left: false,
 		right: false,
@@ -53,16 +57,24 @@ export default function HorizontalScrollContainer({ children, title }) {
 	}, []);
 
 	return (
-		<div style={{ width: '100%' }}>
+		<div style={{ width: '100%' }} className={className}>
 			<div className={styles.top}>
 				{title && title}
 				<div className={styles.buttons}>
-					<button onClick={() => scroll(-1)} disabled={!canScrollTo.left}>
-						<i className='icon'>chevron_left</i>
+					<button
+						onClick={() => scroll(-1)}
+						disabled={!canScrollTo.left}
+						className='icon'
+					>
+						chevron_left
 					</button>
 
-					<button onClick={() => scroll(1)} disabled={!canScrollTo.right}>
-						<i className='icon'>chevron_right</i>
+					<button
+						onClick={() => scroll(1)}
+						disabled={!canScrollTo.right}
+						className='icon'
+					>
+						chevron_right
 					</button>
 				</div>
 			</div>

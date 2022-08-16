@@ -5,46 +5,18 @@
 	max-width: 100%;
 }
 
-.imageContainer {
-	position: relative;
-	border-radius: 10px;
-	overflow: hidden;
-}
-
-.imageContainer img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.overlay {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: transparent;
-	opacity: 1;
-	transition: opacity 0.2s;
-}
-
-@media (hover: hover) {
-	.overlay {
-		background-color: rgba(0, 0, 0, 0.5);
-		opacity: 0;
-	}
-
-	.card:hover .overlay {
-		opacity: 1;
-	}
-}
-
 .card:global(.vertical) {
 	width: 200px;
 }
 
 .card:global(.horizontal) {
 	width: 350px;
+}
+
+.imageContainer {
+	position: relative;
+	border-radius: 10px;
+	overflow: hidden;
 }
 
 .card:global(.vertical) .imageContainer {
@@ -55,13 +27,74 @@
 	aspect-ratio: 3 / 1.7;
 }
 
+.imageContainer img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.navigateButton,
+.overlayContainer {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.navigateButton {
+	background-color: transparent;
+	cursor: pointer;
+	border: 0;
+}
+
+.overlayContainer {
+	opacity: 1;
+	transition: opacity 0.2s;
+	display: flex;
+	align-items: flex-end;
+	justify-content: flex-end;
+	pointer-events: none;
+}
+
+.overlayContainer * {
+	pointer-events: all;
+}
+
+.buttonsContainer {
+	display: flex;
+	margin: 0.3em;
+}
+
+.buttonsContainer > button {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.7);
+	display: grid;
+	place-items: center;
+	transition: background-color 0.2s, opacity 0.2s, color 0.2s;
+	border: 0;
+	outline: none;
+	cursor: pointer;
+	font-size: 24px;
+	position: relative;
+}
+
+.buttonsContainer > button:hover,
+.buttonsContainer > button:focus-within {
+	background-color: rgba(0, 164, 220, 0.2);
+	color: var(--main-color);
+}
+
+.buttonsContainer > button[data-watched='true'] {
+	color: #c33;
+}
+
 .cardBody {
 	width: 100%;
 	padding: 4px 5px 2px 5px;
 	text-align: center;
-	/* display: flex;
-	flex-direction: column;
-	row-gap: 0px; */
 }
 
 .title,
@@ -75,11 +108,41 @@
 }
 
 .title {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	cursor: pointer;
 	color: rgba(255, 255, 255, 0.8);
 	font-size: 16px;
+}
+
+.title:hover {
+	text-decoration: underline;
 }
 
 .subtitle {
 	color: rgba(255, 255, 255, 0.5);
 	font-size: 14px;
+}
+
+@media (hover: hover) {
+	.overlayContainer {
+		background-color: rgba(0, 0, 0, 0.5);
+		opacity: 0;
+	}
+
+	.card:hover .overlayContainer,
+	.card:focus-within .overlayContainer {
+		opacity: 1;
+	}
+
+	.buttonsContainer {
+		margin: 0;
+	}
+
+	.buttonsContainer > button {
+		background-color: transparent;
+		width: 1.7em;
+		height: 1.7em;
+	}
 }

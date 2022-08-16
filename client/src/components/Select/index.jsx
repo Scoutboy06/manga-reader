@@ -26,14 +26,12 @@ export default function Select({ children, value, onChange }) {
 		>
 			<span>{selectedValue.display}</span>
 
-			<svg
-				xmlns='http://www.w3.org/2000/svg'
-				viewBox='0 0 24 24'
+			<i
+				className='icon'
 				style={{ transform: `rotate(${isOpen ? 180 : 0}deg)` }}
 			>
-				<path d='M0 0h24v24H0z' fill='none' />
-				<path d='M7 10l5 5 5-5z' />
-			</svg>
+				arrow_drop_down
+			</i>
 
 			<Dropdown
 				size='small'

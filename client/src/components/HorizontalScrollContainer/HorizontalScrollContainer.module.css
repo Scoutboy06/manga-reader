@@ -1,9 +1,19 @@
 .top {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	align-items: center;
 	justify-content: space-between;
 	margin-bottom: 10px;
+}
+
+.top > p {
+	word-wrap: break-word;
+}
+
+.buttons {
+	display: flex;
+	flex-wrap: nowrap;
+	width: 90px;
 }
 
 .buttons button {
@@ -26,9 +36,6 @@
 
 .buttons button[disabled=''] {
 	cursor: auto;
-}
-
-.buttons button[disabled=''] i {
 	color: #333;
 }
 
@@ -38,6 +45,7 @@
 	flex-direction: row;
 	flex-wrap: nowrap;
 	overflow-x: scroll;
+	overflow-y: visible;
 
 	scrollbar-width: none;
 	-ms-overflow-style: none;

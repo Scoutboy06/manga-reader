@@ -14,8 +14,8 @@
 	outline: none;
 }
 
-.container > svg {
-	width: 30px;
+.container > i {
+	font-size: 18px;
 	transition: transform 0.1s ease-out;
 }
 
