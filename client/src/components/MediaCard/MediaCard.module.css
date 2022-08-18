@@ -81,10 +81,21 @@
 	position: relative;
 }
 
-.buttonsContainer > button:hover,
-.buttonsContainer > button:focus-within {
-	background-color: rgba(0, 164, 220, 0.2);
-	color: var(--main-color);
+.buttonsContainer > button::after {
+	content: '';
+	position: absolute;
+	width: 130%;
+	height: 130%;
+	border-radius: 50%;
+	top: -15%;
+	left: -15%;
+	background-color: var(--main-color);
+	opacity: 0;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.buttonsContainer > button:active::after {
+	opacity: 0.5;
 }
 
 .buttonsContainer > button[data-watched='true'] {
@@ -144,5 +155,15 @@
 		background-color: transparent;
 		width: 1.7em;
 		height: 1.7em;
+	}
+
+	.buttonsContainer > button:hover,
+	.buttonsContainer > button:focus-within {
+		background-color: rgba(0, 164, 220, 0.2);
+		color: var(--main-color);
+	}
+
+	.buttonsContainer > button:active::after {
+		opacity: 0;
 	}
 }
