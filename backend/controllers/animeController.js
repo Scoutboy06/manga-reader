@@ -15,8 +15,22 @@ export const createAnime = asyncHandler(async (req, res) => {
 });
 
 // @desc	Get an anime by it's url name
+// @route	GET /users/:userId/animes/:urlName
+export const getAnimeByUrlName = asyncHandler(async (req, res) => {
+	const { urlName, userId } = req.params;
+
+	const dbAnime = await Anime.findOne({ urlName, ownerId: userId });
+	if (!dbAnime) {
+		const scrapeAnime = await getAnimeMeta(urlName);
+		return res.json({ ...scrapeAnime, from: 'scrape' });
+	}
+
+	res.json({ ...dbAnime, from: 'db' });
+});
+
+// @desc	Get an anime by it's id or it's urlName
 // @route	GET /animes/:_id
-export const getAnime = asyncHandler(async (req, res) => {
+export const getAnimeById = asyncHandler(async (req, res) => {
 	const { _id } = req.params;
 	const anime = await getAnimeMeta(_id);
 	res.json(anime);

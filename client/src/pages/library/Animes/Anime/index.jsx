@@ -1,17 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NProgress from 'nprogress';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
+import fetchAPI from '../../../../functions/fetchAPI';
+
+import { ProfileContext } from '../../../../contexts/ProfileContext';
 
 import Navbar from '../../../../components/navbars/Anime';
 
 import styles from './Anime.module.css';
 
 export default function Anime() {
+	const [{ currentProfile }] = useContext(ProfileContext);
 	const params = useParams();
+	const { mutate } = useSWRConfig();
 
-	const { data: animeMeta } = useSWR(`/animes/${params.name}`);
+	const { data: animeMeta } = useSWR(
+		() => `/users/${currentProfile._id}/animes/${params.name}`
+	);
 	const [nextEpisode, setNextEpisode] = useState();
+
+	const addToLibrary = async () => {
+		const res = await fetchAPI(`/users/${currentProfile._id}/animes`, {
+			method: 'POST',
+			body: JSON.stringify({ urlName: animeMeta.urlName }),
+		});
+		console.log(res);
+		if (res.ok) {
+			mutate(`/users/${currentProfile._id}/animes/${params.name}`);
+		}
+	};
 
 	useEffect(() => {
 		if (!animeMeta) {
@@ -39,23 +57,29 @@ export default function Anime() {
 					<div className={styles.titleContainer}>
 						<h1>{animeMeta.title}</h1>
 
-						<div className={styles.buttonContainer}>
-							<button className={styles.button}>
-								<i className='icon'>play_arrow</i>
+						{animeMeta.from === 'db' ? (
+							<div className={styles.buttonContainer}>
+								<button className={styles.button}>
+									<i className='icon'>play_arrow</i>
+								</button>
+								<button className={styles.button}>
+									<i className='icon'>done</i>
+								</button>
+								<button className={styles.button}>
+									<i className='icon'>notifications_active</i>
+								</button>
+								<button className={styles.button}>
+									<i className='icon'>edit</i>
+								</button>
+								<button className={styles.button}>
+									<i className='icon'>more_vert</i>
+								</button>
+							</div>
+						) : (
+							<button className={styles.addToLibraryBtn} onClick={addToLibrary}>
+								Add to library
 							</button>
-							<button className={styles.button}>
-								<i className='icon'>done</i>
-							</button>
-							<button className={styles.button}>
-								<i className='icon'>notifications_active</i>
-							</button>
-							<button className={styles.button}>
-								<i className='icon'>edit</i>
-							</button>
-							<button className={styles.button}>
-								<i className='icon'>more_vert</i>
-							</button>
-						</div>
+						)}
 					</div>
 
 					<p className={styles.description}>{animeMeta.description}</p>
@@ -81,7 +105,7 @@ export default function Anime() {
 						</tbody>
 					</table>
 
-					{nextEpisode && (
+					{animeMeta.from === 'db' && nextEpisode && (
 						<div className={styles.nextUp}>
 							<p>Next up:</p>
 							<Link
@@ -95,6 +119,18 @@ export default function Anime() {
 
 					<div className={styles.episodes}>
 						<p>Episodes</p>
+
+						{animeMeta.from === 'scrape' && (
+							<div className={styles.overlay}>
+								<h1>Add to your library to start watching</h1>
+								<button
+									className={styles.addToLibraryBtn}
+									onClick={addToLibrary}
+								>
+									Add to library
+								</button>
+							</div>
+						)}
 
 						{animeMeta.episodes.map(episode => (
 							<Link
