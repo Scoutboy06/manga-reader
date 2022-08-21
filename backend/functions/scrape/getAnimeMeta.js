@@ -55,8 +55,8 @@ export default async function getAnimeMeta(urlName, cache = true) {
 	};
 
 	const data = {
-		_id: urlName,
-		imgUrl,
+		// ownerId,
+		urlName,
 		title,
 		description,
 		genres,
@@ -64,6 +64,13 @@ export default async function getAnimeMeta(urlName, cache = true) {
 		status,
 		otherNames,
 		episodes,
+		// isFavorite,
+		// hasWatched,
+		// notificationsOn,
+		posters: {
+			large: imgUrl,
+		},
+		// backdrops,
 	};
 
 	cachedResults.put(urlName, data);

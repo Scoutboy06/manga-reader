@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler';
+import cloudinary from 'cloudinary';
 // import fetch from 'node-fetch';
 // import HTMLParser from 'node-html-parser';
 
@@ -9,10 +10,51 @@ import getAnimeEpisode from '../functions/scrape/getAnimeEpisode.js';
 
 // @desc	Create an anime to save in the database
 // @route	POST /users/:userId/animes
-// export const createAnime = asyncHandler(async (req, res) => {
-// 	const { userId } = req.params;
-// 	const { urlName } = req.body;
-// });
+export const addAnimeToLibrary = asyncHandler(async (req, res) => {
+	const { userId } = req.params;
+	const { urlName, season, tmdbId } = req.body;
+
+	const dbRes = await Anime.findOne({ urlName, ownerId: userId });
+	if (dbRes) {
+		res.status(405);
+		throw new Error('Anime is already in library.');
+	}
+
+	const gogoMeta = await getAnimeMeta(urlName);
+
+	const tmdbMeta = await fetch('https://api.themoviedb.org/3/search/tv?' + new URLSearchParams({
+		api_key: process.env.TMDB_V3_API_KEY,
+		query: gogoMeta.name,
+	})).then(res => res.json()).then(json => json.results[0]);
+
+	if (!tmdbMeta) {
+		res.status(500);
+		throw new Error('No results from TMDB');
+	}
+
+	const anime = new Anime({
+		title: tmdbMeta.name,
+		description: tmdbMeta.overview,
+
+		...gogoMeta,
+		type: tmdb.media_type,
+		ownerId: userId,
+		isFavorite: false,
+		hasWatched: false,
+		notificationsOn: false,
+		posters: {
+			small: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/w300${tmdbMeta.poster_path}` : gogoMeta.posters.large,
+			large: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/original${tmdbMeta.poster_path}` : gogoMeta.posters.large,
+		},
+		backdrops: {
+			small: tmdbMeta.backdrop_path ? `https://image.tmdb.org/t/p/w400${tmdbMeta.backdrop_path}` : gogoMeta.posters.large,
+			large: tmdbMeta.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMeta.backdrop_path}` : gogoMeta.posters.large,
+		}
+	});
+
+	const createdAnime = await anime.save();
+	return res.json(createdAnime);
+});
 
 // @desc	Get an anime by it's url name
 // @route	GET /animes/:_id
