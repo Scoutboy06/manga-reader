@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import HTMLParser from 'node-html-parser';
 import mcache from 'memory-cache';
 
-const cachedResults = new mcache.Cache();
+export const cachedResults = new mcache.Cache();
 
 export default async function getAnimeMeta(urlName, cache = true) {
 	if (cache) {
@@ -25,12 +25,12 @@ export default async function getAnimeMeta(urlName, cache = true) {
 	const imgUrl = main_body.querySelector('.anime_info_body_bg img').getAttribute('src').trim();
 	const title = main_body.querySelector('.anime_info_body_bg h1').textContent.trim();
 	const description = stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(5)')).trim();
-	const misc = {
-		genres: stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(6)')).trim(),
-		released: stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(7)')).trim(),
-		status: stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(8)')).trim(),
-		otherNames: stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(9)')).trim(),
-	};
+
+	const genres = stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(6)')).trim();
+	const released = stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(7)')).trim();
+	const status = stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(8)')).trim();
+	const otherNames = stripTitle(main_body.querySelector('.anime_info_body_bg p.type:nth-child(9)')).trim();
+
 
 	const ep_start = main_body.querySelector('#episode_page li:first-child a').getAttribute('ep_start');
 	const ep_end = main_body.querySelector('#episode_page li:last-child a').getAttribute('ep_end');
@@ -59,7 +59,10 @@ export default async function getAnimeMeta(urlName, cache = true) {
 		imgUrl,
 		title,
 		description,
-		misc,
+		genres,
+		released,
+		status,
+		otherNames,
 		episodes,
 	};
 

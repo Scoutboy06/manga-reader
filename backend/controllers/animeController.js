@@ -9,17 +9,23 @@ import getAnimeEpisode from '../functions/scrape/getAnimeEpisode.js';
 
 // @desc	Create an anime to save in the database
 // @route	POST /users/:userId/animes
-export const createAnime = asyncHandler(async (req, res) => {
-	const { userId } = req.params;
-	const { urlName } = req.body;
-});
+// export const createAnime = asyncHandler(async (req, res) => {
+// 	const { userId } = req.params;
+// 	const { urlName } = req.body;
+// });
 
 // @desc	Get an anime by it's url name
 // @route	GET /animes/:_id
 export const getAnime = asyncHandler(async (req, res) => {
 	const { _id } = req.params;
-	const anime = await getAnimeMeta(_id);
-	res.json(anime);
+
+	const dbRes = await Anime.findById(_id);
+	if (!dbRes) {
+		const anime = await getAnimeMeta(_id);
+		return res.json(anime);
+	}
+
+	return res.json(dbRes);
 });
 
 // @desc	Get metadata about a single episode
