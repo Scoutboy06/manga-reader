@@ -1,5 +1,4 @@
 import asyncHandler from 'express-async-handler';
-import cloudinary from 'cloudinary';
 // import fetch from 'node-fetch';
 // import HTMLParser from 'node-html-parser';
 
@@ -22,31 +21,41 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 
 	const gogoMeta = await getAnimeMeta(urlName);
 
-	const tmdbMeta = await fetch('https://api.themoviedb.org/3/search/tv?' + new URLSearchParams({
-		api_key: process.env.TMDB_V3_API_KEY,
-		query: gogoMeta.name,
-	})).then(res => res.json()).then(json => json.results[0]);
+	let tmdbMeta;
+	if (tmdbId) {
+		tmdbMeta = await fetch(`https://api.themoviedb.org/3/tv?` + new URLSearchParams({
+			api_key: process.env.TMDB_V3_API_KEY,
+			tv_id: tmdbId,
+		})).then(res => res.json());
+	} else {
+		tmdbMeta = await fetch('https://api.themoviedb.org/3/search/tv?' + new URLSearchParams({
+			api_key: process.env.TMDB_V3_API_KEY,
+			query: gogoMeta.name,
+		})).then(res => res.json()).then(json => json.results[0]);
+	}
 
 	if (!tmdbMeta) {
-		res.status(500);
+		res.status(404);
 		throw new Error('No results from TMDB');
 	}
 
 	const anime = new Anime({
+		ownerId: userId,
+
 		title: tmdbMeta.name,
 		description: tmdbMeta.overview,
+		mediaType: tmdb.media_type,
 
 		...gogoMeta,
-		type: tmdb.media_type,
-		ownerId: userId,
 		isFavorite: false,
 		hasWatched: false,
 		notificationsOn: false,
-		posters: {
+
+		poster: {
 			small: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/w300${tmdbMeta.poster_path}` : gogoMeta.posters.large,
 			large: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/original${tmdbMeta.poster_path}` : gogoMeta.posters.large,
 		},
-		backdrops: {
+		backdrop: {
 			small: tmdbMeta.backdrop_path ? `https://image.tmdb.org/t/p/w400${tmdbMeta.backdrop_path}` : gogoMeta.posters.large,
 			large: tmdbMeta.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMeta.backdrop_path}` : gogoMeta.posters.large,
 		}
@@ -92,13 +101,7 @@ export const getEpisode = asyncHandler(async (req, res) => {
 	res.json(episode);
 });
 
-// @desc	Update a saved anime's metadata
-// @route	PUT /animes/:animeId
-export const updateAnime = asyncHandler(async (req, res) => {
-	const { userId, urlName } = req.params;
-});
-
-// @desc	Update a saved anime's metadata
+// @desc	Delete an anime
 // @route	PUT /users/:userId/animes/:animeId
 export const deleteAnime = asyncHandler(async (req, res) => {
 	const { userId, urlName } = req.params;

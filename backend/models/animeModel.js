@@ -4,11 +4,12 @@ const MODEL_NAME = mongoose.Schema(
 	{
 		ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
 		tmdbId: Number,
-
 		urlName: { type: String, required: true },
+		gogoUrlName: { type: String, required: true },
+
 		title: { type: String, required: true },
 		description: { type: String, required: true },
-		type: String,
+		mediaType: String,
 		season: { type: Number, required: true },
 
 		genres: { type: String, required: true },
@@ -28,7 +29,7 @@ const MODEL_NAME = mongoose.Schema(
 			},
 		],
 
-		posters: {
+		poster: {
 			small: {
 				url: String,
 				public_id: String,
@@ -38,7 +39,7 @@ const MODEL_NAME = mongoose.Schema(
 				public_id: String,
 			}
 		},
-		backdrops: {
+		backdrop: {
 			small: {
 				url: String,
 				public_id: String,
