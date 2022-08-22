@@ -35,9 +35,9 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/', router);
+app.use('/', router);
 
-app.use('/api/dc/:_id', asyncHandler(async (req, res) => {
+app.use('/dc/:_id', asyncHandler(async (req, res) => {
 	const { _id } = req.params;
 	const manga = await Manga.findById(_id);
 	if (!manga) throw new Error(404);
@@ -46,11 +46,11 @@ app.use('/api/dc/:_id', asyncHandler(async (req, res) => {
 }));
 
 
-app.use('/api/test', asyncHandler(async (req, res) => {
+app.use('/test', asyncHandler(async (req, res) => {
 	res.json({ hello: 'there' });
 }));
 
-app.get('/api/getUpdates', getMangaUpdates);
+app.get('/getUpdates', getMangaUpdates);
 
 app.use(notFound);
 app.use(errorHandler);

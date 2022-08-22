@@ -88,19 +88,19 @@ export default function Anime() {
 						<tbody>
 							<tr>
 								<th>Genres</th>
-								<th>{animeMeta.misc.genres}</th>
+								<th>{animeMeta.genres}</th>
 							</tr>
 							<tr>
 								<th>Released</th>
-								<th>{animeMeta.misc.released}</th>
+								<th>{animeMeta.released}</th>
 							</tr>
 							<tr>
 								<th>Status</th>
-								<th>{animeMeta.misc.status}</th>
+								<th>{animeMeta.status}</th>
 							</tr>
 							<tr>
 								<th>Other names</th>
-								<th>{animeMeta.misc.otherNames}</th>
+								<th>{animeMeta.otherNames}</th>
 							</tr>
 						</tbody>
 					</table>
