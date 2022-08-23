@@ -4,9 +4,6 @@ const MODEL_NAME = mongoose.Schema(
 	{
 		name: { type: String, required: true },
 		imageUrl: { type: String, required: true },
-		// mangas: [
-		// 	{ type: mongoose.Types.ObjectId, ref: 'Manga' },
-		// ],
 		discordUserId: { type: String, required: false },
 	},
 	{

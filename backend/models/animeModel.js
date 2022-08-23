@@ -5,12 +5,30 @@ const MODEL_NAME = mongoose.Schema(
 		ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
 		tmdbId: Number,
 		urlName: { type: String, required: true },
-		gogoUrlName: { type: String, required: true },
 
 		title: { type: String, required: true },
 		description: { type: String, required: true },
 		mediaType: String,
-		season: { type: Number, required: true },
+
+		seasons: [
+			{
+				name: { type: String, required: true },
+				seasonNumber: { type: Number, required: true },
+				id: { type: Number, required: true },
+				poster: {
+					small: {
+						url: String,
+						public_id: String,
+					},
+					large: {
+						url: String,
+						public_id: String,
+					}
+				},
+				_id: false,
+			}
+		],
+		seasonNumber: Number,
 
 		genres: { type: String, required: true },
 		released: { type: String, required: true },
@@ -26,28 +44,17 @@ const MODEL_NAME = mongoose.Schema(
 				number: { type: Number, required: true },
 				urlName: { type: String, required: true },
 				status: { type: String, default: '' },
+				_id: false,
 			},
 		],
 
 		poster: {
-			small: {
-				url: String,
-				public_id: String,
-			},
-			large: {
-				url: String,
-				public_id: String,
-			}
+			small: String,
+			large: String,
 		},
 		backdrop: {
-			small: {
-				url: String,
-				public_id: String,
-			},
-			large: {
-				url: String,
-				public_id: String,
-			}
+			small: String,
+			large: String,
 		}
 	},
 	{

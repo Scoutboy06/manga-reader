@@ -107,9 +107,12 @@
 	justify-content: space-between;
 }
 
-.titleContainer h1,
-.titleContainer h3 {
+.titleContainer h1 {
 	font-weight: 500;
+}
+
+.titleContainer h3 {
+	font-weight: normal;
 }
 
 .episodes {

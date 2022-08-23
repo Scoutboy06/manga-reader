@@ -20,8 +20,9 @@ import {
 } from './controllers/userController.js';
 import { updateProgress } from './controllers/updatesController.js';
 import {
+	addAnimeToLibrary,
+	getAnimeLibrary,
 	getAnimeByUrlName,
-	getAnimeById,
 	getEpisode,
 } from './controllers/animeController.js';
 
@@ -54,10 +55,11 @@ router.patch('/mangas/:mangaId/updates', updateProgress);
 router.get('/mangas/:mangaId/:chapter', getImageUrls);
 
 // Animes
+router.route('/users/:userId/animes')
+	.get(getAnimeLibrary)
+	.post(addAnimeToLibrary);
 router.get('/users/:userId/animes/:urlName', getAnimeByUrlName);
-router.get('/animes/:_id', getAnimeById);
-router.get('/animes/:_id/episode-:episodeNumber', getEpisode);
-// router.get('/episodes/:_id', getEpisode);
+router.get('/animes/:urlName/episode-:episodeNumber', getEpisode);
 
 // Search
 router.get('/search', search);

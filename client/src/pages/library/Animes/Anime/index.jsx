@@ -18,6 +18,7 @@ export default function Anime() {
 	const { data: animeMeta } = useSWR(
 		() => `/users/${currentProfile._id}/animes/${params.name}`
 	);
+	console.log(animeMeta);
 	const [nextEpisode, setNextEpisode] = useState();
 
 	const addToLibrary = async () => {
@@ -32,7 +33,7 @@ export default function Anime() {
 	};
 
 	useEffect(() => {
-		if (!animeMeta) {
+		if (!animeMeta?.episodes) {
 			NProgress.start();
 		} else {
 			NProgress.done(true);
@@ -50,7 +51,7 @@ export default function Anime() {
 			<main className={styles.mainContainer}>
 				<div className={styles.imageContainer}>
 					{/* eslint-disable-next-line jsx-a11y/alt-text */}
-					<img src={animeMeta.imgUrl} />
+					<img src={animeMeta.poster.large} />
 				</div>
 
 				<div className={styles.dataContainer}>
@@ -132,7 +133,7 @@ export default function Anime() {
 							</div>
 						)}
 
-						{animeMeta.episodes.map(episode => (
+						{animeMeta?.episodes?.map(episode => (
 							<Link
 								key={'EP ' + episode.number}
 								to={`/animes/${params.name}/episode-${episode.number}`}

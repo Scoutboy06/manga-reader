@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useSWR from 'swr';
 import NProgress from 'nprogress';
+
+import { ProfileContext } from '../../contexts/ProfileContext';
 
 import Head from '../../components/Head';
 import Navbar from '../../components/navbars/Anime';
@@ -12,8 +14,12 @@ import styles from './watch.module.css';
 
 export default function Anime() {
 	const params = useParams();
+	const [{ currentProfile }] = useContext(ProfileContext);
 
-	const { data: animeMeta } = useSWR(`/animes/${params.name}`, fetcher);
+	const { data: animeMeta } = useSWR(
+		`/users/${currentProfile._id}/animes/${params.name}`,
+		fetcher
+	);
 
 	const { data: currentEpisode } = useSWR(
 		`/animes/${params.name}/episode-${params.episodeNumber}`,
@@ -28,7 +34,7 @@ export default function Anime() {
 	}, [params]);
 
 	useEffect(() => {
-		if (animeMeta) {
+		if (animeMeta?.episodes) {
 			const { episodes } = animeMeta;
 
 			const curr = episodes.find(
@@ -121,7 +127,7 @@ export default function Anime() {
 				<div className={styles.episodes}>
 					<p>Episodes</p>
 
-					{animeMeta &&
+					{animeMeta?.episodes &&
 						animeMeta.episodes.map(episode => (
 							<Link
 								key={'EP ' + episode.number}

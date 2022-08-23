@@ -12,7 +12,7 @@ export default async function getAnimeMeta(urlName, cache = true) {
 		}
 	}
 
-	const html = await fetch(`https://gogoanime.gg/category/${urlName}`, { redirect: 'follow' }).then(res => res.text());
+	const html = await fetch(`https://gogoanime.tel/category/${urlName}`, { redirect: 'follow' }).then(res => res.text());
 	const document = HTMLParser.parse(html);
 
 	const stripTitle = parent => {
