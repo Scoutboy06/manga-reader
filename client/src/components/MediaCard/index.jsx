@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import DropdownButton from '../DropdownButton';
+import Loader from '../Loader';
 
 import fetchAPI from '../../functions/fetchAPI';
 
@@ -23,6 +24,8 @@ export default function MediaCard({
 	id,
 	seriesHref,
 	dropdownItems,
+	showSpinner = false,
+	hasUpdates = false,
 }) {
 	const navigate = useNavigate();
 
@@ -34,6 +37,13 @@ export default function MediaCard({
 			className={`${styles.card} ${orientationTypes[type]}`}
 			ref={mainContainer}
 		>
+			{showSpinner && (
+				<div className={styles.loader}>
+					<Loader size={30} />
+				</div>
+			)}
+			{hasUpdates && !showSpinner && <div className={styles.updates}></div>}
+
 			<div className={styles.imageContainer}>
 				<img src={imgUrl} alt={title} />
 
@@ -88,7 +98,7 @@ export default function MediaCard({
 						className={styles.title}
 						onClick={e => {
 							e.preventDefault();
-							navigate(seriesHref);
+							navigate(seriesHref || href);
 						}}
 					>
 						{title}

@@ -16,18 +16,17 @@
 
 .section2 {
 	border-radius: 0.3em;
-	margin-top: 20px;
-	padding: 0;
 	display: block;
 	width: calc(100% - 2 * var(--padding));
 	background: var(--bg-00dp);
 	border: 1px solid var(--bg-01dp);
-	margin: 0 auto;
+	margin: 0 auto var(--padding) auto;
 }
 
 .section2 > div {
 	border-top: 1px solid var(--bg-01dp);
 	display: none;
+	padding: 15px 0 0;
 }
 
 .section2[data-show='true'] > div {
