@@ -121,7 +121,7 @@ export default function Mangas() {
 									},
 								]}
 								showSpinner={manga.isSubscribed && isFetchingUpdates}
-								hasUpdates={!!updates[manga._id]}
+								hasUpdates={!!updates?.[manga._id]}
 							/>
 						)
 				)}
