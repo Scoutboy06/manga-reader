@@ -67,7 +67,7 @@ export default async function getAnimeMeta(urlName, cache = true) {
 		// isFavorite,
 		// hasWatched,
 		// notificationsOn,
-		posters: {
+		poster: {
 			large: imgUrl,
 		},
 		// backdrops,
