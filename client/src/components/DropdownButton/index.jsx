@@ -8,6 +8,8 @@ export default function DropdownButton({
 	style,
 	children,
 	dropdownItems,
+	title,
+	noPadding = false,
 }) {
 	const container = useRef();
 	const dropdown = useRef();
@@ -15,7 +17,7 @@ export default function DropdownButton({
 	const [isVisible, setVisibility] = useState(false);
 	const [pos, setPos] = useState({ x: 0, y: 0 });
 
-	const handleClick = visible => {
+	const handleClick = e => {
 		const drop = dropdown.current.getBoundingClientRect();
 		const parent = container.current.getBoundingClientRect();
 
@@ -33,7 +35,12 @@ export default function DropdownButton({
 		}
 
 		setPos({ x, y });
-		setVisibility(v => (typeof visible === 'boolean' ? visible : !v));
+		if (
+			e?.nativeEvent?.target === container.current ||
+			typeof e === 'boolean'
+		) {
+			setVisibility(v => (typeof e === 'boolean' ? e : !v));
+		}
 	};
 
 	const handleScrollAndResize = () => {
@@ -56,25 +63,25 @@ export default function DropdownButton({
 	}, [isVisible]);
 
 	return (
-		<>
-			<BlurContainer
-				element={{ slug: 'button' }}
-				onClick={handleClick}
-				onBlur={() => setVisibility(false)}
-				className={className || ''}
-				style={{ ...style, position: 'relative' }}
-				_ref={container}
-			>
-				{children}
+		<BlurContainer
+			element={{ slug: 'button' }}
+			onClick={handleClick}
+			onBlur={() => setVisibility(false)}
+			className={className || ''}
+			style={{ ...style, position: 'relative' }}
+			_ref={container}
+		>
+			{children}
 
-				<Dropdown
-					items={dropdownItems}
-					isShown={isVisible}
-					pos={pos}
-					showSelected={false}
-					_ref={dropdown}
-				/>
-			</BlurContainer>
-		</>
+			<Dropdown
+				title={title}
+				items={dropdownItems}
+				isShown={isVisible}
+				pos={pos}
+				showSelected={false}
+				_ref={dropdown}
+				noPadding={noPadding}
+			/>
+		</BlurContainer>
 	);
 }

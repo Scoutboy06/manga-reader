@@ -21,8 +21,13 @@ export default function Anime() {
 		fetcher
 	);
 
+	const currentSeason = animeMeta?.seasons?.find(
+		season => season.urlName === params.season
+	);
+
 	const { data: currentEpisode } = useSWR(
-		`/animes/${params.name}/episode-${params.episodeNumber}`,
+		() =>
+			`/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`,
 		fetcher
 	);
 
@@ -34,11 +39,11 @@ export default function Anime() {
 	}, [params]);
 
 	useEffect(() => {
-		if (animeMeta?.episodes) {
-			const { episodes } = animeMeta;
+		if (currentSeason?.episodes) {
+			const { episodes } = currentSeason;
 
 			const curr = episodes.find(
-				episode => episode.number === Number(params.episodeNumber)
+				episode => episode.urlName === params.episodeUrlName
 			);
 			const index = episodes.indexOf(curr);
 			const prev = episodes[index - 1];
@@ -47,7 +52,7 @@ export default function Anime() {
 			setPrevEpisode(prev);
 			setNextEpisode(next);
 		}
-	}, [animeMeta, currentEpisode, params.episodeNumber]);
+	}, [currentSeason, params.episodeUrlName]);
 
 	return (
 		<>
@@ -76,14 +81,18 @@ export default function Anime() {
 
 				<div className={styles.paginationContainer}>
 					{prevEpisode ? (
-						<Link to={`/animes/${params.name}/episode-${prevEpisode.number}`}>
+						<Link
+							to={`/animes/${params.name}/${currentSeason.urlName}/${prevEpisode.urlName}`}
+						>
 							<i className='icon'>chevron_left</i> Episode {prevEpisode.number}
 						</Link>
 					) : (
 						<div></div>
 					)}
 					{nextEpisode ? (
-						<Link to={`/animes/${params.name}/episode-${nextEpisode.number}`}>
+						<Link
+							to={`/animes/${params.name}/${currentSeason.urlName}/${nextEpisode.urlName}`}
+						>
 							Episode {nextEpisode.number}
 							<i className='icon'>chevron_right</i>
 						</Link>
@@ -96,7 +105,9 @@ export default function Anime() {
 					<h1>{animeMeta?.title}</h1>
 
 					<div>
-						<h3>Episode {currentEpisode?.number}</h3>
+						<h3>
+							{currentSeason?.name} - Episode {currentEpisode?.number}
+						</h3>
 
 						<div className={styles.buttonContainer}>
 							<button className={styles.button} title='Add to your favourites'>
@@ -127,23 +138,22 @@ export default function Anime() {
 				<div className={styles.episodes}>
 					<p>Episodes</p>
 
-					{animeMeta?.episodes &&
-						animeMeta.episodes.map(episode => (
-							<Link
-								key={'EP ' + episode.number}
-								to={`/animes/${params.name}/episode-${episode.number}`}
-								className={
-									styles.episode +
-									(currentEpisode?.number === episode.number
-										? ' current'
-										: episode.status != null
-										? ' ' + episode.status
-										: '')
-								}
-							>
-								EP {episode.number}
-							</Link>
-						))}
+					{currentSeason?.episodes?.map(episode => (
+						<Link
+							key={'EP ' + episode.number}
+							to={`/animes/${params.name}/${currentSeason.urlName}/${episode.urlName}`}
+							className={
+								styles.episode +
+								(currentEpisode?.number === episode.number
+									? ' current'
+									: episode.status != null
+									? ' ' + episode.status
+									: '')
+							}
+						>
+							EP {episode.number}
+						</Link>
+					))}
 				</div>
 			</main>
 		</>

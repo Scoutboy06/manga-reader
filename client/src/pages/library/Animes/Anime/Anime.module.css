@@ -116,7 +116,8 @@
 	position: relative;
 }
 
-.episodes > p {
+.episodes > p,
+.seasons > p {
 	width: 100%;
 	font-size: 24px;
 	border-bottom: 1px solid #323232;
@@ -129,7 +130,7 @@
 	background-color: rgba(0, 0, 0, 0.75);
 	width: 100%;
 	height: 100%;
-	min-height: 150px;
+	min-height: 130px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -137,6 +138,8 @@
 
 .overlay h1 {
 	margin: 20px 0;
+	font-size: 24px;
+	font-weight: 500;
 }
 
 .episode {
@@ -149,6 +152,14 @@
 
 .episode:global(.completed) {
 	background-color: #0d5914;
+}
+
+.seasons {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	position: relative;
 }
 
 @media (max-width: 800px) {

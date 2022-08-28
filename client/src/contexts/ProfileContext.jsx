@@ -4,7 +4,11 @@ import useSWR from 'swr';
 export const ProfileContext = createContext();
 
 export default function Provider(props) {
-	const { data: profiles, error } = useSWR('/users');
+	const { data: profiles, error } = useSWR('/users', {
+		revalidateIfStale: false,
+		revalidateOnFocus: false,
+		revalidateOnReconnect: false,
+	});
 	const [isLoading, setIsLoading] = useState(true);
 	const [currentProfile, setCurrentProfile] = useState();
 

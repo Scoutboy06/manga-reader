@@ -7,7 +7,7 @@ import Host from '../models/hostModel.js';
 
 // @desc	Search for new mangas
 // @route	GET /search
-const search = asyncHandler(async (req, res) => {
+export const searchManga = asyncHandler(async (req, res) => {
 	const keyword = req.query.mangaName
 		? {
 			name: {
@@ -87,24 +87,4 @@ const search = asyncHandler(async (req, res) => {
 	res.status(200).json(data);
 });
 
-/*
-{
-	[
-		{
-			hostName: String,
-			needProxy: Boolean,
-			mangas: [
-				{
-					mangaName: String,
-					imgUrl: String,
-					latestChapter: String,
-					latestUpdate: String,
-					// urlName: 
-				}
-			]
-		}
-	]
-}
-*/
 
-export { search };

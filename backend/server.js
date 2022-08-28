@@ -45,9 +45,13 @@ app.use('/dc/:_id', asyncHandler(async (req, res) => {
 	res.json(manga);
 }));
 
+app.use('/tmdb/*', asyncHandler(async (req, res) => {
+	const data = await fetch(`https://api.themoviedb.org/3/${req.params[0]}?` + new URLSearchParams({
+		api_key: process.env.TMDB_V3_API_KEY,
+		...req.query,
+	})).then(res => res.json());
 
-app.use('/test', asyncHandler(async (req, res) => {
-	res.json({ hello: 'there' });
+	res.json(data);
 }));
 
 app.get('/getUpdates', getMangaUpdates);

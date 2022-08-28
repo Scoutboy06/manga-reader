@@ -1,45 +1,49 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NProgress from 'nprogress';
-import useSWR, { useSWRConfig } from 'swr';
+import useSWR from 'swr';
 import fetchAPI from '../../../../functions/fetchAPI';
 
 import { ProfileContext } from '../../../../contexts/ProfileContext';
 
 import Navbar from '../../../../components/navbars/Anime';
+import AddToLibraryButton from '../../../../components/AddToLibraryButton';
+import MediaCard from './../../../../components/MediaCard/index';
 
 import styles from './Anime.module.css';
 
 export default function Anime() {
-	const [{ currentProfile }] = useContext(ProfileContext);
 	const params = useParams();
-	const { mutate } = useSWRConfig();
+	const [{ currentProfile }] = useContext(ProfileContext);
 
 	const { data: animeMeta } = useSWR(
-		() => `/users/${currentProfile._id}/animes/${params.name}`
+		() => `/users/${currentProfile._id}/animes/${params.name}`,
+		{
+			revalidateIfStale: false,
+			revalidateOnFocus: false,
+		}
 	);
-	console.log(animeMeta);
 	const [nextEpisode, setNextEpisode] = useState();
 
-	const addToLibrary = async () => {
-		const res = await fetchAPI(`/users/${currentProfile._id}/animes`, {
-			method: 'POST',
-			body: JSON.stringify({ urlName: animeMeta.urlName }),
-		});
-		console.log(res);
-		if (res.ok) {
-			mutate(`/users/${currentProfile._id}/animes/${params.name}`);
-		}
-	};
+	const isSeason = !!params.season;
+	const isAnime = !params.season;
+
+	const currentSeason = animeMeta?.seasons?.find(
+		season => season.urlName === params.season
+	);
 
 	useEffect(() => {
-		if (!animeMeta?.episodes) {
-			NProgress.start();
-		} else {
-			NProgress.done(true);
-			const next = animeMeta.episodes.find(ep => ep.status === '');
-			setNextEpisode(next);
-		}
+		NProgress.done(true);
+
+		// if(!animeMeta?.seasons)
+
+		// if (!animeMeta?.episodes) {
+		// 	NProgress.start();
+		// } else {
+		// 	NProgress.done(true);
+		// 	const next = animeMeta.episodes.find(ep => ep.status === '');
+		// 	setNextEpisode(next);
+		// }
 	}, [animeMeta]);
 
 	if (!animeMeta) return null;
@@ -50,15 +54,22 @@ export default function Anime() {
 
 			<main className={styles.mainContainer}>
 				<div className={styles.imageContainer}>
-					{/* eslint-disable-next-line jsx-a11y/alt-text */}
-					<img src={animeMeta.poster.large} />
+					<img
+						src={isAnime ? animeMeta.poster.large : currentSeason.poster.large}
+						alt={animeMeta.title}
+					/>
 				</div>
 
 				<div className={styles.dataContainer}>
 					<div className={styles.titleContainer}>
-						<h1>{animeMeta.title}</h1>
+						<div>
+							<h1>{animeMeta.title}</h1>
+							{isSeason && <p>{currentSeason.name}</p>}
+						</div>
 
-						{animeMeta.from === 'db' ? (
+						{animeMeta.from === 'scrape' ? (
+							<AddToLibraryButton animeMeta={animeMeta} />
+						) : (
 							<div className={styles.buttonContainer}>
 								<button className={styles.button}>
 									<i className='icon'>play_arrow</i>
@@ -76,37 +87,37 @@ export default function Anime() {
 									<i className='icon'>more_vert</i>
 								</button>
 							</div>
-						) : (
-							<button className={styles.addToLibraryBtn} onClick={addToLibrary}>
-								Add to library
-							</button>
 						)}
 					</div>
 
-					<p className={styles.description}>{animeMeta.description}</p>
+					<p className={styles.description}>
+						{isAnime ? animeMeta.description : currentSeason.description}
+					</p>
 
-					<table className={styles.misc}>
-						<tbody>
-							<tr>
-								<th>Genres</th>
-								<th>{animeMeta.genres}</th>
-							</tr>
-							<tr>
-								<th>Released</th>
-								<th>{animeMeta.released}</th>
-							</tr>
-							<tr>
-								<th>Status</th>
-								<th>{animeMeta.status}</th>
-							</tr>
-							<tr>
-								<th>Other names</th>
-								<th>{animeMeta.otherNames}</th>
-							</tr>
-						</tbody>
-					</table>
+					{isAnime && (
+						<table className={styles.misc}>
+							<tbody>
+								<tr>
+									<th>Genres</th>
+									<th>{animeMeta.genres}</th>
+								</tr>
+								<tr>
+									<th>Released</th>
+									<th>{animeMeta.released}</th>
+								</tr>
+								<tr>
+									<th>Status</th>
+									<th>{animeMeta.status}</th>
+								</tr>
+								<tr>
+									<th>Other names</th>
+									<th>{animeMeta.otherNames}</th>
+								</tr>
+							</tbody>
+						</table>
+					)}
 
-					{animeMeta.from === 'db' && nextEpisode && (
+					{isAnime && animeMeta.from === 'db' && nextEpisode && (
 						<div className={styles.nextUp}>
 							<p>Next up:</p>
 							<Link
@@ -118,34 +129,45 @@ export default function Anime() {
 						</div>
 					)}
 
-					<div className={styles.episodes}>
-						<p>Episodes</p>
+					{params.season || animeMeta.from === 'scrape' ? (
+						<div className={styles.episodes}>
+							<p>Episodes</p>
 
-						{animeMeta.from === 'scrape' && (
-							<div className={styles.overlay}>
-								<h1>Add to your library to start watching</h1>
-								<button
-									className={styles.addToLibraryBtn}
-									onClick={addToLibrary}
+							{animeMeta.from === 'scrape' && (
+								<div className={styles.overlay}>
+									<h1>Add to your library to start watching</h1>
+									<AddToLibraryButton animeMeta={animeMeta} />
+								</div>
+							)}
+
+							{currentSeason?.episodes?.map(episode => (
+								<Link
+									key={'EP ' + episode.number}
+									to={`/animes/${params.name}/${currentSeason.urlName}/episode-${episode.number}`}
+									className={
+										styles.episode +
+										(episode.status != null ? ' ' + episode.status : '')
+									}
 								>
-									Add to library
-								</button>
-							</div>
-						)}
+									EP {episode.number}
+								</Link>
+							))}
+						</div>
+					) : (
+						<div className={styles.seasons}>
+							<p>Seasons</p>
 
-						{animeMeta?.episodes?.map(episode => (
-							<Link
-								key={'EP ' + episode.number}
-								to={`/animes/${params.name}/episode-${episode.number}`}
-								className={
-									styles.episode +
-									(episode.status != null ? ' ' + episode.status : '')
-								}
-							>
-								EP {episode.number}
-							</Link>
-						))}
-					</div>
+							{animeMeta?.seasons?.map(season => (
+								<MediaCard
+									href={`/animes/${params.name}/${season.urlName}`}
+									imgUrl={season.poster.small}
+									title={season.name}
+									type='series'
+									seriesHref={`/animes/${params.name}/${season.urlName}`}
+								/>
+							))}
+						</div>
+					)}
 				</div>
 			</main>
 		</>

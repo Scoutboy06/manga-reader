@@ -1,0 +1,294 @@
+.container {
+	width: 200%;
+	height: 100%;
+	overflow: hidden;
+	transition: transform 0.3s ease-in-out;
+	display: flex;
+	flex-direction: row;
+}
+
+.section {
+	width: 50%;
+	height: 100%;
+	position: relative;
+	overflow: scroll;
+}
+
+.inputContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: calc(100% - 5em);
+	height: 2.8em;
+	background: var(--bg-12dp);
+	border-radius: 4px;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
+	overflow: hidden;
+	margin: 0 auto 20px auto;
+}
+
+.inputContainer input {
+	padding: 0 0.2em 0 1em;
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	color: #eee;
+	font-size: 16px;
+	width: 100%;
+}
+
+.inputContainer input::placeholder {
+	color: #ababab;
+	opacity: 1;
+}
+
+.inputContainer button {
+	background: transparent;
+	border: 0;
+	outline: none;
+	height: 100%;
+	opacity: 0.7;
+}
+
+.submitBtn,
+.resetBtn {
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+}
+
+.resetBtn {
+	opacity: 1;
+	margin-right: 8px;
+	font-size: 20px;
+}
+
+.submitBtn {
+	width: 60px;
+}
+
+.inputContainer:hover .submitBtn {
+	background: #444;
+	opacity: 1;
+}
+
+.itemContainer {
+	position: relative;
+	height: 150px;
+	width: 90%;
+	margin: 0 auto 15px auto;
+	border-radius: 6px;
+	overflow: hidden;
+	border: 1px solid var(--bg-12dp);
+}
+
+.item {
+	background-color: transparent;
+	display: flex;
+	text-align: left;
+	height: 100%;
+	width: 100%;
+	padding: 0 30px 0 0;
+	cursor: pointer;
+	border: 0;
+	transition: background-color 0.2s, box-shadow 0.2s;
+	user-select: none;
+}
+
+.item:hover {
+	background-color: var(--bg-06dp);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
+}
+
+.item[data-selected='true'] {
+	background: var(--bg-24dp);
+}
+
+.poster {
+	width: 100px;
+	height: 100%;
+	object-fit: cover;
+}
+
+.details {
+	display: inline-block;
+	margin: 10px 0 0 10px;
+	width: calc(100% - 80px);
+}
+
+.details span {
+	display: block;
+	color: #fff;
+	margin: 7px 10px;
+	width: 100%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.details span:not(:first-child) {
+	color: #a1a1a1;
+	font-size: 13px;
+}
+
+.details span:first-child {
+	width: 100%;
+	white-space: wrap;
+	text-overflow: ellipsis;
+}
+
+.openSource {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	border-radius: 50%;
+	border: 0;
+	background-color: transparent;
+	color: #fff;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	transition: background-color 0.2s;
+	text-decoration: none;
+	width: 45px;
+	height: 45px;
+}
+
+.button {
+	width: 45px;
+	height: 45px;
+}
+
+.openSource:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.formGroup {
+	width: 90%;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.formGroup:not(:last-child) {
+	margin-bottom: 1.8em;
+}
+
+.formGroup label {
+	user-select: none;
+	color: #bbb;
+	font-size: 1em;
+	margin-bottom: 0.25em;
+	width: max-content;
+}
+
+.formGroup input[type='text'],
+.formGroup textarea,
+.formGroup select {
+	color: #bbb;
+	background-color: var(--bg-12dp);
+	border: 0.16em solid var(--bg-12dp);
+	outline: none;
+	border-radius: 0.2em;
+	padding: 0.4em 0.25em;
+	font-size: 1.1em;
+	font-family: Arial;
+	width: 100%;
+}
+
+.formGroup textarea {
+	resize: vertical;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+	border-color: var(--main-color);
+}
+
+.formGroup button:not([name]),
+.toggleAdvanced {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	font-size: 1em;
+	color: #bbb;
+	text-decoration: underline;
+	cursor: pointer;
+	width: max-content;
+	margin-top: 0.2em;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 50%;
+	height: 5em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--bg-06dp);
+}
+
+.footer button {
+	font-size: 18px;
+	padding: 0.7em 2em;
+	color: #fff;
+	border: 0;
+	cursor: pointer;
+	border-radius: 0.2em;
+}
+
+.footer button[type='submit'] {
+	margin-left: 10px;
+	background-color: var(--main-color);
+}
+
+.footer button[type='reset'] {
+	background-color: var(--bg-24dp);
+}
+
+.nextBtn,
+.backBtn {
+	font-size: 18px;
+	border: 0;
+	cursor: pointer;
+	border-radius: 0.5em;
+	display: flex;
+	gap: 0.3em;
+}
+
+.nextBtn {
+	position: absolute;
+	background-color: var(--main-color);
+	padding: 0.6em 0.3em 0.6em 0.8em;
+	bottom: 1em;
+	right: 1em;
+	transition: bottom 0.2s ease-out;
+}
+
+.backBtn {
+	background-color: transparent;
+	margin: 0.7em 5%;
+}
+
+@media screen and (max-width: 40em) {
+	.container {
+		height: calc(100vh - 4em);
+	}
+}
+
+@media screen and (max-height: 43em) and (min-width: 40em) {
+}
+
+@media screen and (max-width: 23em) {
+	.footer button {
+		padding: 0.7em 1em;
+	}
+}
+
+@media screen and (max-width: 17em) {
+	.footer button {
+		font-size: 15px;
+	}
+}

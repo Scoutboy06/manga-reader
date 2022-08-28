@@ -4,8 +4,7 @@ import mcache from 'memory-cache';
 
 const cachedResults = new mcache.Cache();
 
-export default async function getAnimeEpisode(_id, episodeNumber, cache = true) {
-	const episodeUrlName = `${_id}-episode-${episodeNumber}`;
+export default async function getAnimeEpisode(episodeUrlName, cache = true) {
 	const url = `https://gogoanime.gg/${episodeUrlName}`;
 
 	if (cache) {
@@ -30,7 +29,6 @@ export default async function getAnimeEpisode(_id, episodeNumber, cache = true) 
 	}
 
 	const data = {
-		number: episodeNumber,
 		urlName: episodeUrlName,
 		originalUrl: url,
 		iframeSrc,

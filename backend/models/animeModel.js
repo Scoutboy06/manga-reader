@@ -8,27 +8,32 @@ const MODEL_NAME = mongoose.Schema(
 
 		title: { type: String, required: true },
 		description: { type: String, required: true },
-		mediaType: String,
+		mediaType: String, // 'tv' or 'movie'
 
 		seasons: [
 			{
 				name: { type: String, required: true },
-				seasonNumber: { type: Number, required: true },
+				urlName: { type: String, required: true },
+				gogoUrlName: { type: String, required: true },
+				description: { type: String, required: true },
 				id: { type: Number, required: true },
 				poster: {
-					small: {
-						url: String,
-						public_id: String,
-					},
-					large: {
-						url: String,
-						public_id: String,
-					}
+					small: String,
+					large: String,
 				},
+				episodes: [
+					{
+						number: { type: Number, required: true },
+						urlName: { type: String, required: true },
+						gogoUrlName: { type: String, required: true },
+						status: { type: String, default: '' },
+						_id: false,
+					},
+				],
 				_id: false,
 			}
 		],
-		seasonNumber: Number,
+		seasonId: Number,
 
 		genres: { type: String, required: true },
 		released: { type: String, required: true },
@@ -38,15 +43,6 @@ const MODEL_NAME = mongoose.Schema(
 		isFavorite: { type: Boolean, default: false },
 		hasWatched: { type: Boolean, default: false },
 		notificationsOn: { type: Boolean, default: false },
-
-		episodes: [
-			{
-				number: { type: Number, required: true },
-				urlName: { type: String, required: true },
-				status: { type: String, default: '' },
-				_id: false,
-			},
-		],
 
 		poster: {
 			small: String,

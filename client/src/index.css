@@ -59,7 +59,7 @@ span {
 	color: var(--text-color);
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
 	width: 16px;
 }
 
@@ -74,7 +74,7 @@ span {
 ::-webkit-scrollbar-corner {
 	background-clip: content-box;
 	background-color: #bbb;
-}
+} */
 
 @font-face {
 	font-family: 'Material Icons';

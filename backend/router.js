@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { getAllHosts, createHost, getHostById } from './controllers/hostController.js';
 import { getImageFromUrl } from './controllers/imageController.js';
 import {
@@ -10,7 +10,7 @@ import {
 	getImageUrls,
 	getMangaByName,
 } from './controllers/mangaController.js';
-import { search } from './controllers/searchController.js';
+import { searchManga } from './controllers/searchController.js';
 import {
 	createUser,
 	deleteUser,
@@ -26,7 +26,7 @@ import {
 	getEpisode,
 } from './controllers/animeController.js';
 
-const router = express.Router();
+const router = Router();
 
 // Hosts
 router.route('/hosts')
@@ -59,10 +59,10 @@ router.route('/users/:userId/animes')
 	.get(getAnimeLibrary)
 	.post(addAnimeToLibrary);
 router.get('/users/:userId/animes/:urlName', getAnimeByUrlName);
-router.get('/animes/:urlName/episode-:episodeNumber', getEpisode);
+router.get('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', getEpisode);
 
 // Search
-router.get('/search', search);
+router.get('/search', searchManga);
 
 // Image
 router.get('/image/*', getImageFromUrl);

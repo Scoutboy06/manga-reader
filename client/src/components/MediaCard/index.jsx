@@ -23,7 +23,7 @@ export default function MediaCard({
 	completed = false,
 	id,
 	seriesHref,
-	dropdownItems,
+	dropdownItems = [],
 	showSpinner = false,
 	hasUpdates = false,
 }) {

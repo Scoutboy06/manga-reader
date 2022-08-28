@@ -32,16 +32,19 @@ export const getAnimeLibrary = asyncHandler(async (req, res) => {
 	const animes = await Anime.find({ ownerId: userId });
 
 	const fields = [
-		{
-			title: 'Continue watching',
-			type: 'video',
-			media: animes.filter(anime => anime.episodes.find(episode => episode.status === '')),
-		},
-		{
-			title: 'Your favorites',
-			type: 'series',
-			media: animes.filter(anime => anime.isFavorite),
-		},
+		// {
+		// 	title: 'Continue watching',
+		// 	type: 'video',
+		// 	media: animes.filter(anime =>
+		// 		anime.seasons.find(season =>
+		// 			season.episodes[0] !== '' && season.episodes.find(episode => episode.status === '')
+		// 		))
+		// },
+		// {
+		// 	title: 'Your favorites',
+		// 	type: 'series',
+		// 	media: animes.filter(anime => anime.isFavorite),
+		// },
 		{
 			title: 'Your library',
 			type: 'series',
@@ -72,83 +75,105 @@ export const getAnimeLibrary = asyncHandler(async (req, res) => {
 // @route	POST /users/:userId/animes
 export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 	const { userId } = req.params;
-	const { urlName, seasonId, tmdbId } = req.body;
+	const {
+		from,
+		gogoUrlName,
+		title,
+		description,
+		poster,
+		backdrop,
+		seasonId,
+		tmdbId,
+		mediaType = 'tv',
+	} = req.body;
 
-	const dbRes = await Anime.findOne({ urlName, ownerId: userId });
-	if (dbRes) {
-		res.status(405);
-		throw new Error('Anime is already in library.');
-	}
+	// const urlName = title.toLowerCase().replaceAll(' ', '-');
 
-	const gogoMeta = await getAnimeMeta(urlName);
+	// const dbRes = await Anime.findOne({ urlName, ownerId: userId });
+	// if (dbRes) {
+	// 	res.status(405);
+	// 	throw new Error('Anime is already in library.');
+	// }
 
-	let tmdbMeta;
-	if (tmdbId) {
-		tmdbMeta = await fetch(`https://api.themoviedb.org/3/tv?` + new URLSearchParams({
-			api_key: process.env.TMDB_V3_API_KEY,
-			tv_id: tmdbId,
-		})).then(res => res.json());
-	} else {
-		tmdbMeta = await fetch('https://api.themoviedb.org/3/search/tv?' + new URLSearchParams({
-			api_key: process.env.TMDB_V3_API_KEY,
-			query: gogoMeta.title,
-		})).then(res => res.json()).then(json => json.results[0]);
-	}
+	const gogoMeta = await getAnimeMeta(gogoUrlName);
 
-	if (!tmdbMeta) {
-		res.status(404);
-		throw new Error('No results from TMDB');
-	}
 
-	let seasonNumber;
-	if (tmdbMeta.seasons) {
-		if (seasonId) {
-			seasonNumber = tmdbMeta.seasons.find(season => season.id === seasonId).season_number;
-		} else {
-			seasonNumber = tmdbMeta.seasons[0].season_number;
+	if (from === 'customImport') {
+		const tmdbMeta = await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_V3_API_KEY}`)
+			.then(res => res.json());
+
+		if (tmdbMeta.success === false) {
+			res.status(404);
+			throw new Error('Invalid TMDB id');
 		}
-	} else {
-		seasonNumber = null;
+
+		const tmdbSeason = tmdbMeta.seasons.find(season => season.id == seasonId);
+
+		const season = {
+			name: tmdbSeason.name,
+			urlName: tmdbSeason.name.toLowerCase().replaceAll(' ', '-'),
+			gogoUrlName,
+			description: tmdbSeason.overview,
+			id: seasonId,
+			poster: {
+				small: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/w300${tmdbSeason.poster_path}` : null,
+				large: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/original${tmdbSeason.poster_path}` : null,
+			},
+			episodes: gogoMeta.episodes,
+		};
+
+		const existingAnime = await Anime.findOne({ tmdbId, ownerId: userId });
+		if (!existingAnime) {
+			const anime = new Anime({
+				ownerId: userId,
+				tmdbId,
+				urlName: title.toLowerCase().replaceAll(' ', '-'),
+
+				title,
+				description,
+				mediaType,
+
+				seasons: [season],
+				seasonId,
+
+				genres: gogoMeta.genres,
+				released: gogoMeta.released,
+				status: gogoMeta.status,
+				otherNames: gogoMeta.otherNames,
+
+				poster,
+				backdrop,
+			});
+
+			const createdAnime = await anime.save();
+			return res.status(201).json(createdAnime);
+		}
+
+		// Rearrange seasons in order
+		const seasons = [];
+		for (let i = 0; i < tmdbMeta.seasons.length; i++) {
+			const existingSeason = existingAnime.seasons.find(season =>
+				season.id === tmdbMeta.seasons[i].id
+			);
+
+			if (existingSeason) seasons.push(existingSeason);
+			else if (tmdbMeta.seasons[i].id === seasonId) seasons.push(season);
+		}
+
+		existingAnime.seasons = seasons;
+		const savedAnime = await existingAnime.save();
+		res.json(savedAnime);
+		return;
 	}
+
 
 	const anime = new Anime({
 		ownerId: userId,
-		tmdbId: tmdbMeta.id,
-
-		title: tmdbMeta.name,
-		description: tmdbMeta.overview,
-
 		...gogoMeta,
-
-		mediaType: tmdbMeta.media_type,
-
-		seasons: tmdbMeta.seasons ? tmdbMeta.seasons.map(season => ({
-			name: season.name,
-			seasonNumber: season.season_number,
-			id: season.id,
-			poster: {
-				small: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/w300${season.poster_path}` : null,
-				large: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/original${season.poster_path}` : null,
-			},
-		})) : null,
-		seasonNumber,
-
-		isFavorite: false,
-		hasWatched: false,
-		notificationsOn: false,
-
-		poster: {
-			small: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/w300${tmdbMeta.poster_path}` : gogoMeta.posters.large,
-			large: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/original${tmdbMeta.poster_path}` : gogoMeta.posters.large,
-		},
-		backdrop: {
-			small: tmdbMeta.backdrop_path ? `https://image.tmdb.org/t/p/w400${tmdbMeta.backdrop_path}` : gogoMeta.posters.large,
-			large: tmdbMeta.backdrop_path ? `https://image.tmdb.org/t/p/original${tmdbMeta.backdrop_path}` : gogoMeta.posters.large,
-		}
 	});
 
 	const createdAnime = await anime.save();
-	return res.json(createdAnime);
+	res.status(201).json(createdAnime);
 });
 
 // @desc	Get an anime by it's url name
@@ -168,11 +193,31 @@ export const getAnimeByUrlName = asyncHandler(async (req, res) => {
 });
 
 // @desc	Get metadata about a single episode
-// @route	GET /users/:userId/animes/:urlName/episode-:episodeNumber
+// @route	GET /users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName
 export const getEpisode = asyncHandler(async (req, res) => {
-	const { userId, urlName, episodeNumber } = req.params;
-	const episode = await getAnimeEpisode(urlName, Number(episodeNumber));
-	res.json(episode);
+	const { userId, animeUrlName, seasonUrlName, episodeUrlName } = req.params;
+
+	const anime = await Anime.findOne({ urlName: animeUrlName, ownerId: userId });
+	if (!anime) {
+		res.status(404);
+		throw new Error('No anime found');
+	}
+
+	const season = anime.seasons.find(season => season.urlName === seasonUrlName);
+	if (!season) {
+		res.status(404);
+		throw new Error('No season found');
+	}
+
+	const episode = season.episodes.find(episode => episode.urlName === episodeUrlName);
+	if (!episode) {
+		res.status(404);
+		throw new Error('No episode found');
+	}
+
+	const scrapedEpisode = await getAnimeEpisode(episode.gogoUrlName);
+	scrapedEpisode.number = season.episodes.indexOf(episode) + 1;
+	res.json(scrapedEpisode);
 });
 
 // @desc	Delete an anime

@@ -17,6 +17,12 @@
 	visibility: visible;
 }
 
+.title {
+	margin: 5px 50px 10px 15px;
+	font-weight: normal;
+	font-size: 16px;
+}
+
 .item {
 	padding: 10px 30px 10px 15px;
 	cursor: pointer;
@@ -42,13 +48,18 @@
 	color: #777;
 }
 
-.item[disabled] svg {
-	fill: currentColor;
-}
-
 .item:not([disabled]):hover,
 .item:not([disabled]):global(.selected) {
 	background: var(--bg-24dp);
+}
+
+.item:global(.noHover) {
+	cursor: default;
+	background: transparent !important;
+}
+
+.item:global(.noPadding) {
+	padding: 0;
 }
 
 .divider {
