@@ -113,12 +113,9 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 			name: tmdbSeason.name,
 			urlName: tmdbSeason.name.toLowerCase().replaceAll(' ', '-'),
 			gogoUrlName,
-			description: tmdbSeason.overview,
+			description,
 			id: seasonId,
-			poster: {
-				small: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/w300${tmdbSeason.poster_path}` : null,
-				large: tmdbMeta.poster_path ? `https://image.tmdb.org/t/p/original${tmdbSeason.poster_path}` : null,
-			},
+			poster,
 			episodes: gogoMeta.episodes,
 		};
 

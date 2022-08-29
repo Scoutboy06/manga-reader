@@ -51,7 +51,7 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 		meta.current = res;
 		setCurrentPage(1);
 		setSeasons(res.seasons);
-		setSelectedSeasonId(null);
+		setSelectedSeasonId(res.seasons[0].id);
 		setTitle(res.name);
 		setDescription(res.overview);
 		setLargePosterUrl(
@@ -75,8 +75,6 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 	};
 
 	const addToLibrary = async () => {
-		console.log(selectedSeasonId);
-		return;
 		const res = await fetchAPI(`/users/${currentProfile._id}/animes`, {
 			method: 'POST',
 			body: JSON.stringify({
