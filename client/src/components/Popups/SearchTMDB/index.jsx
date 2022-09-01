@@ -1,5 +1,5 @@
 import { useState, useContext, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 import fetchAPI from '../../../functions/fetchAPI';
 
@@ -11,6 +11,7 @@ import styles from './SearchTMDB.module.css';
 
 export default function SearchTMDB({ closePopup, data: animeMeta }) {
 	const params = useParams();
+	const navigate = useNavigate();
 	const { mutate } = useSWRConfig();
 	const [{ currentProfile }] = useContext(ProfileContext);
 
@@ -75,28 +76,31 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 	};
 
 	const addToLibrary = async () => {
-		const res = await fetchAPI(`/users/${currentProfile._id}/animes`, {
-			method: 'POST',
-			body: JSON.stringify({
-				from: 'customImport',
-				gogoUrlName: animeMeta.urlName,
-				title,
-				description,
-				poster: {
-					large: largePosterUrl,
-					small: smallPosterUrl,
-				},
-				backdrop: {
-					large: largeBackdropUrl,
-					small: smallBackdropUrl,
-				},
-				seasonId: selectedSeasonId,
-				tmdbId: meta.current.id,
-			}),
-		});
-		console.log(res);
-		if (res.ok) {
-			mutate(`/users/${currentProfile._id}/animes/${params.name}`);
+		try {
+			const res = await fetchAPI(`/users/${currentProfile._id}/animes`, {
+				method: 'POST',
+				body: JSON.stringify({
+					from: 'customImport',
+					gogoUrlName: animeMeta.urlName,
+					title,
+					description,
+					poster: {
+						large: largePosterUrl,
+						small: smallPosterUrl,
+					},
+					backdrop: {
+						large: largeBackdropUrl,
+						small: smallBackdropUrl,
+					},
+					seasonId: Number(selectedSeasonId),
+					tmdbId: meta.current.id,
+				}),
+			});
+
+			closePopup();
+			navigate(`/animes/${res.urlName}`);
+		} catch (err) {
+			console.error(err);
 		}
 	};
 
@@ -155,7 +159,7 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 								<img
 									className={styles.poster}
 									src={`https://image.tmdb.org/t/p/w300${item.poster_path}`}
-									alt='Manga cover'
+									alt={item.name}
 								/>
 								<div className={styles.details}>
 									<span>{item.name}</span>
@@ -206,7 +210,25 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 							name='season'
 							id='season'
 							value={selectedSeasonId}
-							onChange={e => setSelectedSeasonId(e.target.value)}
+							onChange={e => {
+								setSelectedSeasonId(e.target.value);
+
+								const selectedSeason = meta.current.seasons.find(
+									season => season.id === Number(e.target.value)
+								);
+
+								setDescription(selectedSeason.overview);
+								setLargePosterUrl(
+									selectedSeason.poster_path
+										? `https://image.tmdb.org/t/p/original${selectedSeason.poster_path}`
+										: ''
+								);
+								setSmallPosterUrl(
+									selectedSeason.poster_path
+										? `https://image.tmdb.org/t/p/w300${selectedSeason.poster_path}`
+										: ''
+								);
+							}}
 						>
 							{seasons.map(season => (
 								<option value={season.id}>{season.name}</option>

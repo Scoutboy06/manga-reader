@@ -87,16 +87,8 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 		mediaType = 'tv',
 	} = req.body;
 
-	// const urlName = title.toLowerCase().replaceAll(' ', '-');
-
-	// const dbRes = await Anime.findOne({ urlName, ownerId: userId });
-	// if (dbRes) {
-	// 	res.status(405);
-	// 	throw new Error('Anime is already in library.');
-	// }
-
+	const existingAnime = await Anime.findOne({ tmdbId, ownerId: userId });
 	const gogoMeta = await getAnimeMeta(gogoUrlName);
-
 
 	if (from === 'customImport') {
 		const tmdbMeta = await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_V3_API_KEY}`)
@@ -104,12 +96,17 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 
 		if (tmdbMeta.success === false) {
 			res.status(404);
-			throw new Error('Invalid TMDB id');
+			throw new Error('Invalid TMDB id or media type');
+		}
+
+		if (existingAnime?.seasons?.find(season => season.id === seasonId)) {
+			res.status(405);
+			throw new Error('Season is already saved');
 		}
 
 		const tmdbSeason = tmdbMeta.seasons.find(season => season.id == seasonId);
 
-		const season = {
+		const newSeason = {
 			name: tmdbSeason.name,
 			urlName: tmdbSeason.name.toLowerCase().replaceAll(' ', '-'),
 			gogoUrlName,
@@ -119,7 +116,7 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 			episodes: gogoMeta.episodes,
 		};
 
-		const existingAnime = await Anime.findOne({ tmdbId, ownerId: userId });
+		// If anime is not in db, add it
 		if (!existingAnime) {
 			const anime = new Anime({
 				ownerId: userId,
@@ -130,7 +127,7 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 				description,
 				mediaType,
 
-				seasons: [season],
+				seasons: [newSeason],
 				seasonId,
 
 				genres: gogoMeta.genres,
@@ -154,7 +151,7 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 			);
 
 			if (existingSeason) seasons.push(existingSeason);
-			else if (tmdbMeta.seasons[i].id === seasonId) seasons.push(season);
+			else if (tmdbMeta.seasons[i].id === seasonId) seasons.push(newSeason);
 		}
 
 		existingAnime.seasons = seasons;

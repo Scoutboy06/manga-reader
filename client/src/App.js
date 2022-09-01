@@ -86,11 +86,11 @@ export default function App() {
 					</Route>
 				</Routes>
 			)}
+
+			<PopupCreator />
+
+			<AlertCreator />
 		</BrowserRouter>
-
-		<PopupCreator />
-
-		<AlertCreator />
 
 		<Head>
 			<link
