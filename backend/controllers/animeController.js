@@ -121,7 +121,7 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 			const anime = new Anime({
 				ownerId: userId,
 				tmdbId,
-				urlName: title.toLowerCase().replaceAll(' ', '-'),
+				urlName: encodeURI(title.toLowerCase().replaceAll(':', '').replaceAll(' ', '-')),
 
 				title,
 				description,

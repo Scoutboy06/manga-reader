@@ -80,8 +80,7 @@ export const createManga = asyncHandler(async (req, res) => {
 	}
 
 
-	const raw = await fetch(host.detailsPage.replace('%name%', urlName));
-	const html = await raw.text();
+	const html = await fetch(host.detailsPage.replace('%name%', urlName)).then(res => res.text());
 	const document = HTMLParser.parse(html);
 
 	const name = document.querySelector('.post-title h1').textContent.trim();
@@ -113,8 +112,9 @@ export const createManga = asyncHandler(async (req, res) => {
 		originalName: name,
 		urlName: urlName,
 
-		chapters,
-		currentChapter: chapters[0].urlName,
+		// chapters,
+		// currentChapter: chapters[0].urlName,
+		currentChapter: 'chapter-1',
 
 		// lastUpdatePingedChapter: null
 		isSubscribed,

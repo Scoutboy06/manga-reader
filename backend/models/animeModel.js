@@ -15,7 +15,7 @@ const MODEL_NAME = mongoose.Schema(
 				name: { type: String, required: true },
 				urlName: { type: String, required: true },
 				gogoUrlName: { type: String, required: true },
-				description: { type: String, required: true },
+				description: { type: String, default: '' },
 				id: { type: Number, required: true },
 				poster: {
 					small: String,

@@ -46,6 +46,10 @@ export default function Anime() {
 		// }
 	}, [animeMeta]);
 
+	useEffect(() => {
+		NProgress.done(true);
+	}, [params]);
+
 	if (!animeMeta) return null;
 
 	return (
@@ -54,10 +58,11 @@ export default function Anime() {
 
 			<main className={styles.mainContainer}>
 				<div className={styles.imageContainer}>
-					<img
-						src={isAnime ? animeMeta.poster.large : currentSeason.poster.large}
-						alt={animeMeta.title}
-					/>
+					{isAnime ? (
+						<img src={animeMeta.poster.large} alt={animeMeta.title} />
+					) : (
+						<img src={currentSeason.poster.large} alt={currentSeason.name} />
+					)}
 				</div>
 
 				<div className={styles.dataContainer}>

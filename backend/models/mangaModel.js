@@ -6,13 +6,13 @@ const MODEL_NAME = mongoose.Schema(
 		originalName: { type: String, required: true },
 		urlName: { type: String, required: true },
 
-		chapters: [
-			{
-				name: { type: String, required: true },
-				urlName: { type: String, required: true },
-				_id: false
-			},
-		],
+		// chapters: [
+		// 	{
+		// 		name: { type: String, required: true },
+		// 		urlName: { type: String, required: true },
+		// 		_id: false
+		// 	},
+		// ],
 		currentChapter: { type: String, required: true },
 
 		lastUpdatePingedChapter: { type: String, required: false },

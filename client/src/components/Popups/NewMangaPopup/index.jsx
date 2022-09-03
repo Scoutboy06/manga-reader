@@ -65,13 +65,10 @@ export default function NewMangaPopup({ closePopup }) {
 				isSubscribed,
 				userId: profileData.currentProfile._id,
 			}),
-		})
-			.then(res => {
-				if (res.ok) window.location.reload();
-				return res.json();
-				// console.log(res);
-			})
-			.then(console.log);
+		}).then(res => {
+			console.log(res);
+			if (res.ok) window.location.reload();
+		});
 	};
 
 	return (

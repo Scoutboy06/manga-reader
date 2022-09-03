@@ -10,8 +10,13 @@
 
 .section1,
 .section2 > div {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(180px, auto));
+}
+
+.section1 > div,
+.section2 > div > div {
+	width: unset !important;
 }
 
 .section2 {
@@ -30,7 +35,7 @@
 }
 
 .section2[data-show='true'] > div {
-	display: flex;
+	display: grid;
 }
 
 .toggleFinshedMangasButton {
