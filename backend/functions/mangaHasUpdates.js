@@ -18,15 +18,15 @@ export default async function mangaHasUpdates(manga, cache) {
 
 	const url = encodeURI(
 		host.path
-			.replace('%name%', manga.urlName)
-			.replace('%chapter%', manga.currentChapter)
+			.replace('%name', manga.urlName)
+			.replace('%chapter', manga.currentChapter)
 	);
 
 	const raw = await fetch(url);
 	const html = await raw.text();
 	const document = HTMLParser.parse(html);
 
-	const nextBtn = document.querySelector(host.chapterNameSelectors.next);
+	const nextBtn = document.querySelector(host.chapterPage.nextPage);
 
 	const hasUpdates = !!nextBtn;
 	updatesCache.put(manga._id, hasUpdates, 1000 * 60 * 60);

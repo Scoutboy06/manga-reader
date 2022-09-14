@@ -45,15 +45,15 @@ export default function Mangas() {
 			<section className={styles.section1}>
 				{mangas?.map(
 					manga =>
-						!manga.hasFinishedReading && (
+						!manga.hasRead && (
 							<MediaCard
 								key={manga._id}
 								type='manga'
-								title={manga.name}
+								title={manga.name || manga.title}
 								subtitle={parseChapterName(manga.currentChapter)}
 								href={`/mangas/${manga.urlName}`}
-								imgUrl={manga.coverUrl}
-								completed={false}
+								imgUrl={manga.coverUrl || manga.poster}
+								completed={{ name: 'hasRead', value: manga.hasRead }}
 								id={manga._id}
 								seriesHref={null}
 								dropdownItems={[
@@ -146,15 +146,15 @@ export default function Mangas() {
 				<div>
 					{mangas?.map(
 						manga =>
-							manga.hasFinishedReading && (
+							manga.hasRead && (
 								<MediaCard
 									key={manga._id}
 									type='manga'
-									title={manga.name}
+									title={manga.name || manga.title}
 									subtitle={parseChapterName(manga.currentChapter)}
 									href={`/mangas/${manga.urlName}`}
-									imgUrl={manga.coverUrl}
-									completed={true}
+									imgUrl={manga.coverUrl || manga.poster}
+									completed={{ name: 'hasRead', value: manga.hasRead }}
 									id={manga._id}
 									seriesHref={null}
 									dropdownItems={[

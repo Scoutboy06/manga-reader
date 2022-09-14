@@ -15,25 +15,7 @@ export const getAllHosts = asyncHandler(async (req, res) => {
 // @desc	Create add a new host
 // @route	POST /hosts
 export const createHost = asyncHandler(async (req, res) => {
-	const {
-		hostName,
-		path,
-		imgSelector,
-		detailsPage,
-		coverSelector,
-		search,
-		needProxy,
-	} = req.body;
-
-	const host = new Host({
-		hostName,
-		path,
-		imgSelector,
-		detailsPage,
-		coverSelector,
-		search,
-		needProxy,
-	});
+	const host = new Host(req.body);
 
 	const createdHost = await host.save();
 	res.status(201).json(createdHost);

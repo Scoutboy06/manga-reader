@@ -20,7 +20,7 @@ export default function MediaCard({
 	title,
 	subtitle,
 	type = 'folder',
-	completed = false,
+	completed = { name: 'completed', value: false },
 	id,
 	seriesHref,
 	dropdownItems = [],
@@ -67,7 +67,7 @@ export default function MediaCard({
 										fetchAPI(`/mangas/${id}`, {
 											method: 'PATCH',
 											body: JSON.stringify({
-												completed: !completed,
+												[completed.name]: !completed.value,
 											}),
 										}).then(() => window.location.reload());
 									}

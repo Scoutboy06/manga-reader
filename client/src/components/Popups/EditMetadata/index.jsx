@@ -14,9 +14,7 @@ export default function EditMetadata({ closePopup, data: manga }) {
 	const [isSubscribed, setIsSubscribed] = useState(manga.isSubscribed);
 	const [hostId, setHostId] = useState(manga.hostId);
 
-	const [hasFinishedReading, setHasFinishedReading] = useState(
-		manga.hasFinishedReading
-	);
+	const [hasRead, setHasRead] = useState(manga.hasRead);
 	const [ownerId, setOwnerId] = useState(manga.ownerId);
 
 	const submitHandler = e => {
@@ -30,7 +28,7 @@ export default function EditMetadata({ closePopup, data: manga }) {
 				currentChapter,
 				isSubscribed,
 				hostId,
-				hasFinishedReading,
+				hasRead,
 				ownerId,
 			}),
 		}).then(() => window.location.reload());
@@ -66,14 +64,14 @@ export default function EditMetadata({ closePopup, data: manga }) {
 				</div>
 
 				<div className={styles.formGroup}>
-					<label htmlFor='hasFinishedReading'>Finished reading:</label>
+					<label htmlFor='hasRead'>Finished reading:</label>
 					<button
 						type='button'
 						className='checkbox'
-						name='hasFinishedReading'
-						id='hasFinishedReading'
-						data-ischecked={hasFinishedReading}
-						onClick={() => setHasFinishedReading(bool => !bool)}
+						name='hasRead'
+						id='hasRead'
+						data-ischecked={hasRead}
+						onClick={() => setHasRead(bool => !bool)}
 					></button>
 				</div>
 

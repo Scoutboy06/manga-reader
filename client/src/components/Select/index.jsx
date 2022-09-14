@@ -5,7 +5,12 @@ import Dropdown from '../Dropdown';
 
 import styles from './index.module.css';
 
-export default function Select({ children, value, onChange }) {
+export default function Select({
+	children,
+	value,
+	onChange,
+	multiple = false,
+}) {
 	const [selectedValue, setSelectedValue] = useState({
 		value,
 		display: children.find(el => el.props.value === value)?.props?.children,

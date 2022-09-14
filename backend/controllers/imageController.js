@@ -8,8 +8,7 @@ const getImageFromUrl = asyncHandler(async (req, res) => {
 		(req.params['0'].startsWith('https://') ? '' : 'https://') +
 		req.params['0'];
 
-	const raw = await fetch(imgUrl);
-	const blob = await raw.blob();
+	const blob = await fetch(imgUrl).then(res => res.blob());
 	const buf = await blob.arrayBuffer();
 
 	res.status(200).send(Buffer.from(buf));

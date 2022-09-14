@@ -26,19 +26,19 @@ export default function Read() {
 
 	const paginate = dir => {
 		window.scrollTo(0, 0);
-		// const { chapters } = metadata;
+		const { chapters } = metadata;
 
-		// const currentChapter = chapters.find(
-		// 	chapter => chapter.urlName === params.chapter
-		// );
-		// const currentChapterIndex = chapters.indexOf(currentChapter);
+		const currentChapter = chapters.find(
+			chapter => chapter.urlName === params.chapter
+		);
+		const currentChapterIndex = chapters.indexOf(currentChapter);
 
 		if (dir === -1) {
-			// const prevChapter = chapters[currentChapterIndex - 1];
-			navigate(`/mangas/${metadata.urlName}/${chapterMeta.prevPath}`);
+			const prevChapter = chapters[currentChapterIndex - 1];
+			navigate(`/mangas/${metadata.urlName}/${prevChapter.urlName}`);
 		} else if (dir === 1) {
-			// const nextChapter = chapters[currentChapterIndex + 1];
-			navigate(`/mangas/${metadata.urlName}/${chapterMeta.nextPath}`);
+			const nextChapter = chapters[currentChapterIndex + 1];
+			navigate(`/mangas/${metadata.urlName}/${nextChapter.urlName}`);
 		}
 	};
 
@@ -88,13 +88,13 @@ export default function Read() {
 			setIsLoading(false);
 
 			// Sync chapter with server
-			fetchAPI(`/mangas/${metadata._id}/updates`, {
-				method: 'PATCH',
-				body: JSON.stringify({
-					chapter: params.chapter,
-					isLast: !chapMeta.nextPath,
-				}),
-			});
+			// fetchAPI(`/mangas/${metadata._id}/updates`, {
+			// 	method: 'PATCH',
+			// 	body: JSON.stringify({
+			// 		chapter: params.chapter,
+			// 		isLast: !chapMeta.nextPath,
+			// 	}),
+			// });
 		}
 
 		if (metadata) loadChapter();
@@ -103,7 +103,16 @@ export default function Read() {
 	return (
 		<>
 			<div className={styles.header}>
-				<h2 className={styles.title}>Chapter {chapterMeta?.chapterTitle}</h2>
+				{/* <h2 className={styles.title}>Chapter {chapterMeta?.chapterTitle}</h2> */}
+				<div style={{ marginBottom: 10 }}>
+					<Select onChange={console.log} className={styles.chapterSelect}>
+						{metadata?.chapters?.reverse()?.map(chapter => (
+							<option value={chapter.urlName} key={chapter.urlName}>
+								{chapter.title}
+							</option>
+						))}
+					</Select>
+				</div>
 
 				<div className={styles.container} style={{ marginBottom: 30 }}>
 					<a

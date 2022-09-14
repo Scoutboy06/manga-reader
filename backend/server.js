@@ -6,14 +6,17 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import fetch from 'node-fetch'
+import chalk from 'chalk';
 
 import connectDB from './config/db.js';
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
-import parseArguments from './functions/parseArguments.js';
+// import parseArguments from './functions/parseArguments.js';
+import updatesChecker from './functions/updatesChecker.js';
 
 import router from './router.js';
+// import getMangaMetadata from './functions/manga/getMetadata.js';
 
 import { getMangaUpdates } from './controllers/updatesController.js';
 
@@ -56,11 +59,18 @@ app.use('/tmdb/*', asyncHandler(async (req, res) => {
 
 app.get('/getUpdates', getMangaUpdates);
 
+app.use('/test', async (req, res) => {
+	// const mangas = await Manga.find({});
+	// const hosts = await Host.find({});
+
+	res.json({});
+});
+
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-	parseArguments();
+	// updatesChecker();
 });

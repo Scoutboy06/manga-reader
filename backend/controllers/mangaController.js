@@ -8,6 +8,7 @@ import User from '../models/userModel.js';
 
 import { updatesCache } from '../functions/mangaHasUpdates.js';
 import getChapterNumber from '../functions/getChapterNumber.js';
+import getMangaMeta from '../functions/manga/getMetadata.js';
 
 // @desc	Get all of the user's mangas, with search functionality
 // @route	GET /users/:userId/mangas
@@ -62,72 +63,44 @@ export const createManga = asyncHandler(async (req, res) => {
 	const { userId } = req.params;
 
 	const {
-		hostName,
+		hostId,
 		urlName,
-		isSubscribed,
+		sourceUrlName,
+		title,
+		poster,
 	} = req.body;
 
 	const user = await User.findById(userId);
 	if (!user) {
-		res.status(404);
-		throw new Error('User not found');
+		res.status(401);
+		throw new Error('Invalid user id');
 	}
 
-	const host = await Host.findOne({ hostName });
-	if (!host) {
-		res.status(404);
-		throw new Error('Host not found : ' + hostName);
-	}
-
-
-	const html = await fetch(host.detailsPage.replace('%name%', urlName)).then(res => res.text());
-	const document = HTMLParser.parse(html);
-
-	const name = document.querySelector('.post-title h1').textContent.trim();
-	const coverEl = document.querySelector('.summary_image a img');
-	const coverUrl = (
-		coverEl.getAttribute('data-src') ||
-		coverEl.getAttribute('data-srcset') ||
-		coverEl.getAttribute('src')
-	).trim();
-
-	const chapters = (() => {
-		const containerEl = document.querySelector('ul.main.version-chap');
-		const chapterEls = containerEl.querySelectorAll('li > a');
-
-		const chapterData = chapterEls.map(el => {
-			const name = el.textContent.trim();
-
-			const href = el.getAttribute('href').trim().split('/');
-			const urlName = href[href.length - 2];
-
-			return { name, urlName };
-		});
-
-		return chapterData.reverse();
-	})();
+	const meta = await getMangaMeta(sourceUrlName, hostId);
 
 	const manga = new Manga({
-		name,
-		originalName: name,
-		urlName: urlName,
+		ownerId: userId,
+		hostId,
+		urlName,
+		sourceUrlName,
 
-		// chapters,
-		// currentChapter: chapters[0].urlName,
-		currentChapter: 'chapter-1',
+		title,
+		description: meta.description,
 
-		// lastUpdatePingedChapter: null
-		isSubscribed,
+		chapters: meta.chapters,
+		currentChapter: meta.chapters[0].urlName,
 
-		coverUrl,
-		originalCoverUrl: coverUrl.trim(),
+		otherNames: meta.otherNames,
+		authors: meta.authors,
+		artists: meta.artists,
+		genres: meta.genres,
+		released: meta.released,
+		status: meta.status,
 
-		hostId: host._id,
-		ownerId: user._id,
+		poster,
 	});
 
 	const createdManga = await manga.save();
-
 	res.status(201).json(createdManga);
 });
 
@@ -178,61 +151,43 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 	const manga = await Manga.findById(mangaId);
 	if (!manga) {
 		res.status(404);
-		throw new Error('Manga not found')
+		throw new Error('Manga not found');
 	}
+
+	const currentChapter = manga.chapters.find(ch => ch.urlName === chapter);
+
 	const host = await Host.findById(manga.hostId);
+	const url = host.chapterPage.url.replace('%name', manga.sourceUrlName).replace('%chapter', currentChapter.sourceUrlName);
 
-	let url = host.path.replace('%name%', manga.urlName).replace('%chapter%', chapter);
-
-	const raw = await fetch(url);
-	const html = await raw.text();
+	const html = await fetch(url).then(res => res.text());
 	const document = HTMLParser.parse(html);
 
-	const images = document.querySelectorAll(host.imgSelector.querySelector);
+	const imageEls = document.querySelectorAll(host.chapterPage.images);
 	const srcs = [];
 
-	for (const img of images) {
-		// let src = img.getAttribute(host.imgSelector.attrSelector);
-		let src = img.getAttribute('data-src') || img.getAttribute('data-setsrc') || img.getAttribute('src');
-
-		if (!src) {
-			res.status(507).json({
-				message: `Invalid attribute selector for host ${host.hostName}`,
-				originalUrl: url,
-				hostName: host.hostName,
-				hostId: host._id,
-			});
-			return;
-		}
+	for (const img of imageEls) {
+		let src = img.getAttribute('data-src') ||
+			img.getAttribute('data-setsrc') ||
+			img.getAttribute('src');
 
 		src = src.trim();
-
-		// if(host.needProxy) {
-		// 	src = 'http://127.0.0.1:5000/image/' + src;
-		// }
-
 		srcs.push(src);
 	}
 
-	if (srcs.length === 0) throw new Error(404);
+	if (srcs.length === 0) {
+		res.status(404);
+		throw new Error('No images found');
+	}
 
-	const parent = document.querySelector(host.chapterNameSelectors.parent);
-	const prevBtn = parent.querySelector(host.chapterNameSelectors.prev);
-	const nextBtn = parent.querySelector(host.chapterNameSelectors.next);
-
-	let path = host.path;
-	// if(host.path[host.path.length - 1] === '/') host.path = host.path.slice(0, host.path.length - 1);
+	const prevBtn = document.querySelector(host.chapterPage.prevPage);
+	const nextBtn = document.querySelector(host.chapterPage.nextPage);
 
 	const getPrevAndNextLinks = btn => {
 		if (!btn) return null;
 
 		const url = btn.getAttribute('href');
-		const reg = RegExp(
-			path.replace('%name%', manga.urlName).replace('%chapter%', '([a-z0-9:/.-]+)')
-		);
-		const match = url.match(reg);
-
-		return match[1];
+		const split = url.split('/');
+		return split[split.length - 2];
 	};
 
 	const prevPath = getPrevAndNextLinks(prevBtn);
