@@ -23,17 +23,6 @@ export default function Mangas() {
 		`/users/${profileData.currentProfile._id}/mangas`
 	);
 
-	const { data: updates, error: updatesError } = useSWR(
-		() =>
-			'/getUpdates?' +
-			new URLSearchParams({
-				cache: true,
-				mangas: mangas
-					.filter(manga => manga.isSubscribed)
-					.map(manga => manga._id),
-			})
-	);
-	const isFetchingUpdates = !updates && !updatesError;
 	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
 
 	return (
@@ -120,8 +109,7 @@ export default function Mangas() {
 										},
 									},
 								]}
-								showSpinner={manga.isSubscribed && isFetchingUpdates}
-								hasUpdates={!!updates?.[manga._id]}
+								hasUpdates={manga.hasUpdates}
 							/>
 						)
 				)}

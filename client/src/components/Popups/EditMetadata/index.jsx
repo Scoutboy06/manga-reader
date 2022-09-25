@@ -7,7 +7,7 @@ import styles from './EditMetadata.module.css';
 export default function EditMetadata({ closePopup, data: manga }) {
 	const [showAdvanced, setShowAdvanced] = useState(false);
 
-	const [name, setName] = useState(manga.name);
+	const [title, setName] = useState(manga.title);
 
 	const [urlName, setUrlName] = useState(manga.urlName);
 	const [currentChapter, setCurrentChapter] = useState(manga.currentChapter);
@@ -23,7 +23,7 @@ export default function EditMetadata({ closePopup, data: manga }) {
 		fetchAPI(`/mangas/${manga._id}`, {
 			method: 'PATCH',
 			body: JSON.stringify({
-				name,
+				title,
 				urlName,
 				currentChapter,
 				isSubscribed,
@@ -38,17 +38,14 @@ export default function EditMetadata({ closePopup, data: manga }) {
 		<form className={styles.container} onSubmit={submitHandler}>
 			<main className={styles.main}>
 				<div className={styles.formGroup}>
-					<label htmlFor='name'>Name:</label>
+					<label htmlFor='title'>Title:</label>
 					<input
 						type='text'
-						name='name'
-						id='name'
-						value={name}
+						name='title'
+						id='title'
+						value={title}
 						onChange={e => setName(e.target.value)}
 					/>
-					<button onClick={() => setName(manga.originalName)} type='button'>
-						Revert to original name
-					</button>
 				</div>
 
 				<div className={styles.formGroup}>

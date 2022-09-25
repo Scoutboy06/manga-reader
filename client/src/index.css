@@ -109,61 +109,6 @@ svg {
 	visibility: hidden;
 }
 
-.button {
-	text-decoration: none;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-
-	border: 1px solid #222;
-	background: transparent;
-	border-radius: 4px;
-	font-family: inherit;
-	transition: box-shadow, background 0.2s;
-	user-select: none;
-}
-
-.button[disabled] {
-	opacity: 0.3;
-	user-select: none;
-	pointer-events: none;
-}
-
-.button:not([disabled]):hover {
-	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
-	background: #303030;
-	cursor: pointer;
-}
-
-.button img,
-.button svg {
-	padding: 5px 8px;
-}
-
-.button svg {
-	fill: #fff;
-	height: 100%;
-}
-
-.button span {
-	color: #fff;
-	width: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 0pt;
-}
-
-.button.icon-left img,
-.button.icon-left svg {
-	padding-right: 0px;
-}
-
-.button.icon-right img,
-.button.icon-right svg {
-	padding-left: 0px;
-}
-
 .checkbox {
 	width: 3.5em;
 	height: 1.5em;
