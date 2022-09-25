@@ -115,7 +115,7 @@ export const updateManga = asyncHandler(async (req, res) => {
 	}
 
 	for (const key of Object.keys(req.body)) {
-		if (key === '_id' || key === 'originalName' || key === 'originalCoverUrl' || key === 'isLast') {
+		if (key === '_id' || key === 'isLast') {
 			continue;
 		}
 
@@ -137,6 +137,30 @@ export const deleteManga = asyncHandler(async (req, res) => {
 	await manga.remove();
 	res.json({ message: `Manga ${manga.name} was removed from library` });
 });
+
+// @desc	Update the current chapter
+// @route	PATCH /mangas/:mangaId/currentChapter
+export const updateCurrentChapter = asyncHandler(async (req, res) => {
+	console.log('Hello');
+	const { mangaId } = req.params;
+	const { currentChapter } = req.body;
+
+	const manga = await Manga.findById(mangaId);
+	if (!manga) {
+		res.status(404);
+		throw new Error('No manga found');
+	}
+
+	manga.currentChapter = currentChapter;
+	if (manga.hasUpdates && manga.chapters[manga.chapters.length - 1].urlName === currentChapter) {
+		manga.hasUpdates = false;
+	}
+
+	console.log(manga.hasUpdates);
+
+	await manga.save();
+	res.json({});
+})
 
 // @desc	Get images from a chapter
 // @route	GET /mangas/:mangaId/:chapter

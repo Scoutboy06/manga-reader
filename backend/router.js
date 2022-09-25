@@ -9,6 +9,7 @@ import {
 	deleteManga,
 	getImageUrls,
 	getMangaByName,
+	updateCurrentChapter,
 } from './controllers/mangaController.js';
 import { searchManga } from './controllers/searchController.js';
 import {
@@ -51,7 +52,7 @@ router.route('/mangas/:mangaId')
 	.get(getMangaById)
 	.delete(deleteManga)
 	.patch(updateManga);
-router.patch('/mangas/:mangaId/updates', updateProgress);
+router.post('/mangas/:mangaId/currentChapter', updateCurrentChapter);
 router.get('/mangas/:mangaId/:chapter', getImageUrls);
 
 // Animes

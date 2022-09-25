@@ -96,13 +96,10 @@ export default function Read() {
 			setIsLoading(false);
 
 			// Sync chapter with server
-			// fetchAPI(`/mangas/${metadata._id}/updates`, {
-			// 	method: 'PATCH',
-			// 	body: JSON.stringify({
-			// 		chapter: params.chapter,
-			// 		isLast: !chapMeta.nextPath,
-			// 	}),
-			// });
+			fetchAPI(`/mangas/${metadata._id}/currentChapter`, {
+				method: 'POST',
+				body: JSON.stringify({ currentChapter: params.chapter }),
+			});
 		}
 
 		if (metadata) loadChapter();
