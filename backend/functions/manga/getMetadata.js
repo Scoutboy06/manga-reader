@@ -11,8 +11,6 @@ export default async function getMangaMeta(urlName, hostId) {
 	const html = await fetch(detailsPage.url.replace('%name', urlName)).then(res => res.text());
 	const document = HTMLParser.parse(html);
 
-	console.log(detailsPage);
-
 	const title = document.querySelector(detailsPage.title).textContent.trim();
 	const description = document.querySelector(detailsPage.description).textContent.trim();
 
@@ -29,7 +27,6 @@ export default async function getMangaMeta(urlName, hostId) {
 
 	const chapters = [];
 	const chapterEls = document.querySelectorAll(detailsPage.chapters);
-	console.log(`${chapterEls.length} chapters found`);
 	[...chapterEls].reverse().forEach((chapterEl, i) => {
 		const titleEl = chapterEl.querySelector('a');
 		const title = titleEl.textContent.trim();
@@ -39,7 +36,6 @@ export default async function getMangaMeta(urlName, hostId) {
 		})();
 
 		const chapterNumber = title.match(/chapter (\d+\.?\d*)/i)?.[1];
-
 		if (!chapterNumber) return;
 
 		chapters.push({

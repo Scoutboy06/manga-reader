@@ -18,12 +18,11 @@ import updatesChecker from './functions/updatesChecker.js';
 import router from './router.js';
 // import getMangaMetadata from './functions/manga/getMetadata.js';
 
-import { getMangaUpdates } from './controllers/updatesController.js';
-
 import Manga from './models/mangaModel.js';
 import Host from './models/hostModel.js';
+import Anime from './models/animeModel.js';
 
-import sendDiscordWebhookUpdate from './functions/sendDiscordWebhookUpdate.js';
+import sendDiscordWebhookUpdate from './functions/sendDiscordWebhook.js';
 import asyncHandler from 'express-async-handler';
 
 const __dirname = path.resolve();
@@ -57,11 +56,10 @@ app.use('/tmdb/*', asyncHandler(async (req, res) => {
 	res.json(data);
 }));
 
-app.get('/getUpdates', getMangaUpdates);
-
 app.use('/test', async (req, res) => {
 	// const mangas = await Manga.find({});
 	// const hosts = await Host.find({});
+	// const animes = await Anime.find({});
 
 	res.json({});
 });
@@ -72,5 +70,5 @@ app.use(errorHandler);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-	// updatesChecker();
+	updatesChecker();
 });

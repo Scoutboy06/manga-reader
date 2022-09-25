@@ -6,7 +6,6 @@ import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
-import { updatesCache } from '../functions/mangaHasUpdates.js';
 import getChapterNumber from '../functions/getChapterNumber.js';
 import getMangaMeta from '../functions/manga/getMetadata.js';
 
@@ -116,11 +115,7 @@ export const updateManga = asyncHandler(async (req, res) => {
 	}
 
 	for (const key of Object.keys(req.body)) {
-		if (key === '_id' || key === 'originalName' || key === 'originalCoverUrl') {
-			continue;
-		} else if (key === 'isLast') {
-			const isLast = !req.body.isLast;
-			if (manga.subscribed) updatesCache.put(manga._id, !isLast);
+		if (key === '_id' || key === 'originalName' || key === 'originalCoverUrl' || key === 'isLast') {
 			continue;
 		}
 

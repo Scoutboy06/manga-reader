@@ -5,8 +5,8 @@ import fetch from 'node-fetch';
 import Anime from '../models/animeModel.js';
 import User from '../models/userModel.js';
 
-import getAnimeMeta from '../functions/scrape/getAnimeMeta.js';
-import getAnimeEpisode from '../functions/scrape/getAnimeEpisode.js';
+import getAnimeMeta from '../functions/anime/getAnimeMeta.js';
+import getAnimeEpisode from '../functions/anime/getAnimeEpisode.js';
 
 // @desc	Fetch the user's anime landing page
 // @route	GET /users/:userId/animes

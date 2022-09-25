@@ -30,6 +30,7 @@ const MODEL_NAME = mongoose.Schema(
 						_id: false,
 					},
 				],
+				hasUpdates: { type: Boolean, default: false },
 				_id: false,
 			}
 		],
@@ -42,7 +43,9 @@ const MODEL_NAME = mongoose.Schema(
 
 		isFavorite: { type: Boolean, default: false },
 		hasWatched: { type: Boolean, default: false },
+		updatesOn: { type: Boolean, default: false },
 		notificationsOn: { type: Boolean, default: false },
+		hasUpdates: { type: Boolean, default: false },
 
 		poster: {
 			small: String,
