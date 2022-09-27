@@ -9,7 +9,7 @@ import getAnimeMeta from './anime/getAnimeMeta.js';
 import sendDiscordWebhookUpdate from './sendDiscordWebhook.js';
 
 export default async function updatesChecker() {
-	const intervalDelay = 30; // minutes
+	const intervalDelay = 120; // minutes
 	console.log(chalk.blue(`Updates checker is activated with an interval of ${intervalDelay} minutes.`));
 
 	const checkUpdates = () => {
