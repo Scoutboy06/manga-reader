@@ -13,7 +13,7 @@ export default async function updatesChecker() {
 	console.log(chalk.blue(`Updates checker is activated with an interval of ${intervalDelay} minutes.`));
 
 	const checkUpdates = () => {
-		// checkMangaUpdates();
+		checkMangaUpdates();
 		checkAnimeUpdates();
 	}
 
