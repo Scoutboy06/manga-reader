@@ -50,28 +50,26 @@ export default function Read() {
 			setIsLoading(true);
 
 			const meta = await fetchAPI(
-				`/users/${profileData.currentProfile._id}/mangas?` +
-					new URLSearchParams({
-						query: params.name,
-						limit: 1,
-					}),
-				{},
-				false
+				`/users/${profileData.currentProfile._id}/mangas/${params.name}`
 			);
 
-			setMetadata(meta[0]);
+			setMetadata(meta);
 
 			if (!params.chapter) {
-				navigate(`/mangas/${params.name}/${meta[0].currentChapter}`, {
+				navigate(`/mangas/${params.name}/${meta.currentChapter}`, {
 					replace: true,
 				});
 			}
 
-			const currentChapterIndex = meta[0].chapters.findIndex(
-				chapter => chapter.urlName === meta[0].currentChapter
+			const currentChapterIndex = meta.chapters.findIndex(
+				chapter => chapter.urlName === meta.currentChapter
 			);
-			setNextChapter(meta[0].chapters[currentChapterIndex + 1]);
-			setPrevChapter(meta[0].chapters[currentChapterIndex - 1]);
+			console.log(
+				meta.chapters[currentChapterIndex + 1],
+				meta.chapters[currentChapterIndex - 1]
+			);
+			setNextChapter(meta.chapters[currentChapterIndex + 1]);
+			setPrevChapter(meta.chapters[currentChapterIndex - 1]);
 
 			setIsLoading(false);
 		}

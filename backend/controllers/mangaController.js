@@ -55,8 +55,11 @@ export const getMangaByName = asyncHandler(async (req, res) => {
 	// const user = await User.findById(userId);
 	// if (!user) return res.status(404).json({ error: 'User not found' });
 
-	const manga = Manga.findOne({ ownerId: userId, urlName: mangaName });
-	if (!manga) return res.status(404).json({ error: 'Manga not found' });
+	const manga = await Manga.findOne({ ownerId: userId, urlName: mangaName });
+	if (!manga) {
+		res.status(404);
+		throw new Error('No manga found');
+	}
 
 	res.json(manga);
 });
