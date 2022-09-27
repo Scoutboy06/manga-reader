@@ -19,7 +19,6 @@ import {
 	getAllUsers,
 	getUserById,
 } from './controllers/userController.js';
-import { updateProgress } from './controllers/updatesController.js';
 import {
 	addAnimeToLibrary,
 	getAnimeLibrary,

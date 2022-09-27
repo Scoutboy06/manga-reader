@@ -1,7 +1,5 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { useParams, useOutletContext } from 'react-router-dom';
-
-import getChapterNumber from '../../functions/getChapterNumber';
+import { useOutletContext } from 'react-router-dom';
 
 import Loader from '../../components/Loader';
 
@@ -10,9 +8,8 @@ import { SettingsContext } from '../../contexts/SettingsContext';
 import styles from './read.module.css';
 
 export default function Manga() {
-	const params = useParams();
 	const [{ contentWidth }] = useContext(SettingsContext);
-	const { isLoading, content: images } = useOutletContext();
+	const { isLoading, chapterMeta } = useOutletContext();
 
 	const [imageScrollProgress, setImageScrollProgress] = useState('-');
 
@@ -20,9 +17,10 @@ export default function Manga() {
 	const imageSizes = useRef([]);
 
 	const scrollHandler = () => {
+		if (!chapterMeta?.images) return;
 		let currentImageIndex = 0;
 
-		for (let i = 0; i < images.length; i++) {
+		for (let i = 0; i < chapterMeta.images.length; i++) {
 			const imgY = imageSizes.current[i];
 
 			if (window.scrollY + window.innerHeight * 0.5 > imgY) {
@@ -33,8 +31,8 @@ export default function Manga() {
 		setImageScrollProgress(currentImageIndex + 1);
 	};
 
-	const setImagesTopCoords = (start = 0, end = images.length) => {
-		if (!images) return;
+	const setImagesTopCoords = (start = 0, end = chapterMeta?.images?.length) => {
+		if (!chapterMeta?.images) return;
 
 		for (let i = start; i < end; i++) {
 			const el = imagesContainerRef.current.children[i];
@@ -52,7 +50,7 @@ export default function Manga() {
 	};
 
 	useEffect(() => {
-		if (images) {
+		if (chapterMeta?.images) {
 			document.addEventListener('scroll', scrollHandler);
 			window.addEventListener('resize', setImagesTopCoords);
 			setImagesTopCoords();
@@ -63,7 +61,7 @@ export default function Manga() {
 			window.removeEventListener('resize', setImagesTopCoords);
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [images]);
+	}, [chapterMeta]);
 
 	useEffect(() => {
 		const ANIMATION_DURATION = 300;
@@ -93,29 +91,28 @@ export default function Manga() {
 					</div>
 				) : (
 					<>
-						{images &&
-							images.map((image, index) => (
-								<div
-									className={styles.imageContainer}
-									key={index}
-									data-isloaded={false}
-								>
-									{/* eslint-disable-next-line jsx-a11y/alt-text */}
-									<img
-										src={image}
-										loading='lazy'
-										onLoad={e => imageLoadHandler(e, index)}
-									/>
-								</div>
-							))}
+						{chapterMeta?.images?.map((image, index) => (
+							<div
+								className={styles.imageContainer}
+								key={index}
+								data-isloaded={false}
+							>
+								{/* eslint-disable-next-line jsx-a11y/alt-text */}
+								<img
+									src={image}
+									loading='lazy'
+									onLoad={e => imageLoadHandler(e, index)}
+								/>
+							</div>
+						))}
 					</>
 				)}
 			</section>
 
 			<div className={styles.progressContainer}>
-				<span>Ch. {getChapterNumber(params.chapter)}</span>
+				<span>Ch. {chapterMeta?.number}</span>
 				<span>
-					{imageScrollProgress || '-'} / {images?.length || '-'}
+					{imageScrollProgress || '-'} / {chapterMeta?.number || '-'}
 				</span>
 			</div>
 		</>

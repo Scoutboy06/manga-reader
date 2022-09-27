@@ -108,7 +108,7 @@ export default function Read() {
 	return (
 		<>
 			<div className={styles.header}>
-				<h2 className={styles.title}>Chapter {chapterMeta?.chapterTitle}</h2>
+				<h2 className={styles.title}>{chapterMeta?.title}</h2>
 				<div style={{ marginBottom: 10 }}>
 					{/* <Select onChange={console.log} className={styles.chapterSelect}>
 						{metadata?.chapters?.reverse()?.map(chapter => (
@@ -190,7 +190,7 @@ export default function Read() {
 			<Outlet
 				context={{
 					isLoading,
-					content: chapterMeta?.images || [],
+					chapterMeta,
 				}}
 			/>
 

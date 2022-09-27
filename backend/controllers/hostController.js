@@ -26,6 +26,9 @@ export const createHost = asyncHandler(async (req, res) => {
 export const getHostById = asyncHandler(async (req, res) => {
 	const { hostId } = req.params;
 	const host = await Host.findById(hostId);
-	if (!host) return res.status(404).json({ error: 'Not found' });
+	if (!host) {
+		res.status(404);
+		throw new Error('No host found');
+	}
 	res.json(host);
 });

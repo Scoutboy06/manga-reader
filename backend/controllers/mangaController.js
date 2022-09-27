@@ -26,9 +26,14 @@ export const getUserMangas = asyncHandler(async (req, res) => {
 	const user = await User.findById(userId);
 	if (!user) return res.status(404).json({ error: 'No user found' });
 
-	const mangas = await Manga.find({ ownerId: user._id, ...keyword })
+	let mangas = await Manga.find({ ownerId: user._id, ...keyword })
 		.limit(limit)
 		.skip(skip);
+
+
+	for (let manga of mangas) {
+		manga.chapters = undefined;
+	}
 
 	res.json(mangas);
 });
@@ -141,7 +146,6 @@ export const deleteManga = asyncHandler(async (req, res) => {
 // @desc	Update the current chapter
 // @route	PATCH /mangas/:mangaId/currentChapter
 export const updateCurrentChapter = asyncHandler(async (req, res) => {
-	console.log('Hello');
 	const { mangaId } = req.params;
 	const { currentChapter } = req.body;
 
@@ -155,8 +159,6 @@ export const updateCurrentChapter = asyncHandler(async (req, res) => {
 	if (manga.hasUpdates && manga.chapters[manga.chapters.length - 1].urlName === currentChapter) {
 		manga.hasUpdates = false;
 	}
-
-	console.log(manga.hasUpdates);
 
 	await manga.save();
 	res.json({});
@@ -198,27 +200,17 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 		throw new Error('No images found');
 	}
 
-	const prevBtn = document.querySelector(host.chapterPage.prevPage);
-	const nextBtn = document.querySelector(host.chapterPage.nextPage);
-
-	const getPrevAndNextLinks = btn => {
-		if (!btn) return null;
-
-		const url = btn.getAttribute('href');
-		const split = url.split('/');
-		return split[split.length - 2];
-	};
-
-	const prevPath = getPrevAndNextLinks(prevBtn);
-	const nextPath = getPrevAndNextLinks(nextBtn);
-
-	const chapterTitle = getChapterNumber(document.querySelector('#chapter-heading').textContent.trim());
+	// {
+	// 	"title": "Chapter 1",
+	// 	"number": 1,
+	// 	"urlName": "chapter-1",
+	// 	"sourceUrlName": "chapter-1"
+	// },
 
 	res.json({
-		prevPath,
-		nextPath,
-		originalUrl: url,
+		title: currentChapter.title,
+		number: currentChapter.number,
 		images: srcs,
-		chapterTitle,
+		originalUrl: url,
 	});
 });

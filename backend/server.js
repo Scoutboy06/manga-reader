@@ -70,5 +70,6 @@ app.use(errorHandler);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
-	updatesChecker();
+
+	if (!process.argv.find(arg => arg === '--no-updates')) updatesChecker();
 });
