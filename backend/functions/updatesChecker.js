@@ -23,7 +23,7 @@ export default async function updatesChecker() {
 
 export async function checkMangaUpdates() {
 	console.log(chalk.yellow('Checking manga updates...'));
-	const subscribedMangas = await Manga.find({ isSubscribed: true, hasUpdates: false });
+	const subscribedMangas = await Manga.find({ isSubscribed: true });
 	let updates = 0;
 
 	await Promise.all(subscribedMangas.map(manga => new Promise(async (resolve, reject) => {
@@ -67,7 +67,7 @@ export async function checkMangaUpdates() {
 
 export async function checkAnimeUpdates() {
 	console.log(chalk.yellow('Checking anime updates...'));
-	const subscribedAnimes = await Anime.find({ isSubscribed: true, hasUpdates: false });
+	const subscribedAnimes = await Anime.find({ isSubscribed: true });
 	let updates = 0;
 
 	await Promise.all(subscribedAnimes.map(anime => new Promise(async (resolve, reject) => {
