@@ -13,7 +13,7 @@ export default async function updatesChecker() {
 	console.log(chalk.blue(`Updates checker is activated with an interval of ${intervalDelay} minutes.`));
 
 	const checkUpdates = () => {
-		checkMangaUpdates();
+		// checkMangaUpdates();
 		checkAnimeUpdates();
 	}
 
@@ -46,7 +46,7 @@ export async function checkMangaUpdates() {
 					title: `${manga.title} - ${chapter.title}`,
 					description: `<@${user.discordUserId}>`,
 					color: 0x1eaeec,
-					image: {
+					thumbnail: {
 						url: manga.poster,
 						height: 150,
 						width: 100,
@@ -67,17 +67,17 @@ export async function checkMangaUpdates() {
 
 export async function checkAnimeUpdates() {
 	console.log(chalk.yellow('Checking anime updates...'));
-	const subscribedAnimes = await Anime.find({ isSubscribed: true });
+	const subscribedAnimes = await Anime.find({ updatesOn: true });
 	let updates = 0;
 
 	await Promise.all(subscribedAnimes.map(anime => new Promise(async (resolve, reject) => {
 		const season = anime.seasons[anime.seasons.length - 1];
 		const meta = await getAnimeMeta(season.gogoUrlName, false);
 
-		const newEpisodes = meta.episodes.filter(episode => !season.episodes.find(ep => ep.gogoUrlName === episode.sourceUrlName));
+		const newEpisodes = meta.episodes.filter(episode => !season.episodes.find(ep => ep.gogoUrlName === episode.gogoUrlName));
+		updates += newEpisodes.length;
 
 		if (newEpisodes.length > 0) {
-			updates++;
 			anime.hasUpdates = true;
 			season.episodes = meta.episodes;
 			anime.save();
@@ -90,7 +90,7 @@ export async function checkAnimeUpdates() {
 					title: `${anime.title} - ${season.name} - Episode ${episode.number}`,
 					description: `<@${user.discordUserId}>`,
 					color: 0x1eaeec,
-					image: {
+					thumbnail: {
 						url: anime.poster.small,
 						height: 150,
 						width: 100,
@@ -107,5 +107,5 @@ export async function checkAnimeUpdates() {
 	})));
 
 
-	console.log(chalk.blue(`Found ${updates} animes with updates`));
+	console.log(chalk.blue(`Found ${updates} new episodes`));
 }
