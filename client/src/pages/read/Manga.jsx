@@ -112,7 +112,7 @@ export default function Manga() {
 			<div className={styles.progressContainer}>
 				<span>Ch. {chapterMeta?.number}</span>
 				<span>
-					{imageScrollProgress || '-'} / {chapterMeta?.number || '-'}
+					{imageScrollProgress || '-'} / {chapterMeta?.images?.length || '-'}
 				</span>
 			</div>
 		</>
