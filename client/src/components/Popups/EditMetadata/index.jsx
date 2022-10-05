@@ -53,8 +53,8 @@ export default function EditMetadata({ closePopup, data: manga }) {
 	return (
 		<form className={styles.container} onSubmit={submitHandler}>
 			<main className={styles.main}>
+				{/* Title */}
 				<div className={styles.formGroup}>
-					{/* Title */}
 					<label htmlFor='title'>Title:</label>
 					<input
 						type='text'
@@ -83,7 +83,7 @@ export default function EditMetadata({ closePopup, data: manga }) {
 					<select
 						name='status'
 						id='status'
-						value={manga.status}
+						defaultValue={manga.status}
 						onChange={e => setStatus(e.target.value)}
 					>
 						<option value='ongoing'>Ongoing</option>

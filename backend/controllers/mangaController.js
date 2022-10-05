@@ -6,7 +6,6 @@ import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
-import getChapterNumber from '../functions/getChapterNumber.js';
 import getMangaMeta from '../functions/manga/getMetadata.js';
 
 // @desc	Get all of the user's mangas, with search functionality
@@ -159,9 +158,7 @@ export const updateCurrentChapter = asyncHandler(async (req, res) => {
 	}
 
 	manga.currentChapter = currentChapter;
-	if (manga.hasUpdates && manga.chapters[manga.chapters.length - 1].urlName === currentChapter) {
-		manga.hasUpdates = false;
-	}
+	manga.hasUpdates = (currentChapter !== manga.chapters[manga.chapters.length - 1].urlName);
 
 	await manga.save();
 	res.json({});

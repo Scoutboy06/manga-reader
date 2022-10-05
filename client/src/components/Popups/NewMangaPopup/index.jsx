@@ -1,5 +1,8 @@
 import { useState, useContext } from 'react';
+import { useSWRConfig } from 'swr';
+
 import { ProfileContext } from '../../../contexts/ProfileContext';
+
 import fetchAPI from '../../../functions/fetchAPI';
 
 import Loader from '../../Loader';
@@ -7,21 +10,23 @@ import Loader from '../../Loader';
 import styles from './NewMangaPopup.module.css';
 
 export default function NewMangaPopup({ closePopup }) {
+	const { mutate } = useSWRConfig();
 	const [profileData] = useContext(ProfileContext);
 
 	const [inputText, setInputText] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 	const [payload, setPayload] = useState();
-	const [isSubscribed, setIsSubscribed] = useState(true);
 
 	const [selectedData, setSelectedData] = useState();
 	const [selectedEl, setSelectedEl] = useState();
+
+	const updateLibrary = () =>
+		mutate(`/users/${profileData.currentProfile._id}/mangas`);
 
 	const reset = () => {
 		setInputText('');
 		setIsLoading(false);
 		// setPayload();
-		setIsSubscribed(true);
 		setSelectedData();
 		setSelectedEl();
 	};
@@ -60,14 +65,12 @@ export default function NewMangaPopup({ closePopup }) {
 
 		fetchAPI(`/users/${profileData.currentProfile._id}/mangas`, {
 			method: 'POST',
-			body: JSON.stringify({
-				...selectedData,
-				isSubscribed,
-				userId: profileData.currentProfile._id,
-			}),
+			body: JSON.stringify(selectedData),
 		}).then(res => {
-			console.log(res);
-			if (res.ok) window.location.reload();
+			if (res.ok) {
+				updateLibrary();
+				closePopup();
+			}
 		});
 	};
 
@@ -100,7 +103,7 @@ export default function NewMangaPopup({ closePopup }) {
 					</button>
 				</form>
 
-				{isLoading && (
+				{isLoading ? (
 					<Loader
 						size={60}
 						style={{
@@ -109,11 +112,8 @@ export default function NewMangaPopup({ closePopup }) {
 							top: '160px',
 						}}
 					/>
-				)}
-
-				{payload &&
-					!isLoading &&
-					payload.map((host, hostIndex) => (
+				) : (
+					payload?.map((host, hostIndex) => (
 						<div key={`_Host_${host.hostName}`}>
 							<h2 className={styles.hostName}>{host.hostName}</h2>
 
@@ -146,28 +146,17 @@ export default function NewMangaPopup({ closePopup }) {
 								</button>
 							))}
 						</div>
-					))}
+					))
+				)}
 			</main>
 
 			<footer className={styles.footer}>
-				<div className={styles.subscribed}>
-					<label htmlFor='subscribed'>Subscribed:</label>
-					<button
-						className='checkbox'
-						type='button'
-						id='subscribed'
-						data-ischecked={isSubscribed}
-						onClick={() => setIsSubscribed(bool => !bool)}
-					></button>
-				</div>
-				<div>
-					<button type='reset' onClick={() => closePopup()}>
-						Cancel
-					</button>
-					<button type='submit' onClick={addSubmit} disabled={!selectedData}>
-						Add to library
-					</button>
-				</div>
+				<button type='reset' onClick={() => closePopup()}>
+					Cancel
+				</button>
+				<button type='submit' onClick={addSubmit} disabled={!selectedData}>
+					Add to library
+				</button>
 			</footer>
 		</div>
 	);

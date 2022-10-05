@@ -160,45 +160,33 @@
 }
 
 .footer {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 0 1em;
 	position: absolute;
-	height: 4em;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background-color: var(--bg-02dp);
+	height: 5em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--bg-06dp);
 }
 
-.footer button[type='submit'],
-.footer button[type='reset'] {
-	padding: 6px 10px;
-	margin: 0 5px;
-	background-color: transparent;
-	border: 1px solid transparent;
+.footer button {
+	font-size: 18px;
+	padding: 0.7em 2em;
 	color: #fff;
-	border-radius: 4px;
-	font-family: inherit;
-	font-size: 15px;
+	border: 0;
 	cursor: pointer;
-	transition: background-color 0.15s;
+	border-radius: 0.2em;
 }
 
 .footer button[type='submit'] {
+	margin-left: 10px;
 	background: var(--main-color);
-	border-color: transparent;
-	/* margin-right: 20px; */
 }
 
-.footer button[type='submit'][disabled] {
-	opacity: 0.6;
-	cursor: not-allowed;
-}
-
-.footer button[type='reset']:hover {
-	background-color: var(--bg-12dp);
+.footer button[type='reset'] {
+	background-color: var(--bg-24dp);
 }
 
 .subscribed {
@@ -208,4 +196,16 @@
 
 .subscribed label {
 	margin-right: 5px;
+}
+
+@media screen and (max-width: 23em) {
+	.footer button {
+		padding: 0.7em 1em;
+	}
+}
+
+@media screen and (max-width: 17em) {
+	.footer button {
+		font-size: 15px;
+	}
 }

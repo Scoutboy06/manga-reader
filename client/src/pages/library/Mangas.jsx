@@ -19,10 +19,10 @@ export default function Mangas() {
 	const [profileData] = useContext(ProfileContext);
 	const [, popupActions] = useContext(PopupContext);
 
-	const { data: mangas } = useSWR(
+	const { data: mangas, mutate: updateLibrary } = useSWR(
 		`/users/${profileData.currentProfile._id}/mangas`,
 		{
-			revalidateIfStale: false,
+			revalidateIfStale: true,
 			revalidateOnFocus: false,
 			revalidateOnReconnect: true,
 		}
@@ -75,26 +75,22 @@ export default function Mangas() {
 									},
 									{
 										content: `${
-											manga.isSubscribed ? 'Disable' : 'Enable'
-										} updates`,
-										icon: manga.isSubscribed ? (
-											<i className='icon'>notifications_off</i>
-										) : (
-											<i className='icon'>notifications_active</i>
+											manga.notificationsOn ? 'Disable' : 'Enable'
+										} notifications`,
+										icon: (
+											<i className='icon'>
+												{manga.notificationsOn
+													? 'notifications_off'
+													: 'notifications_active'}
+											</i>
 										),
 										action: () => {
-											if (
-												window.confirm(
-													'Are you sure you want to perform this action?'
-												)
-											) {
-												fetchAPI(`/mangas/${manga._id}`, {
-													method: 'PATCH',
-													body: JSON.stringify({
-														isSubscribed: !manga.isSubscribed,
-													}),
-												}).then(() => window.location.reload());
-											}
+											fetchAPI(`/mangas/${manga._id}`, {
+												method: 'PATCH',
+												body: JSON.stringify({
+													notificationsOn: !manga.notificationsOn,
+												}),
+											}).then(() => updateLibrary());
 										},
 									},
 									'divider',
@@ -109,7 +105,7 @@ export default function Mangas() {
 											) {
 												fetchAPI(`/mangas/${manga._id}`, {
 													method: 'DELETE',
-												}).then(() => window.location.reload());
+												}).then(() => updateLibrary());
 											}
 										},
 									},
@@ -185,7 +181,7 @@ export default function Mangas() {
 												) {
 													fetchAPI(`/mangas/${manga._id}`, {
 														method: 'DELETE',
-													}).then(() => window.location.reload());
+													}).then(() => updateLibrary());
 												}
 											},
 										},

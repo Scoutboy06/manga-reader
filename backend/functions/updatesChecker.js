@@ -23,10 +23,10 @@ export default async function updatesChecker() {
 
 export async function checkMangaUpdates() {
 	console.log(chalk.yellow('Checking manga updates...'));
-	const subscribedMangas = await Manga.find({ isSubscribed: true });
+	const ongoingMangas = await Manga.find({ status: 'ongoing' });
 	let updates = 0;
 
-	await Promise.all(subscribedMangas.map(manga => new Promise(async (resolve, reject) => {
+	await Promise.all(ongoingMangas.map(manga => new Promise(async (resolve, reject) => {
 		const meta = await getMangaMeta(manga.sourceUrlName, manga.hostId);
 
 		const newChapters = meta.chapters.filter(chapter =>
