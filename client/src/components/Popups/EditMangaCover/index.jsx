@@ -5,25 +5,25 @@ import fetchAPI from '../../../functions/fetchAPI.js';
 import styles from './EditMangaCover.module.css';
 
 export default function EditMangaCover({ closePopup, data: manga }) {
-	const [coverUrl, setCoverUrl] = useState(
-		manga.coverUrl.startsWith('/api/image/')
-			? manga.coverUrl.slice(11)
-			: manga.coverUrl
+	const [poster, setPoster] = useState(
+		manga.poster.startsWith('/api/image/')
+			? manga.poster.slice(11)
+			: manga.poster
 	);
-	const [renderedUrl, setRenderedUrl] = useState(manga.coverUrl);
+	const [renderedUrl, setRenderedUrl] = useState(manga.poster);
 
 	const [imageSize, setImageSize] = useState({
 		source: null,
 		rendered: null,
 	});
 	const [useProxy, setUseProxy] = useState(
-		manga.coverUrl.startsWith('/api/image/')
+		manga.poster.startsWith('/api/image/')
 	);
 
 	const submitHandler = () => {
 		fetchAPI(`/mangas/${manga._id}`, {
 			method: 'PATCH',
-			body: JSON.stringify({ coverUrl: renderedUrl }),
+			body: JSON.stringify({ poster: renderedUrl }),
 		}).then(() => window.location.reload());
 	};
 
@@ -35,30 +35,22 @@ export default function EditMangaCover({ closePopup, data: manga }) {
 	};
 
 	useEffect(() => {
-		if (useProxy) setRenderedUrl('/api/image/' + coverUrl);
-		else setRenderedUrl(coverUrl);
-	}, [coverUrl, useProxy]);
+		if (useProxy) setRenderedUrl('/api/image/' + poster);
+		else setRenderedUrl(poster);
+	}, [poster, useProxy]);
 
 	return (
 		<div className={styles.container}>
 			<main className={styles.main}>
 				<div className={styles.formGroup}>
-					<label htmlFor='coverUrl'>Cover URI:</label>
+					<label htmlFor='poster'>Poster URL:</label>
 					<input
 						type='text'
-						name='coverUrl'
-						id='coverUrl'
-						value={coverUrl}
-						onChange={e => setCoverUrl(e.target.value)}
+						name='poster'
+						id='poster'
+						value={poster}
+						onChange={e => setPoster(e.target.value)}
 					/>
-					<button
-						onClick={() => {
-							setCoverUrl(manga.originalCoverUrl);
-							setUseProxy(false);
-						}}
-					>
-						Revert to original image
-					</button>
 				</div>
 
 				<div className={styles.formGroup}>
@@ -79,6 +71,16 @@ export default function EditMangaCover({ closePopup, data: manga }) {
 					rel='nofollow noreferrer noopener'
 				>
 					Upload an image
+					<i
+						className='icon'
+						style={{
+							fontSize: 'inherit',
+							lineHeight: 'inherit',
+							marginLeft: '2px',
+						}}
+					>
+						open_in_new
+					</i>
 				</a>
 
 				{imageSize && (
