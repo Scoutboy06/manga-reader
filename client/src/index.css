@@ -125,6 +125,11 @@ svg {
 	background-color: var(--main-color);
 }
 
+.checkbox[disabled] {
+	cursor: not-allowed;
+	opacity: 0.3;
+}
+
 .checkbox::after {
 	content: '';
 	width: 1.8em;

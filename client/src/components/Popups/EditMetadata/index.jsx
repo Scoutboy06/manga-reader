@@ -1,43 +1,60 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useSWRConfig } from 'swr';
 
 import fetchAPI from '../../../functions/fetchAPI.js';
+
+import { ProfileContext } from './../../../contexts/ProfileContext';
 
 import styles from './EditMetadata.module.css';
 
 export default function EditMetadata({ closePopup, data: manga }) {
-	const [showAdvanced, setShowAdvanced] = useState(false);
+	const { mutate } = useSWRConfig();
+	const [{ currentProfile }] = useContext(ProfileContext);
 
 	const [title, setName] = useState(manga.title);
-
 	const [urlName, setUrlName] = useState(manga.urlName);
-	const [currentChapter, setCurrentChapter] = useState(manga.currentChapter);
-	const [isSubscribed, setIsSubscribed] = useState(manga.isSubscribed);
-	const [hostId, setHostId] = useState(manga.hostId);
 
+	const [status, setStatus] = useState(manga.status);
+	const [isFavorite, setIsFavorite] = useState(manga.isFavorite);
 	const [hasRead, setHasRead] = useState(manga.hasRead);
-	const [ownerId, setOwnerId] = useState(manga.ownerId);
+	const [notificationsOn, setNotificationsOn] = useState(manga.notificationsOn);
 
-	const submitHandler = e => {
+	const submitHandler = async e => {
 		e.preventDefault();
+
+		const newData = {
+			title,
+			urlName,
+			status,
+			isFavorite,
+			hasRead,
+			notificationsOn,
+		};
 
 		fetchAPI(`/mangas/${manga._id}`, {
 			method: 'PATCH',
-			body: JSON.stringify({
-				title,
-				urlName,
-				currentChapter,
-				isSubscribed,
-				hostId,
-				hasRead,
-				ownerId,
-			}),
-		}).then(() => window.location.reload());
+			body: JSON.stringify(newData),
+		});
+
+		mutate(`/users/${currentProfile._id}/mangas`, () => {}, {
+			revalidate: false,
+			populateCache: (_, mangas) => {
+				const thisManga = mangas.find(m => m._id === manga._id);
+				for (const key of Object.keys(newData)) {
+					thisManga[key] = newData[key];
+				}
+				return mangas;
+			},
+		});
+
+		closePopup();
 	};
 
 	return (
 		<form className={styles.container} onSubmit={submitHandler}>
 			<main className={styles.main}>
 				<div className={styles.formGroup}>
+					{/* Title */}
 					<label htmlFor='title'>Title:</label>
 					<input
 						type='text'
@@ -48,18 +65,46 @@ export default function EditMetadata({ closePopup, data: manga }) {
 					/>
 				</div>
 
+				{/* Url name */}
 				<div className={styles.formGroup}>
-					<label htmlFor='isSubscribed'>Subscribed:</label>
+					<label htmlFor='urlName'>URL-name:</label>
+					<input
+						type='text'
+						name='urlName'
+						id='urlName'
+						value={urlName}
+						onChange={e => setUrlName(e.target.value)}
+					/>
+				</div>
+
+				{/* Status */}
+				<div className={styles.formGroup}>
+					<label htmlFor='status'>Status:</label>
+					<select
+						name='status'
+						id='status'
+						value={manga.status}
+						onChange={e => setStatus(e.target.value)}
+					>
+						<option value='ongoing'>Ongoing</option>
+						<option value='completed'>Completed</option>
+					</select>
+				</div>
+
+				{/* Favorite */}
+				<div className={styles.formGroup}>
+					<label htmlFor='isFavorite'>Favorite:</label>
 					<button
 						type='button'
 						className='checkbox'
-						name='isSubscribed'
-						id='isSubscribed'
-						data-ischecked={isSubscribed}
-						onClick={() => setIsSubscribed(bool => !bool)}
+						name='isFavorite'
+						id='isFavorite'
+						data-ischecked={isFavorite}
+						onClick={() => setIsFavorite(!isFavorite)}
 					></button>
 				</div>
 
+				{/* Has read */}
 				<div className={styles.formGroup}>
 					<label htmlFor='hasRead'>Finished reading:</label>
 					<button
@@ -68,67 +113,26 @@ export default function EditMetadata({ closePopup, data: manga }) {
 						name='hasRead'
 						id='hasRead'
 						data-ischecked={hasRead}
-						onClick={() => setHasRead(bool => !bool)}
+						onClick={() => {
+							if (!hasRead) setNotificationsOn(false);
+							setHasRead(!hasRead);
+						}}
 					></button>
 				</div>
 
+				{/* Notifications on */}
 				<div className={styles.formGroup}>
+					<label htmlFor='notificationsOn'>Enable notifications:</label>
 					<button
 						type='button'
-						onClick={() => setShowAdvanced(bool => !bool)}
-						className={styles.toggleAdvanced}
-					>
-						{showAdvanced ? 'Hide' : 'Show'} advanced
-					</button>
+						className='checkbox'
+						name='notificationsOn'
+						id='notificationsOn'
+						data-ischecked={notificationsOn}
+						disabled={hasRead}
+						onClick={() => setNotificationsOn(!notificationsOn)}
+					></button>
 				</div>
-
-				{showAdvanced && (
-					<>
-						<div className={styles.formGroup}>
-							<label htmlFor='urlName'>URL-name:</label>
-							<input
-								type='text'
-								name='urlName'
-								id='urlName'
-								value={urlName}
-								onChange={e => setUrlName(e.target.value)}
-							/>
-						</div>
-
-						<div className={styles.formGroup}>
-							<label htmlFor='currentChapter'>Current chapter:</label>
-							<input
-								type='text'
-								name='currentChapter'
-								id='currentChapter'
-								value={currentChapter}
-								onChange={e => setCurrentChapter(e.target.value)}
-							/>
-						</div>
-
-						<div className={styles.formGroup}>
-							<label htmlFor='ownerId'>Owner ID:</label>
-							<input
-								type='text'
-								name='ownerId'
-								id='ownerId'
-								value={ownerId}
-								onChange={e => setOwnerId(e.target.value)}
-							/>
-						</div>
-
-						<div className={styles.formGroup}>
-							<label htmlFor='hostId'>Host ID:</label>
-							<input
-								type='text'
-								name='hostId'
-								id='hostId'
-								value={hostId}
-								onChange={e => setHostId(e.target.value)}
-							/>
-						</div>
-					</>
-				)}
 			</main>
 
 			<footer className={styles.footer}>

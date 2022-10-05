@@ -20,7 +20,12 @@ export default function Mangas() {
 	const [, popupActions] = useContext(PopupContext);
 
 	const { data: mangas } = useSWR(
-		`/users/${profileData.currentProfile._id}/mangas`
+		`/users/${profileData.currentProfile._id}/mangas`,
+		{
+			revalidateIfStale: false,
+			revalidateOnFocus: false,
+			revalidateOnReconnect: true,
+		}
 	);
 
 	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
@@ -166,30 +171,6 @@ export default function Mangas() {
 													content: EditMangaCover,
 													data: manga,
 												});
-											},
-										},
-										{
-											content: `${
-												manga.isSubscribed ? 'Disable' : 'Enable'
-											} updates`,
-											icon: manga.isSubscribed ? (
-												<i className='icon'>notifications_off</i>
-											) : (
-												<i className='icon'>notifications_active</i>
-											),
-											action: () => {
-												if (
-													window.confirm(
-														'Are you sure you want to perform this action?'
-													)
-												) {
-													fetchAPI(`/mangas/${manga._id}`, {
-														method: 'PATCH',
-														body: JSON.stringify({
-															isSubscribed: !manga.isSubscribed,
-														}),
-													}).then(() => window.location.reload());
-												}
 											},
 										},
 										'divider',
