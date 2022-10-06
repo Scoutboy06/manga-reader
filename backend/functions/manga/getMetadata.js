@@ -1,11 +1,7 @@
 import fetch from 'node-fetch';
 import HTMLParser from 'node-html-parser';
 
-import Host from '../../models/hostModel.js';
-
-export default async function getMangaMeta(urlName, hostId) {
-	const host = await Host.findById(hostId);
-
+export default async function getMangaMeta({ urlName, host }) {
 	const { detailsPage } = host;
 
 	const html = await fetch(detailsPage.url.replace('%name', urlName)).then(res => res.text());
@@ -23,7 +19,8 @@ export default async function getMangaMeta(urlName, hostId) {
 	if (detailsPage.released) released = document.querySelector(detailsPage.released)?.textContent?.trim();
 	if (detailsPage.status) status = document.querySelector(detailsPage.status)?.textContent?.trim()?.toLowerCase();
 
-	const poster = document.querySelector(detailsPage.poster).textContent.trim();
+	const posterEl = document.querySelector(detailsPage.poster);
+	const poster = posterEl.getAttribute('data-src') || posterEl.getAttribute('data-srcset') || posterEl.getAttribute('srcset') || posterEl.getAttribute('src');
 
 	const chapters = [];
 	const chapterEls = document.querySelectorAll(detailsPage.chapters);

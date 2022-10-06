@@ -8,72 +8,39 @@ import Host from '../models/hostModel.js';
 // @desc	Search for new mangas
 // @route	GET /search
 export const searchManga = asyncHandler(async (req, res) => {
-	const keyword = req.query.mangaName
-		? {
-			name: {
-				$regex: req.query.mangaName,
-				$options: 'i',
-			},
-		}
-		: {};
+	const { query } = req.query;
 
-	const noProxyHosts = await Host.find({ needProxy: false });
+	const hosts = await Host.find();
 
-	let data = [];
+	let returnData = [];
 
-	for (const host of noProxyHosts) {
-		if (!host['search']) continue;
+	for (const host of hosts) {
+		const { search } = host;
 
-		const url = host['search']['url'].replace(
-			'%searchTerm%',
-			req.query.mangaName
-		);
+		const url = search.url.replace('%query', query);
 
-		const raw = await fetch(url);
+		const raw = await fetch(url, { method: host.search.method });
 		const html = await raw.text();
 		const document = HTMLParser.parse(html);
 
-		const { selectors } = host['search'];
-
-		let hostData = {
-			hostName: host['hostName'],
-			needProxy: host['needProxy'],
-			mangas: [],
-		};
-
-		const mangas = document.querySelectorAll(selectors['parent']);
+		const mangas = document.querySelectorAll(host.search.container);
+		const results = [];
 
 		for (const manga of mangas) {
-			if (manga.single) continue;
+			const posterEl = manga.querySelector(search.poster);
+			const poster = posterEl.getAttribute('data-src') || posterEl.getAttribute('data-srcset') || posterEl.getAttribute('srcset') || posterEl.getAttribute('src');
+			const title = manga.querySelector(search.title).textContent.trim();
+			const latestChapter = manga.querySelector(search.latestChapter).textContent.trim();
+			const latestUpdate = manga.querySelector(search.latestUpdate).textContent.trim();
+			const detailsPage = manga.querySelector(search.detailsPage).getAttribute('href');
 
-			// TODO: fix .trim() error
-
-			const mangaName = manga
-				.querySelector(selectors.mangaName)
-				.innerText.trim();
-			const imgUrl = manga
-				.querySelector(selectors.img.selector)
-				.getAttribute(selectors.img.attribute)
-				.trim();
-			const latestChapter = manga
-				.querySelector(selectors.latestChapter)
-				.innerText.trim();
-			const latestUpdate = manga
-				.querySelector(selectors.latestUpdate)
-				.innerText.trim();
-			const detailsPage = manga
-				.querySelector(selectors.detailsPage)
-				.getAttribute('href');
-
-			// Compare saved details page path with the one we got earlier
 			const detailsPageSplit = detailsPage.split('/');
-			const urlNameIndex = host.detailsPage.split('/').indexOf('%name%');
-
+			const urlNameIndex = host.detailsPage.url.split('/').indexOf('%name');
 			const urlName = detailsPageSplit[urlNameIndex];
 
-			hostData['mangas'].push({
-				mangaName,
-				imgUrl,
+			results.push({
+				poster,
+				title,
 				latestChapter,
 				latestUpdate,
 				detailsPage,
@@ -81,10 +48,13 @@ export const searchManga = asyncHandler(async (req, res) => {
 			});
 		}
 
-		data.push(hostData);
+		returnData.push({
+			hostName: host.name,
+			results,
+		});
 	}
 
-	res.status(200).json(data);
+	res.status(200).json(returnData);
 });
 
 

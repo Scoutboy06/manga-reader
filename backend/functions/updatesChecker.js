@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 
 import Manga from '../models/mangaModel.js';
+import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 import Anime from '../models/animeModel.js';
 
@@ -24,10 +25,12 @@ export default async function updatesChecker() {
 export async function checkMangaUpdates() {
 	console.log(chalk.yellow('Checking manga updates...'));
 	const ongoingMangas = await Manga.find({ status: 'ongoing' });
+	const hosts = await Host.find({});
 	let updates = 0;
 
 	await Promise.all(ongoingMangas.map(manga => new Promise(async (resolve, reject) => {
-		const meta = await getMangaMeta(manga.sourceUrlName, manga.hostId);
+		const host = hosts.find(host => host._id === manga.hostId);
+		const meta = await getMangaMeta({ urlName: manga.sourceUrlName, host });
 
 		const newChapters = meta.chapters.filter(chapter =>
 			!manga.chapters.find(ch => ch.sourceUrlName === chapter.sourceUrlName)

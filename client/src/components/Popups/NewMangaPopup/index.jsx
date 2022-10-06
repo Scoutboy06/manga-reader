@@ -37,7 +37,7 @@ export default function NewMangaPopup({ closePopup }) {
 		setPayload();
 		setIsLoading(true);
 
-		fetchAPI(`/search?mangaName=${inputText}`, {}, true).then(json => {
+		fetchAPI(`/search?query=${inputText}`, {}, true).then(json => {
 			setIsLoading(false);
 			setPayload(json);
 		});
@@ -56,7 +56,7 @@ export default function NewMangaPopup({ closePopup }) {
 
 		setSelectedData({
 			hostName: payload[hostIndex].hostName,
-			urlName: payload[hostIndex].mangas[mangaIndex].urlName,
+			urlName: payload[hostIndex].results[mangaIndex].urlName,
 		});
 	};
 
@@ -66,11 +66,9 @@ export default function NewMangaPopup({ closePopup }) {
 		fetchAPI(`/users/${profileData.currentProfile._id}/mangas`, {
 			method: 'POST',
 			body: JSON.stringify(selectedData),
-		}).then(res => {
-			if (res.ok) {
-				updateLibrary();
-				closePopup();
-			}
+		}).then(() => {
+			updateLibrary();
+			closePopup();
 		});
 	};
 
@@ -113,30 +111,29 @@ export default function NewMangaPopup({ closePopup }) {
 						}}
 					/>
 				) : (
-					payload?.map((host, hostIndex) => (
-						<div key={`_Host_${host.hostName}`}>
-							<h2 className={styles.hostName}>{host.hostName}</h2>
+					payload?.map(({ hostName, results }, i) => (
+						<div key={`_Host_${hostName}`}>
+							<h2 className={styles.hostName}>{hostName}</h2>
 
-							{host.mangas.map((manga, mangaIndex) => (
+							{results.map((manga, mangaIndex) => (
 								<button
 									key={manga.urlName}
 									className={styles.mangaItem}
-									onClick={e => handleSelectEl(e, hostIndex, mangaIndex)}
+									onClick={e => handleSelectEl(e, i, mangaIndex)}
 								>
 									<img
 										className={styles.mangaImage}
-										src={manga.imgUrl}
+										src={manga.poster}
 										alt='Manga cover'
 									/>
 									<div className={styles.mangaDetails}>
-										<span>{manga.mangaName}</span>
+										<span>{manga.title}</span>
 										<span>{manga.latestChapter}</span>
 										<span>{manga.latestUpdate}</span>
 									</div>
 
 									<a
 										className={styles.openSource + ' icon'}
-										// onClick={() => window.open(manga.detailsPage, '_blank')}
 										href={manga.detailsPage}
 										target='_blank'
 										rel='nofollow noreferrer noopener'

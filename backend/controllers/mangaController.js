@@ -12,7 +12,7 @@ import getMangaMeta from '../functions/manga/getMetadata.js';
 // @route	GET /users/:userId/mangas
 export const getUserMangas = asyncHandler(async (req, res) => {
 	const { userId } = req.params;
-	const { limit = Infinity, skip = 0, query = '' } = req.query;
+	const { limit = 50, skip = 0, query = '' } = req.query;
 
 	const keyword = query
 		? {
@@ -22,11 +22,11 @@ export const getUserMangas = asyncHandler(async (req, res) => {
 			},
 		} : {};
 
-	let mangas = await Manga.find({ ownerId: userId, ...keyword })
+	const mangas = await Manga.find({ ownerId: userId, ...keyword })
 		.limit(limit)
 		.skip(skip);
 
-	const removeFields = ['ownerId', 'hostId', 'sourceUrlName', 'description', 'chapters', 'otherNames', 'authors', 'artists', 'genres', 'released', 'status', 'lastUpdatePingedChapter'];
+	const removeFields = ['ownerId', 'hostId', 'sourceUrlName', 'description', 'chapters', 'otherNames', 'authors', 'artists', 'genres', 'released', 'lastUpdatePingedChapter'];
 	for (let manga of mangas) {
 		for (const field of removeFields) {
 			manga[field] = undefined;
@@ -65,11 +65,8 @@ export const createManga = asyncHandler(async (req, res) => {
 	const { userId } = req.params;
 
 	const {
-		hostId,
-		urlName,
-		sourceUrlName,
-		title,
-		poster,
+		hostName,
+		urlName: sourceUrlName,
 	} = req.body;
 
 	const user = await User.findById(userId);
@@ -78,15 +75,23 @@ export const createManga = asyncHandler(async (req, res) => {
 		throw new Error('Invalid user id');
 	}
 
-	const meta = await getMangaMeta(sourceUrlName, hostId);
+	const host = await Host.findOne({ name: hostName });
+	if (!host) {
+		res.status(401);
+		throw new Error('No host found');
+	}
+
+	const meta = await getMangaMeta({ urlName: sourceUrlName, host });
+	const urlName = encodeURI(meta.title.toLowerCase().replaceAll(':', '').replaceAll(' ', '-'));
+	console.log(meta.poster);
 
 	const manga = new Manga({
 		ownerId: userId,
-		hostId,
+		hostId: host._id,
 		urlName,
 		sourceUrlName,
 
-		title,
+		title: meta.title,
 		description: meta.description,
 
 		chapters: meta.chapters,
@@ -97,9 +102,9 @@ export const createManga = asyncHandler(async (req, res) => {
 		artists: meta.artists,
 		genres: meta.genres,
 		released: meta.released,
-		status: meta.status,
+		status: meta.status || 'ongoing',
 
-		poster,
+		poster: meta.poster,
 	});
 
 	const createdManga = await manga.save();

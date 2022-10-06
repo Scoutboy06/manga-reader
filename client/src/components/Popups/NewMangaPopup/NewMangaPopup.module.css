@@ -185,6 +185,11 @@
 	background: var(--main-color);
 }
 
+.footer button[type='submit'][disabled] {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
 .footer button[type='reset'] {
 	background-color: var(--bg-24dp);
 }

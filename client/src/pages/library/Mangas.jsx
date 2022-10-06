@@ -73,26 +73,28 @@ export default function Mangas() {
 											});
 										},
 									},
-									{
-										content: `${
-											manga.notificationsOn ? 'Disable' : 'Enable'
-										} notifications`,
-										icon: (
-											<i className='icon'>
-												{manga.notificationsOn
-													? 'notifications_off'
-													: 'notifications_active'}
-											</i>
-										),
-										action: () => {
-											fetchAPI(`/mangas/${manga._id}`, {
-												method: 'PATCH',
-												body: JSON.stringify({
-													notificationsOn: !manga.notificationsOn,
-												}),
-											}).then(() => updateLibrary());
-										},
-									},
+									manga.status === 'ongoing'
+										? {
+												content: `${
+													manga.notificationsOn ? 'Disable' : 'Enable'
+												} notifications`,
+												icon: (
+													<i className='icon'>
+														{manga.notificationsOn
+															? 'notifications_off'
+															: 'notifications_active'}
+													</i>
+												),
+												action: () => {
+													fetchAPI(`/mangas/${manga._id}`, {
+														method: 'PATCH',
+														body: JSON.stringify({
+															notificationsOn: !manga.notificationsOn,
+														}),
+													}).then(() => updateLibrary());
+												},
+										  }
+										: null,
 									'divider',
 									{
 										content: 'Delete',
