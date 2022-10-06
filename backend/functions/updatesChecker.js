@@ -29,7 +29,11 @@ export async function checkMangaUpdates() {
 	let updates = 0;
 
 	await Promise.all(ongoingMangas.map(manga => new Promise(async (resolve, reject) => {
-		const host = hosts.find(host => host._id === manga.hostId);
+		const host = hosts.find(host => host._id.toString() === manga.hostId.toString());
+		if (!host) {
+			console.log('No host: ' + manga.hostId);
+			return reject(manga.hostId);
+		}
 		const meta = await getMangaMeta({ urlName: manga.sourceUrlName, host });
 
 		const newChapters = meta.chapters.filter(chapter =>
