@@ -145,3 +145,46 @@ svg {
 .checkbox[data-ischecked='true']::after {
 	left: calc(100% - 1.8em);
 }
+
+.formGroup {
+	width: 100%;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.formGroup:not(:last-child) {
+	margin-bottom: 1.8em;
+}
+
+.formGroup label {
+	user-select: none;
+	color: #bbb;
+	font-size: 1em;
+	margin-bottom: 0.25em;
+	width: max-content;
+}
+
+.formGroup input[type='text'],
+.formGroup textarea,
+.formGroup select {
+	color: #bbb;
+	background-color: var(--bg-12dp);
+	border: 0.16em solid var(--bg-12dp);
+	outline: none;
+	border-radius: 0.2em;
+	padding: 0.4em 0.25em;
+	font-size: 1.1em;
+	font-family: Arial;
+	width: 100%;
+}
+
+.formGroup textarea {
+	resize: vertical;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus,
+.formGroup select:focus {
+	border-color: var(--main-color);
+}
