@@ -29,7 +29,22 @@ export const getAnimeLibrary = asyncHandler(async (req, res) => {
 	(Popular ongoing update)
 	*/
 
+	// const continueWatching = [];
+	// const favorites = [];
+	// const popular = [];
+	// const newSeason = [];
+	// const recentRelease = [];
 	const animes = await Anime.find({ ownerId: userId });
+
+
+	let removeFields = ['ownerId', 'tmdbId', 'description', 'seasons', 'seasonId', 'genres', 'released', 'status', 'otherNames'];
+
+	for (const anime of animes) {
+		for (const field of removeFields) {
+			anime[field] = undefined;
+		}
+	}
+
 
 	const fields = [
 		// {

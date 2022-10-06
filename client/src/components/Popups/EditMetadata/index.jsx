@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { useSWRConfig } from 'swr';
 
 import fetchAPI from '../../../functions/fetchAPI.js';

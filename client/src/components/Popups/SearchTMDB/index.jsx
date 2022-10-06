@@ -1,11 +1,12 @@
-import { useState, useContext, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
+
 import fetchAPI from '../../../functions/fetchAPI';
+import useFormCreator from './../../../hooks/useFormCreator';
+import { ProfileContext } from '../../../contexts/ProfileContext';
 
 import Loader from '../../Loader';
-
-import { ProfileContext } from '../../../contexts/ProfileContext';
 
 import styles from './SearchTMDB.module.css';
 
@@ -22,16 +23,20 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 	const [currentPage, setCurrentPage] = useState(0);
 	const [selectedItemIndex, setSelectedItemIndex] = useState(null);
 
-	const meta = useRef();
+	const [tmdbMeta, setTmdbMeta] = useState({});
 
-	const [selectedSeasonId, setSelectedSeasonId] = useState('');
-	const [seasons, setSeasons] = useState(null);
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [largePosterUrl, setLargePosterUrl] = useState('');
-	const [smallPosterUrl, setSmallPosterUrl] = useState('');
-	const [largeBackdropUrl, setLargeBackdropUrl] = useState('');
-	const [smallBackdropUrl, setSmallBackdropUrl] = useState('');
+	const [{ season: selectedSeasonId }, seasonSelectEl] = useFormCreator([
+		{
+			label: 'Season:',
+			name: 'season',
+			type: 'select',
+			defaultValue: tmdbMeta?.seasons?.[0],
+			options: tmdbMeta?.seasons?.map(season => ({
+				value: season.id,
+				displayName: season.name,
+			})),
+		},
+	]);
 
 	const searchSubmit = async e => {
 		e.preventDefault();
@@ -49,30 +54,8 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 		const { id } = items[selectedItemIndex];
 
 		const res = await fetchAPI(`/tmdb/tv/${id}`);
-		meta.current = res;
+		setTmdbMeta(res);
 		setCurrentPage(1);
-		setSeasons(res.seasons);
-		setSelectedSeasonId(res.seasons[0].id);
-		setTitle(res.name);
-		setDescription(res.overview);
-		setLargePosterUrl(
-			res.poster_path
-				? `https://image.tmdb.org/t/p/original${res.poster_path}`
-				: ''
-		);
-		setSmallPosterUrl(
-			res.poster_path ? `https://image.tmdb.org/t/p/w300${res.poster_path}` : ''
-		);
-		setLargeBackdropUrl(
-			res.backdrop_path
-				? `https://image.tmdb.org/t/p/original${res.backdrop_path}`
-				: ''
-		);
-		setSmallBackdropUrl(
-			res.backdrop_path
-				? `https://image.tmdb.org/t/p/w300${res.backdrop_path}`
-				: ''
-		);
 	};
 
 	const addToLibrary = async () => {
@@ -82,22 +65,23 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 				body: JSON.stringify({
 					from: 'customImport',
 					gogoUrlName: animeMeta.urlName,
-					title,
-					description,
+					title: tmdbMeta.name,
+					description: tmdbMeta.overview,
 					poster: {
-						large: largePosterUrl,
-						small: smallPosterUrl,
+						large: `https://image.tmdb.org/t/p/original${tmdbMeta.poster_path}`,
+						small: `https://image.tmdb.org/t/p/w300${tmdbMeta.poster_path}`,
 					},
 					backdrop: {
-						large: largeBackdropUrl,
-						small: smallBackdropUrl,
+						large: `https://image.tmdb.org/t/p/original${tmdbMeta.backdrop_path}`,
+						small: `https://image.tmdb.org/t/p/w300${tmdbMeta.backdrop_path}`,
 					},
 					seasonId: Number(selectedSeasonId),
-					tmdbId: meta.current.id,
+					tmdbId: tmdbMeta.id,
 				}),
 			});
-
 			closePopup();
+			if (params.name === res.urlName)
+				mutate(`/users/${currentProfile._id}/animes/${params.name}`);
 			navigate(`/animes/${res.urlName}`);
 		} catch (err) {
 			console.error(err);
@@ -203,113 +187,7 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 					<i className='icon'>chevron_left</i> Back
 				</button>
 
-				{seasons && (
-					<div className={styles.formGroup}>
-						<label htmlFor='season'>Season:</label>
-						<select
-							name='season'
-							id='season'
-							value={selectedSeasonId}
-							onChange={e => {
-								setSelectedSeasonId(e.target.value);
-
-								const selectedSeason = meta.current.seasons.find(
-									season => season.id === Number(e.target.value)
-								);
-
-								setDescription(selectedSeason.overview);
-								setLargePosterUrl(
-									selectedSeason.poster_path
-										? `https://image.tmdb.org/t/p/original${selectedSeason.poster_path}`
-										: ''
-								);
-								setSmallPosterUrl(
-									selectedSeason.poster_path
-										? `https://image.tmdb.org/t/p/w300${selectedSeason.poster_path}`
-										: ''
-								);
-							}}
-						>
-							{seasons.map(season => (
-								<option value={season.id}>{season.name}</option>
-							))}
-						</select>
-					</div>
-				)}
-
-				<div className={styles.formGroup}>
-					<label htmlFor='title'>Title:</label>
-					<input
-						type='text'
-						name='title'
-						id='title'
-						value={title}
-						onChange={e => setTitle(e.target.value)}
-					/>
-					<button onClick={() => setTitle(animeMeta.title)}>
-						Revert to original
-					</button>
-				</div>
-
-				<div className={styles.formGroup}>
-					<label htmlFor='description'>Description:</label>
-					<textarea
-						name='description'
-						id='description'
-						value={description}
-						onChange={e => setDescription(e.target.value)}
-					/>
-					<button onClick={() => setDescription(animeMeta.description)}>
-						Revert to original
-					</button>
-				</div>
-
-				<div className={styles.formGroup}>
-					<label htmlFor='largePosterUrl'>Large poster URL:</label>
-					<input
-						type='text'
-						name='largePosterUrl'
-						id='largePosterUrl'
-						value={largePosterUrl}
-						onChange={e => setLargePosterUrl(e.target.value)}
-					/>
-					<button onClick={() => setLargePosterUrl(animeMeta?.poster?.large)}>
-						Revert to original
-					</button>
-				</div>
-
-				<div className={styles.formGroup}>
-					<label htmlFor='smallPosterUrl'>Small poster URL:</label>
-					<input
-						type='text'
-						name='smallPosterUrl'
-						id='smallPosterUrl'
-						value={smallPosterUrl}
-						onChange={e => setSmallPosterUrl(e.target.value)}
-					/>
-				</div>
-
-				<div className={styles.formGroup}>
-					<label htmlFor='largeBackdropUrl'>Large backdrop URL:</label>
-					<input
-						type='text'
-						name='largeBackdropUrl'
-						id='largeBackdropUrl'
-						value={largeBackdropUrl}
-						onChange={e => setLargeBackdropUrl(e.target.value)}
-					/>
-				</div>
-
-				<div className={styles.formGroup}>
-					<label htmlFor='smallBackdropUrl'>Small backdrop URL:</label>
-					<input
-						type='text'
-						name='smallBackdropUrl'
-						id='smallBackdropUrl'
-						value={smallBackdropUrl}
-						onChange={e => setSmallBackdropUrl(e.target.value)}
-					/>
-				</div>
+				{tmdbMeta && seasonSelectEl}
 			</div>
 
 			<footer className={styles.footer}>

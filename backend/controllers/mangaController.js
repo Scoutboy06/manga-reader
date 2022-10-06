@@ -22,16 +22,15 @@ export const getUserMangas = asyncHandler(async (req, res) => {
 			},
 		} : {};
 
-	const user = await User.findById(userId);
-	if (!user) return res.status(404).json({ error: 'No user found' });
-
-	let mangas = await Manga.find({ ownerId: user._id, ...keyword })
+	let mangas = await Manga.find({ ownerId: userId, ...keyword })
 		.limit(limit)
 		.skip(skip);
 
-
+	const removeFields = ['ownerId', 'hostId', 'sourceUrlName', 'description', 'chapters', 'otherNames', 'authors', 'artists', 'genres', 'released', 'status', 'lastUpdatePingedChapter'];
 	for (let manga of mangas) {
-		manga.chapters = undefined;
+		for (const field of removeFields) {
+			manga[field] = undefined;
+		}
 	}
 
 	res.json(mangas);
@@ -50,9 +49,6 @@ export const getMangaById = asyncHandler(async (req, res) => {
 // @route	GET /users/:userId/mangas/:mangaName
 export const getMangaByName = asyncHandler(async (req, res) => {
 	const { userId, mangaName } = req.params;
-
-	// const user = await User.findById(userId);
-	// if (!user) return res.status(404).json({ error: 'User not found' });
 
 	const manga = await Manga.findOne({ ownerId: userId, urlName: mangaName });
 	if (!manga) {

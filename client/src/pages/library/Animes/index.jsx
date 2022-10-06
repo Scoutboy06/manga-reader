@@ -18,7 +18,11 @@ export default function Animes() {
 	const [, popupActions] = useContext(PopupContext);
 	const [{ currentProfile }] = useContext(ProfileContext);
 
-	const { data } = useSWR(() => `/users/${currentProfile._id}/animes`);
+	const { data } = useSWR(() => `/users/${currentProfile._id}/animes`, {
+		revalidateIfStale: true,
+		revalidateOnFocus: false,
+		revalidateOnReconnect: true,
+	});
 
 	return (
 		<>
@@ -54,9 +58,9 @@ export default function Animes() {
 												content: 'Play',
 												icon: <i className='icon'>play_arrow</i>,
 												action: () => {
-													navigate(
-														`/animes/${media._id}/episode-${media.episodeNumber}`
-													);
+													// navigate(
+													// 	`/animes/${media.seasons[media.seasons.length - 1].urlName}/episode-${media.episodeNumber}`
+													// );
 												},
 											},
 											'divider',
@@ -82,30 +86,6 @@ export default function Animes() {
 													// });
 												},
 											},
-											media.updatesEnabled !== undefined
-												? {
-														content:
-															(media.updatesEnabled ? 'Disable' : 'Enable') +
-															' updates',
-														icon: media.updatesEnabled ? (
-															<i className='icon'>notifications_off</i>
-														) : (
-															<i className='icon'>notifications_active</i>
-														),
-														action: () => {
-															// if (
-															// 	window.confirm(
-															// 		'Are you sure you want to perform this action?'
-															// 	)
-															// ) {
-															// 	fetchAPI(`/animes/${media._id}`, {
-															// 		method: 'PATCH',
-															// 		body: JSON.stringify({ isSubscribed: !media.isSubscribed }),
-															// 	}).then(() => window.location.reload());
-															// }
-														},
-												  }
-												: null,
 										]}
 									/>
 								))}
