@@ -1,35 +1,33 @@
 import { useState } from 'react';
 
 import BlurContainer from '../BlurContainer';
-import Dropdown from '../Dropdown';
 
-import styles from './index.module.css';
+import styles from './Select.module.css';
+import dropdownStyles from '../Dropdown/Dropdown.module.css';
 
 export default function Select({
 	children,
-	value,
-	onChange,
-	multiple = false,
+	defaultValue,
+	onChange = () => {},
+	size = '',
+	containerText,
 }) {
-	const [selectedValue, setSelectedValue] = useState({
-		value,
-		display: children.find(el => el.props.value === value)?.props?.children,
-	});
+	const [selectedValue, setSelectedValue] = useState(defaultValue);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const selectHandler = value => {
-		if (onChange) onChange(value);
+		onChange(value);
 		setSelectedValue(value);
 	};
 
 	return (
 		<BlurContainer
-			className={styles.container + (isOpen ? ' open' : '')}
+			className={styles.selectContainer + (isOpen ? ' open' : '')}
 			onClick={() => setIsOpen(isOpen => !isOpen)}
 			onBlur={() => setIsOpen(false)}
 			element={{ slug: 'button' }}
 		>
-			<span>{selectedValue.display}</span>
+			<span>{containerText}</span>
 
 			<i
 				className='icon'
@@ -38,28 +36,37 @@ export default function Select({
 				arrow_drop_down
 			</i>
 
-			<Dropdown
-				size='small'
-				pos={{ x: 0, y: 40 }}
-				isShown={isOpen}
-				showSelected={true}
-				items={(children || []).map(item => {
-					if (item.type === 'hr') return 'divider';
-					if (item.type === 'option')
-						return {
-							content: item.props.children,
-							disabled: item.props.disabled,
-							default: item.props.default,
-							action: () => {
-								selectHandler({
-									display: item.props.children,
-									value: item.props.value,
-								});
-							},
-						};
-					return null;
-				})}
-			/>
+			<div
+				className={`${dropdownStyles.dropdown} ${
+					isOpen ? 'visible' : ''
+				} ${size}`}
+				style={{
+					right: 0,
+					bottom: -5,
+					transform: 'translateY(100%)',
+					fontFamily: 'var(--font-family)',
+					position: 'absolute',
+				}}
+				onClick={e => e.preventDefault()}
+			>
+				{children.map((child, i) =>
+					child.type === 'hr' ? (
+						<div key={`hr_${i}`} className={dropdownStyles.divider}></div>
+					) : (
+						<div
+							key={child.props.value}
+							className={
+								dropdownStyles.item +
+								(selectedValue === child.props.value ? ' selected' : '')
+							}
+							onClick={() => selectHandler(child.props.value)}
+						>
+							<i className={`${styles.check} icon`}>check</i>
+							{child}
+						</div>
+					)
+				)}
+			</div>
 		</BlurContainer>
 	);
 }

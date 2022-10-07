@@ -1,12 +1,12 @@
 import { useState, useContext } from 'react';
 import useSWR from 'swr';
+import { useNavigate } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
 
 import parseChapterName from '../../functions/parseChapterName';
 
 import Head from '../../components/Head';
 import MediaCard from '../../components/MediaCard';
-import NewMangaPopup from '../../components/Popups/NewMangaPopup';
 import EditMangaCover from '../../components/Popups/EditMangaCover';
 import EditMetadata from '../../components/Popups/EditMetadata';
 
@@ -16,6 +16,8 @@ import { PopupContext } from '../../contexts/PopupContext';
 import styles from './index.module.css';
 
 export default function Mangas() {
+	const navigate = useNavigate();
+
 	const [profileData] = useContext(ProfileContext);
 	const [, popupActions] = useContext(PopupContext);
 
@@ -174,6 +176,24 @@ export default function Mangas() {
 											},
 											'divider',
 											{
+												content: 'Read again',
+												icon: <i className='icon'>replay</i>,
+												action: async () => {
+													const { chapters } = await fetchAPI(
+														`/mangas/${manga._id}`
+													);
+
+													fetchAPI(`/mangas/${manga._id}`, {
+														method: 'PATCH',
+														body: JSON.stringify({ hasRead: false }),
+													});
+
+													navigate(
+														`/mangas/${manga.urlName}/${chapters[0].urlName}`
+													);
+												},
+											},
+											{
 												content: 'Delete',
 												icon: <i className='icon'>delete</i>,
 												action: () => {
@@ -195,24 +215,6 @@ export default function Mangas() {
 					</div>
 				</section>
 			</main>
-
-			<button
-				className={styles.newManga}
-				onClick={() => {
-					popupActions.createPopup({
-						title: 'Search for a new manga',
-						content: NewMangaPopup,
-					});
-				}}
-			>
-				<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-					<g>
-						<g>
-							<path d='M18,13h-5v5c0,0.55-0.45,1-1,1l0,0c-0.55,0-1-0.45-1-1v-5H6c-0.55,0-1-0.45-1-1l0,0c0-0.55,0.45-1,1-1h5V6 c0-0.55,0.45-1,1-1l0,0c0.55,0,1,0.45,1,1v5h5c0.55,0,1,0.45,1,1l0,0C19,12.55,18.55,13,18,13z' />
-						</g>
-					</g>
-				</svg>
-			</button>
 		</>
 	);
 }

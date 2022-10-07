@@ -30,7 +30,6 @@ export default function MediaCard({
 	const navigate = useNavigate();
 
 	const mainContainer = useRef();
-	const [showDropdown, setShowDropdown] = useState(false);
 
 	return (
 		<div
@@ -79,13 +78,7 @@ export default function MediaCard({
 							</button>
 						)}
 
-						<DropdownButton
-							visible={showDropdown}
-							setVisibility={setShowDropdown}
-							mainContainer={mainContainer.current}
-							className='icon'
-							dropdownItems={dropdownItems}
-						>
+						<DropdownButton className='icon' dropdownItems={dropdownItems}>
 							more_vert
 						</DropdownButton>
 					</div>

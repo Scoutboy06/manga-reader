@@ -78,8 +78,15 @@
 }
 
 .profileDropdown i {
-	color: #fff;
 	font-size: 22px;
 	transition: transform 0.15s;
 	user-select: none;
+}
+
+.profileDropdown > i {
+	transform: rotate(-90deg);
+}
+
+.profileDropdown:global(.show-dropdown) > i {
+	transform: rotate(90deg);
 }

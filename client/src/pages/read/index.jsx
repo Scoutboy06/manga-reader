@@ -15,7 +15,7 @@ export default function Read() {
 	const params = useParams();
 	const navigate = useNavigate();
 
-	const [profileData] = useContext(ProfileContext);
+	const [{ currentProfile }] = useContext(ProfileContext);
 	const [{ contentWidth }, { setContentWidth }] = useContext(SettingsContext);
 
 	const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +50,7 @@ export default function Read() {
 			setIsLoading(true);
 
 			const meta = await fetchAPI(
-				`/users/${profileData.currentProfile._id}/mangas/${params.name}`
+				`/users/${currentProfile._id}/mangas/${params.name}`
 			);
 
 			setMetadata(meta);
@@ -64,20 +64,16 @@ export default function Read() {
 			const currentChapterIndex = meta.chapters.findIndex(
 				chapter => chapter.urlName === meta.currentChapter
 			);
-			console.log(
-				meta.chapters[currentChapterIndex + 1],
-				meta.chapters[currentChapterIndex - 1]
-			);
 			setNextChapter(meta.chapters[currentChapterIndex + 1]);
 			setPrevChapter(meta.chapters[currentChapterIndex - 1]);
 
 			setIsLoading(false);
 		}
 
-		if (!hasInit.current && profileData.currentProfile) init();
+		if (!hasInit.current && currentProfile) init();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [params, profileData]);
+	}, [params, currentProfile]);
 
 	// Load new chapter
 	useEffect(() => {
@@ -129,34 +125,25 @@ export default function Read() {
 					</a>
 
 					<Select
-						value={contentWidth}
-						onChange={({ value }) =>
-							setContentWidth(value === 'pageWidth' ? 'pageWidth' : value)
+						defaultValue={contentWidth}
+						onChange={value => {
+							setContentWidth(value === 'pageWidth' ? 'pageWidth' : value);
+						}}
+						containerText={
+							contentWidth === 'pageWidth'
+								? 'Page width'
+								: `${contentWidth * 100}%`
 						}
 					>
 						<option value='pageWidth'>Page width</option>
 						<hr />
-						<option value={0.5} default={contentWidth === 0.5}>
-							50%
-						</option>
-						<option value={0.75} default={contentWidth === 0.75}>
-							75%
-						</option>
-						<option value={0.9} default={contentWidth === 0.9}>
-							90%
-						</option>
-						<option value={1.0} default={contentWidth === 1.0}>
-							100%
-						</option>
-						<option value={1.25} default={contentWidth === 1.25}>
-							125%
-						</option>
-						<option value={1.5} default={contentWidth === 1.5}>
-							150%
-						</option>
-						<option value={2.0} default={contentWidth === 2.0}>
-							200%
-						</option>
+						<option value={0.5}>50%</option>
+						<option value={0.75}>75%</option>
+						<option value={0.9}>90%</option>
+						<option value={1.0}>100%</option>
+						<option value={1.25}>125%</option>
+						<option value={1.5}>150%</option>
+						<option value={2.0}>200%</option>
 					</Select>
 				</div>
 

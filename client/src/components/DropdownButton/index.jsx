@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 
-import Dropdown from '../_Dropdown';
+import Dropdown from '../Dropdown';
 import BlurContainer from '../BlurContainer';
 
 export default function DropdownButton({
@@ -10,6 +10,7 @@ export default function DropdownButton({
 	dropdownItems,
 	title,
 	noPadding = false,
+	offset = { x: 0, y: 0 },
 }) {
 	const container = useRef();
 	const dropdown = useRef();
@@ -21,8 +22,8 @@ export default function DropdownButton({
 		const drop = dropdown.current.getBoundingClientRect();
 		const parent = container.current.getBoundingClientRect();
 
-		let x = parent.x;
-		let y = parent.y + parent.height;
+		let x = parent.x + offset.x;
+		let y = parent.y + parent.height + offset.y;
 
 		// Right aligned
 		if (x + drop.width > window.innerWidth) {
@@ -60,6 +61,7 @@ export default function DropdownButton({
 			window.removeEventListener('scroll', handleScrollAndResize);
 			window.removeEventListener('resize', handleScrollAndResize);
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isVisible]);
 
 	return (
@@ -67,7 +69,7 @@ export default function DropdownButton({
 			element={{ slug: 'button' }}
 			onClick={handleClick}
 			onBlur={() => setVisibility(false)}
-			className={className || ''}
+			className={`${className || ''} ${isVisible ? 'show-dropdown' : ''}`}
 			style={{ ...style, position: 'relative' }}
 			_ref={container}
 		>

@@ -7,20 +7,11 @@
 	max-height: calc(100vh - 2em);
 	overflow-y: auto;
 	visibility: hidden;
-}
-
-.dropdown {
 	position: fixed;
 }
 
 .dropdown:global(.visible) {
 	visibility: visible;
-}
-
-.title {
-	margin: 5px 50px 10px 15px;
-	font-weight: normal;
-	font-size: 16px;
 }
 
 .item {
@@ -81,5 +72,5 @@
 }
 
 .icon :global(.icon) {
-	margin-right: 10px;
+	margin-right: 15px;
 }

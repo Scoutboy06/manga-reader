@@ -1,10 +1,11 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigate, useLocation, NavLink } from 'react-router-dom';
 
-import Dropdown from '../../Dropdown';
-import BlurContainer from '../../BlurContainer';
+import DropdownButton from '../../DropdownButton';
+import NewMangaPopup from '../../Popups/NewMangaPopup';
 
 import { ProfileContext } from '../../../contexts/ProfileContext';
+import { PopupContext } from './../../../contexts/PopupContext';
 
 import styles from './LibraryNavbar.module.css';
 
@@ -12,56 +13,45 @@ export default function LibraryNavbar() {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const [profileData, profileActions] = useContext(ProfileContext);
-
-	const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+	const [, popupActions] = useContext(PopupContext);
 
 	return (
 		<nav className={styles.navbar}>
 			<div>
-				<BlurContainer
+				<DropdownButton
 					className={styles.profileDropdown}
-					onClick={() => setShowProfileDropdown(bool => !bool)}
-					onBlur={() => setShowProfileDropdown(false)}
+					dropdownItems={[
+						...profileData.profiles.map(profile => ({
+							content: profile.name,
+							icon: <img src={profile.imageUrl} alt='Profile' />,
+							action: () => profileActions.selectProfile(profile),
+						})),
+						'divider',
+						{
+							content: 'Profiles settings',
+							action: () => navigate(`/settings/profiles`),
+							icon: <i className='icon'>manage_accounts</i>,
+						},
+						{
+							content: 'Exit profile',
+							action: () => {
+								profileActions.deselectProfile();
+								navigate('/');
+							},
+							icon: <i className='icon'>logout</i>,
+						},
+						'divider',
+						{
+							content: 'App settings',
+							action: () => navigate('/settings/application'),
+							icon: <i className='icon'>settings</i>,
+						},
+					]}
+					offset={{ x: 0, y: 5 }}
 				>
 					<img src={profileData.currentProfile.imageUrl} alt='Profile' />
-					<i
-						className='icon'
-						style={{
-							transform: `rotate(${(showProfileDropdown * 2 - 1) * 90}deg)`,
-						}}
-					>
-						chevron_left
-					</i>
-
-					<Dropdown
-						items={[
-							...profileData.profiles.map(profile => ({
-								content: profile.name,
-								icon: <img src={profile.imageUrl} alt='Profile' />,
-								action: () => profileActions.selectProfile(profile),
-							})),
-							'divider',
-							{
-								content: 'Profiles settings',
-								action: () => navigate(`/settings/profiles`),
-								icon: <i className='icon'>manage_accounts</i>,
-							},
-							{
-								content: 'Exit profile',
-								action: () => profileActions.deselectProfile(),
-								icon: <i className='icon'>logout</i>,
-							},
-							'divider',
-							{
-								content: 'App settings',
-								action: () => navigate('/settings/application'),
-								icon: <i className='icon'>settings</i>,
-							},
-						]}
-						pos={{ x: 0, y: 35 }}
-						isShown={showProfileDropdown}
-					/>
-				</BlurContainer>
+					<i className='icon'>chevron_left</i>
+				</DropdownButton>
 			</div>
 
 			<div>
@@ -77,11 +67,22 @@ export default function LibraryNavbar() {
 			</div>
 
 			<div>
-				{location.pathname === '/animes' && (
-					<button className={styles.button}>
-						<i className='icon'>search</i>
-					</button>
-				)}
+				<button
+					className={styles.button}
+					onClick={() => {
+						popupActions.createPopup({
+							title: 'Search for a new manga',
+							content:
+								location.pathname === '/mangas' ? (
+									NewMangaPopup
+								) : (
+									<h1>Hello</h1>
+								),
+						});
+					}}
+				>
+					<i className='icon'>search</i>
+				</button>
 			</div>
 		</nav>
 	);
