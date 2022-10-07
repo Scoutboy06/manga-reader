@@ -46,12 +46,12 @@ export async function checkMangaUpdates() {
 			manga.chapters = meta.chapters;
 			manga.save();
 
-			const user = await User.findById(manga.ownerId);
+			if (!manga.notificationsOn) return resolve();
 
+			const user = await User.findById(manga.ownerId);
 			await Promise.all(newChapters.map(chapter => new Promise(async (resolve, reject) => {
 				const embed = {
 					title: `${manga.title} - ${chapter.title}`,
-					description: `<@${user.discordUserId}>`,
 					color: 0x1eaeec,
 					thumbnail: {
 						url: manga.poster,
@@ -61,7 +61,11 @@ export async function checkMangaUpdates() {
 					url: `${process.env.WEBSITE_URI}/read/${manga.urlName}/${chapter.urlName}`
 				};
 
-				await sendDiscordWebhookUpdate({ embeds: [embed] });
+				await sendDiscordWebhookUpdate({
+					username: 'Manga updates',
+					content: `<@${user.discordUserId}>`,
+					embeds: [embed],
+				});
 				resolve();
 			})));
 		}
@@ -89,13 +93,13 @@ export async function checkAnimeUpdates() {
 			season.episodes = meta.episodes;
 			anime.save();
 
-			const user = await User.findById(anime.ownerId);
+			if (!anime.notificationsOn) return resolve();
 
+			const user = await User.findById(anime.ownerId);
 			await Promise.all(newEpisodes.map(episode => new Promise(async (resolve, reject) => {
 
 				const embed = {
 					title: `${anime.title} - ${season.name} - Episode ${episode.number}`,
-					description: `<@${user.discordUserId}>`,
 					color: 0x1eaeec,
 					thumbnail: {
 						url: anime.poster.small,
@@ -105,7 +109,11 @@ export async function checkAnimeUpdates() {
 					url: `${process.env.WEBSITE_URI}/watch/${anime.urlName}/${season.urlName}/${episode.urlName}`
 				};
 
-				await sendDiscordWebhookUpdate({ embeds: [embed] });
+				await sendDiscordWebhookUpdate({
+					username: 'Anime updates',
+					content: `<@${user.discordUserId}>`,
+					embeds: [embed],
+				});
 				resolve();
 			})));
 		}
