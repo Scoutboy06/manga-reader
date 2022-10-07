@@ -36,108 +36,11 @@ export default function Mangas() {
 				<title>Choose a manga</title>
 			</Head>
 
-			<section className={styles.section1}>
-				{mangas?.map(
-					manga =>
-						!manga.hasRead && (
-							<MediaCard
-								key={manga._id}
-								type='manga'
-								title={manga.name || manga.title}
-								subtitle={parseChapterName(manga.currentChapter)}
-								href={`/mangas/${manga.urlName}`}
-								imgUrl={manga.coverUrl || manga.poster}
-								completed={{ name: 'hasRead', value: manga.hasRead }}
-								id={manga._id}
-								seriesHref={null}
-								dropdownItems={[
-									{
-										content: 'Edit metadata',
-										icon: <i className='icon'>edit</i>,
-										action: () => {
-											popupActions.createPopup({
-												title: 'Edit metadata',
-												content: EditMetadata,
-												data: manga,
-											});
-										},
-									},
-									{
-										content: 'Edit cover',
-										icon: <i className='icon'>image</i>,
-										action: () => {
-											popupActions.createPopup({
-												title: 'Edit manga cover',
-												content: EditMangaCover,
-												data: manga,
-											});
-										},
-									},
-									manga.status === 'ongoing'
-										? {
-												content: `${
-													manga.notificationsOn ? 'Disable' : 'Enable'
-												} notifications`,
-												icon: (
-													<i className='icon'>
-														{manga.notificationsOn
-															? 'notifications_off'
-															: 'notifications_active'}
-													</i>
-												),
-												action: () => {
-													fetchAPI(`/mangas/${manga._id}`, {
-														method: 'PATCH',
-														body: JSON.stringify({
-															notificationsOn: !manga.notificationsOn,
-														}),
-													}).then(() => updateLibrary());
-												},
-										  }
-										: null,
-									'divider',
-									{
-										content: 'Delete',
-										icon: <i className='icon'>delete</i>,
-										action: () => {
-											if (
-												window.confirm(
-													'Are you sure you want to delete this manga? The action cannot be undone.'
-												)
-											) {
-												fetchAPI(`/mangas/${manga._id}`, {
-													method: 'DELETE',
-												}).then(() => updateLibrary());
-											}
-										},
-									},
-								]}
-								hasUpdates={manga.hasUpdates}
-							/>
-						)
-				)}
-			</section>
-
-			<section className={styles.section2} data-show={showFinishedMangas}>
-				<button
-					onClick={() => setShowFinishedMangas(!showFinishedMangas)}
-					className={styles.toggleFinshedMangasButton}
-				>
-					<span>Finished reading</span>
-					<i
-						className='icon'
-						style={{
-							transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
-						}}
-					>
-						expand_more
-					</i>
-				</button>
-
-				<div>
+			<main>
+				<section className={styles.section1}>
 					{mangas?.map(
 						manga =>
-							manga.hasRead && (
+							!manga.hasRead && (
 								<MediaCard
 									key={manga._id}
 									type='manga'
@@ -171,6 +74,28 @@ export default function Mangas() {
 												});
 											},
 										},
+										manga.status === 'ongoing'
+											? {
+													content: `${
+														manga.notificationsOn ? 'Disable' : 'Enable'
+													} notifications`,
+													icon: (
+														<i className='icon'>
+															{manga.notificationsOn
+																? 'notifications_off'
+																: 'notifications_active'}
+														</i>
+													),
+													action: () => {
+														fetchAPI(`/mangas/${manga._id}`, {
+															method: 'PATCH',
+															body: JSON.stringify({
+																notificationsOn: !manga.notificationsOn,
+															}),
+														}).then(() => updateLibrary());
+													},
+											  }
+											: null,
 										'divider',
 										{
 											content: 'Delete',
@@ -188,11 +113,88 @@ export default function Mangas() {
 											},
 										},
 									]}
+									hasUpdates={manga.hasUpdates}
 								/>
 							)
 					)}
-				</div>
-			</section>
+				</section>
+
+				<section className={styles.section2} data-show={showFinishedMangas}>
+					<button
+						onClick={() => setShowFinishedMangas(!showFinishedMangas)}
+						className={styles.toggleFinshedMangasButton}
+					>
+						<span>Finished reading</span>
+						<i
+							className='icon'
+							style={{
+								transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
+							}}
+						>
+							expand_more
+						</i>
+					</button>
+
+					<div>
+						{mangas?.map(
+							manga =>
+								manga.hasRead && (
+									<MediaCard
+										key={manga._id}
+										type='manga'
+										title={manga.name || manga.title}
+										subtitle={parseChapterName(manga.currentChapter)}
+										href={`/mangas/${manga.urlName}`}
+										imgUrl={manga.coverUrl || manga.poster}
+										completed={{ name: 'hasRead', value: manga.hasRead }}
+										id={manga._id}
+										seriesHref={null}
+										dropdownItems={[
+											{
+												content: 'Edit metadata',
+												icon: <i className='icon'>edit</i>,
+												action: () => {
+													popupActions.createPopup({
+														title: 'Edit metadata',
+														content: EditMetadata,
+														data: manga,
+													});
+												},
+											},
+											{
+												content: 'Edit cover',
+												icon: <i className='icon'>image</i>,
+												action: () => {
+													popupActions.createPopup({
+														title: 'Edit manga cover',
+														content: EditMangaCover,
+														data: manga,
+													});
+												},
+											},
+											'divider',
+											{
+												content: 'Delete',
+												icon: <i className='icon'>delete</i>,
+												action: () => {
+													if (
+														window.confirm(
+															'Are you sure you want to delete this manga? The action cannot be undone.'
+														)
+													) {
+														fetchAPI(`/mangas/${manga._id}`, {
+															method: 'DELETE',
+														}).then(() => updateLibrary());
+													}
+												},
+											},
+										]}
+									/>
+								)
+						)}
+					</div>
+				</section>
+			</main>
 
 			<button
 				className={styles.newManga}

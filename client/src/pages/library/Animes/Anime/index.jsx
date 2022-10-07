@@ -174,6 +174,11 @@ export default function Anime() {
 						</div>
 					)}
 				</div>
+
+				<div className={styles.backdrop}>
+					{/* eslint-disable-next-line jsx-a11y/alt-text */}
+					<img src={animeMeta?.backdrop?.large} />
+				</div>
 			</main>
 		</>
 	);

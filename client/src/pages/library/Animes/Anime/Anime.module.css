@@ -34,6 +34,7 @@
 
 .mainContainer {
 	width: 100%;
+	margin-top: 64px;
 	/* padding: 60px; */
 	padding: 60px 4vw;
 	display: flex;
@@ -162,6 +163,24 @@
 	position: relative;
 }
 
+.backdrop {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	background-color: #000;
+	/* display: none; */
+}
+
+.backdrop img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0.25;
+}
+
 @media (max-width: 800px) {
 	.mainContainer {
 		flex-direction: column;
@@ -189,5 +208,9 @@
 
 	.description {
 		font-size: 14px;
+	}
+
+	.backdrop {
+		display: none;
 	}
 }
