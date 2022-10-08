@@ -35,6 +35,11 @@ export default async function getMangaMeta({ urlName, host }) {
 		const chapterNumber = title.match(/chapter (\d+\.?\d*)/i)?.[1];
 		if (!chapterNumber) return;
 
+		for (const chapter of chapters) {
+			if (chapter.urlName === `chapter-${chapterNumber}`)
+				return;
+		}
+
 		chapters.push({
 			title,
 			number: Number(chapterNumber),

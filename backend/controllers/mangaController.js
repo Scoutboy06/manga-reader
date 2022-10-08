@@ -82,8 +82,7 @@ export const createManga = asyncHandler(async (req, res) => {
 	}
 
 	const meta = await getMangaMeta({ urlName: sourceUrlName, host });
-	const urlName = encodeURI(meta.title.toLowerCase().replaceAll(':', '').replaceAll(' ', '-'));
-	console.log(meta.poster);
+	const urlName = encodeURI(meta.title.toLowerCase().replaceAll(/[^ a-z0-9-._~:\[\]@!$'()*+,;%=]/g, '').replaceAll(/[ ]+/g, '-'));
 
 	const manga = new Manga({
 		ownerId: userId,
