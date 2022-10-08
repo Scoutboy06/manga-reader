@@ -20,11 +20,11 @@ export default function Read() {
 	const [{ contentWidth }, { setContentWidth }] = useContext(SettingsContext);
 
 	const { data: metadata } = useSWRImmutable(
-		() => `/users/${currentProfile._id}/mangas/${params.name}`
+		`/users/${currentProfile._id}/mangas/${params.name}`
 	);
 
 	const { data: chapterMeta } = useSWRImmutable(
-		() => `/mangas/${metadata._id}/${params.chapter}`
+		params.chapter ? `/mangas/${metadata._id}/${params.chapter}` : null
 	);
 
 	const isLoading = !chapterMeta || !metadata;

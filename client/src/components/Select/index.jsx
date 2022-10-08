@@ -80,6 +80,7 @@ export default function Select({
 
 	useEffect(() => {
 		if (isOpen) {
+			scrollToSelectedItem();
 			window.addEventListener('scroll', handleScrollAndResize);
 			window.addEventListener('resize', handleScrollAndResize);
 		} else {

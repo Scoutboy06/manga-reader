@@ -23,6 +23,7 @@
 	font-family: var(--font-family);
 	color: #fff;
 	text-align: left;
+	white-space: nowrap;
 }
 
 .dropdown:global(.small) .item {
