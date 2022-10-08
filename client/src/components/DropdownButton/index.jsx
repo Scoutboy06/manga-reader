@@ -16,7 +16,6 @@ export default function DropdownButton({
 	const dropdown = useRef();
 
 	const [isVisible, setVisibility] = useState(false);
-	const [pos, setPos] = useState({ x: 0, y: 0 });
 
 	const handleClick = e => {
 		const drop = dropdown.current.getBoundingClientRect();
@@ -35,7 +34,9 @@ export default function DropdownButton({
 			y = parent.y - drop.height;
 		}
 
-		setPos({ x, y });
+		dropdown.current.style.top = y + 'px';
+		dropdown.current.style.left = x + 'px';
+
 		if (
 			e?.nativeEvent?.target === container.current ||
 			typeof e === 'boolean'
@@ -79,7 +80,6 @@ export default function DropdownButton({
 				title={title}
 				items={dropdownItems}
 				isShown={isVisible}
-				pos={pos}
 				showSelected={false}
 				_ref={dropdown}
 				noPadding={noPadding}

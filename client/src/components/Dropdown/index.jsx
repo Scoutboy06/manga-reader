@@ -1,20 +1,10 @@
 import styles from './Dropdown.module.css';
 
-export default function Dropdown({
-	items,
-	isShown,
-	pos,
-	_ref,
-	noPadding = false,
-}) {
+export default function Dropdown({ items, isShown, _ref, noPadding = false }) {
 	return (
 		<div
 			className={styles.dropdown + (isShown ? ' visible' : '')}
-			style={{
-				left: pos.x,
-				top: pos.y,
-				fontFamily: 'var(--font-family)',
-			}}
+			style={{ fontFamily: 'var(--font-family)' }}
 			onClick={e => e.preventDefault()}
 			ref={_ref}
 		>

@@ -56,8 +56,10 @@ export default function Select({
 		// Prefered alignment is to the left
 		else x = leftPos;
 
-		setPos({ x, y });
-		setMaxHeight(Math.min(window.innerHeight - 2 * padding, maxHeight));
+		dropdown.current.style.left = `${x}px`;
+		dropdown.current.style.top = `${y}px`;
+		dropdown.current.style.maxHeight =
+			Math.min(window.innerHeight - 2 * padding, maxHeight) + 'px';
 	};
 
 	const scrollToSelectedItem = () => {
@@ -121,10 +123,7 @@ export default function Select({
 					isOpen ? 'visible' : ''
 				} ${size}`}
 				style={{
-					top: pos.y,
-					left: pos.x,
 					fontFamily: 'var(--font-family)',
-					maxHeight,
 				}}
 				onClick={e => e.preventDefault()}
 				ref={dropdown}

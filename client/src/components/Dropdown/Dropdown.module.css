@@ -4,11 +4,9 @@
 	z-index: 999;
 	cursor: auto;
 	padding: 5px 0;
-	/* max-height: calc(100vh - 5em); */
 	overflow-y: auto;
 	visibility: hidden;
 	position: fixed;
-	/* display: flex; */
 }
 
 .dropdown:global(.visible) {
