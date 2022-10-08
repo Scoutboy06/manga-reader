@@ -11,6 +11,7 @@ import AddToLibraryButton from '../../../../components/AddToLibraryButton';
 import MediaCard from './../../../../components/MediaCard/index';
 
 import styles from './Anime.module.css';
+import Image from './../../../../components/Image';
 
 export default function Anime() {
 	const params = useParams();
@@ -59,9 +60,15 @@ export default function Anime() {
 			<main className={styles.mainContainer}>
 				<div className={styles.imageContainer}>
 					{isAnime ? (
-						<img src={animeMeta.poster.large} alt={animeMeta.title} />
+						<Image
+							src={animeMeta.poster.large}
+							placeholder={animeMeta.poster.small}
+						/>
 					) : (
-						<img src={currentSeason.poster.large} alt={currentSeason.name} />
+						<Image
+							src={currentSeason.poster.large}
+							placeholder={currentSeason.poster.small}
+						/>
 					)}
 				</div>
 
@@ -176,8 +183,11 @@ export default function Anime() {
 				</div>
 
 				<div className={styles.backdrop}>
-					{/* eslint-disable-next-line jsx-a11y/alt-text */}
-					<img src={animeMeta?.backdrop?.large} />
+					<Image
+						src={animeMeta?.backdrop?.large}
+						placeholder={animeMeta?.backdrop?.small}
+						blur={3}
+					/>
 				</div>
 			</main>
 		</>
