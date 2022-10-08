@@ -6,7 +6,7 @@ import styles from './Select.module.css';
 import dropdownStyles from '../Dropdown/Dropdown.module.css';
 
 export default function Select({
-	children,
+	options = [],
 	defaultValue,
 	value,
 	onChange = () => {},
@@ -16,8 +16,6 @@ export default function Select({
 }) {
 	const [selectedValue, setSelectedValue] = useState(defaultValue);
 	const [isOpen, setIsOpen] = useState(false);
-	const [pos, setPos] = useState({ x: 0, y: 0 });
-	const [maxHeight, setMaxHeight] = useState(0);
 
 	const container = useRef();
 	const dropdown = useRef();
@@ -63,8 +61,8 @@ export default function Select({
 	};
 
 	const scrollToSelectedItem = () => {
-		const selectedIndex = children.findIndex(
-			child => child.props.value === selectedValue
+		const selectedIndex = options.findIndex(
+			child => child.value === selectedValue
 		);
 		if (!selectedIndex) return;
 
@@ -78,7 +76,6 @@ export default function Select({
 
 	useEffect(() => {
 		if (value !== undefined) setSelectedValue(value);
-		// setMaxHeight(window.innerHeight - y)
 	}, [value]);
 
 	useEffect(() => {
@@ -122,26 +119,23 @@ export default function Select({
 				className={`${dropdownStyles.dropdown} ${
 					isOpen ? 'visible' : ''
 				} ${size}`}
-				style={{
-					fontFamily: 'var(--font-family)',
-				}}
+				style={{ fontFamily: 'var(--font-family)' }}
 				onClick={e => e.preventDefault()}
 				ref={dropdown}
 			>
-				{children?.map((child, i) =>
-					child.type === 'hr' ? (
+				{options?.map((item, i) =>
+					item === 'divider' ? (
 						<div key={`hr_${i}`} className={dropdownStyles.divider}></div>
 					) : (
 						<div
-							key={child.props.value}
+							key={`${item.value}_${i}`}
 							className={
 								dropdownStyles.item +
-								(selectedValue === child.props.value ? ' selected' : '')
+								(selectedValue === item.value ? ' selected' : '')
 							}
-							onClick={() => selectHandler(child.props.value)}
+							onClick={() => selectHandler(item.value)}
 						>
-							<i className={`${styles.check} icon`}>check</i>
-							{child}
+							{item.label}
 						</div>
 					)
 				)}

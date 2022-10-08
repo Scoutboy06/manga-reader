@@ -33,22 +33,6 @@ export default function Read() {
 	const [nextChapter, setNextChapter] = useState(null);
 	const [prevChapter, setPrevChapter] = useState(null);
 
-	const paginate = dir => {
-		window.scrollTo(0, 0);
-		const { chapters } = metadata;
-
-		if (dir === -1) {
-			navigate(`/mangas/${metadata.urlName}/${prevChapter.urlName}`);
-		} else if (dir === 1) {
-			navigate(`/mangas/${metadata.urlName}/${nextChapter.urlName}`);
-		}
-
-		const newChapterIndex =
-			chapters.findIndex(chapter => chapter.urlName === params.chapter) + dir;
-		setNextChapter(chapters[newChapterIndex + 1]);
-		setPrevChapter(chapters[newChapterIndex - 1]);
-	};
-
 	// Load new chapter
 	useEffect(() => {
 		if (!metadata) return;
@@ -72,7 +56,7 @@ export default function Read() {
 			method: 'POST',
 			body: JSON.stringify({ currentChapter: params.chapter }),
 		});
-	}, [metadata, navigate, params]);
+	}, [metadata, navigate, params.chapter]);
 
 	return (
 		<>
@@ -87,13 +71,11 @@ export default function Read() {
 							<h1 className={styles.title}>{currentChapter?.title}</h1>
 						}
 						placement='bl'
-					>
-						{metadata?.chapters?.reverse()?.map(chapter => (
-							<option value={chapter.urlName} key={chapter.urlName}>
-								{chapter.title}
-							</option>
-						))}
-					</Select>
+						options={metadata?.chapters?.map(chapter => ({
+							value: chapter.urlName,
+							label: chapter.title,
+						}))}
+					/>
 				</div>
 
 				<div className={styles.container} style={{ marginBottom: 30 }}>
@@ -118,22 +100,26 @@ export default function Read() {
 								: `${contentWidth * 100}%`
 						}
 						placement='br'
-					>
-						<option value='pageWidth'>Page width</option>
-						<hr />
-						<option value={0.5}>50%</option>
-						<option value={0.75}>75%</option>
-						<option value={0.9}>90%</option>
-						<option value={1.0}>100%</option>
-						<option value={1.25}>125%</option>
-						<option value={1.5}>150%</option>
-						<option value={2.0}>200%</option>
-					</Select>
+						options={[
+							{ value: 'pageWidth', label: 'Page width' },
+							'divider',
+							{ value: 0.5, label: '50%' },
+							{ value: 0.75, label: '75%' },
+							{ value: 0.9, label: '90%' },
+							{ value: 1.0, label: '100%' },
+							{ value: 1.25, label: '125%' },
+							{ value: 1.5, label: '150%' },
+							{ value: 2.0, label: '200%' },
+						]}
+					/>
 				</div>
 
 				<div className={styles.container}>
 					<button
-						onClick={() => paginate(-1)}
+						onClick={() => {
+							window.scrollTo(0, 0);
+							navigate(`/mangas/${metadata.urlName}/${prevChapter.urlName}`);
+						}}
 						className={styles.button + ' icon-left'}
 						disabled={isLoading || !prevChapter}
 					>
@@ -146,7 +132,10 @@ export default function Read() {
 					</Link>
 
 					<button
-						onClick={() => paginate(1)}
+						onClick={() => {
+							window.scrollTo(0, 0);
+							navigate(`/mangas/${metadata.urlName}/${nextChapter.urlName}`);
+						}}
 						className={styles.button + ' icon-right'}
 						disabled={isLoading || !nextChapter}
 					>
@@ -169,7 +158,10 @@ export default function Read() {
 			<div className={styles.header}>
 				<div className={styles.container}>
 					<button
-						onClick={() => paginate(-1)}
+						onClick={() => {
+							window.scrollTo(0, 0);
+							navigate(`/mangas/${metadata.urlName}/${prevChapter.urlName}`);
+						}}
 						className={styles.button + ' icon-left'}
 						disabled={isLoading || !prevChapter}
 					>
@@ -182,7 +174,10 @@ export default function Read() {
 					</Link>
 
 					<button
-						onClick={() => paginate(1)}
+						onClick={() => {
+							window.scrollTo(0, 0);
+							navigate(`/mangas/${metadata.urlName}/${nextChapter.urlName}`);
+						}}
 						className={styles.button + ' icon-right'}
 						disabled={isLoading || !nextChapter}
 					>
