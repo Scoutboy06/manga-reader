@@ -39,8 +39,9 @@ router.route('/users')
 	.get(getAllUsers)
 	.post(createUser)
 	.delete(deleteUser)
-	.patch(updateUser)
-router.get('/users/:userId', getUserById);
+router.route('/users/:userId')
+	.get(getUserById)
+	.patch(updateUser);
 
 // Mangas
 router.route('/users/:userId/mangas')
