@@ -6,9 +6,9 @@
 
 .title {
 	color: rgba(255, 255, 255, 0.7);
-	padding: 10px 0;
+	padding: 0.2em 0;
 	font-weight: 100;
-	height: 52px;
+	font-size: 1.5em;
 }
 
 /* .chapterSelect {

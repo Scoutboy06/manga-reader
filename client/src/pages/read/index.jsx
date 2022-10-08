@@ -1,5 +1,6 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import useSWRImmutable from 'swr/immutable';
 import { useNavigate, useParams, Outlet } from 'react-router-dom';
 
 import fetchAPI from '../../functions/fetchAPI';
@@ -18,14 +19,19 @@ export default function Read() {
 	const [{ currentProfile }] = useContext(ProfileContext);
 	const [{ contentWidth }, { setContentWidth }] = useContext(SettingsContext);
 
-	const [isLoading, setIsLoading] = useState(false);
-	const [metadata, setMetadata] = useState();
-	const [chapterMeta, setChapterMeta] = useState();
+	const { data: metadata } = useSWRImmutable(
+		() => `/users/${currentProfile._id}/mangas/${params.name}`
+	);
 
+	const { data: chapterMeta } = useSWRImmutable(
+		() => `/mangas/${metadata._id}/${params.chapter}`
+	);
+
+	const isLoading = !chapterMeta || !metadata;
+
+	const [currentChapter, setCurrentChapter] = useState(null);
 	const [nextChapter, setNextChapter] = useState(null);
 	const [prevChapter, setPrevChapter] = useState(null);
-
-	const hasInit = useRef(false);
 
 	const paginate = dir => {
 		window.scrollTo(0, 0);
@@ -43,74 +49,51 @@ export default function Read() {
 		setPrevChapter(chapters[newChapterIndex - 1]);
 	};
 
-	// Init
-	useEffect(() => {
-		async function init() {
-			hasInit.current = true;
-			setIsLoading(true);
-
-			const meta = await fetchAPI(
-				`/users/${currentProfile._id}/mangas/${params.name}`
-			);
-
-			setMetadata(meta);
-
-			if (!params.chapter) {
-				navigate(`/mangas/${params.name}/${meta.currentChapter}`, {
-					replace: true,
-				});
-			}
-
-			const currentChapterIndex = meta.chapters.findIndex(
-				chapter => chapter.urlName === meta.currentChapter
-			);
-			setNextChapter(meta.chapters[currentChapterIndex + 1]);
-			setPrevChapter(meta.chapters[currentChapterIndex - 1]);
-
-			setIsLoading(false);
-		}
-
-		if (!hasInit.current && currentProfile) init();
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [params, currentProfile]);
-
 	// Load new chapter
 	useEffect(() => {
-		async function loadChapter() {
-			setIsLoading(true);
+		if (!metadata) return;
 
-			const chapMeta = await fetchAPI(
-				`/mangas/${metadata._id}/${params.chapter}`,
-				{},
-				true
-			);
-
-			setChapterMeta(chapMeta);
-			setIsLoading(false);
-
-			// Sync chapter with server
-			fetchAPI(`/mangas/${metadata._id}/currentChapter`, {
-				method: 'POST',
-				body: JSON.stringify({ currentChapter: params.chapter }),
+		if (!params.chapter) {
+			navigate(`/mangas/${metadata.urlName}/${metadata.currentChapter}`, {
+				replace: true,
 			});
 		}
 
-		if (metadata) loadChapter();
-	}, [metadata, params]);
+		const { chapters } = metadata;
+		const currentChapterIndex = chapters.findIndex(
+			chapter => chapter.urlName === params.chapter
+		);
+		setPrevChapter(chapters[currentChapterIndex - 1]);
+		setCurrentChapter(chapters[currentChapterIndex]);
+		setNextChapter(chapters[currentChapterIndex + 1]);
+
+		// Sync chapter with server
+		fetchAPI(`/mangas/${metadata._id}/currentChapter`, {
+			method: 'POST',
+			body: JSON.stringify({ currentChapter: params.chapter }),
+		});
+	}, [metadata, navigate, params]);
 
 	return (
 		<>
 			<div className={styles.header}>
-				<h2 className={styles.title}>{chapterMeta?.title}</h2>
 				<div style={{ marginBottom: 10 }}>
-					{/* <Select onChange={console.log} className={styles.chapterSelect}>
+					<Select
+						onChange={chapterUrlName =>
+							navigate(`/mangas/${params.name}/${chapterUrlName}`)
+						}
+						value={params.chapter}
+						containerText={
+							<h1 className={styles.title}>{currentChapter?.title}</h1>
+						}
+						placement='bl'
+					>
 						{metadata?.chapters?.reverse()?.map(chapter => (
 							<option value={chapter.urlName} key={chapter.urlName}>
 								{chapter.title}
 							</option>
 						))}
-					</Select> */}
+					</Select>
 				</div>
 
 				<div className={styles.container} style={{ marginBottom: 30 }}>
@@ -134,6 +117,7 @@ export default function Read() {
 								? 'Page width'
 								: `${contentWidth * 100}%`
 						}
+						placement='br'
 					>
 						<option value='pageWidth'>Page width</option>
 						<hr />
@@ -175,7 +159,10 @@ export default function Read() {
 			<Outlet
 				context={{
 					isLoading,
-					chapterMeta,
+					chapterMeta: chapterMeta,
+					currentChapter,
+					prevChapter,
+					nextChapter,
 				}}
 			/>
 
