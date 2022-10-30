@@ -28,7 +28,7 @@ export async function checkMangaUpdates() {
 	const hosts = await Host.find({});
 	let updates = 0;
 
-	await Promise.all(ongoingMangas.map(manga => new Promise(async (resolve, reject) => {
+	await Promise.allSettled(ongoingMangas.map(manga => new Promise(async (resolve, reject) => {
 		const host = hosts.find(host => host._id.toString() === manga.hostId.toString());
 		if (!host) {
 			console.log('No host: ' + manga.hostId);
@@ -81,7 +81,7 @@ export async function checkAnimeUpdates() {
 	const subscribedAnimes = await Anime.find({ updatesOn: true });
 	let updates = 0;
 
-	await Promise.all(subscribedAnimes.map(anime => new Promise(async (resolve, reject) => {
+	await Promise.allSettled(subscribedAnimes.map(anime => new Promise(async (resolve, reject) => {
 		const season = anime.seasons[anime.seasons.length - 1];
 		const meta = await getAnimeMeta(season.gogoUrlName, false);
 
