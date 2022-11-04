@@ -5,10 +5,7 @@
 	margin-bottom: 5px;
 	height: 65px;
 	align-items: center;
-}
-
-.navbar > * {
-	width: 100%;
+	justify-content: space-between;
 }
 
 .buttonContainer {

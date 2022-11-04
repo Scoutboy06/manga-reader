@@ -1,14 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useSWR from 'swr';
-import NProgress from 'nprogress';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 
 import Head from '../../components/Head';
 import Navbar from '../../components/navbars/watch';
-
-import { fetcher } from '../../functions/fetchAPI.js';
 
 import styles from './watch.module.css';
 
@@ -18,48 +15,48 @@ export default function Anime() {
 
 	const { data: animeMeta } = useSWR(
 		`/users/${currentProfile._id}/animes/${params.name}`,
-		fetcher
+		{
+			revalidateIfStale: false,
+			revalidateOnFocus: false,
+			revalidateOnReconnect: false,
+		}
 	);
 
 	const currentSeason = animeMeta?.seasons?.find(
 		season => season.urlName === params.season
 	);
 
-	const { data: currentEpisode } = useSWR(
+	const { data: episodeMeta } = useSWR(
 		() =>
-			`/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`,
-		fetcher
+			`/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`
 	);
 
-	const [prevEpisode, setPrevEpisode] = useState();
-	const [nextEpisode, setNextEpisode] = useState();
+	const [prevEpisode, setPrevEpisode] = useState(null);
+	const [currentEpisode, setCurrentEpisode] = useState(null);
+	const [nextEpisode, setNextEpisode] = useState(null);
 
 	useEffect(() => {
-		NProgress.start();
-	}, [params]);
+		if (currentSeason?.parts) {
+			parts: for (let i = 0; i < currentSeason.parts.length; i++) {
+				const part = currentSeason.parts[i];
+				// console.log(part.episodes.length);
 
-	useEffect(() => {
-		if (currentSeason?.episodes) {
-			const { episodes } = currentSeason;
-
-			const curr = episodes.find(
-				episode => episode.urlName === params.episodeUrlName
-			);
-			const index = episodes.indexOf(curr);
-			const prev = episodes[index - 1];
-			const next = episodes[index + 1];
-
-			setPrevEpisode(prev);
-			setNextEpisode(next);
+				for (let j = 0; i < part.episodes.length; j++) {
+					if (part.episodes[j]?.urlName === params.episodeUrlName) {
+						setPrevEpisode(part.episodes[j - 1]);
+						setCurrentEpisode(part.episodes[j]);
+						setNextEpisode(part.episodes[j + 1]);
+						break parts;
+					}
+				}
+			}
 		}
 	}, [currentSeason, params.episodeUrlName]);
 
 	return (
 		<>
 			<Head>
-				<title>
-					{currentEpisode ? 'Episode ' + currentEpisode?.number : ''}
-				</title>
+				<title>{'Episode ' + currentEpisode?.number || ''}</title>
 			</Head>
 
 			<Navbar />
@@ -67,14 +64,13 @@ export default function Anime() {
 			<main className={styles.mainContainer}>
 				<div className={styles.videoContainer}>
 					<iframe
-						src={currentEpisode?.iframeSrc}
+						src={episodeMeta?.iframeSrc}
 						allowFullScreen={true}
 						frameBorder='0'
 						marginWidth='0'
 						marginHeight='0'
 						scrolling='no'
 						title='video'
-						onLoad={() => NProgress.done()}
 					></iframe>
 					{/* <div></div> */}
 				</div>
@@ -82,7 +78,7 @@ export default function Anime() {
 				<div className={styles.paginationContainer}>
 					{prevEpisode ? (
 						<Link
-							to={`/animes/${params.name}/${currentSeason.urlName}/${prevEpisode.urlName}`}
+							to={`/animes/${params.name}/${currentSeason?.urlName}/${prevEpisode.urlName}`}
 						>
 							<i className='icon'>chevron_left</i> Episode {prevEpisode.number}
 						</Link>
@@ -91,7 +87,7 @@ export default function Anime() {
 					)}
 					{nextEpisode ? (
 						<Link
-							to={`/animes/${params.name}/${currentSeason.urlName}/${nextEpisode.urlName}`}
+							to={`/animes/${params.name}/${currentSeason?.urlName}/${nextEpisode.urlName}`}
 						>
 							Episode {nextEpisode.number}
 							<i className='icon'>chevron_right</i>
@@ -110,26 +106,28 @@ export default function Anime() {
 						</h3>
 
 						<div className={styles.buttonContainer}>
+							<button className={styles.button} title='Toggle watch state'>
+								<i
+									className='icon'
+									style={{
+										color:
+											currentEpisode?.watchStatus === 'completed'
+												? '#c33'
+												: '#fff',
+									}}
+								>
+									check
+								</i>
+							</button>
 							<button className={styles.button} title='Add to your favourites'>
 								<i className='icon'>favorite</i>
 							</button>
 							<button
 								className={styles.button}
-								title='Display in picture-in-picture mode'
-							>
-								<i className='icon'>picture_in_picture</i>
-							</button>
-							<button
-								className={styles.button}
 								title='Open source video'
-								onClick={() =>
-									window.open(currentEpisode?.originalUrl, '_blank')
-								}
+								onClick={() => window.open(episodeMeta?.originalUrl, '_blank')}
 							>
 								<i className='icon'>open_in_new</i>
-							</button>
-							<button className={styles.button} title='Share this video'>
-								<i className='icon'>share</i>
 							</button>
 						</div>
 					</div>
@@ -138,21 +136,26 @@ export default function Anime() {
 				<div className={styles.episodes}>
 					<p>Episodes</p>
 
-					{currentSeason?.episodes?.map(episode => (
-						<Link
-							key={'EP ' + episode.number}
-							to={`/animes/${params.name}/${currentSeason.urlName}/${episode.urlName}`}
-							className={
-								styles.episode +
-								(currentEpisode?.number === episode.number
-									? ' current'
-									: episode.status != null
-									? ' ' + episode.status
-									: '')
-							}
-						>
-							EP {episode.number}
-						</Link>
+					{currentSeason?.parts?.map(part => (
+						<div className={styles.part} key={`part_${part.number}`}>
+							{currentSeason.parts.length > 1 && (
+								<h2 className={styles.partTitle}>Part {part.number}</h2>
+							)}
+
+							{part.episodes.map(episode => (
+								<Link
+									key={'EP_' + episode.number}
+									to={`/animes/${params.name}/${currentSeason.urlName}/${episode.urlName}`}
+									className={`${styles.episode} ${
+										params.episodeUrlName === episode.urlName
+											? 'current'
+											: episode.status
+									}`}
+								>
+									EP {episode.number}
+								</Link>
+							))}
+						</div>
 					))}
 				</div>
 			</main>

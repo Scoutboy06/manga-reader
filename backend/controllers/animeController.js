@@ -141,7 +141,6 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 		// If anime is not in db, add it and return
 		const existingAnime = await Anime.findOne({ tmdbId, ownerId: userId });
 		if (!existingAnime) {
-			console.log('New anime');
 			const anime = new Anime({
 				ownerId: userId,
 				tmdbId,
@@ -160,7 +159,10 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 				status: gogoMeta.status,
 				otherNames: gogoMeta.otherNames,
 
-				poster: newSeason.poster,
+				poster: {
+					large: `https://image.tmdb.org/t/p/original${tmdbMeta.poster_path}`,
+					small: `https://image.tmdb.org/t/p/w300${tmdbMeta.poster_path}`,
+				},
 				backdrop: {
 					large: `https://image.tmdb.org/t/p/original${tmdbMeta.backdrop_path}`,
 					small: `https://image.tmdb.org/t/p/w300${tmdbMeta.backdrop_path}`,
@@ -175,7 +177,6 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 		// If season is not in db, add it in it's chronological order
 		const existingSeason = existingAnime.seasons.find(season => season.tmdbId === tmdbSeasonId);
 		if (!existingSeason) {
-			console.log('New season');
 			let hasInsertedNewSeason = false;
 			const seasons = [];
 
@@ -200,8 +201,6 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 			const savedAnime = await existingAnime.save();
 			return res.json(savedAnime);
 		}
-
-		console.log('New part');
 
 		// If the part already exists in db, remove it (and add it in the next step)
 		const existingPartIndex = existingSeason?.parts?.findIndex(p => p.number === part);
@@ -278,14 +277,25 @@ export const getEpisode = asyncHandler(async (req, res) => {
 		throw new Error('No season found');
 	}
 
-	const episode = season.episodes.find(episode => episode.urlName === episodeUrlName);
-	if (!episode) {
-		res.status(404);
-		throw new Error('No episode found');
+	let foundPart, foundEpisode;
+
+	for (const part of season.parts) {
+		for (const episode of part.episodes) {
+			if (episode.urlName === episodeUrlName) {
+				foundPart = part;
+				foundEpisode = episode;
+				break;
+			}
+		}
 	}
 
-	const scrapedEpisode = await getAnimeEpisode(episode.sourceUrlName);
-	scrapedEpisode.number = season.episodes.indexOf(episode) + 1;
+	if (!foundPart || !foundEpisode) {
+		res.status(404);
+		throw new Error('Episode not found');
+	}
+
+	const scrapedEpisode = await getAnimeEpisode(foundEpisode.sourceUrlName);
+	scrapedEpisode.number = foundEpisode.number;
 	res.json(scrapedEpisode);
 });
 
@@ -301,5 +311,6 @@ export const deleteAnime = asyncHandler(async (req, res) => {
 	}
 
 	await anime.remove();
+	res.status(201).json({ message: 'Anime was successfully deleted' });
 });
 

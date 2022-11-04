@@ -147,10 +147,7 @@ export default function Anime() {
 										<Link
 											key={'EP ' + episode.number}
 											to={`/animes/${params.name}/${currentSeason.urlName}/episode-${episode.number}`}
-											className={
-												styles.episode +
-												(episode.status != null ? ' ' + episode.status : '')
-											}
+											className={`${styles.episode} ${episode.watchStatus}`}
 										>
 											EP {episode.number}
 										</Link>
@@ -164,6 +161,7 @@ export default function Anime() {
 
 							{animeMeta?.seasons?.map(season => (
 								<MediaCard
+									key={season.tmdbId}
 									href={`/animes/${params.name}/${season.urlName}`}
 									imgUrl={season.poster.small}
 									title={season.name}

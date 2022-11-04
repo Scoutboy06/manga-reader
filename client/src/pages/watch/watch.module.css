@@ -31,7 +31,7 @@
 	width: 100%;
 	height: 56.25vw;
 	min-height: 260px;
-	max-height: calc(100vh - 220px);
+	max-height: calc(100vh - 230px);
 	background-color: #000;
 	display: flex;
 	justify-content: center;
@@ -107,16 +107,25 @@
 
 .episodes {
 	margin: 20px 0;
-	display: flex;
-	flex-direction: row;
-	gap: 7px;
-	flex-wrap: wrap;
 }
 
 .episodes > p {
 	width: 100%;
 	font-size: 24px;
 	margin-bottom: 10px;
+}
+
+.part {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	gap: 7px;
+	flex-wrap: wrap;
+}
+
+.partTitle {
+	font-weight: normal;
+	width: 100%;
 }
 
 .episode {
