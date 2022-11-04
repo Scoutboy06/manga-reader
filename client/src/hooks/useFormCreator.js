@@ -2,16 +2,22 @@ import { useState } from 'react';
 
 export default function useFormCreator(fields) {
 	const [states, setStates] = useState(
-		fields.reduce(
+		fields?.reduce(
 			(previousValue, currentField) => ({ ...previousValue, [currentField.name]: currentField.defaultValue }),
 			{},
 		)
 	);
 
+	const updateFields = () => {
+		stateChange(fields?.reduce(
+			(previousValue, currentField) => ({ ...previousValue, [currentField.name]: currentField.defaultValue }),
+			{},
+		));
+	}
+
 	const isDisabled = field => {
-		const type = typeof field.disabled;
-		if (type === 'boolean') return field.disabled;
-		if (type === 'function') return field.disabled(states);
+		if (typeof field.disabled === 'boolean') return field.disabled;
+		if (typeof field.disabled === 'function') return field.disabled(states);
 		return field.disabled;
 	}
 
@@ -37,6 +43,8 @@ export default function useFormCreator(fields) {
 	}
 
 	const stateChange = (states) => {
+		if (!states) return setStates({});
+
 		for (const field of fields) {
 			if (field?.forceValue === undefined) continue;
 
@@ -48,12 +56,13 @@ export default function useFormCreator(fields) {
 		}
 
 		setStates(states);
+		console.log(states);
 	}
 
 
 	return [
 		states,
-		fields.map((field, i) => (
+		fields ? fields.map((field, i) => (
 			<div className='formGroup' key={field.name}>
 				{field.label && (
 					<label htmlFor={field.name}>{field.label}</label>
@@ -67,6 +76,18 @@ export default function useFormCreator(fields) {
 						onChange={e => inputChange(i, e.target.value)}
 						disabled={isDisabled(field)}
 						autoComplete={field?.autoComplete ? 'on' : 'off'}
+					/>
+				)}
+
+				{field.type === 'input:number' && (
+					<input
+						type='number'
+						id={field.name}
+						value={states[field.name]}
+						onChange={e => inputChange(i, e.target.value)}
+						disabled={isDisabled(field)}
+						min={field.min || null}
+						max={field.max || null}
 					/>
 				)}
 
@@ -105,6 +126,7 @@ export default function useFormCreator(fields) {
 
 				{!field.type && field}
 			</div>
-		))
+		)) : null,
+		updateFields,
 	];
 }

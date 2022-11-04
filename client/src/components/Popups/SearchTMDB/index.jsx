@@ -1,10 +1,11 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 
 import fetchAPI from '../../../functions/fetchAPI';
 import useFormCreator from './../../../hooks/useFormCreator';
 import { ProfileContext } from '../../../contexts/ProfileContext';
+import { AlertContext } from '../../../contexts/AlertContext';
 
 import Loader from '../../Loader';
 
@@ -15,6 +16,7 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 	const navigate = useNavigate();
 	const { mutate } = useSWRConfig();
 	const [{ currentProfile }] = useContext(ProfileContext);
+	const [, { createAlert }] = useContext(AlertContext);
 
 	const [inputText, setInputText] = useState(animeMeta.title);
 	const [isLoading, setIsLoading] = useState(false);
@@ -25,18 +27,26 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 
 	const [tmdbMeta, setTmdbMeta] = useState({});
 
-	const [{ season: selectedSeasonId }, seasonSelectEl] = useFormCreator([
-		{
-			label: 'Season:',
-			name: 'season',
-			type: 'select',
-			defaultValue: tmdbMeta?.seasons?.[0],
-			options: tmdbMeta?.seasons?.map(season => ({
-				value: season.id,
-				displayName: season.name,
-			})),
-		},
-	]);
+	const [{ season: selectedSeasonId, part }, seasonSelectEl, updateFields] =
+		useFormCreator([
+			{
+				label: 'Season:',
+				name: 'season',
+				type: 'select',
+				defaultValue: tmdbMeta?.seasons?.[0]?.id,
+				options: tmdbMeta?.seasons?.map(season => ({
+					value: season.id,
+					displayName: season.name,
+				})),
+			},
+			{
+				label: 'Part:',
+				name: 'part',
+				type: 'input:number',
+				defaultValue: 1,
+				min: 1,
+			},
+		]);
 
 	const searchSubmit = async e => {
 		e.preventDefault();
@@ -51,9 +61,7 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 	};
 
 	const selectItem = async () => {
-		const { id } = items[selectedItemIndex];
-
-		const res = await fetchAPI(`/tmdb/tv/${id}`);
+		const res = await fetchAPI(`/tmdb/tv/${items[selectedItemIndex].id}`);
 		setTmdbMeta(res);
 		setCurrentPage(1);
 	};
@@ -63,37 +71,38 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 			const res = await fetchAPI(`/users/${currentProfile._id}/animes`, {
 				method: 'POST',
 				body: JSON.stringify({
-					from: 'customImport',
-					gogoUrlName: animeMeta.urlName,
-					title: tmdbMeta.name,
-					description: tmdbMeta.overview,
-					poster: {
-						large: `https://image.tmdb.org/t/p/original${tmdbMeta.poster_path}`,
-						small: `https://image.tmdb.org/t/p/w300${tmdbMeta.poster_path}`,
-					},
-					backdrop: {
-						large: `https://image.tmdb.org/t/p/original${tmdbMeta.backdrop_path}`,
-						small: `https://image.tmdb.org/t/p/w300${tmdbMeta.backdrop_path}`,
-					},
-					seasonId: Number(selectedSeasonId),
+					from: 'tmdb',
+					sourceUrlName: animeMeta.urlName,
+					tmdbSeasonId: Number(selectedSeasonId),
+					part,
 					tmdbId: tmdbMeta.id,
 				}),
 			});
-			closePopup();
-			if (params.name === res.urlName)
-				mutate(`/users/${currentProfile._id}/animes/${params.name}`);
+
+			if (!res.urlName)
+				throw new Error('An error occured when trying to import the anime');
+
+			mutate(`/users/${currentProfile._id}/animes/${res.urlName}`);
 			navigate(`/animes/${res.urlName}`);
+			closePopup();
 		} catch (err) {
 			console.error(err);
+			createAlert({
+				text: err.message,
+				type: 'error',
+			});
 		}
 	};
+
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	useEffect(updateFields, [tmdbMeta]);
 
 	return (
 		<div
 			className={styles.container}
 			style={{ transform: `translateX(${-50 * currentPage}%)` }}
 		>
-			<div className={styles.section} style={{ paddingTop: '20px' }}>
+			<div className={styles.section}>
 				<form onSubmit={searchSubmit} className={styles.inputContainer}>
 					<input
 						type='text'
@@ -133,9 +142,8 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 
 				{!isLoading &&
 					items?.map((item, i) => (
-						<div className={styles.itemContainer}>
+						<div className={styles.itemContainer} key={item.id}>
 							<button
-								key={item.id}
 								className={styles.item}
 								onClick={() => setSelectedItemIndex(i)}
 								data-selected={selectedItemIndex === i}

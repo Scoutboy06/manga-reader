@@ -13,6 +13,8 @@
 	display: flex;
 	justify-content: space-between;
 	animation: animateOut 0.15s ease-in forwards;
+	z-index: 9999999999;
+	color: var(--bg-00dp);
 }
 
 .alert:global(.visible) {
@@ -20,8 +22,12 @@
 	animation: animateIn 0.15s ease-in forwards;
 }
 
+.alert:global(.error) {
+	background-color: var(--error);
+}
+
 .text {
-	color: var(--bg-00dp);
+	color: inherit;
 	margin: 16px;
 }
 

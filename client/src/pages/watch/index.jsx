@@ -6,7 +6,7 @@ import NProgress from 'nprogress';
 import { ProfileContext } from '../../contexts/ProfileContext';
 
 import Head from '../../components/Head';
-import Navbar from '../../components/navbars/Anime';
+import Navbar from '../../components/navbars/watch';
 
 import { fetcher } from '../../functions/fetchAPI.js';
 

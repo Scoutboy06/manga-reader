@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NProgress from 'nprogress';
 import useSWR from 'swr';
-import fetchAPI from '../../../../functions/fetchAPI';
 
 import { ProfileContext } from '../../../../contexts/ProfileContext';
 
@@ -34,22 +33,8 @@ export default function Anime() {
 	);
 
 	useEffect(() => {
-		NProgress.done(true);
-
-		// if(!animeMeta?.seasons)
-
-		// if (!animeMeta?.episodes) {
-		// 	NProgress.start();
-		// } else {
-		// 	NProgress.done(true);
-		// 	const next = animeMeta.episodes.find(ep => ep.status === '');
-		// 	setNextEpisode(next);
-		// }
-	}, [animeMeta]);
-
-	useEffect(() => {
-		NProgress.done(true);
-	}, [params]);
+		NProgress.done();
+	}, []);
 
 	if (!animeMeta) return null;
 
@@ -152,17 +137,25 @@ export default function Anime() {
 								</div>
 							)}
 
-							{currentSeason?.episodes?.map(episode => (
-								<Link
-									key={'EP ' + episode.number}
-									to={`/animes/${params.name}/${currentSeason.urlName}/episode-${episode.number}`}
-									className={
-										styles.episode +
-										(episode.status != null ? ' ' + episode.status : '')
-									}
-								>
-									EP {episode.number}
-								</Link>
+							{currentSeason?.parts?.map(part => (
+								<div className={styles.part}>
+									{currentSeason.parts.length > 1 && (
+										<h2 className={styles.partTitle}>Part {part.number}</h2>
+									)}
+
+									{part.episodes.map(episode => (
+										<Link
+											key={'EP ' + episode.number}
+											to={`/animes/${params.name}/${currentSeason.urlName}/episode-${episode.number}`}
+											className={
+												styles.episode +
+												(episode.status != null ? ' ' + episode.status : '')
+											}
+										>
+											EP {episode.number}
+										</Link>
+									))}
+								</div>
 							))}
 						</div>
 					) : (

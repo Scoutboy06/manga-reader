@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import fetchAPI from '../../../functions/fetchAPI';
+import fetchAPI from '../../../functions/fetchAPI';
 import useSWR from 'swr';
 
 import Head from '../../../components/Head';
@@ -18,7 +18,7 @@ export default function Animes() {
 	const [, popupActions] = useContext(PopupContext);
 	const [{ currentProfile }] = useContext(ProfileContext);
 
-	const { data } = useSWR(() => `/users/${currentProfile._id}/animes`, {
+	const { data, mutate } = useSWR(() => `/users/${currentProfile._id}/animes`, {
 		revalidateIfStale: true,
 		revalidateOnFocus: false,
 		revalidateOnReconnect: true,
@@ -84,6 +84,17 @@ export default function Animes() {
 													// 	content: EditMangaCover,
 													// 	data: manga,
 													// });
+												},
+											},
+											'divider',
+											{
+												content: 'Delete',
+												icon: <i className='icon'>delete</i>,
+												action: () => {
+													fetchAPI(`/animes/${media._id}`, {
+														method: 'DELETE',
+													});
+													mutate();
 												},
 											},
 										]}

@@ -9,6 +9,7 @@ export default function AlertCreator() {
 	Alert:
 		text: String
 		(optional) actionText: string
+		(optional) type: string <default | error>
 		(optional) onAction: function,
 		(optional) onClose: function,
 		(optional) timeout: number (4s - 10s)
@@ -39,6 +40,7 @@ export default function AlertCreator() {
 		<div
 			className={[
 				styles.alert,
+				alert.type === 'error' ? 'error' : '',
 				alert.actionText ? styles.hasAction : '',
 				alert.isVisible ? 'visible' : '',
 			].join(' ')}

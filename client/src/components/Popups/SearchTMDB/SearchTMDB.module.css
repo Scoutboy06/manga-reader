@@ -12,6 +12,11 @@
 	height: 100%;
 	position: relative;
 	overflow: scroll;
+	padding: 0 2.5%;
+}
+
+.section:first-child {
+	padding-top: 20px;
 }
 
 .inputContainer {
@@ -75,7 +80,6 @@
 .itemContainer {
 	position: relative;
 	height: 150px;
-	width: 90%;
 	margin: 0 auto 15px auto;
 	border-radius: 6px;
 	overflow: hidden;
@@ -163,61 +167,6 @@
 	background-color: rgba(255, 255, 255, 0.1);
 }
 
-.formGroup {
-	width: 90%;
-	margin: 0 auto;
-	display: flex;
-	flex-direction: column;
-}
-
-.formGroup:not(:last-child) {
-	margin-bottom: 1.8em;
-}
-
-.formGroup label {
-	user-select: none;
-	color: #bbb;
-	font-size: 1em;
-	margin-bottom: 0.25em;
-	width: max-content;
-}
-
-.formGroup input[type='text'],
-.formGroup textarea,
-.formGroup select {
-	color: #bbb;
-	background-color: var(--bg-12dp);
-	border: 0.16em solid var(--bg-12dp);
-	outline: none;
-	border-radius: 0.2em;
-	padding: 0.4em 0.25em;
-	font-size: 1.1em;
-	font-family: Arial;
-	width: 100%;
-}
-
-.formGroup textarea {
-	resize: vertical;
-}
-
-.formGroup input:focus,
-.formGroup textarea:focus {
-	border-color: var(--main-color);
-}
-
-.formGroup button:not([name]),
-.toggleAdvanced {
-	background-color: transparent;
-	border: 0;
-	outline: none;
-	font-size: 1em;
-	color: #bbb;
-	text-decoration: underline;
-	cursor: pointer;
-	width: max-content;
-	margin-top: 0.2em;
-}
-
 .footer {
 	position: absolute;
 	bottom: 0;
@@ -269,7 +218,7 @@
 
 .backBtn {
 	background-color: transparent;
-	margin: 0.7em 5%;
+	margin: 1em 0;
 }
 
 @media screen and (max-width: 40em) {

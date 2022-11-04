@@ -1,4 +1,11 @@
 :root {
+	color-scheme: light dark;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+		sans-serif;
+	font-size: 16px;
+	color: var(--text-color);
+
 	--text-color: #fff;
 
 	--main-color: #2596be; /* #00a4dc */
@@ -20,6 +27,8 @@
 	--font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
 		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
+
+	--error: #cf6679;
 }
 
 #root {
@@ -41,11 +50,8 @@ body {
 	overflow-x: hidden;
 }
 
-body,
 button {
-	font-family: var(--font-family);
-	font-size: 16px;
-	color: var(--text-color);
+	font-family: inherit;
 }
 
 h1,
@@ -166,6 +172,7 @@ svg {
 }
 
 .formGroup input[type='text'],
+.formGroup input[type='number'],
 .formGroup textarea,
 .formGroup select {
 	color: #bbb;
