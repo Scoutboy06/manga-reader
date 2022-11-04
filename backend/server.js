@@ -22,9 +22,9 @@ import router from './router.js';
 import asyncHandler from 'express-async-handler';
 
 const __dirname = path.resolve();
-dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config({ path: path.join(__dirname, '.env.local') });
 
-const db = connectDB();
+connectDB();
 
 const app = express();
 if (process.env.NODE_ENV === 'development') {
