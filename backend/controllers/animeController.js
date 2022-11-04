@@ -92,20 +92,20 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 	const { userId } = req.params;
 	const {
 		from,
-		gogoUrlName,
-		title,
-		description,
-		poster,
-		backdrop,
-		seasonId,
+		sourceUrlName,
+		// title,
+		// description,
+		// poster,
+		// backdrop,
+		tmdbSeasonId,
+		part,
 		tmdbId,
 		mediaType = 'tv',
 	} = req.body;
 
-	const existingAnime = await Anime.findOne({ tmdbId, ownerId: userId });
-	const gogoMeta = await getAnimeMeta(gogoUrlName);
+	const gogoMeta = await getAnimeMeta(sourceUrlName);
 
-	if (from === 'customImport') {
+	if (from === 'tmdb') {
 		const tmdbMeta = await fetch(`https://api.themoviedb.org/3/${mediaType}/${tmdbId}?api_key=${process.env.TMDB_V3_API_KEY}`)
 			.then(res => res.json());
 
@@ -114,62 +114,122 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 			throw new Error('Invalid TMDB id or media type');
 		}
 
-		if (existingAnime?.seasons?.find(season => season.id === seasonId)) {
-			res.status(405);
-			throw new Error('Season is already saved');
-		}
+		const tmdbSeason = tmdbMeta.seasons.find(season => season.id == tmdbSeasonId);
 
-		const tmdbSeason = tmdbMeta.seasons.find(season => season.id == seasonId);
+		const newPart = {
+			number: part,
+			sourceUrlName,
+			status: gogoMeta.status.toLowerCase(),
+			episodes: gogoMeta.episodes,
+		};
 
 		const newSeason = {
 			name: tmdbSeason.name,
 			urlName: tmdbSeason.name.toLowerCase().replaceAll(' ', '-'),
-			gogoUrlName,
-			description,
-			id: seasonId,
-			poster,
-			episodes: gogoMeta.episodes,
+			sourceUrlName,
+			description: tmdbSeason.overview,
+			tmdbId: tmdbSeasonId,
+			poster: {
+				large: `https://image.tmdb.org/t/p/original${tmdbSeason.poster_path}`,
+				small: `https://image.tmdb.org/t/p/w300${tmdbSeason.poster_path}`,
+			},
+			parts: [newPart],
+			status: gogoMeta.status.toLowerCase(),
 		};
 
-		// If anime is not in db, add it
+
+		// If anime is not in db, add it and return
+		const existingAnime = await Anime.findOne({ tmdbId, ownerId: userId });
 		if (!existingAnime) {
+			console.log('New anime');
 			const anime = new Anime({
 				ownerId: userId,
 				tmdbId,
-				urlName: encodeURI(title.toLowerCase().replaceAll(':', '').replaceAll(' ', '-')),
+				urlName: encodeURI(tmdbMeta.name.toLowerCase().replaceAll(':', '').replaceAll(' ', '-')),
 
-				title,
-				description,
+				title: tmdbMeta.name,
+				description: tmdbMeta.overview,
 				mediaType,
 
 				seasons: [newSeason],
-				seasonId,
+				// currentSeasonId: 
+				// currentEpisodeId: 
 
 				genres: gogoMeta.genres,
 				released: gogoMeta.released,
 				status: gogoMeta.status,
 				otherNames: gogoMeta.otherNames,
 
-				poster,
-				backdrop,
+				poster: newSeason.poster,
+				backdrop: {
+					large: `https://image.tmdb.org/t/p/original${tmdbMeta.backdrop_path}`,
+					small: `https://image.tmdb.org/t/p/w300${tmdbMeta.backdrop_path}`,
+				},
 			});
 
 			const createdAnime = await anime.save();
 			return res.status(201).json(createdAnime);
 		}
 
-		// Rearrange seasons in order
-		const seasons = [];
-		for (let i = 0; i < tmdbMeta.seasons.length; i++) {
-			const existingSeason = existingAnime.seasons.find(season =>
-				season.id === tmdbMeta.seasons[i].id
-			);
 
-			if (existingSeason) seasons.push(existingSeason);
-			else if (tmdbMeta.seasons[i].id === seasonId) seasons.push(newSeason);
+		// If season is not in db, add it in it's chronological order
+		const existingSeason = existingAnime.seasons.find(season => season.tmdbId === tmdbSeasonId);
+		if (!existingSeason) {
+			console.log('New season');
+			let hasInsertedNewSeason = false;
+			const seasons = [];
+
+			// Insert the new season in order
+			for (let i in tmdbMeta.seasons) {
+				// See if the current season is already in db
+				const existingSeason = existingAnime.seasons.find(season =>
+					season.tmdbId === tmdbMeta.seasons[i].id
+				);
+
+				if (existingSeason) seasons.push(existingSeason);
+				else if (tmdbMeta.seasons[i].id === tmdbSeasonId) {
+					seasons.push(newSeason);
+					hasInsertedNewSeason = true;
+				}
+			}
+
+			if (!hasInsertedNewSeason) seasons.push(newSeason);
+
+			existingAnime.seasons = seasons;
+
+			const savedAnime = await existingAnime.save();
+			return res.json(savedAnime);
 		}
 
-		existingAnime.seasons = seasons;
+		console.log('New part');
+
+		// If the part already exists in db, remove it (and add it in the next step)
+		const existingPartIndex = existingSeason?.parts?.findIndex(p => p.number === part);
+		if (existingPartIndex !== -1) {
+			existingSeason.splice(existingPartIndex, 1);
+		}
+
+
+		// 1. Add the new part to the season,
+		// 2. Sort the array
+		// 3. Update the episodes' number and urlName
+		existingSeason.parts.push(newPart);
+		existingSeason.parts.sort((partA, partB) => partA.number - partB.number);
+		let episodeNumber = 1;
+		for (let i in existingSeason.parts) {
+			const part = existingSeason.parts[i];
+
+			for (let j in part.episodes) {
+				const episode = part.episodes[j];
+
+				episode.number = episodeNumber;
+				episode.urlName = `episode-${episodeNumber}`;
+
+				episodeNumber++;
+			}
+		}
+
+
 		const savedAnime = await existingAnime.save();
 		res.json(savedAnime);
 		return;
@@ -224,14 +284,22 @@ export const getEpisode = asyncHandler(async (req, res) => {
 		throw new Error('No episode found');
 	}
 
-	const scrapedEpisode = await getAnimeEpisode(episode.gogoUrlName);
+	const scrapedEpisode = await getAnimeEpisode(episode.sourceUrlName);
 	scrapedEpisode.number = season.episodes.indexOf(episode) + 1;
 	res.json(scrapedEpisode);
 });
 
 // @desc	Delete an anime
-// @route	PUT /users/:userId/animes/:animeId
+// @route	DELETE /animes/:animeId
 export const deleteAnime = asyncHandler(async (req, res) => {
-	const { userId, urlName } = req.params;
+	const { id } = req.params;
+
+	const anime = await Anime.findById(id);
+	if (!anime) {
+		res.status(404);
+		throw new Error('No anime found');
+	}
+
+	await anime.remove();
 });
 

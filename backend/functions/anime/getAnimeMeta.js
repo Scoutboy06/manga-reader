@@ -50,13 +50,12 @@ export default async function getAnimeMeta(urlName, cache = true) {
 		const a = aList[i];
 		const number = Number(stripTitle(a.querySelector('.name')).trim());
 		const urlName = `episode-${number}`;
-		const gogoUrlName = a.getAttribute('href').trim().replace('/', '');
+		const sourceUrlName = a.getAttribute('href').trim().replace('/', '');
 		const status = '';
-		episodes.push({ number, urlName, gogoUrlName, status });
+		episodes.push({ number, urlName, sourceUrlName, status });
 	};
 
 	const data = {
-		// ownerId,
 		urlName,
 		title,
 		description,
@@ -65,13 +64,9 @@ export default async function getAnimeMeta(urlName, cache = true) {
 		status,
 		otherNames,
 		episodes,
-		// isFavorite,
-		// hasWatched,
-		// notificationsOn,
 		poster: {
 			large: imgUrl,
 		},
-		// backdrops,
 	};
 
 	cachedResults.put(urlName, data);

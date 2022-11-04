@@ -14,36 +14,46 @@ const MODEL_NAME = mongoose.Schema(
 			{
 				name: { type: String, required: true },
 				urlName: { type: String, required: true },
-				gogoUrlName: { type: String, required: true },
 				description: { type: String, default: '' },
-				id: { type: Number, required: true },
+				tmdbId: { type: Number, required: true },
+				status: { type: String, required: true },
+				watchStatus: { type: String, default: '' },
 				poster: {
 					small: String,
 					large: String,
 				},
-				episodes: [
+				parts: [
 					{
 						number: { type: Number, required: true },
-						urlName: { type: String, required: true },
-						gogoUrlName: { type: String, required: true },
-						status: { type: String, default: '' },
+						sourceUrlName: { type: String, required: true },
+						status: { type: String, required: true },
+						episodes: [
+							{
+								number: { type: Number, required: true },
+								urlName: { type: String, required: true },
+								sourceUrlName: { type: String, required: true },
+								watchStatus: { type: String, default: '' },
+							},
+						],
 						_id: false,
-					},
+					}
 				],
 				hasUpdates: { type: Boolean, default: false },
 				_id: false,
 			}
 		],
-		seasonId: Number,
+		currentSeasonId: mongoose.Types.ObjectId,
+		currentPartIndex: Number,
+		currentEpisodeId: mongoose.Types.ObjectId,
 
 		genres: { type: String, required: true },
 		released: { type: String, required: true },
 		status: { type: String, required: true },
+		watchStatus: { type: String, default: '' },
 		otherNames: { type: String, required: true },
 
 		isFavorite: { type: Boolean, default: false },
 		hasWatched: { type: Boolean, default: false },
-		updatesOn: { type: Boolean, default: false },
 		notificationsOn: { type: Boolean, default: false },
 		hasUpdates: { type: Boolean, default: false },
 

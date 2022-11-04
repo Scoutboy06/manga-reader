@@ -78,14 +78,15 @@ export async function checkMangaUpdates() {
 
 export async function checkAnimeUpdates() {
 	console.log(chalk.yellow('Checking anime updates...'));
-	const subscribedAnimes = await Anime.find({ updatesOn: true });
+	const subscribedAnimes = await Anime.find({ status: 'ongoing' });
+	console.log(subscribedAnimes);
 	let updates = 0;
 
 	await Promise.allSettled(subscribedAnimes.map(anime => new Promise(async (resolve, reject) => {
 		const season = anime.seasons[anime.seasons.length - 1];
-		const meta = await getAnimeMeta(season.gogoUrlName, false);
+		const meta = await getAnimeMeta(season.sourceUrlName, false);
 
-		const newEpisodes = meta.episodes.filter(episode => !season.episodes.find(ep => ep.gogoUrlName === episode.gogoUrlName));
+		const newEpisodes = meta.episodes.filter(episode => !season.episodes.find(ep => ep.sourceUrlName === episode.sourceUrlName));
 		updates += newEpisodes.length;
 
 		if (newEpisodes.length > 0) {

@@ -24,6 +24,7 @@ import {
 	getAnimeLibrary,
 	getAnimeByUrlName,
 	getEpisode,
+	deleteAnime,
 } from './controllers/animeController.js';
 
 const router = Router();
@@ -56,6 +57,8 @@ router.post('/mangas/:mangaId/currentChapter', updateCurrentChapter);
 router.get('/mangas/:mangaId/:chapter', getImageUrls);
 
 // Animes
+router.route('/animes/:id')
+	.delete(deleteAnime);
 router.route('/users/:userId/animes')
 	.get(getAnimeLibrary)
 	.post(addAnimeToLibrary);
