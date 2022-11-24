@@ -51,8 +51,7 @@ export default async function getAnimeMeta(urlName, cache = true) {
 		const number = Number(stripTitle(a.querySelector('.name')).trim());
 		const urlName = `episode-${number}`;
 		const sourceUrlName = a.getAttribute('href').trim().replace('/', '');
-		const status = '';
-		episodes.push({ number, urlName, sourceUrlName, status });
+		episodes.push({ number, urlName, sourceUrlName });
 	};
 
 	const data = {

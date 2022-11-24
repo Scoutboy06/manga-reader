@@ -1,13 +1,14 @@
-import asyncHandler from 'express-async-handler';
+import { Router } from 'express';
 import fetch from 'node-fetch';
 import HTMLParser from 'node-html-parser';
 
-import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
+
+const router = Router();
 
 // @desc	Search for new mangas
 // @route	GET /search
-export const searchManga = asyncHandler(async (req, res) => {
+router.get('/search', async (req, res) => {
 	const { query } = req.query;
 
 	const hosts = await Host.find();
@@ -54,7 +55,8 @@ export const searchManga = asyncHandler(async (req, res) => {
 		});
 	}
 
-	res.status(200).json(returnData);
+	res.json(returnData);
 });
 
 
+export default router;

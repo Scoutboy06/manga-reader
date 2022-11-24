@@ -1,74 +1,16 @@
 import { Router } from 'express';
-import { getAllHosts, createHost, getHostById } from './controllers/hostController.js';
-import { getImageFromUrl } from './controllers/imageController.js';
-import {
-	getUserMangas,
-	getMangaById,
-	createManga,
-	updateManga,
-	deleteManga,
-	getImageUrls,
-	getMangaByName,
-	updateCurrentChapter,
-} from './controllers/mangaController.js';
-import { searchManga } from './controllers/searchController.js';
-import {
-	createUser,
-	deleteUser,
-	updateUser,
-	getAllUsers,
-	getUserById,
-} from './controllers/userController.js';
-import {
-	addAnimeToLibrary,
-	getAnimeLibrary,
-	getAnimeByUrlName,
-	getEpisode,
-	deleteAnime,
-} from './controllers/animeController.js';
+import hostRouter from './controllers/hostController.js';
+import mangaRouter from './controllers/mangaController.js';
+import searchRouter from './controllers/searchController.js';
+import userRouter from './controllers/userController.js';
+import animeRouter from './controllers/animeController.js';
 
 const router = Router();
 
-// Hosts
-router.route('/hosts')
-	.get(getAllHosts)
-	.post(createHost);
-router.get('/hosts/:hostId', getHostById);
-
-// Users
-router.route('/users')
-	.get(getAllUsers)
-	.post(createUser)
-	.delete(deleteUser)
-router.route('/users/:userId')
-	.get(getUserById)
-	.patch(updateUser);
-
-// Mangas
-router.route('/users/:userId/mangas')
-	.get(getUserMangas)
-	.post(createManga)
-router.get('/users/:userId/mangas/:mangaName', getMangaByName);
-router.route('/mangas/:mangaId')
-	.get(getMangaById)
-	.delete(deleteManga)
-	.patch(updateManga);
-router.post('/mangas/:mangaId/currentChapter', updateCurrentChapter);
-router.get('/mangas/:mangaId/:chapter', getImageUrls);
-
-// Animes
-router.route('/animes/:id')
-	.delete(deleteAnime);
-router.route('/users/:userId/animes')
-	.get(getAnimeLibrary)
-	.post(addAnimeToLibrary);
-router.get('/users/:userId/animes/:urlName', getAnimeByUrlName);
-router.get('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', getEpisode);
-
-// Search
-router.get('/search', searchManga);
-
-// Image
-router.get('/image/*', getImageFromUrl);
+router.use(hostRouter);
+router.use(userRouter);
+router.use(mangaRouter);
+router.use(animeRouter);
+router.use(searchRouter);
 
 export default router;

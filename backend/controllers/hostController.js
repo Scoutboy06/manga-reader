@@ -1,20 +1,20 @@
-import asyncHandler from 'express-async-handler';
-// import fetch from 'node-fetch';
-// import HTMLParser from 'node-html-parser';
+import { Router } from 'express';
 
 import Host from '../models/hostModel.js';
+
+const router = Router();
 
 
 // @desc	Get all hosts
 // @route	GET /hosts
-export const getAllHosts = asyncHandler(async (req, res) => {
+router.get('/hosts', async (req, res) => {
 	const hosts = await Host.find({});
 	res.json(hosts);
 })
 
 // @desc	Create add a new host
 // @route	POST /hosts
-export const createHost = asyncHandler(async (req, res) => {
+router.post('/hosts', async (req, res) => {
 	const host = new Host(req.body);
 
 	const createdHost = await host.save();
@@ -23,7 +23,7 @@ export const createHost = asyncHandler(async (req, res) => {
 
 // @desc	Get a host by it's id
 // @route	GET /hosts/:hostId
-export const getHostById = asyncHandler(async (req, res) => {
+router.get('/hosts/:hostId', async (req, res) => {
 	const { hostId } = req.params;
 	const host = await Host.findById(hostId);
 	if (!host) {
@@ -32,3 +32,6 @@ export const getHostById = asyncHandler(async (req, res) => {
 	}
 	res.json(host);
 });
+
+
+export default router;

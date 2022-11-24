@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+import { Router } from 'express';
 import fetch from 'node-fetch';
 import HTMLParser from 'node-html-parser';
 
@@ -8,9 +8,12 @@ import User from '../models/userModel.js';
 
 import getMangaMeta from '../functions/manga/getMetadata.js';
 
+const router = Router();
+
+
 // @desc	Get all of the user's mangas, with search functionality
 // @route	GET /users/:userId/mangas
-export const getUserMangas = asyncHandler(async (req, res) => {
+router.get('/users/:userId/mangas', async (req, res) => {
 	const { userId } = req.params;
 	const { limit = 50, skip = 0, query = '' } = req.query;
 
@@ -38,7 +41,7 @@ export const getUserMangas = asyncHandler(async (req, res) => {
 
 // @desc	Get a manga by id
 // @route	GET /mangas/:mangaId
-export const getMangaById = asyncHandler(async (req, res) => {
+router.get('/mangas/:mangaId', async (req, res) => {
 	const { mangaId } = req.params;
 	const manga = await Manga.findById(mangaId);
 	if (!manga) return res.status(404).json({ error: 'Not found' });
@@ -47,7 +50,7 @@ export const getMangaById = asyncHandler(async (req, res) => {
 
 // @desc	Get a manga by name
 // @route	GET /users/:userId/mangas/:mangaName
-export const getMangaByName = asyncHandler(async (req, res) => {
+router.get('/users/:userId/mangas/:mangaName', async (req, res) => {
 	const { userId, mangaName } = req.params;
 
 	const manga = await Manga.findOne({ ownerId: userId, urlName: mangaName });
@@ -61,7 +64,7 @@ export const getMangaByName = asyncHandler(async (req, res) => {
 
 // @desc	Create a new manga
 // @route	POST /users/:userId/mangas
-export const createManga = asyncHandler(async (req, res) => {
+router.post('/users/:userId/mangas', async (req, res) => {
 	const { userId } = req.params;
 
 	const {
@@ -112,7 +115,7 @@ export const createManga = asyncHandler(async (req, res) => {
 
 // @desc	Update manga
 // @route	PATCH /mangas/:mangaId
-export const updateManga = asyncHandler(async (req, res) => {
+router.patch('/mangas/:mangaId', async (req, res) => {
 	const { mangaId } = req.params;
 
 	const manga = await Manga.findById(mangaId);
@@ -135,7 +138,7 @@ export const updateManga = asyncHandler(async (req, res) => {
 
 // @desc	Delete a manga
 // @route	DELETE /mangas/:mangaId
-export const deleteManga = asyncHandler(async (req, res) => {
+router.delete('/mangas/:mangaId', async (req, res) => {
 	const { mangaId } = req.params;
 
 	const manga = await Manga.findById(mangaId);
@@ -147,7 +150,7 @@ export const deleteManga = asyncHandler(async (req, res) => {
 
 // @desc	Update the current chapter
 // @route	PATCH /mangas/:mangaId/currentChapter
-export const updateCurrentChapter = asyncHandler(async (req, res) => {
+router.patch('/mangas/:mangaId/currentChapter', async (req, res) => {
 	const { mangaId } = req.params;
 	const { currentChapter } = req.body;
 
@@ -162,11 +165,11 @@ export const updateCurrentChapter = asyncHandler(async (req, res) => {
 
 	await manga.save();
 	res.json({});
-})
+});
 
 // @desc	Get images from a chapter
 // @route	GET /mangas/:mangaId/:chapter
-export const getImageUrls = asyncHandler(async (req, res) => {
+router.get('/mangas/:mangaId/:chapter', async (req, res) => {
 	const { mangaId, chapter } = req.params;
 
 	const manga = await Manga.findById(mangaId);
@@ -214,3 +217,6 @@ export const getImageUrls = asyncHandler(async (req, res) => {
 		originalUrl: url,
 	});
 });
+
+
+export default router;

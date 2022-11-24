@@ -8,6 +8,8 @@ import Anime from '../models/animeModel.js';
 import getMangaMeta from './manga/getMetadata.js';
 import getAnimeMeta from './anime/getAnimeMeta.js';
 import sendDiscordWebhookUpdate from './sendDiscordWebhook.js';
+import asyncMap from './asyncMap.js';
+import updateEpisodes from './anime/updateEpisodes.js';
 
 export default async function updatesChecker() {
 	const intervalDelay = 120; // minutes
@@ -50,22 +52,22 @@ export async function checkMangaUpdates() {
 
 			const user = await User.findById(manga.ownerId);
 			await Promise.all(newChapters.map(chapter => new Promise(async (resolve, reject) => {
-				const embed = {
-					title: `${manga.title} - ${chapter.title}`,
-					color: 0x1eaeec,
-					thumbnail: {
-						url: manga.poster,
-						height: 150,
-						width: 100,
-					},
-					url: `${process.env.WEBSITE_URI}/read/${manga.urlName}/${chapter.urlName}`
-				};
 
 				await sendDiscordWebhookUpdate({
 					username: 'Manga updates',
-					content: `<@${user.discordUserId}>`,
-					embeds: [embed],
+					content: `${manga.title} - ${chapter.title}\n<@${user.discordUserId}>`,
+					embeds: [{
+						title: `${manga.title} - ${chapter.title}`,
+						color: 0x1eaeec,
+						thumbnail: {
+							url: manga.poster,
+							height: 150,
+							width: 100,
+						},
+						url: `${process.env.WEBSITE_URI}/read/${manga.urlName}/${chapter.urlName}`
+					}],
 				});
+
 				resolve();
 			})));
 		}
@@ -78,50 +80,59 @@ export async function checkMangaUpdates() {
 
 export async function checkAnimeUpdates() {
 	console.log(chalk.yellow('Checking anime updates...'));
-	const subscribedAnimes = await Anime.find({ status: 'ongoing' });
-	console.log(subscribedAnimes);
-	let updates = 0;
+	const ongoingAnimes = await Anime.find({ isAiring: true });
+	let newEpisodesCount = 0;
 
-	await Promise.allSettled(subscribedAnimes.map(anime => new Promise(async (resolve, reject) => {
-		const season = anime.seasons[anime.seasons.length - 1];
-		const meta = await getAnimeMeta(season.sourceUrlName, false);
+	// animes -> seasons -> parts -> episodes
 
-		const newEpisodes = meta.episodes.filter(episode => !season.episodes.find(ep => ep.sourceUrlName === episode.sourceUrlName));
-		updates += newEpisodes.length;
+	await asyncMap(ongoingAnimes, async anime => {
+		let animeHasUpdated = false;
+		const user = await User.findById(anime.ownerId);
+		const ongoingSeasons = anime.seasons.filter(season => season.isAiring);
 
-		if (newEpisodes.length > 0) {
-			anime.hasUpdates = true;
-			season.episodes = meta.episodes;
-			anime.save();
+		await asyncMap(ongoingSeasons, async season => {
+			const ongoingParts = season.parts.filter(part => part.isAiring);
 
-			if (!anime.notificationsOn) return resolve();
+			await asyncMap(ongoingParts, async part => {
+				const meta = await getAnimeMeta(part.sourceUrlName, false);
+				const newEpisodes = meta.episodes.filter(episode => !part.episodes.find(ep => ep.sourceUrlName === episode.sourceUrlName));
 
-			const user = await User.findById(anime.ownerId);
-			await Promise.all(newEpisodes.map(episode => new Promise(async (resolve, reject) => {
+				if (newEpisodes.length > 0) {
+					const newEpisodeList = updateEpisodes(part.episodes, meta.episodes);
+					part.episodes = newEpisodeList;
+					animeHasUpdated = true;
+					anime.hasNewEpisodes = true;
+					season.hasNewEpisodes = true;
+				}
 
-				const embed = {
-					title: `${anime.title} - ${season.name} - Episode ${episode.number}`,
-					color: 0x1eaeec,
-					thumbnail: {
-						url: anime.poster.small,
-						height: 150,
-						width: 100,
-					},
-					url: `${process.env.WEBSITE_URI}/watch/${anime.urlName}/${season.urlName}/${episode.urlName}`
-				};
+				await asyncMap(newEpisodes, async episode => {
+					newEpisodesCount++;
 
-				await sendDiscordWebhookUpdate({
-					username: 'Anime updates',
-					content: `<@${user.discordUserId}>`,
-					embeds: [embed],
+					if (!anime.notificationsOn) return;
+					await sendDiscordWebhookUpdate({
+						username: 'Anime updates',
+						content: `${anime.title} - ${season.name} - Episode ${episode.number}\n<@${user.discordUserId}>`,
+						embeds: [{
+							title: `${anime.title} - ${season.name} - Episode ${episode.number}`,
+							color: 0x1eaeec,
+							thumbnail: {
+								url: anime.poster.small,
+								height: 150,
+								width: 100,
+							},
+							url: `${process.env.WEBSITE_URI}/watch/${anime.urlName}/${season.urlName}/${episode.urlName}`
+						}],
+					});
+
 				});
-				resolve();
-			})));
+			});
+		});
+
+		if (animeHasUpdated) {
+			await anime.save();
 		}
-
-		resolve();
-	})));
+	});
 
 
-	console.log(chalk.blue(`Found ${updates} new episodes`));
+	console.log(chalk.blue(`Found ${newEpisodesCount} new anime episode${newEpisodesCount === 1 ? '' : 's'}`));
 }

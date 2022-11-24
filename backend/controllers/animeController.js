@@ -1,6 +1,5 @@
-import asyncHandler from 'express-async-handler';
+import { Router } from 'express';
 import fetch from 'node-fetch';
-// import HTMLParser from 'node-html-parser';
 
 import Anime from '../models/animeModel.js';
 import User from '../models/userModel.js';
@@ -8,9 +7,11 @@ import User from '../models/userModel.js';
 import getAnimeMeta from '../functions/anime/getAnimeMeta.js';
 import getAnimeEpisode from '../functions/anime/getAnimeEpisode.js';
 
+const router = Router();
+
 // @desc	Fetch the user's anime landing page
 // @route	GET /users/:userId/animes
-export const getAnimeLibrary = asyncHandler(async (req, res) => {
+router.get('/users/:userId/animes', async (req, res) => {
 	const { userId } = req.params;
 
 	const user = await User.findById(userId);
@@ -37,7 +38,7 @@ export const getAnimeLibrary = asyncHandler(async (req, res) => {
 	const animes = await Anime.find({ ownerId: userId });
 
 
-	let removeFields = ['ownerId', 'tmdbId', 'description', 'seasons', 'seasonId', 'genres', 'released', 'status', 'otherNames'];
+	let removeFields = ['ownerId', 'tmdbId', 'seasons', 'seasonId', 'genres', 'released', 'status', 'otherNames'];
 
 	for (const anime of animes) {
 		for (const field of removeFields) {
@@ -88,7 +89,7 @@ export const getAnimeLibrary = asyncHandler(async (req, res) => {
 
 // @desc	Create an anime to save in the database
 // @route	POST /users/:userId/animes
-export const addAnimeToLibrary = asyncHandler(async (req, res) => {
+router.post('/users/:userId/animes', async (req, res) => {
 	const { userId } = req.params;
 	const {
 		from,
@@ -120,7 +121,7 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 			number: part,
 			sourceUrlName,
 			status: gogoMeta.status.toLowerCase(),
-			episodes: gogoMeta.episodes,
+			episodes: gogoMeta.episodes.map(episode => ({ ...episode, watchStatus: '' })),
 		};
 
 		const newSeason = {
@@ -156,7 +157,7 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 
 				genres: gogoMeta.genres,
 				released: gogoMeta.released,
-				status: gogoMeta.status,
+				status: gogoMeta.status.toLowerCase(),
 				otherNames: gogoMeta.otherNames,
 
 				poster: {
@@ -246,7 +247,7 @@ export const addAnimeToLibrary = asyncHandler(async (req, res) => {
 
 // @desc	Get an anime by it's url name
 // @route	GET /users/:userId/animes/:urlName
-export const getAnimeByUrlName = asyncHandler(async (req, res) => {
+router.get('/users/:userId/animes/:urlName', async (req, res) => {
 	const { urlName, userId } = req.params;
 
 	const dbAnime = await Anime.findOne({ urlName, ownerId: userId });
@@ -262,7 +263,7 @@ export const getAnimeByUrlName = asyncHandler(async (req, res) => {
 
 // @desc	Get metadata about a single episode
 // @route	GET /users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName
-export const getEpisode = asyncHandler(async (req, res) => {
+router.get('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', async (req, res) => {
 	const { userId, animeUrlName, seasonUrlName, episodeUrlName } = req.params;
 
 	const anime = await Anime.findOne({ urlName: animeUrlName, ownerId: userId });
@@ -301,7 +302,7 @@ export const getEpisode = asyncHandler(async (req, res) => {
 
 // @desc	Delete an anime
 // @route	DELETE /animes/:animeId
-export const deleteAnime = asyncHandler(async (req, res) => {
+router.delete('/animes/:animeId', async (req, res) => {
 	const { id } = req.params;
 
 	const anime = await Anime.findById(id);
@@ -314,3 +315,108 @@ export const deleteAnime = asyncHandler(async (req, res) => {
 	res.status(201).json({ message: 'Anime was successfully deleted' });
 });
 
+
+// @desc	Update an anime
+// @route	PATCH /animes/:animeId
+router.patch('/animes/:animeId', async (req, res) => {
+	const { animeId } = req.params;
+
+	const anime = await Anime.findById(animeId);
+	if (!anime) {
+		res.status(404);
+		throw new Error('No anime found');
+	}
+
+	const allowedKeys = [
+		'title',
+		'urlName',
+		'description',
+		'isAiring',
+		'notificationsOn',
+		'hasWatched',
+	];
+
+	for (const key of Object.keys(req.body)) {
+		if (allowedKeys.includes(key)) anime[key] = req.body[key];
+	}
+
+	const savedAnime = await anime.save();
+	res.json(savedAnime);
+});
+
+
+// @desc	Update anime, season and episode's watch status
+// @route PATCH /users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName
+router.patch('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', async (req, res) => {
+	const { userId, animeUrlName, seasonUrlName, episodeUrlName } = req.params;
+	const { hasWatched, isFavorite } = req.body;
+
+	const user = await User.findById(userId);
+	if (!user) {
+		res.status(404);
+		throw new Error('No user found');
+	}
+
+	const anime = await Anime.findOne({ urlName: animeUrlName });
+	if (!anime) {
+		res.status(404);
+		throw new Error('No anime found');
+	}
+
+	const season = anime.seasons.find(season => season.urlName === seasonUrlName);
+	if (!season) {
+		res.status(404);
+		throw new Error('No anime found');
+	}
+
+	// Update hasUpdates field on anime and season
+	// and update anime, season and episode's watchStatus
+	let animeHasNewEpisodes = false;
+	let hasWatchAllAnimeEpisodes = true;
+
+	for (const _season of anime.seasons) {
+		let seasonHasNewEpisodes = false;
+		let hasWatchedAllSeasonEpisodes = true;
+
+		for (const _part of _season.parts) {
+			for (const _episode of _part.episodes) {
+
+				// If it's the episode we're looking for
+				if (_episode.urlName === episodeUrlName) {
+					if (hasWatched !== undefined) {
+						_episode.hasWatched = hasWatched;
+						_episode.isNew = false;
+					}
+
+					if (isFavorite !== undefined) {
+						_episode.isFavorite = isFavorite;
+					}
+				}
+
+				if (_episode.isNew) {
+					animeHasNewEpisodes = true;
+					seasonHasNewEpisodes = true;
+				}
+
+				if (!_episode.hasWatched) {
+					hasWatchAllAnimeEpisodes = false;
+					hasWatchedAllSeasonEpisodes = false;
+				}
+			}
+		}
+
+
+		season.hasWatched = !season.isAiring && hasWatchedAllSeasonEpisodes;
+		season.hasNewEpisodes = seasonHasNewEpisodes;
+	}
+
+	anime.hasWatched = !anime.isAiring && hasWatchAllAnimeEpisodes;
+	anime.hasNewEpisodes = animeHasNewEpisodes;
+
+	const savedAnime = await anime.save();
+	res.status(200);
+	res.json(savedAnime);
+});
+
+
+export default router;

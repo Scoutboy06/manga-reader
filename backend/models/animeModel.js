@@ -16,8 +16,9 @@ const MODEL_NAME = mongoose.Schema(
 				urlName: { type: String, required: true },
 				description: { type: String, default: '' },
 				tmdbId: { type: Number, required: true },
-				status: { type: String, required: true },
-				watchStatus: { type: String, default: '' },
+				hasWatched: { type: Boolean, default: false },
+				hasNewEpisodes: { type: Boolean, default: false },
+				isAiring: { type: Boolean, required: true },
 				poster: {
 					small: String,
 					large: String,
@@ -26,19 +27,21 @@ const MODEL_NAME = mongoose.Schema(
 					{
 						number: { type: Number, required: true },
 						sourceUrlName: { type: String, required: true },
-						status: { type: String, required: true },
+						isAiring: { type: Boolean, required: true },
 						episodes: [
 							{
 								number: { type: Number, required: true },
 								urlName: { type: String, required: true },
 								sourceUrlName: { type: String, required: true },
-								watchStatus: { type: String, default: '' },
+								hasWatched: { type: Boolean, default: false },
+								isFavorite: { type: Boolean, default: false },
+								isNew: { type: Boolean, default: false },
+								_id: false,
 							},
 						],
 						_id: false,
 					}
 				],
-				hasUpdates: { type: Boolean, default: false },
 				_id: false,
 			}
 		],
@@ -48,14 +51,13 @@ const MODEL_NAME = mongoose.Schema(
 
 		genres: { type: String, required: true },
 		released: { type: String, required: true },
-		status: { type: String, required: true },
-		watchStatus: { type: String, default: '' },
+		isAiring: { type: Boolean, required: true },
+		hasWatched: { type: Boolean, default: false },
 		otherNames: { type: String, required: true },
 
 		isFavorite: { type: Boolean, default: false },
-		hasWatched: { type: Boolean, default: false },
 		notificationsOn: { type: Boolean, default: false },
-		hasUpdates: { type: Boolean, default: false },
+		hasNewEpisodes: { type: Boolean, default: false },
 
 		poster: {
 			small: String,
