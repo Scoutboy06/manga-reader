@@ -23,7 +23,7 @@ export default function Read() {
 		`/users/${currentProfile._id}/mangas/${params.name}`
 	);
 
-	const { data: chapterMeta } = useSWRImmutable(
+	const { data: chapterMeta } = useSWRImmutable(() =>
 		params.chapter ? `/mangas/${metadata._id}/${params.chapter}` : null
 	);
 

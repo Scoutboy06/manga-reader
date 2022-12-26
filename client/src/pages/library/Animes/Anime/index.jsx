@@ -5,9 +5,13 @@ import useSWR from 'swr';
 
 import { ProfileContext } from '../../../../contexts/ProfileContext';
 
+import Head from '../../../../components/Head';
 import Navbar from '../../../../components/navbars/Anime';
 import AddToLibraryButton from '../../../../components/AddToLibraryButton';
 import MediaCard from './../../../../components/MediaCard/index';
+import EditSeasonMetadata from '../../../../components/Popups/EditSeasonMetadata';
+
+import { PopupContext } from '../../../../contexts/PopupContext';
 
 import styles from './Anime.module.css';
 import Image from './../../../../components/Image';
@@ -15,6 +19,7 @@ import Image from './../../../../components/Image';
 export default function Anime() {
 	const params = useParams();
 	const [{ currentProfile }] = useContext(ProfileContext);
+	const [, popupActions] = useContext(PopupContext);
 
 	const { data: animeMeta } = useSWR(
 		() => `/users/${currentProfile._id}/animes/${params.name}`,
@@ -147,7 +152,11 @@ export default function Anime() {
 										<Link
 											key={'EP ' + episode.number}
 											to={`/animes/${params.name}/${currentSeason.urlName}/episode-${episode.number}`}
-											className={`${styles.episode} ${episode.watchStatus}`}
+											className={[
+												styles.episode,
+												episode.hasWatched ? 'completed' : '',
+												episode.isNew ? 'new' : '',
+											].join(' ')}
 										>
 											EP {episode.number}
 										</Link>
@@ -167,6 +176,45 @@ export default function Anime() {
 									title={season.name}
 									type='series'
 									seriesHref={`/animes/${params.name}/${season.urlName}`}
+									hasUpdates={season.hasNewEpisodes}
+									dropdownItems={[
+										{
+											content: 'Edit metadata',
+											icon: <i className='icon'>edit</i>,
+											action: () => {
+												popupActions.createPopup({
+													title: 'Edit metadata',
+													content: EditSeasonMetadata,
+													data: { season, anime: animeMeta },
+												});
+											},
+										},
+										{
+											content: 'Edit cover',
+											icon: <i className='icon'>image</i>,
+											action: () => {
+												// popupActions.createPopup({
+												// 	title: 'Edit manga cover',
+												// 	content: EditMangaCover,
+												// 	data: manga,
+												// });
+											},
+										},
+										'divider',
+										{
+											content: 'Delete',
+											icon: <i className='icon'>delete</i>,
+											action: () => {
+												fetchAPI(
+													`/animes/${animeMeta._id}/seasons/${season._id}`,
+													{
+														method: 'DELETE',
+													}
+												);
+												mutate(`/animes/${animeMeta._id}`);
+											},
+										},
+									]}
 								/>
 							))}
 						</div>

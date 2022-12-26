@@ -14,11 +14,6 @@
 	grid-template-columns: repeat(auto-fill, minmax(180px, auto));
 }
 
-.section1 > div,
-.section2 > div > div {
-	width: unset !important;
-}
-
 .section2 {
 	border-radius: 0.3em;
 	display: block;

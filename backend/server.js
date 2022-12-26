@@ -18,28 +18,26 @@ import router from './router.js';
 // import Host from './models/hostModel.js';
 import Anime from './models/animeModel.js';
 
-import asyncHandler from 'express-async-handler';
-
 const app = express();
 const __dirname = path.resolve();
 dotenv.config({ path: path.join(__dirname, '.env.local') });
 
-if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
-
+if (process.env.NODE_ENV === 'development') {
+	app.use(morgan('dev'));
+}
 app.use(express.json());
 app.use(cors());
-app.use(errorCatcher);
-app.use('/', router);
 
+app.use(router);
 
-app.use('/tmdb/*', asyncHandler(async (req, res) => {
+app.use('/tmdb/*', async (req, res) => {
 	const data = await fetch(`https://api.themoviedb.org/3/${req.params[0]}?` + new URLSearchParams({
 		api_key: process.env.TMDB_V3_API_KEY,
 		...req.query,
 	})).then(res => res.json());
 
 	res.json(data);
-}));
+});
 
 app.use('/test', async (req, res) => {
 	// const mangas = await Manga.find({});
@@ -65,6 +63,7 @@ app.use('/test', async (req, res) => {
 	res.json(data);
 });
 
+app.use(errorCatcher);
 app.use(notFound);
 
 const PORT = process.env.PORT;

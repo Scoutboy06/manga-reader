@@ -29,6 +29,7 @@
 		sans-serif;
 
 	--error: #cf6679;
+	--update-badge: rgb(219, 8, 8);
 }
 
 #root {
@@ -51,7 +52,7 @@ body {
 }
 
 button {
-	font-family: inherit;
+	font: inherit;
 }
 
 h1,

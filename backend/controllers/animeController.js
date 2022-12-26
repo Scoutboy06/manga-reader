@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import fetch from 'node-fetch';
+import handler from 'express-async-handler';
 
 import Anime from '../models/animeModel.js';
 import User from '../models/userModel.js';
@@ -11,13 +12,13 @@ const router = Router();
 
 // @desc	Fetch the user's anime landing page
 // @route	GET /users/:userId/animes
-router.get('/users/:userId/animes', async (req, res) => {
+router.get('/users/:userId/animes', async (req, res, next) => {
 	const { userId } = req.params;
 
 	const user = await User.findById(userId);
 	if (!user) {
 		res.status(400);
-		throw new Error('No user');
+		return next(new Error('User not found'));
 	}
 
 	/*
@@ -263,19 +264,19 @@ router.get('/users/:userId/animes/:urlName', async (req, res) => {
 
 // @desc	Get metadata about a single episode
 // @route	GET /users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName
-router.get('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', async (req, res) => {
+router.get('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', async (req, res, next) => {
 	const { userId, animeUrlName, seasonUrlName, episodeUrlName } = req.params;
 
 	const anime = await Anime.findOne({ urlName: animeUrlName, ownerId: userId });
 	if (!anime) {
 		res.status(404);
-		throw new Error('No anime found');
+		return next(new Error('No anime found'));
 	}
 
 	const season = anime.seasons.find(season => season.urlName === seasonUrlName);
 	if (!season) {
 		res.status(404);
-		throw new Error('No season found');
+		return next(new Error('No season found'));
 	}
 
 	let foundPart, foundEpisode;
@@ -292,7 +293,7 @@ router.get('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName',
 
 	if (!foundPart || !foundEpisode) {
 		res.status(404);
-		throw new Error('Episode not found');
+		return next(new Error('Episode not found'));
 	}
 
 	const scrapedEpisode = await getAnimeEpisode(foundEpisode.sourceUrlName);
@@ -302,13 +303,13 @@ router.get('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName',
 
 // @desc	Delete an anime
 // @route	DELETE /animes/:animeId
-router.delete('/animes/:animeId', async (req, res) => {
+router.delete('/animes/:animeId', async (req, res, next) => {
 	const { id } = req.params;
 
 	const anime = await Anime.findById(id);
 	if (!anime) {
 		res.status(404);
-		throw new Error('No anime found');
+		return next(new Error('No anime found'));
 	}
 
 	await anime.remove();
@@ -318,13 +319,13 @@ router.delete('/animes/:animeId', async (req, res) => {
 
 // @desc	Update an anime
 // @route	PATCH /animes/:animeId
-router.patch('/animes/:animeId', async (req, res) => {
+router.patch('/animes/:animeId', async (req, res, next) => {
 	const { animeId } = req.params;
 
 	const anime = await Anime.findById(animeId);
 	if (!anime) {
 		res.status(404);
-		throw new Error('No anime found');
+		return next(new Error('No anime found'));
 	}
 
 	const allowedKeys = [
@@ -347,26 +348,27 @@ router.patch('/animes/:animeId', async (req, res) => {
 
 // @desc	Update anime, season and episode's watch status
 // @route PATCH /users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName
-router.patch('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', async (req, res) => {
+router.patch('/users/:userId/animes/:animeUrlName/:seasonUrlName/:episodeUrlName', async (req, res, next) => {
 	const { userId, animeUrlName, seasonUrlName, episodeUrlName } = req.params;
 	const { hasWatched, isFavorite } = req.body;
 
-	const user = await User.findById(userId);
-	if (!user) {
+	const user = await User.findById(userId).catch(err => {
 		res.status(404);
-		throw new Error('No user found');
-	}
+		next(err);
+	});
+	if (!user) return;
 
-	const anime = await Anime.findOne({ urlName: animeUrlName });
-	if (!anime) {
+	const anime = await Anime.findOne({ urlName: animeUrlName }).catch(err => {
 		res.status(404);
-		throw new Error('No anime found');
-	}
+		next(new Error('No anime found'));
+	});
+
+	if (!anime) return;
 
 	const season = anime.seasons.find(season => season.urlName === seasonUrlName);
 	if (!season) {
 		res.status(404);
-		throw new Error('No anime found');
+		return next(new Error('No anime found'));
 	}
 
 	// Update hasUpdates field on anime and season

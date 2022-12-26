@@ -6,13 +6,35 @@ import Manga from '../models/mangaModel.js';
 const router = Router();
 
 
+// @desc	Get all users
+// @route GET /users
+router.get('/users', async (req, res) => {
+	const users = await User.find();
+	res.status(200).json(users);
+});
+
+
+// @desc	Get a user by id
+// @route	GET /users/:userId
+router.get('/users/:userId', async (req, res, next) => {
+	const user = await User.findById(req.params.userId).catch(err => {
+		res.status(404);
+		next(err);
+	});
+	res.status(200).json(user);
+});
+
+
 // @desc	Create a new user
 // @route	POST /users
-router.post('/users', async (req, res) => {
+router.post('/users', async (req, res, next) => {
 	const user = new User(req.body);
 
-	const createdUser = await user.save();
-	res.status(201).json(createdUser);
+	const createdUser = await user.save().catch(err => {
+		res.status(400);
+		next(err);
+	});
+	if (createdUser) res.status(201).json(createdUser);
 });
 
 
@@ -21,12 +43,17 @@ router.post('/users', async (req, res) => {
 router.delete('/users/:_id', async (req, res) => {
 	// TODO: Remove all mangas that the user owns
 	const user = await User.findById(req.params._id);
-	if (!user) throw new Error(404);
+	if (!user) {
+		res.status(404);
+		return next(new Error('User not found'));
+	}
 
 	const { deletedCount } = await Manga.deleteMany({ ownerId: user._id });
-
 	await user.remove();
-	res.status(200).json({ message: `User "${user.name}" with ${deletedCount} mangas was successfully deleted` });
+
+	res.status(200).json({
+		message: `User "${user.name}" with ${deletedCount} mangas was successfully deleted`
+	});
 });
 
 
@@ -46,30 +73,12 @@ router.patch('/users/:userId', async (req, res) => {
 });
 
 
-// @desc	Get all users
-// @route GET /users
-router.get('/users', async (req, res) => {
-	const users = await User.find();
-	res.status(200).json(users);
-});
-
-
-// @desc	Get a user by id
-// @route	GET /users/:userId
-router.get('/users/:userId', async (req, res) => {
-	const user = await User.findById(req.params.userId);
-
-	if (user) res.status(200).json(user);
-	else throw new Error(404);
-});
-
-
 // @desc	Get user's manga list
 // @route	GET /users/:userId/mangas
 router.get('/users/:userId/mangas', async (req, res) => {
 	const { userId } = req.params;
 	const user = await User.findById(userId);
-	if (!user) res.status(400).json({ error: 'Not found' });
+	if (!user) return res.status(400).json({ error: 'Not found' });
 
 	const mangas = await Manga.find({ ownerId: user._id });
 	res.status(200).json(mangas);

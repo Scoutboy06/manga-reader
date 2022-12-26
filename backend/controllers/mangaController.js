@@ -149,34 +149,37 @@ router.delete('/mangas/:mangaId', async (req, res) => {
 });
 
 // @desc	Update the current chapter
-// @route	PATCH /mangas/:mangaId/currentChapter
-router.patch('/mangas/:mangaId/currentChapter', async (req, res) => {
+// @route	POST /mangas/:mangaId/currentChapter
+router.post('/mangas/:mangaId/currentChapter', async (req, res, next) => {
 	const { mangaId } = req.params;
 	const { currentChapter } = req.body;
 
-	const manga = await Manga.findById(mangaId);
-	if (!manga) {
+	const manga = await Manga.findById(mangaId).catch(err => {
 		res.status(404);
-		throw new Error('No manga found');
-	}
+		next(err);
+	});
+	if (!manga) return;
 
 	manga.currentChapter = currentChapter;
 	manga.hasUpdates = (currentChapter !== manga.chapters[manga.chapters.length - 1].urlName);
 
-	await manga.save();
-	res.json({});
+	const savedManga = await manga.save().catch(err => {
+		res.status(400);
+		next(err);
+	});
+	if (savedManga) res.json(savedManga);
 });
 
 // @desc	Get images from a chapter
 // @route	GET /mangas/:mangaId/:chapter
-router.get('/mangas/:mangaId/:chapter', async (req, res) => {
+router.get('/mangas/:mangaId/:chapter', async (req, res, next) => {
 	const { mangaId, chapter } = req.params;
 
-	const manga = await Manga.findById(mangaId);
-	if (!manga) {
+	const manga = await Manga.findById(mangaId).catch(() => {
 		res.status(404);
-		throw new Error('Manga not found');
-	}
+		next(new Error('Manga not found'));
+	});
+	if (!manga) return;
 
 	const currentChapter = manga.chapters.find(ch => ch.urlName === chapter);
 
@@ -200,7 +203,7 @@ router.get('/mangas/:mangaId/:chapter', async (req, res) => {
 
 	if (srcs.length === 0) {
 		res.status(404);
-		throw new Error('No images found');
+		return next(new Error('No images found'));
 	}
 
 	// {

@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import Head from '../../../components/Head';
 import MediaCard from '../../../components/MediaCard';
 import HorizontalScrollContainer from '../../../components/HorizontalScrollContainer';
-import EditMetadata from '../../../components/Popups/EditMetadata';
+import EditAnimeMetadata from '../../../components/Popups/EditAnimeMetadata';
 
 import { PopupContext } from '../../../contexts/PopupContext';
 import { ProfileContext } from '../../../contexts/ProfileContext';
@@ -19,7 +19,7 @@ export default function Animes() {
 	const [{ currentProfile }] = useContext(ProfileContext);
 
 	const { data, mutate } = useSWR(() => `/users/${currentProfile._id}/animes`, {
-		revalidateIfStale: true,
+		revalidateIfStale: false,
 		revalidateOnFocus: false,
 		revalidateOnReconnect: true,
 	});
@@ -53,26 +53,17 @@ export default function Animes() {
 										subtitle={media.subtitle}
 										id={media._id}
 										finished={media.hasWatched}
+										hasUpdates={media.hasNewEpisodes}
 										dropdownItems={[
-											{
-												content: 'Play',
-												icon: <i className='icon'>play_arrow</i>,
-												action: () => {
-													// navigate(
-													// 	`/animes/${media.seasons[media.seasons.length - 1].urlName}/episode-${media.episodeNumber}`
-													// );
-												},
-											},
-											'divider',
 											{
 												content: 'Edit metadata',
 												icon: <i className='icon'>edit</i>,
 												action: () => {
-													// popupActions.createPopup({
-													// 	title: 'Edit metadata',
-													// 	content: EditMetadata,
-													// 	data: media,
-													// });
+													popupActions.createPopup({
+														title: 'Edit metadata',
+														content: EditAnimeMetadata,
+														data: media,
+													});
 												},
 											},
 											{
@@ -86,6 +77,28 @@ export default function Animes() {
 													// });
 												},
 											},
+											media.isAiring
+												? {
+														content:
+															(media.notificationsOn ? 'Disable' : 'Enable') +
+															' notifications',
+														icon: (
+															<i className='icon'>
+																{media.notificationsOn
+																	? 'notifications_off'
+																	: 'notifications_active'}
+															</i>
+														),
+														action: () => {
+															fetchAPI(`/animes/${media._id}`, {
+																method: 'PATCH',
+																body: JSON.stringify({
+																	notificationsOn: !media.notificationsOn,
+																}),
+															});
+														},
+												  }
+												: null,
 											'divider',
 											{
 												content: 'Delete',

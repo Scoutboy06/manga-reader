@@ -134,6 +134,7 @@
 	padding: 7px 15px;
 	background-color: #2a2a2a;
 	border-radius: 7px;
+	position: relative;
 }
 
 .episode:global(.completed) {
@@ -141,7 +142,18 @@
 }
 
 .episode:global(.current) {
-	background-color: #0055a4;
+	background-color: #0055a4 !important;
+}
+
+.episode:global(.new):not(:global(.current))::after {
+	content: '';
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	width: 16px;
+	height: 16px;
+	background-color: var(--update-badge);
+	border-radius: 50%;
 }
 
 @media (max-width: 500px) {

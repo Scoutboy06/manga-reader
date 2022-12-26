@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
+import fetchAPI from '../../functions/fetchAPI';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 
@@ -12,6 +13,7 @@ import styles from './watch.module.css';
 export default function Anime() {
 	const params = useParams();
 	const [{ currentProfile }] = useContext(ProfileContext);
+	const { mutate } = useSWRConfig();
 
 	const { data: animeMeta } = useSWR(
 		`/users/${currentProfile._id}/animes/${params.name}`,
@@ -28,7 +30,12 @@ export default function Anime() {
 
 	const { data: episodeMeta } = useSWR(
 		() =>
-			`/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`
+			`/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`,
+		{
+			revalidateIfStale: false,
+			revalidateOnFocus: false,
+			revalidateOnReconnect: false,
+		}
 	);
 
 	const [prevEpisode, setPrevEpisode] = useState(null);
@@ -41,8 +48,11 @@ export default function Anime() {
 				const part = currentSeason.parts[i];
 				// console.log(part.episodes.length);
 
-				for (let j = 0; i < part.episodes.length; j++) {
-					if (part.episodes[j]?.urlName === params.episodeUrlName) {
+				for (let j = 0; j < part.episodes.length; j++) {
+					if (
+						part.episodes[j]?.urlName === params.episodeUrlName &&
+						currentSeason.urlName === params.season
+					) {
 						setPrevEpisode(part.episodes[j - 1]);
 						setCurrentEpisode(part.episodes[j]);
 						setNextEpisode(part.episodes[j + 1]);
@@ -52,6 +62,75 @@ export default function Anime() {
 			}
 		}
 	}, [currentSeason, params.episodeUrlName]);
+
+	useEffect(() => {
+		if (!episodeMeta) return;
+
+		const animeUrl = `/users/${currentProfile._id}/animes/${params.name}`;
+		const episodeUrl = `/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`;
+
+		// Update current episode in anime's cache
+		mutate(
+			animeUrl,
+			anime => {
+				let animeHasNewEpisodes = false;
+				let hasWatchedAllAnimeEpisodes = true;
+
+				for (const season of anime.seasons) {
+					let seasonHasNewEpisodes = false;
+					let hasWatchedAllSeasonEpisodes = true;
+
+					for (const part of season.parts) {
+						for (const episode of part.episodes) {
+							// If it's the episode we're looking for
+							if (episode.urlName === params.episodeUrlName) {
+								episode.hasWatched = true;
+								episode.isNew = false;
+							}
+
+							if (episode.isNew) {
+								animeHasNewEpisodes = true;
+								seasonHasNewEpisodes = true;
+							}
+
+							if (!episode.hasWatched) {
+								hasWatchedAllAnimeEpisodes = false;
+								hasWatchedAllSeasonEpisodes = false;
+							}
+						}
+					}
+
+					season.hasWatched = hasWatchedAllSeasonEpisodes;
+					season.hasNewEpisodes = seasonHasNewEpisodes;
+				}
+
+				anime.hasNewEpisodes = animeHasNewEpisodes;
+				anime.hasWatched = hasWatchedAllAnimeEpisodes;
+
+				return anime;
+			},
+			{ revalidate: false }
+		);
+
+		// Update current episode
+		mutate(
+			episodeUrl,
+			async episode => {
+				console.log(episode);
+				fetchAPI(episodeUrl, {
+					method: 'PATCH',
+					body: JSON.stringify({
+						hasWatched: true,
+					}),
+				});
+
+				episode.hasWatched = true;
+				episode.isNew = false;
+				return episode;
+			},
+			{ revalidate: false }
+		);
+	}, [episodeMeta]);
 
 	return (
 		<>
@@ -63,7 +142,7 @@ export default function Anime() {
 
 			<main className={styles.mainContainer}>
 				<div className={styles.videoContainer}>
-					<iframe
+					{/* <iframe
 						src={episodeMeta?.iframeSrc}
 						allowFullScreen={true}
 						frameBorder='0'
@@ -71,8 +150,8 @@ export default function Anime() {
 						marginHeight='0'
 						scrolling='no'
 						title='video'
-					></iframe>
-					{/* <div></div> */}
+					></iframe> */}
+					<div></div>
 				</div>
 
 				<div className={styles.paginationContainer}>
@@ -146,11 +225,14 @@ export default function Anime() {
 								<Link
 									key={'EP_' + episode.number}
 									to={`/animes/${params.name}/${currentSeason.urlName}/${episode.urlName}`}
-									className={`${styles.episode} ${
-										params.episodeUrlName === episode.urlName
+									className={[
+										styles.episode,
+										currentEpisode?._id === episode._id
 											? 'current'
-											: episode.status
-									}`}
+											: episode.hasWatched
+											? 'completed'
+											: '',
+									].join(' ')}
 								>
 									EP {episode.number}
 								</Link>

@@ -14,23 +14,27 @@ router.get('/hosts', async (req, res) => {
 
 // @desc	Create add a new host
 // @route	POST /hosts
-router.post('/hosts', async (req, res) => {
+router.post('/hosts', async (req, res, next) => {
 	const host = new Host(req.body);
 
-	const createdHost = await host.save();
-	res.status(201).json(createdHost);
+	const createdHost = await host.save().catch(err => {
+		res.status(400);
+		next(err);
+	});
+
+	if (createdHost) res.status(201).json(createdHost);
 });
 
 // @desc	Get a host by it's id
 // @route	GET /hosts/:hostId
-router.get('/hosts/:hostId', async (req, res) => {
+router.get('/hosts/:hostId', async (req, res, next) => {
 	const { hostId } = req.params;
-	const host = await Host.findById(hostId);
-	if (!host) {
+	const host = await Host.findById(hostId).catch(err => {
 		res.status(404);
-		throw new Error('No host found');
-	}
-	res.json(host);
+		next(err);
+	});
+
+	if (host) res.json(host);
 });
 
 
