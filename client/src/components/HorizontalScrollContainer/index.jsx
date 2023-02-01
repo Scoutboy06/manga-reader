@@ -59,7 +59,7 @@ export default function HorizontalScrollContainer({
 	return (
 		<div style={{ width: '100%' }} className={className}>
 			<div className={styles.top}>
-				{title && title}
+				{title && <h1 className={styles.title}>{title}</h1>}
 				<div className={styles.buttons}>
 					<button
 						onClick={() => scroll(-1)}

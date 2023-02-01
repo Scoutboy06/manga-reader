@@ -4,71 +4,8 @@
 	text-align: center;
 }
 
-.section1 {
-	margin: 15px calc(var(--padding) - 0.6em) 0;
-}
-
-.section1,
-.section2 > div {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(180px, auto));
-}
-
-.section2 {
-	border-radius: 0.3em;
-	display: block;
-	width: calc(100% - 2 * var(--padding));
-	background: var(--bg-00dp);
-	border: 1px solid var(--bg-01dp);
-	margin: 0 auto var(--padding) auto;
-}
-
-.section2 > div {
-	border-top: 1px solid var(--bg-01dp);
-	display: none;
-	padding: 15px 0 0;
-}
-
-.section2[data-show='true'] > div {
-	display: grid;
-}
-
-.toggleFinshedMangasButton {
-	display: flex;
-	align-items: center;
-
-	width: 100%;
-	height: 50px;
-	margin: 0;
-	padding: 5px 12px;
-	background: var(--bg-00dp);
-	border: 0;
-	outline: none;
-	border-radius: 0.1em;
-
-	color: #fff;
-	font-size: 1.5rem;
-	text-align: left;
-
-	transition: background 0.3s;
-	cursor: pointer;
-}
-
-.section2[data-show='true'] .toggleFinshedMangasButton {
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
-.toggleFinshedMangasButton:hover {
-	background: var(--bg-01dp);
-}
-
-.toggleFinshedMangasButton:active {
-	background: var(--bg-02dp);
-}
-
-.toggleFinshedMangasButton i {
-	transition: transform 0.1s;
+.main {
+	padding: 0 var(--padding);
 }
 
 .newManga {
@@ -92,6 +29,7 @@
 	justify-content: center;
 
 	cursor: pointer;
+	-webkit-user-select: none;
 	user-select: none;
 }
 

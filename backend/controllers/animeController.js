@@ -10,6 +10,7 @@ import getAnimeEpisode from '../functions/anime/getAnimeEpisode.js';
 
 const router = Router();
 
+
 // @desc	Fetch the user's anime landing page
 // @route	GET /users/:userId/animes
 router.get('/users/:userId/animes', async (req, res, next) => {
@@ -21,25 +22,9 @@ router.get('/users/:userId/animes', async (req, res, next) => {
 		return next(new Error('User not found'));
 	}
 
-	/*
-	Continue watching
-		(New episodes - subscribed)
-	Your favorites
-	Popular
-	New season
-	Recent realease
-	(Popular ongoing update)
-	*/
-
-	// const continueWatching = [];
-	// const favorites = [];
-	// const popular = [];
-	// const newSeason = [];
-	// const recentRelease = [];
 	const animes = await Anime.find({ ownerId: userId });
 
-
-	let removeFields = ['ownerId', 'tmdbId', 'seasons', 'seasonId', 'genres', 'released', 'status', 'otherNames'];
+	let removeFields = ['ownerId', 'tmdbId', 'seasons', 'otherNames'];
 
 	for (const anime of animes) {
 		for (const field of removeFields) {
@@ -47,44 +32,7 @@ router.get('/users/:userId/animes', async (req, res, next) => {
 		}
 	}
 
-
-	const fields = [
-		// {
-		// 	title: 'Continue watching',
-		// 	type: 'video',
-		// 	media: animes.filter(anime =>
-		// 		anime.seasons.find(season =>
-		// 			season.episodes[0] !== '' && season.episodes.find(episode => episode.status === '')
-		// 		))
-		// },
-		// {
-		// 	title: 'Your favorites',
-		// 	type: 'series',
-		// 	media: animes.filter(anime => anime.isFavorite),
-		// },
-		{
-			title: 'Your library',
-			type: 'series',
-			media: animes,
-		},
-		// {
-		// 	title: 'Popular',
-		// 	type: 'series',
-		// 	media: []
-		// },
-		// {
-		// 	title: 'New season',
-		// 	type: 'series',
-		// 	media: [],
-		// },
-		// {
-		// 	title: 'Recent release',
-		// 	type: 'series',
-		// 	media: [],
-		// },
-	];
-
-	res.json(fields);
+	res.json(animes);
 });
 
 

@@ -1,27 +1,17 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import DropdownButton from '../DropdownButton';
 import Loader from '../Loader';
 
-import fetchAPI from '../../functions/fetchAPI';
-
 import styles from './MediaCard.module.css';
-
-const orientationTypes = {
-	series: 'vertical',
-	video: 'horizontal',
-	manga: 'vertical',
-};
 
 export default function MediaCard({
 	href,
 	imgUrl,
 	title,
 	subtitle,
-	type = 'folder',
-	completed = { name: 'completed', value: false },
-	id,
+	orientation = 'vertical',
 	seriesHref,
 	dropdownItems = [],
 	showSpinner = false,
@@ -32,10 +22,7 @@ export default function MediaCard({
 	const mainContainer = useRef();
 
 	return (
-		<div
-			className={`${styles.card} ${orientationTypes[type]}`}
-			ref={mainContainer}
-		>
+		<div className={`${styles.card} ${orientation}`} ref={mainContainer}>
 			{showSpinner && (
 				<div className={styles.loader}>
 					<Loader size={30} />
@@ -53,31 +40,6 @@ export default function MediaCard({
 
 				<div className={styles.overlayContainer}>
 					<div className={styles.buttonsContainer}>
-						{window.matchMedia('(hover: hover)').matches && (
-							<button
-								onClick={e => {
-									e.preventDefault();
-
-									if (
-										window.confirm(
-											'Are you sure you want to perform this action?'
-										)
-									) {
-										fetchAPI(`/mangas/${id}`, {
-											method: 'PATCH',
-											body: JSON.stringify({
-												[completed.name]: !completed.value,
-											}),
-										}).then(() => window.location.reload());
-									}
-								}}
-								data-completed={completed}
-								className='icon'
-							>
-								done
-							</button>
-						)}
-
 						<DropdownButton className='icon' dropdownItems={dropdownItems}>
 							more_vert
 						</DropdownButton>

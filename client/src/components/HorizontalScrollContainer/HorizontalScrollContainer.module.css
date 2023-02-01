@@ -6,6 +6,14 @@
 	margin-bottom: 10px;
 }
 
+.title {
+	color: #cecece;
+	font-weight: 500;
+	font-size: 26px;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
 .top > p {
 	word-wrap: break-word;
 }

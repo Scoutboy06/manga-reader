@@ -9,6 +9,7 @@ import Head from '../../components/Head';
 import MediaCard from '../../components/MediaCard';
 import EditMangaCover from '../../components/Popups/EditMangaCover';
 import EditMetadata from '../../components/Popups/EditMetadata';
+import HorizontalScrollContainer from '../../components/HorizontalScrollContainer';
 
 import { ProfileContext } from '../../contexts/ProfileContext';
 import { PopupContext } from '../../contexts/PopupContext';
@@ -18,19 +19,29 @@ import styles from './index.module.css';
 export default function Mangas() {
 	const navigate = useNavigate();
 
-	const [profileData] = useContext(ProfileContext);
-	const [, popupActions] = useContext(PopupContext);
+	const [{ currentProfile }] = useContext(ProfileContext);
+	const [, { createPopup }] = useContext(PopupContext);
 
-	const { data: mangas, mutate: updateLibrary } = useSWR(
-		`/users/${profileData.currentProfile._id}/mangas`,
+	const { data: mangas } = useSWR(`/users/${currentProfile._id}/mangas`, {
+		revalidateIfStale: true,
+		revalidateOnFocus: false,
+		revalidateOnReconnect: true,
+	});
+
+	const sections = [
 		{
-			revalidateIfStale: true,
-			revalidateOnFocus: false,
-			revalidateOnReconnect: true,
-		}
-	);
-
-	const [showFinishedMangas, setShowFinishedMangas] = useState(false);
+			title: 'New Chapters',
+			data: mangas?.filter(manga => manga.hasUpdates),
+		},
+		{
+			title: 'Your library',
+			data: mangas,
+		},
+		{
+			title: 'Read again',
+			data: mangas?.filter(manga => manga.hasRead),
+		},
+	];
 
 	return (
 		<>
@@ -38,27 +49,48 @@ export default function Mangas() {
 				<title>Choose a manga</title>
 			</Head>
 
-			<main>
-				<section className={styles.section1}>
-					{mangas?.map(
-						manga =>
-							!manga.hasRead && (
+			<main className={styles.main}>
+				{sections
+					.filter(section => section.data)
+					.map(section => (
+						<HorizontalScrollContainer
+							key={section.title}
+							title={section.title}
+						>
+							{section.data.map(manga => (
 								<MediaCard
 									key={manga._id}
-									type='manga'
-									title={manga.name || manga.title}
+									orentation='vertical'
+									title={manga.title}
 									subtitle={parseChapterName(manga.currentChapter)}
 									href={`/mangas/${manga.urlName}`}
-									imgUrl={manga.coverUrl || manga.poster}
-									completed={{ name: 'hasRead', value: manga.hasRead }}
-									id={manga._id}
-									seriesHref={null}
+									imgUrl={manga.poster}
 									dropdownItems={[
+										manga.hasRead
+											? {
+													content: 'Read again',
+													icon: <i className='icon'>replay</i>,
+													action: async () => {
+														const { chapters } = await fetchAPI(
+															`/mangas/${manga._id}`
+														);
+
+														fetchAPI(`/mangas/${manga._id}`, {
+															method: 'PATCH',
+															body: JSON.stringify({ hasRead: false }),
+														});
+
+														navigate(
+															`/mangas/${manga.urlName}/${chapters[0].urlName}`
+														);
+													},
+											  }
+											: null,
 										{
 											content: 'Edit metadata',
 											icon: <i className='icon'>edit</i>,
 											action: () => {
-												popupActions.createPopup({
+												createPopup({
 													title: 'Edit metadata',
 													content: EditMetadata,
 													data: manga,
@@ -69,7 +101,7 @@ export default function Mangas() {
 											content: 'Edit cover',
 											icon: <i className='icon'>image</i>,
 											action: () => {
-												popupActions.createPopup({
+												createPopup({
 													title: 'Edit manga cover',
 													content: EditMangaCover,
 													data: manga,
@@ -117,103 +149,9 @@ export default function Mangas() {
 									]}
 									hasUpdates={manga.hasUpdates}
 								/>
-							)
-					)}
-				</section>
-
-				<section className={styles.section2} data-show={showFinishedMangas}>
-					<button
-						onClick={() => setShowFinishedMangas(!showFinishedMangas)}
-						className={styles.toggleFinshedMangasButton}
-					>
-						<span>Finished reading</span>
-						<i
-							className='icon'
-							style={{
-								transform: `rotate(${showFinishedMangas ? 0 : -90}deg)`,
-							}}
-						>
-							expand_more
-						</i>
-					</button>
-
-					<div>
-						{mangas?.map(
-							manga =>
-								manga.hasRead && (
-									<MediaCard
-										key={manga._id}
-										type='manga'
-										title={manga.name || manga.title}
-										subtitle={parseChapterName(manga.currentChapter)}
-										href={`/mangas/${manga.urlName}`}
-										imgUrl={manga.coverUrl || manga.poster}
-										completed={{ name: 'hasRead', value: manga.hasRead }}
-										id={manga._id}
-										seriesHref={null}
-										dropdownItems={[
-											{
-												content: 'Edit metadata',
-												icon: <i className='icon'>edit</i>,
-												action: () => {
-													popupActions.createPopup({
-														title: 'Edit metadata',
-														content: EditMetadata,
-														data: manga,
-													});
-												},
-											},
-											{
-												content: 'Edit cover',
-												icon: <i className='icon'>image</i>,
-												action: () => {
-													popupActions.createPopup({
-														title: 'Edit manga cover',
-														content: EditMangaCover,
-														data: manga,
-													});
-												},
-											},
-											'divider',
-											{
-												content: 'Read again',
-												icon: <i className='icon'>replay</i>,
-												action: async () => {
-													const { chapters } = await fetchAPI(
-														`/mangas/${manga._id}`
-													);
-
-													fetchAPI(`/mangas/${manga._id}`, {
-														method: 'PATCH',
-														body: JSON.stringify({ hasRead: false }),
-													});
-
-													navigate(
-														`/mangas/${manga.urlName}/${chapters[0].urlName}`
-													);
-												},
-											},
-											{
-												content: 'Delete',
-												icon: <i className='icon'>delete</i>,
-												action: () => {
-													if (
-														window.confirm(
-															'Are you sure you want to delete this manga? The action cannot be undone.'
-														)
-													) {
-														fetchAPI(`/mangas/${manga._id}`, {
-															method: 'DELETE',
-														}).then(() => updateLibrary());
-													}
-												},
-											},
-										]}
-									/>
-								)
-						)}
-					</div>
-				</section>
+							))}
+						</HorizontalScrollContainer>
+					))}
 			</main>
 		</>
 	);
