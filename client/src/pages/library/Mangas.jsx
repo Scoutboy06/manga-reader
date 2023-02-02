@@ -15,6 +15,19 @@ import { ProfileContext } from '../../contexts/ProfileContext';
 import { PopupContext } from '../../contexts/PopupContext';
 
 import styles from './index.module.css';
+/*
+- My List (db)
+
+- Continue Reading (db)
+
+- Popular Manga (MAL)
+- Top 10 Most Popular Manga (MAL)
+- Top One Shots (MAL)
+
+--- Genres (db)
+
+- Read again
+*/
 
 export default function Mangas() {
 	const navigate = useNavigate();
@@ -30,12 +43,12 @@ export default function Mangas() {
 
 	const sections = [
 		{
-			title: 'New Chapters',
-			data: mangas?.filter(manga => manga.hasUpdates),
+			title: 'My List',
+			data: mangas?.filter(manga => manga.isFavorite),
 		},
 		{
-			title: 'Your library',
-			data: mangas,
+			title: 'Continue Reading',
+			data: mangas?.filter(manga => manga.hasUpdates),
 		},
 		{
 			title: 'Read again',

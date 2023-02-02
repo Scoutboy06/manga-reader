@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const MODEL_NAME = mongoose.Schema(
 	{
-		ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
+		ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: false },
+
 		hostId: { type: mongoose.Types.ObjectId, ref: 'Host', required: true },
 		urlName: { type: String, required: true },
 		sourceUrlName: { type: String, required: true },
@@ -16,23 +17,22 @@ const MODEL_NAME = mongoose.Schema(
 				number: { type: Number, required: true },
 				urlName: { type: String, required: true },
 				sourceUrlName: { type: String, required: true },
-				_id: false
 			},
 		],
-		currentChapter: { type: String, required: true },
+		// currentChapter: { type: String, required: true },
 
-		otherNames: String,
-		authors: String,
-		artists: String,
-		genres: String,
-		released: String,
-		status: String,
+		// otherNames: String,
+		// authors: String,
+		// artists: String,
+		// genres: String,
+		// released: String,
+		status: { type: String, enum: ['ongoing', 'completed'] },
 
-		isFavorite: { type: Boolean, default: false },
-		hasRead: { type: Boolean, default: false },
-		notificationsOn: { type: Boolean, default: false },
-		lastUpdatePingedChapter: String,
-		hasUpdates: { type: Boolean, default: true },
+		// isFavorite: { type: Boolean, default: false },
+		// hasRead: { type: Boolean, default: false },
+		// notificationsOn: { type: Boolean, default: false },
+		// lastUpdatePingedChapter: String,
+		// hasUpdates: { type: Boolean, default: true },
 
 		poster: { type: String, required: true },
 	},
