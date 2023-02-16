@@ -37,11 +37,11 @@ export default function Read() {
 	useEffect(() => {
 		if (!metadata) return;
 
-		if (!params.chapter) {
-			navigate(`/mangas/${metadata.urlName}/${metadata.currentChapter}`, {
-				replace: true,
-			});
-		}
+		// if (!params.chapter) {
+		// 	navigate(`/mangas/${metadata.urlName}/${metadata.currentChapter}`, {
+		// 		replace: true,
+		// 	});
+		// }
 
 		const { chapters } = metadata;
 		const currentChapterIndex = chapters.findIndex(
@@ -52,10 +52,13 @@ export default function Read() {
 		setNextChapter(chapters[currentChapterIndex + 1]);
 
 		// Sync chapter with server
-		fetchAPI(`/mangas/${metadata._id}/currentChapter`, {
-			method: 'POST',
-			body: JSON.stringify({ currentChapter: params.chapter }),
-		});
+		fetchAPI(
+			`/users/${currentProfile._id}/mangas/${metadata._id}/currentChapter`,
+			{
+				method: 'POST',
+				body: JSON.stringify({ urlName: params.chapter }),
+			}
+		);
 	}, [metadata, navigate, params.chapter]);
 
 	return (

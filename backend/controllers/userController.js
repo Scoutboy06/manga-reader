@@ -10,6 +10,12 @@ const router = Router();
 // @route GET /users
 router.get('/users', async (req, res) => {
 	const users = await User.find();
+
+	for (const user of users) {
+		user.animes = undefined;
+		user.mangas = undefined;
+	}
+
 	res.status(200).json(users);
 });
 
@@ -70,18 +76,6 @@ router.patch('/users/:userId', async (req, res) => {
 
 	await user.save();
 	res.status(200).json(user);
-});
-
-
-// @desc	Get user's manga list
-// @route	GET /users/:userId/mangas
-router.get('/users/:userId/mangas', async (req, res) => {
-	const { userId } = req.params;
-	const user = await User.findById(userId);
-	if (!user) return res.status(400).json({ error: 'Not found' });
-
-	const mangas = await Manga.find({ ownerId: user._id });
-	res.status(200).json(mangas);
 });
 
 

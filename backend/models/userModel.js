@@ -2,21 +2,24 @@ import mongoose from 'mongoose';
 
 const UserSchema = mongoose.Schema({
 	name: { type: String, required: true },
-	email: { type: String, required: true },
-	password: { type: String, required: true },
+	password: String,
 
-	// imageUrl: { type: String, required: true },
 	profilePicture: { type: String, required: true },
 	discordUserId: String,
 
 	mangas: [
 		{
 			_id: { type: mongoose.Types.ObjectId, ref: 'Manga', required: true },
+			urlName: { type: String, required: true },
+			title: { type: String, required: true },
+
+			hasNewChapters: { type: Boolean, default: false },
 			isFavorite: { type: Boolean, defualt: false },
 			notificationsOn: { type: Boolean, default: false },
-			readStatus: { type: String, enum: ['reading', 'finished'] },
+			readStatus: { type: String, enum: ['reading', 'finished'], default: 'reading' },
 
-			readChapters: [mongoose.Types.ObjectId],
+			readChapters: [Number], // chapter.number
+			newChapters: [Number], // chapter.number
 
 			currentChapter: {
 				title: { type: String, required: true },
@@ -24,14 +27,17 @@ const UserSchema = mongoose.Schema({
 				urlName: { type: String, required: true },
 				sourceUrlName: { type: String, required: true },
 			},
+
+			poster: { type: String, required: true },
 		}
 	],
 
 	animes: [{
 		_id: { type: mongoose.Types.ObjectId, ref: 'Anime', required: true },
+		urlName: { type: String, required: true },
 		isFavorite: { type: Boolean, defualt: false },
 		notificationsOn: { type: Boolean, default: false },
-		watchStatus: { type: String, enum: ['watching', 'finished'], required: true },
+		watchStatus: { type: String, enum: ['watching', 'finished'], default: 'watching' },
 
 		seasons: [{
 			_id: false,
@@ -40,8 +46,8 @@ const UserSchema = mongoose.Schema({
 			episodes: [{
 				_id: false,
 				number: { type: Number, required: true },
-				hasWatched: { type: Boolean, default: false },
 				isNew: { type: Boolean, required: true },
+				hasWatched: { type: Boolean, default: false },
 				isFavorite: { type: Boolean, default: false },
 			}]
 		}],

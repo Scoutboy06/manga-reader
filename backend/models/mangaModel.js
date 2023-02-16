@@ -1,45 +1,34 @@
 import mongoose from 'mongoose';
 
-const MODEL_NAME = mongoose.Schema(
-	{
-		ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: false },
+const MODEL_NAME = mongoose.Schema({
+	title: { type: String, required: true },
+	description: { type: String, required: true },
+	urlName: { type: String, required: true },
+	sourceUrlName: { type: String, required: true },
 
-		hostId: { type: mongoose.Types.ObjectId, ref: 'Host', required: true },
-		urlName: { type: String, required: true },
-		sourceUrlName: { type: String, required: true },
+	hostId: { type: mongoose.Types.ObjectId, ref: 'Host', required: true },
+	ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: false },
 
-		title: { type: String, required: true },
-		description: { type: String, required: true },
+	airStatus: { type: String, enum: ['ongoing', 'completed'], required: true },
 
-		chapters: [
-			{
-				title: { type: String, required: true },
-				number: { type: Number, required: true },
-				urlName: { type: String, required: true },
-				sourceUrlName: { type: String, required: true },
-			},
-		],
-		// currentChapter: { type: String, required: true },
+	chapters: [
+		{
+			_id: false,
+			title: { type: String, required: true },
+			number: { type: Number, required: true },
+			urlName: { type: String, required: true },
+			sourceUrlName: { type: String, required: true },
+		},
+	],
 
-		// otherNames: String,
-		// authors: String,
-		// artists: String,
-		// genres: String,
-		// released: String,
-		status: { type: String, enum: ['ongoing', 'completed'] },
+	otherNames: String,
+	authors: String,
+	artists: String,
+	genres: String,
+	released: String,
 
-		// isFavorite: { type: Boolean, default: false },
-		// hasRead: { type: Boolean, default: false },
-		// notificationsOn: { type: Boolean, default: false },
-		// lastUpdatePingedChapter: String,
-		// hasUpdates: { type: Boolean, default: true },
-
-		poster: { type: String, required: true },
-	},
-	{
-		timestamps: true,
-	}
-);
+	poster: { type: String, required: true },
+});
 
 const Manga = mongoose.model('Manga', MODEL_NAME);
 

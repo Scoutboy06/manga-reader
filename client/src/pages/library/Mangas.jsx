@@ -35,11 +35,14 @@ export default function Mangas() {
 	const [{ currentProfile }] = useContext(ProfileContext);
 	const [, { createPopup }] = useContext(PopupContext);
 
-	const { data: mangas } = useSWR(`/users/${currentProfile._id}/mangas`, {
-		revalidateIfStale: true,
-		revalidateOnFocus: false,
-		revalidateOnReconnect: true,
-	});
+	const { data: mangas, mutate: updateLibrary } = useSWR(
+		`/users/${currentProfile._id}/mangas`,
+		{
+			revalidateIfStale: true,
+			revalidateOnFocus: false,
+			revalidateOnReconnect: true,
+		}
+	);
 
 	const sections = [
 		{
@@ -48,11 +51,11 @@ export default function Mangas() {
 		},
 		{
 			title: 'Continue Reading',
-			data: mangas?.filter(manga => manga.hasUpdates),
+			data: mangas?.filter(manga => manga.readStatus === 'reading'),
 		},
 		{
 			title: 'Read again',
-			data: mangas?.filter(manga => manga.hasRead),
+			data: mangas?.filter(manga => manga.readStatus === 'finished'),
 		},
 	];
 
@@ -64,7 +67,7 @@ export default function Mangas() {
 
 			<main className={styles.main}>
 				{sections
-					.filter(section => section.data)
+					.filter(section => section.data?.length > 0)
 					.map(section => (
 						<HorizontalScrollContainer
 							key={section.title}
@@ -75,11 +78,11 @@ export default function Mangas() {
 									key={manga._id}
 									orentation='vertical'
 									title={manga.title}
-									subtitle={parseChapterName(manga.currentChapter)}
-									href={`/mangas/${manga.urlName}`}
+									subtitle={'Chapter ' + manga.currentChapter.number}
+									href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
 									imgUrl={manga.poster}
 									dropdownItems={[
-										manga.hasRead
+										manga.readStatus === 'completed'
 											? {
 													content: 'Read again',
 													icon: <i className='icon'>replay</i>,
@@ -90,7 +93,7 @@ export default function Mangas() {
 
 														fetchAPI(`/mangas/${manga._id}`, {
 															method: 'PATCH',
-															body: JSON.stringify({ hasRead: false }),
+															body: JSON.stringify({ readStatus: 'reading' }),
 														});
 
 														navigate(
@@ -121,7 +124,7 @@ export default function Mangas() {
 												});
 											},
 										},
-										manga.status === 'ongoing'
+										manga.airStatus === 'ongoing'
 											? {
 													content: `${
 														manga.notificationsOn ? 'Disable' : 'Enable'
