@@ -10,32 +10,31 @@ import getAnimeMeta from './anime/getAnimeMeta.js';
 import sendDiscordWebhookUpdate from './sendDiscordWebhook.js';
 import asyncMap from './asyncMap.js';
 import updateEpisodes from './anime/updateEpisodes.js';
+import { asyncSettled } from './asyncMap.js';
 
 export default async function updatesChecker() {
 	const intervalDelay = 120; // minutes
 	console.log(chalk.blue(`Updates checker is activated with an interval of ${intervalDelay} minutes.`));
 
-	const checkUpdates = () => {
-		checkMangaUpdates();
-		checkAnimeUpdates();
+	const checkUpdates = async () => {
+		const hosts = await Host.find({});
+		const mangas = await Manga.find({ airStatus: 'ongoing' });
+		// const animes = await Anime.find({});
+
+		checkMangaUpdates({ hosts, mangas });
+		// checkAnimeUpdates({ users, hosts, animes });
 	}
 
 	setInterval(checkUpdates, 1000 * 60 * intervalDelay);
 	checkUpdates();
 }
 
-export async function checkMangaUpdates() {
+export async function checkMangaUpdates({ hosts, mangas }) {
 	console.log(chalk.yellow('Checking manga updates...'));
-	const ongoingMangas = await Manga.find({ status: 'ongoing' });
-	const hosts = await Host.find({});
 	let updates = 0;
 
-	await Promise.allSettled(ongoingMangas.map(manga => new Promise(async (resolve, reject) => {
+	await asyncSettled(mangas, async manga => {
 		const host = hosts.find(host => host._id.toString() === manga.hostId.toString());
-		if (!host) {
-			console.log('No host: ' + manga.hostId);
-			return reject(manga.hostId);
-		}
 		const meta = await getMangaMeta({ urlName: manga.sourceUrlName, host });
 
 		const newChapters = meta.chapters.filter(chapter =>
@@ -43,18 +42,25 @@ export async function checkMangaUpdates() {
 		);
 
 		if (newChapters.length > 0) {
-			updates++;
+			updates += newChapters.length;
 			manga.hasUpdates = true;
 			manga.chapters = meta.chapters;
-			manga.save();
+			await manga.save();
 
-			if (!manga.notificationsOn) return resolve();
+			const usersWithNotificationsOn = await User.find({
+				mangas: {
+					$elemMatch: {
+						_id: manga._id,
+						notificationsOn: true,
+					}
+				}
+			});
 
-			const user = await User.findById(manga.ownerId);
-			await Promise.all(newChapters.map(chapter => new Promise(async (resolve, reject) => {
+			await asyncSettled(usersWithNotificationsOn, async user => {
+				if (!user.discordUserId) return;
 
 				await sendDiscordWebhookUpdate({
-					username: 'Manga updates',
+					username: 'Manga update',
 					content: `${manga.title} - ${chapter.title}\n<@${user.discordUserId}>`,
 					embeds: [{
 						title: `${manga.title} - ${chapter.title}`,
@@ -67,18 +73,14 @@ export async function checkMangaUpdates() {
 						url: `${process.env.WEBSITE_URI}/read/${manga.urlName}/${chapter.urlName}`
 					}],
 				});
-
-				resolve();
-			})));
+			});
 		}
+	});
 
-		resolve();
-	})));
-
-	console.log(chalk.blue(`Found ${updates} mangas with updates`));
+	console.log(chalk.blue(`Found ${updates} new chapters`));
 }
 
-export async function checkAnimeUpdates() {
+export async function checkAnimeUpdates({ users, hosts, animes }) {
 	console.log(chalk.yellow('Checking anime updates...'));
 	const ongoingAnimes = await Anime.find({ isAiring: true });
 	let newEpisodesCount = 0;

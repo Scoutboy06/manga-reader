@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom';
 
-import Navbar from '../../components/navbars/Library';
+import Navbar from './navbars/Library';
 
-export default function Library() {
+export default function LibraryWrapper() {
 	return (
 		<>
 			<Navbar />

@@ -80,7 +80,7 @@
 .profileDropdown i {
 	font-size: 22px;
 	transition: transform 0.15s;
-	user-select: none;
+	pointer-events: none;
 }
 
 .profileDropdown > i {

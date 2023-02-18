@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const UserSchema = mongoose.Schema({
 	name: { type: String, required: true },
 	password: String,
+	isAdmin: { type: Boolean, default: false },
 
 	profilePicture: { type: String, required: true },
 	discordUserId: String,
@@ -13,13 +14,9 @@ const UserSchema = mongoose.Schema({
 			urlName: { type: String, required: true },
 			title: { type: String, required: true },
 
-			hasNewChapters: { type: Boolean, default: false },
 			isFavorite: { type: Boolean, defualt: false },
 			notificationsOn: { type: Boolean, default: false },
 			readStatus: { type: String, enum: ['reading', 'finished'], default: 'reading' },
-
-			readChapters: [Number], // chapter.number
-			newChapters: [Number], // chapter.number
 
 			currentChapter: {
 				title: { type: String, required: true },

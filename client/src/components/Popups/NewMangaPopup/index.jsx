@@ -37,7 +37,15 @@ export default function NewMangaPopup({ closePopup }) {
 		setPayload();
 		setIsLoading(true);
 
-		fetchAPI(`/search?query=${inputText}`, {}, true).then(json => {
+		fetchAPI(
+			'/search?' +
+				new URLSearchParams({
+					type: 'manga',
+					query: inputText,
+				}),
+			{},
+			true
+		).then(json => {
 			setIsLoading(false);
 			setPayload(json);
 		});

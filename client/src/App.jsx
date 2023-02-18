@@ -10,21 +10,22 @@ import {
 import { SettingsContext } from './contexts/SettingsContext';
 import { ProfileContext } from './contexts/ProfileContext';
 
+import LibraryWrapper from './components/LibraryWrapper';
 import PopupCreator from './components/PopupCreator';
 import AlertCreator from './components/AlertCreator';
 import Head from './components/Head';
 import Loader from './components/PageLoader';
 
 import ProfilePicker from './pages/profilePicker';
-import Library from './pages/library';
 import Settings from './pages/settings';
 import Read from './pages/read';
 
 // Library
-const Mangas = lazy(() => import('./pages/library/Mangas'));
-const Novels = lazy(() => import('./pages/library/Novels'));
-const Animes = lazy(() => import('./pages/library/Animes'));
-const Anime = lazy(() => import('./pages/library/Animes/Anime'));
+const Mangas = lazy(() => import('./pages/mangas'));
+const NewManga = lazy(() => import('./pages/mangas/new'));
+const Novels = lazy(() => import('./pages/novels'));
+const Animes = lazy(() => import('./pages/animes'));
+const Anime = lazy(() => import('./pages/animes/anime'));
 
 // Read/watch
 const Manga = lazy(() => import('./pages/read/Manga'));
@@ -51,12 +52,13 @@ export default function App() {
 				</Routes>
 			) : (currentProfile && !isLoading) && (
 				<Routes>
-					<Route element={<Library />}>
-						<Route path='mangas' element={<Suspense fallback={<Loader />}><Mangas /></Suspense>} />
-						<Route path='novels' element={<Suspense fallback={<Loader />}><Novels /></Suspense>} />
-						<Route path='animes' element={<Suspense fallback={<Loader />}><Animes /></Suspense>} />
-						<Route path='*' element={<Navigate to='mangas' replace />} />
+					<Route element={<LibraryWrapper />}>
+						<Route path='mangas' element={<Suspense><Mangas /></Suspense>} />
+						<Route path='mangas/new' element={<NewManga />} />
+						<Route path='novels' element={<Suspense><Novels /></Suspense>} />
+						<Route path='animes' element={<Suspense><Animes /></Suspense>} />
 					</Route>
+
 
 					<Route element={<Read />}>
 						<Route path='mangas/:name/' element={<Suspense fallback={<Loader />}><Manga /></Suspense>}>
@@ -84,6 +86,8 @@ export default function App() {
 							<Route path=':_id' element={<Host />} />
 						</Route>
 					</Route>
+
+					<Route path='*' element={<Navigate to='mangas' replace />} />
 				</Routes>
 			)}
 

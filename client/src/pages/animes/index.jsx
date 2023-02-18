@@ -1,15 +1,15 @@
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import fetchAPI from '../../../functions/fetchAPI';
+import fetchAPI from '../../functions/fetchAPI';
 import useSWR from 'swr';
 
-import Head from '../../../components/Head';
-import MediaCard from '../../../components/MediaCard';
-import HorizontalScrollContainer from '../../../components/HorizontalScrollContainer';
-import EditAnimeMetadata from '../../../components/Popups/EditAnimeMetadata';
+import Head from '../../components/Head';
+import MediaCard from '../../components/MediaCard';
+import HorizontalScrollContainer from '../../components/HorizontalScrollContainer';
+import EditAnimeMetadata from '../../components/Popups/EditAnimeMetadata';
 
-import { PopupContext } from '../../../contexts/PopupContext';
-import { ProfileContext } from '../../../contexts/ProfileContext';
+import { PopupContext } from '../../contexts/PopupContext';
+import { ProfileContext } from '../../contexts/ProfileContext';
 
 /*
 	Continue watching
@@ -151,91 +151,6 @@ export default function Animes() {
 							))}
 						</HorizontalScrollContainer>
 					))}
-				{/* {data?.map(
-					(section, i) =>
-						section.media.length > 0 && (
-							<HorizontalScrollContainer
-								key={`Section_${i}`}
-								title={section.title}
-							>
-								{section.media.map(media => (
-									<MediaCard
-										key={media._id}
-										orentation={section.type}
-										href={`/animes/${media.urlName}`}
-										seriesHref={`/animes/${media.urlName}`}
-										imgUrl={
-											section.type === 'video'
-												? media.backdrop.small
-												: media.poster.small
-										}
-										title={media.title}
-										subtitle={media.subtitle}
-										id={media._id}
-										finished={media.hasWatched}
-										hasUpdates={media.hasNewEpisodes}
-										dropdownItems={[
-											{
-												content: 'Edit metadata',
-												icon: <i className='icon'>edit</i>,
-												action: () => {
-													popupActions.createPopup({
-														title: 'Edit metadata',
-														content: EditAnimeMetadata,
-														data: media,
-													});
-												},
-											},
-											{
-												content: 'Edit cover',
-												icon: <i className='icon'>image</i>,
-												action: () => {
-													// popupActions.createPopup({
-													// 	title: 'Edit manga cover',
-													// 	content: EditMangaCover,
-													// 	data: manga,
-													// });
-												},
-											},
-											media.isAiring
-												? {
-														content:
-															(media.notificationsOn ? 'Disable' : 'Enable') +
-															' notifications',
-														icon: (
-															<i className='icon'>
-																{media.notificationsOn
-																	? 'notifications_off'
-																	: 'notifications_active'}
-															</i>
-														),
-														action: () => {
-															fetchAPI(`/animes/${media._id}`, {
-																method: 'PATCH',
-																body: JSON.stringify({
-																	notificationsOn: !media.notificationsOn,
-																}),
-															});
-														},
-												  }
-												: null,
-											'divider',
-											{
-												content: 'Delete',
-												icon: <i className='icon'>delete</i>,
-												action: () => {
-													fetchAPI(`/animes/${media._id}`, {
-														method: 'DELETE',
-													});
-													mutate();
-												},
-											},
-										]}
-									/>
-								))}
-							</HorizontalScrollContainer>
-						)
-				)} */}
 			</main>
 		</>
 	);

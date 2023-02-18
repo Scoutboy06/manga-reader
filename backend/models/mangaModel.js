@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
 
 const MODEL_NAME = mongoose.Schema({
+	isVerified: { type: Boolean, required: true },
 	title: { type: String, required: true },
 	description: { type: String, required: true },
-	urlName: { type: String, required: true },
+	urlName: { type: String, required: true, unique: true },
 	sourceUrlName: { type: String, required: true },
 
 	hostId: { type: mongoose.Types.ObjectId, ref: 'Host', required: true },
-	ownerId: { type: mongoose.Types.ObjectId, ref: 'User', required: false },
+	ownerId: { type: mongoose.Types.ObjectId, ref: 'User' },
 
 	airStatus: { type: String, enum: ['ongoing', 'completed'], required: true },
 

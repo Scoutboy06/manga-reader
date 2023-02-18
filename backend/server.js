@@ -14,10 +14,10 @@ import asyncMap from './functions/asyncMap.js';
 
 import router from './router.js';
 
-import Manga from './models/mangaModel.js';
+// import Manga from './models/mangaModel.js';
 // import Host from './models/hostModel.js';
 // import Anime from './models/animeModel.js';
-import User from './models/userModel.js';
+// import User from './models/userModel.js';
 
 const app = express();
 const __dirname = path.resolve();

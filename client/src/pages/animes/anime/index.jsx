@@ -3,18 +3,18 @@ import { useParams, Link } from 'react-router-dom';
 import NProgress from 'nprogress';
 import useSWR from 'swr';
 
-import { ProfileContext } from '../../../../contexts/ProfileContext';
+import { ProfileContext } from '../../contexts/ProfileContext';
 
-import Head from '../../../../components/Head';
-import Navbar from '../../../../components/navbars/Anime';
-import AddToLibraryButton from '../../../../components/AddToLibraryButton';
-import MediaCard from './../../../../components/MediaCard/index';
-import EditSeasonMetadata from '../../../../components/Popups/EditSeasonMetadata';
+import Head from '../../components/Head';
+import Navbar from '../../components/navbars/Anime';
+import AddToLibraryButton from '../../components/AddToLibraryButton';
+import MediaCard from '../../components/MediaCard/index';
+import EditSeasonMetadata from '../../components/Popups/EditSeasonMetadata';
 
-import { PopupContext } from '../../../../contexts/PopupContext';
+import { PopupContext } from '../../contexts/PopupContext';
 
-import styles from './Anime.module.css';
-import Image from './../../../../components/Image';
+import styles from './anime.module.css';
+import Image from '../../components/Image';
 
 export default function Anime() {
 	const params = useParams();

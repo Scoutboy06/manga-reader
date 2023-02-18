@@ -1,9 +1,7 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import useSWR from 'swr';
 import { useNavigate } from 'react-router-dom';
 import fetchAPI from '../../functions/fetchAPI';
-
-import parseChapterName from '../../functions/parseChapterName';
 
 import Head from '../../components/Head';
 import MediaCard from '../../components/MediaCard';
@@ -14,7 +12,6 @@ import HorizontalScrollContainer from '../../components/HorizontalScrollContaine
 import { ProfileContext } from '../../contexts/ProfileContext';
 import { PopupContext } from '../../contexts/PopupContext';
 
-import styles from './index.module.css';
 /*
 - My List (db)
 
@@ -65,7 +62,7 @@ export default function Mangas() {
 				<title>Choose a manga</title>
 			</Head>
 
-			<main className={styles.main}>
+			<main style={{ margin: '0 var(--padding)' }}>
 				{sections
 					.filter(section => section.data?.length > 0)
 					.map(section => (

@@ -1,17 +1,19 @@
 import { Router } from 'express';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
+import handler from 'express-async-handler';
 
 import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
 import getMangaMeta from '../functions/manga/getMetadata.js';
+import isAdmin from '../middleware/isAdmin.js';
 
 const router = Router();
 
 
-// @desc	Get all of the user's mangas, with search functionality
+// @desc	Get all of the user's mangas
 // @route	GET /users/:userId/mangas
 router.get('/users/:userId/mangas', async (req, res) => {
 	const { userId } = req.params;
@@ -51,90 +53,37 @@ router.get('/users/:userId/mangas/:mangaName', async (req, res) => {
 
 
 // @desc	Create a new manga
-// @route	POST /users/:userId/mangas
-router.post('/users/:userId/mangas', async (req, res) => {
-	const { userId } = req.params;
+// @route	POST /mangas
+router.post('/mangas', handler(async (req, res) => {
+	const { title, hostId } = req.body;
 
-	const {
-		hostName,
-		urlName: sourceUrlName,
-	} = req.body;
+	const host = await Host.findById(hostId);
+	const { chapters } = await getMangaMeta({ urlName, host });
 
-	const user = await User.findById(userId);
-	if (!user) {
-		res.status(401);
-		throw new Error('Invalid user id');
-	}
-
-	const host = await Host.findOne({ name: hostName });
-	if (!host) {
-		res.status(401);
-		throw new Error('No host found');
-	}
-
-	const meta = await getMangaMeta({ urlName: sourceUrlName, host });
-	const urlName = encodeURI(meta.title.toLowerCase().replaceAll(/[^ a-z0-9-._~:\[\]@!$'()*+,;%=]/g, '').replaceAll(/[ ]+/g, '-'));
+	const urlName = encodeURI(title.toLowerCase().replaceAll(/[^ a-z0-9-._~:\[\]@!$'()*+,;%=]/g, '').replaceAll(/[ ]+/g, '-'));
 
 	const manga = new Manga({
-		ownerId: userId,
-		hostId: host._id,
+		isVerified: req.body.isVerified || true,
+		title: req.body.title,
+		description: req.body.description,
 		urlName,
-		sourceUrlName,
-
-		title: meta.title,
-		description: meta.description,
-
-		chapters: meta.chapters,
-		currentChapter: meta.chapters[0].urlName,
-
-		otherNames: meta.otherNames,
-		authors: meta.authors,
-		artists: meta.artists,
-		genres: meta.genres,
-		released: meta.released,
-		status: meta.status || 'ongoing',
-
-		poster: meta.poster,
+		sourceUrlName: req.body.sourceUrlName,
+		hostId,
+		airStatus: req.body.airStatus,
+		// ownerId: req.body.userId,
+		chapters,
+		otherNames: req.body.otherNames,
+		authors: req.body.authors,
+		artists: req.body.artists,
+		genres: req.body.genres,
+		released: req.body.released,
+		poster: req.body.poster,
 	});
 
 	const createdManga = await manga.save();
+
 	res.status(201).json(createdManga);
-});
-
-// @desc	Update manga
-// @route	PATCH /mangas/:mangaId
-router.patch('/mangas/:mangaId', async (req, res) => {
-	const { mangaId } = req.params;
-
-	const manga = await Manga.findById(mangaId);
-	if (!manga) {
-		res.status(404);
-		throw new Error('Manga not found');
-	}
-
-	for (const key of Object.keys(req.body)) {
-		if (key === '_id' || key === 'isLast') {
-			continue;
-		}
-
-		manga[key] = req.body[key];
-	}
-
-	await manga.save();
-	res.status(201).json(manga);
-});
-
-// @desc	Delete a manga
-// @route	DELETE /mangas/:mangaId
-router.delete('/mangas/:mangaId', async (req, res) => {
-	const { mangaId } = req.params;
-
-	const manga = await Manga.findById(mangaId);
-	if (!manga) res.status(404).json({ error: 'Not found' });
-
-	await manga.remove();
-	res.json({ message: `Manga '${manga.name}' was removed from library` });
-});
+}));
 
 // @desc	Update the current chapter
 // @route	POST /mangas/:mangaId/currentChapter
@@ -164,19 +113,12 @@ router.post('/users/:userId/mangas/:mangaId/currentChapter', async (req, res, ne
 	const currentChapter = manga.chapters.find(chapter => chapter.urlName === chapterUrlName);
 	userManga.currentChapter = currentChapter;
 
-	// Remove the chapter's entry in 'user.manga.$.newChapters[]'
-	const chapterInNewChaptersIndex = userManga.newChapters.findIndex(chapter => chapter.urlName === chapterUrlName);
-	if (chapterInNewChaptersIndex !== -1) {
-		userManga.newChapters.splice(chapterInNewChaptersIndex, 1);
-	}
-
-	userManga.hasNewChapters = (userManga.newChapters.length > 0);
-
-	const savedManga = await userManga.save().catch(err => {
+	await user.save().catch(err => {
 		res.status(400);
 		next(err);
 	});
-	if (savedManga) res.json(savedManga);
+
+	res.json({ status: 'success' });
 });
 
 // @desc	Get images from a chapter

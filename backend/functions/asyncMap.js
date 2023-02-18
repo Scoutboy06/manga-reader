@@ -26,3 +26,16 @@ export default function (arr, cb) {
 		}
 	})));
 };
+
+
+// Same function but Promise.allSettled instead of Promise.all
+export function asyncSettled(arr, cb) {
+	return Promise.allSettled(arr.map((...args) => new Promise(async (resolve, reject) => {
+		try {
+			const res = await cb(...args);
+			resolve(res);
+		} catch (err) {
+			reject(err);
+		}
+	})))
+}
