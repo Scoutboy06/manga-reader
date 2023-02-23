@@ -9,6 +9,7 @@ import User from '../models/userModel.js';
 
 import getMangaMeta from '../functions/manga/getMetadata.js';
 import isAdmin from '../middleware/isAdmin.js';
+import parseUrlName from '../functions/parseUrlName.js';
 
 const router = Router();
 
@@ -23,6 +24,24 @@ router.get('/users/:userId/mangas', async (req, res) => {
 
 	res.json(user.mangas);
 });
+
+
+// @desc	Get metadata from an external source
+router.get('/mangas/external', handler(async (req, res) => {
+	const { url } = req.query;
+	const parsedUrl = new URL(url);
+	const urlName = parsedUrl.pathname.split('/')[2];
+
+	const host = await Host.findOne({ name: parsedUrl.host });
+	const manga = await getMangaMeta({ urlName, host });
+
+	res.json({
+		...manga,
+		sourceUrlName: urlName,
+		urlName: parseUrlName(manga.title),
+		hostId: host._id,
+	});
+}));
 
 
 // @desc	Get a manga by id
@@ -55,12 +74,12 @@ router.get('/users/:userId/mangas/:mangaName', async (req, res) => {
 // @desc	Create a new manga
 // @route	POST /mangas
 router.post('/mangas', handler(async (req, res) => {
-	const { title, hostId } = req.body;
+	const { title, hostId, sourceUrlName } = req.body;
 
 	const host = await Host.findById(hostId);
-	const { chapters } = await getMangaMeta({ urlName, host });
+	const { chapters } = await getMangaMeta({ urlName: sourceUrlName, host });
 
-	const urlName = encodeURI(title.toLowerCase().replaceAll(/[^ a-z0-9-._~:\[\]@!$'()*+,;%=]/g, '').replaceAll(/[ ]+/g, '-'));
+	const urlName = parseUrlName(title);
 
 	const manga = new Manga({
 		isVerified: req.body.isVerified || true,

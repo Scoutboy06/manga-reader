@@ -136,5 +136,6 @@ export default function useFormCreator(fields) {
 			  ))
 			: null,
 		updateFields,
+		stateChange,
 	];
 }

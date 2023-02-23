@@ -1,11 +1,17 @@
-import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+// import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { useRouter } from 'next/router';
+
+import { useProfile } from '@/contexts/ProfileContext';
+
+import Navlink from '@/components/Navlink';
 
 import styles from './SettingsNavbar.module.css';
 
 export default function SettingsNavbar({ className }) {
-	const navigate = useNavigate();
-	const location = useLocation();
-	const path = location.pathname.slice(1).split('/');
+	const router = useRouter();
+	const path = router.pathname.slice(1).split('/');
+
+	const [{ currentProfile }] = useProfile();
 
 	return (
 		<nav className={styles.navbar}>
@@ -13,10 +19,10 @@ export default function SettingsNavbar({ className }) {
 				className={styles.button}
 				onClick={() => {
 					if (path.length === 2) {
-						navigate('/');
+						router.push('/');
 					} else {
 						const newPath = path.slice(0, path.length - 1);
-						navigate('/' + newPath.join('/'));
+						router.push('/' + newPath.join('/'));
 					}
 				}}
 			>
@@ -26,15 +32,27 @@ export default function SettingsNavbar({ className }) {
 			</button>
 
 			<div className={className ? ' ' + className : ''}>
-				<NavLink to='/settings/application' className={styles.navlink}>
-					Application
-				</NavLink>
-				<NavLink to='/settings/hosts' className={styles.navlink}>
-					Hosts
-				</NavLink>
-				<NavLink to='/settings/profiles' className={styles.navlink}>
-					Profiles
-				</NavLink>
+				<Navlink href='/settings/profile' className={styles.navlink}>
+					Profile
+				</Navlink>
+
+				{currentProfile?.isAdmin && (
+					<>
+						<Navlink href='/settings/hosts' className={styles.navlink}>
+							Hosts
+						</Navlink>
+						<Navlink
+							href='/settings/mangas'
+							className={styles.navlink}
+							subpaths={true}
+						>
+							Mangas
+						</Navlink>
+						<Navlink href='/settings/animes' className={styles.navlink}>
+							Animes
+						</Navlink>
+					</>
+				)}
 			</div>
 
 			<div style={{ width: 45 }}></div>

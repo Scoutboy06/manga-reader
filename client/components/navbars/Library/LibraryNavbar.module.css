@@ -1,13 +1,15 @@
 .navbar {
 	background-color: var(--bg-00dp);
 	display: flex;
+	flex-direction: row;
 	padding: 10px var(--padding);
 	margin-bottom: 5px;
 	height: 65px;
 	align-items: center;
+	justify-content: space-between;
 }
 
-.navbar > * {
+.navbar > div {
 	width: 100%;
 }
 
@@ -15,20 +17,16 @@
 	text-align: center;
 }
 
-.navbar > *:nth-child(3) > button {
-	float: right;
-}
-
 .navlink {
 	background-color: transparent;
 	border: 0;
 	outline: none;
 	color: #a0a0a0;
-	font-size: 0.9em;
+	font-size: 0.9rem;
 	cursor: pointer;
 	transition: color 0.2s;
 	font-weight: bold;
-	margin: 0 1em;
+	margin: 0 1rem;
 	text-decoration: none;
 }
 
@@ -89,4 +87,24 @@
 
 .profileDropdown:global(.show-dropdown) > i {
 	transform: rotate(90deg);
+}
+
+.searchBtn {
+	float: right;
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	height: 100%;
+	padding: 0.6rem;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: 0.15s;
+}
+
+.searchBtn:hover {
+	background-color: var(--bg-04dp);
+}
+
+.searchBtn:focus {
+	background-color: var(--bg-24dp);
 }

@@ -9,7 +9,6 @@ import Select from '@/components/Select';
 import Loader from '@/components/Loader';
 
 import { ProfileContext } from '@/contexts/ProfileContext';
-// import { SettingsContext } from '@/contexts/SettingsContext';
 
 import styles from '@/styles/ReadWrapper.module.css';
 
@@ -19,8 +18,7 @@ export default function ReadManga() {
 	const { query } = router;
 
 	const [{ currentProfile }] = useContext(ProfileContext);
-	// const [{ imageWidth }, { setImageWidth }] = useContext(SettingsContext);
-	const [imageWidth, setImageWidth] = useState(1);
+	const [imageWidth, setImageWidth] = useState(null);
 
 	const { data: mangaMeta } = useSWRImmutable(
 		() => `/users/${currentProfile._id}/mangas/${query.manga}`
@@ -39,6 +37,14 @@ export default function ReadManga() {
 	} = useScrollProgress({ chapterMeta, imageWidth });
 
 	const isLoading = !chapterMeta || !mangaMeta;
+
+	useEffect(() => {
+		if (!imageWidth) {
+			setImageWidth(Number(localStorage.getItem('imageWidth')) || 1);
+		} else {
+			localStorage.setItem('imageWidth', imageWidth);
+		}
+	}, [imageWidth]);
 
 	return (
 		<>
@@ -72,9 +78,9 @@ export default function ReadManga() {
 					</a>
 
 					<Select
-						defaultValue={imageWidth}
+						value={imageWidth}
 						onChange={value => {
-							setImageWidth(value === 'pageWidth' ? 'pageWidth' : value);
+							setImageWidth(value);
 						}}
 						containerText={
 							imageWidth === 'pageWidth'

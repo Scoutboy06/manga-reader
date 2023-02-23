@@ -1,15 +1,16 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import fetchAPI from '../../functions/fetchAPI';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import Head from 'next/head';
+import fetchAPI from '@/functions/fetchAPI';
 
-import MediaCard from '../../components/MediaCard';
-import HorizontalScrollContainer from '../../components/HorizontalScrollContainer';
-import EditAnimeMetadata from '../../components/Popups/EditAnimeMetadata';
+import MediaCard from '@/components/MediaCard';
+import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
+import EditAnimeMetadata from '@/components/Popups/EditAnimeMetadata';
+import Navbar from '@/components/navbars/Library';
 
-import { PopupContext } from '../../contexts/PopupContext';
-import { ProfileContext } from '../../contexts/ProfileContext';
+import { PopupContext } from '@/contexts/PopupContext';
+import { ProfileContext } from '@/contexts/ProfileContext';
 
 /*
 	Continue watching
@@ -23,8 +24,8 @@ import { ProfileContext } from '../../contexts/ProfileContext';
 	*/
 
 export default function Animes() {
-	const navigate = useNavigate();
-	const [, { createPopup }] = useContext(PopupContext);
+	const router = useRouter();
+	// const [, { createPopup }] = useContext(PopupContext);
 	const [{ currentProfile }] = useContext(ProfileContext);
 
 	const { data: animes, mutate } = useSWR(
@@ -70,6 +71,8 @@ export default function Animes() {
 				<title>Choose an anime</title>
 			</Head>
 
+			<Navbar />
+
 			<main style={{ padding: '0 var(--padding)' }}>
 				{sections
 					.filter(section => section.data)
@@ -95,11 +98,11 @@ export default function Animes() {
 											content: 'Edit metadata',
 											icon: <i className='icon'>edit</i>,
 											action: () => {
-												createPopup({
-													title: 'Edit metadata',
-													content: EditAnimeMetadata,
-													data: anime,
-												});
+												// createPopup({
+												// 	title: 'Edit metadata',
+												// 	content: EditAnimeMetadata,
+												// 	data: anime,
+												// });
 											},
 										},
 										{

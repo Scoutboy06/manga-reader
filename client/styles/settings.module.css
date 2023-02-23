@@ -1,0 +1,73 @@
+.main {
+	width: 40em;
+	max-width: 100%;
+	margin: 0 auto;
+	padding: 1em;
+}
+
+.item {
+	margin: 0 0.2em;
+	text-align: center;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.item img,
+.item svg {
+	width: 10em;
+	aspect-ratio: 1 / 1;
+	border-radius: 0.25em;
+	border: 0.15em solid transparent;
+	fill: grey;
+}
+
+.item p {
+	font-size: 1.2em;
+	color: grey;
+	text-decoration: none !important;
+}
+
+.item:hover img,
+.item:hover svg {
+	border-color: #e5e5e5;
+}
+
+.item:hover p {
+	color: #e5e5e5;
+}
+
+.submitBtn {
+	background: var(--main-color);
+	width: 100%;
+	font-size: 18px;
+	padding: 0.7em 2em;
+	color: #fff;
+	border: 0;
+	cursor: pointer;
+	border-radius: 0.2em;
+}
+
+.profiles {
+	margin-top: 1em;
+	display: flex;
+	justify-content: center;
+}
+
+.poster {
+	height: 300px;
+	margin: 10px 0;
+}
+
+.importBtn {
+	display: block;
+	width: 10rem;
+	height: 3rem;
+	margin: 0 auto;
+}
+
+@media screen and (max-width: 26em) {
+	.item img,
+	.item svg {
+		width: 8em;
+	}
+}

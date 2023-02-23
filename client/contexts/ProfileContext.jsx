@@ -1,7 +1,9 @@
-import { useState, useEffect, createContext } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import useSWR from 'swr';
 
 export const ProfileContext = createContext();
+
+export const useProfile = () => useContext(ProfileContext);
 
 export default function Provider(props) {
 	const { data: profiles, error } = useSWR('/users', {

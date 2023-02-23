@@ -64,7 +64,7 @@ export default function Select({
 		const selectedIndex = options.findIndex(
 			child => child.value === selectedValue
 		);
-		if (!selectedIndex) return;
+		if (selectedIndex === -1) return;
 
 		const selectedItem = dropdown.current.children[selectedIndex];
 		selectedItem.scrollIntoView();

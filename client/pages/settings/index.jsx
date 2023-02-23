@@ -1,17 +1,12 @@
-import { useNavigate, useLocation, Outlet } from 'react-router-dom';
-
-import Navbar from '../../components/navbars/Settings';
-
-import styles from './settings.module.css';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function Settings() {
-	return (
-		<>
-			<Navbar />
+	const router = useRouter();
 
-			<main className={styles.main}>
-				<Outlet />
-			</main>
-		</>
-	);
+	useEffect(() => {
+		router.replace('/settings/profile');
+	}, []);
+
+	return null;
 }

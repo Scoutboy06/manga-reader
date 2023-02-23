@@ -1,21 +1,18 @@
-import { useContext } from 'react';
-import Link from 'next/link';
+import { useState, useRef, useContext } from 'react';
 import { useRouter } from 'next/router';
 
 import DropdownButton from '@/components/DropdownButton';
 import NewMangaPopup from '@/components/Popups/NewMangaPopup';
 import Navlink from '@/components/Navlink';
 
-import { ProfileContext } from '@/contexts/ProfileContext';
-import { PopupContext } from '@/contexts/PopupContext';
+import { useProfile } from '@/contexts/ProfileContext';
 
 import styles from './LibraryNavbar.module.css';
 
 export default function LibraryNavbar() {
 	const router = useRouter();
 	const [{ profiles, currentProfile }, { selectProfile, deselectProfile }] =
-		useContext(ProfileContext);
-	const [, popupActions] = useContext(PopupContext);
+		useProfile();
 
 	return (
 		<nav className={styles.navbar}>
@@ -30,8 +27,8 @@ export default function LibraryNavbar() {
 						})),
 						'divider',
 						{
-							content: 'Profiles settings',
-							action: () => router.push(`/settings/profiles`),
+							content: 'Profile settings',
+							action: () => router.push(`/settings/profile`),
 							icon: <i className='icon'>manage_accounts</i>,
 						},
 						{
@@ -44,8 +41,8 @@ export default function LibraryNavbar() {
 						},
 						'divider',
 						{
-							content: 'App settings',
-							action: () => router.push('/settings/application'),
+							content: 'Settings',
+							action: () => router.push('/settings'),
 							icon: <i className='icon'>settings</i>,
 						},
 					]}
@@ -70,16 +67,10 @@ export default function LibraryNavbar() {
 
 			<div>
 				<button
-					className={styles.button}
-					onClick={() => {
-						popupActions.createPopup({
-							title: 'Search for a new manga',
-							content:
-								router.pathname === '/mangas' ? NewMangaPopup : <h1>Hello</h1>,
-						});
-					}}
+					className={styles.searchBtn + ' icon'}
+					onClick={() => router.push('/mangas/search')}
 				>
-					<i className='icon'>search</i>
+					search
 				</button>
 			</div>
 		</nav>

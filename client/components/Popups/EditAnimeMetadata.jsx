@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import { useSWRConfig } from 'swr';
 
-import fetchAPI from '../../functions/fetchAPI.js';
-import useFormCreator from '../../hooks/useFormCreator';
-import { ProfileContext } from '../../contexts/ProfileContext';
+import fetchAPI from '@/functions/fetchAPI.js';
+import useFormCreator from '@/hooks/useFormCreator';
+import { ProfileContext } from '@/contexts/ProfileContext';
 
 import styles from './EditMetadata/EditMetadata.module.css';
 

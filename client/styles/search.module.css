@@ -1,0 +1,52 @@
+.inputContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 30rem;
+	max-width: calc(100% - 2 * var(--padding));
+	padding: 0.8rem 1.2rem;
+	background: var(--bg-04dp);
+	border-radius: 0.7rem;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 50%);
+	margin: 40px auto 20px;
+	position: relative;
+}
+
+.input {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	font-size: 16px;
+	width: 100%;
+	color: #eee;
+}
+
+.input::placeholder {
+	color: #ababab;
+	opacity: 1;
+}
+
+.inputContainer button {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	height: 100%;
+	opacity: 0.7;
+}
+
+.resetBtn {
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+}
+
+.resetBtn {
+	opacity: 1;
+	margin-right: 8px;
+	font-size: 20px;
+}
+
+.searchIcon {
+	color: #ababab;
+	margin-right: -0.3rem;
+}
