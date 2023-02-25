@@ -108,7 +108,7 @@ export default function useFormCreator(fields) {
 						{field.type === 'select' && (
 							<select
 								id={field.name}
-								defaultValue={field.defaultValue}
+								value={states[field.name]}
 								onChange={e => selectChange(i, e.target.value)}
 								disabled={isDisabled(field)}
 							>

@@ -97,7 +97,7 @@ export default function Mangas({ hosts }) {
 	]);
 
 	const importHandler = async () => {
-		const url = 'https://www.mangaread.org/manga/one-punch-man-onepunchman/'; //prompt('URL to the manga's details page:');
+		const url = prompt('URL to the manga:');
 
 		const {
 			poster,
@@ -113,8 +113,6 @@ export default function Mangas({ hosts }) {
 			genres,
 			released,
 		} = await fetchAPI(`/mangas/external?url=${encodeURI(url)}`);
-		console.log(formStates);
-		console.log(hostId);
 
 		setFields({
 			...formStates,

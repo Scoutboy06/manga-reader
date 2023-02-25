@@ -29,6 +29,7 @@ const MODEL_NAME = mongoose.Schema({
 	released: String,
 
 	poster: { type: String, required: true },
+	backdrop: String,
 });
 
 const Manga = mongoose.model('Manga', MODEL_NAME);

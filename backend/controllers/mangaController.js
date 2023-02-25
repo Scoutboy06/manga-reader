@@ -26,6 +26,33 @@ router.get('/users/:userId/mangas', async (req, res) => {
 });
 
 
+router.get('/mangas', handler(async (req, res) => {
+	const { limit = 50, skip = 0, query = '' } = req.query;
+
+	const mangas = await Manga.find({
+		isVerified: true,
+		$or: [
+			{
+				title: {
+					$regex: query,
+					$options: 'i',
+				}
+			},
+			{
+				otherNames: {
+					$regex: query,
+					$options: 'i',
+				}
+			}
+		]
+	}, {
+		chapters: 0,
+	}).limit(limit).skip(skip);
+
+	res.json(mangas);
+}))
+
+
 // @desc	Get metadata from an external source
 router.get('/mangas/external', handler(async (req, res) => {
 	const { url } = req.query;
@@ -40,6 +67,7 @@ router.get('/mangas/external', handler(async (req, res) => {
 		sourceUrlName: urlName,
 		urlName: parseUrlName(manga.title),
 		hostId: host._id,
+		airStatus: manga.airStatus,
 	});
 }));
 
