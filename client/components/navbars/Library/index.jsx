@@ -1,5 +1,6 @@
 import { useState, useRef, useContext } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import DropdownButton from '@/components/DropdownButton';
 import NewMangaPopup from '@/components/Popups/NewMangaPopup';
@@ -17,7 +18,7 @@ export default function LibraryNavbar() {
 	return (
 		<nav className={styles.navbar}>
 			<div>
-				<DropdownButton
+				{/* <DropdownButton
 					className={styles.profileDropdown}
 					dropdownItems={[
 						...(profiles || [])?.map(profile => ({
@@ -50,7 +51,10 @@ export default function LibraryNavbar() {
 				>
 					<img src={currentProfile?.profilePicture} alt='Profile' />
 					<i className='icon'>chevron_left</i>
-				</DropdownButton>
+				</DropdownButton> */}
+				<Link href='/' className={styles.logo}>
+					<img src='/appIcons/rikka_square_72.png' />
+				</Link>
 			</div>
 
 			<div>
@@ -65,13 +69,15 @@ export default function LibraryNavbar() {
 				</Navlink>
 			</div>
 
-			<div>
-				<button
+			<div style={{ justifyContent: 'flex-end' }}>
+				{/* <button
 					className={styles.searchBtn + ' icon'}
 					onClick={() => router.push('/mangas/search')}
 				>
 					search
-				</button>
+				</button> */}
+
+				<i className='icon'>account_circle</i>
 			</div>
 		</nav>
 	);

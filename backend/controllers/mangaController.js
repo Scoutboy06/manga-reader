@@ -50,7 +50,7 @@ router.get('/mangas', handler(async (req, res) => {
 	}).limit(limit).skip(skip);
 
 	res.json(mangas);
-}))
+}));
 
 
 // @desc	Get metadata from an external source
@@ -74,29 +74,28 @@ router.get('/mangas/external', handler(async (req, res) => {
 
 // @desc	Get a manga by id
 // @route	GET /mangas/:mangaId
-router.get('/mangas/:mangaId', async (req, res) => {
+router.get('/mangas/:mangaId', handler(async (req, res) => {
 	const { mangaId } = req.params;
 
 	const manga = await Manga.findById(mangaId);
-	if (!manga) return res.status(404).json({ error: 'Not found' });
+	if (!manga) {
+		res.status(404)
+		throw new Error('Manga not found');
+	}
 
 	res.json(manga);
-});
+}));
 
 
 // @desc	Get a manga by name
 // @route	GET /users/:userId/mangas/:mangaName
-router.get('/users/:userId/mangas/:mangaName', async (req, res) => {
+router.get('/users/:userId/mangas/:mangaName', handler(async (req, res) => {
 	const { userId, mangaName } = req.params;
 
 	const manga = await Manga.findOne({ ownerId: userId, urlName: mangaName });
-	if (!manga) {
-		res.status(404);
-		throw new Error('No manga found');
-	}
 
 	res.json(manga);
-});
+}));
 
 
 // @desc	Create a new manga

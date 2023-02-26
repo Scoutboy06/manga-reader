@@ -1,152 +1,118 @@
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import fetchAPI from '@/functions/fetchAPI';
 import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import MediaCard from '@/components/MediaCard';
-// import EditMangaCover from '@/components/Popups/EditMangaCover';
-// import EditMetadata from '@/components/Popups/EditMetadata';
-import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
+// import MediaCard from '@/components/MediaCard';
 import Navbar from '@/components/navbars/Library';
 
-import { ProfileContext } from '@/contexts/ProfileContext';
-import { PopupContext } from '@/contexts/PopupContext';
+// import { ProfileContext } from '@/contexts/ProfileContext';
+// import { PopupContext } from '@/contexts/PopupContext';
 
-/*
-- My List (db)
+import styles from '@/styles/mangas.module.css';
 
-- Continue Reading (db)
+export default function Mangas({ headerMangas }) {
+	// const router = useRouter();
 
-- Popular Manga (MAL)
-- Top 10 Most Popular Manga (MAL)
-- Top One Shots (MAL)
+	// const [{ currentProfile }] = useContext(ProfileContext);
 
---- Genres (db)
-
-- Read again
-*/
-
-export default function Mangas() {
-	const router = useRouter();
-
-	const [{ currentProfile }] = useContext(ProfileContext);
-	// const [, { createPopup }] = useContext(PopupContext);
-
-	const { data: mangas, mutate: updateLibrary } = useSWR(
-		() => `/users/${currentProfile._id}/mangas`,
-		{
-			revalidateIfStale: true,
-			revalidateOnFocus: false,
-			revalidateOnReconnect: true,
-		}
-	);
-
-	const sections = [
-		{
-			title: 'My List',
-			data: mangas?.filter(manga => manga.isFavorite),
-		},
-		{
-			title: 'Continue Reading',
-			data: mangas?.filter(manga => manga.readStatus === 'reading'),
-		},
-		{
-			title: 'Read again',
-			data: mangas?.filter(manga => manga.readStatus === 'finished'),
-		},
-	];
+	const [slideshowIndex, setSlideshowIndex] = useState(0);
 
 	return (
 		<>
 			<Head>
-				<title>Choose a manga</title>
+				<title>Manga Reader - Read Manga Online For Free</title>
 			</Head>
 
 			<Navbar />
 
-			<main style={{ margin: '0 var(--padding)' }}>
-				{sections
-					.filter(section => section.data?.length > 0)
-					.map(section => (
-						<HorizontalScrollContainer
-							key={section.title}
-							title={section.title}
+			<main className={styles.main}>
+				<header>
+					<div className={styles.slideshow}>
+						<div
+							className={styles.prevBtn + ' icon'}
+							onClick={() => setSlideshowIndex((slideshowIndex - 1) % 10)}
 						>
-							{section.data.map(manga => (
-								<MediaCard
-									key={manga._id}
-									orentation='vertical'
-									title={manga.title}
-									subtitle={'Chapter ' + manga.currentChapter.number}
-									href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
-									imgUrl={manga.poster}
-									dropdownItems={[
-										manga.readStatus === 'completed'
-											? {
-													content: 'Read again',
-													icon: <i className='icon'>replay</i>,
-													action: async () => {
-														const { chapters } = await fetchAPI(
-															`/mangas/${manga._id}`
-														);
+							arrow_back_ios_new
+						</div>
+						<div
+							className={styles.nextBtn + ' icon'}
+							onClick={() => setSlideshowIndex((slideshowIndex + 1) % 10)}
+						>
+							arrow_forward_ios
+						</div>
 
-														fetchAPI(`/mangas/${manga._id}`, {
-															method: 'PATCH',
-															body: JSON.stringify({ readStatus: 'reading' }),
-														});
-
-														router.push(
-															`/mangas/${manga.urlName}/${chapters[0].urlName}`
-														);
-													},
-											  }
-											: null,
-										manga.airStatus === 'ongoing'
-											? {
-													content: `${
-														manga.notificationsOn ? 'Disable' : 'Enable'
-													} notifications`,
-													icon: (
-														<i className='icon'>
-															{manga.notificationsOn
-																? 'notifications_off'
-																: 'notifications_active'}
-														</i>
-													),
-													action: () => {
-														fetchAPI(`/mangas/${manga._id}`, {
-															method: 'PATCH',
-															body: JSON.stringify({
-																notificationsOn: !manga.notificationsOn,
-															}),
-														}).then(() => updateLibrary());
-													},
-											  }
-											: null,
-										'divider',
-										{
-											content: 'Delete',
-											icon: <i className='icon'>delete</i>,
-											action: () => {
-												if (
-													window.confirm(
-														'Are you sure you want to delete this manga? The action cannot be undone.'
-													)
-												) {
-													fetchAPI(`/mangas/${manga._id}`, {
-														method: 'DELETE',
-													}).then(() => updateLibrary());
-												}
-											},
-										},
-									]}
-									hasUpdates={manga.hasUpdates}
-								/>
+						<div className={styles.smallButtons}>
+							{headerMangas.map((_, i) => (
+								<button
+									onClick={() => setSlideshowIndex(i)}
+									className={slideshowIndex === i ? 'active' : ''}
+									key={`button_${i}`}
+								></button>
 							))}
-						</HorizontalScrollContainer>
-					))}
+						</div>
+
+						<div
+							className={styles.items}
+							style={{ transform: `translateX(-${slideshowIndex * 100}%)` }}
+						>
+							{headerMangas.map(manga => (
+								<div className={styles.item} key={manga._id}>
+									<img
+										src={
+											manga.backdrop ||
+											'https://www.themoviedb.org/t/p/original/iiGtoYxmKFq85i0C196veQJtyVB.jpg'
+										}
+										alt='Backdrop'
+										className={styles.backdrop}
+									/>
+
+									<div className={styles.metadata}>
+										<img
+											src={manga.poster}
+											alt={manga.title}
+											className={styles.poster}
+										/>
+
+										<div className={styles.text}>
+											<p className={styles.genres}>
+												{manga.genres.split(', ').map(genre => (
+													<Link href={`/mangas/genres/${genre.toLowerCase()}`}>
+														{genre}
+													</Link>
+												))}
+											</p>
+											<h1>{manga.title}</h1>
+											<p className={styles.description}>{manga.description}</p>
+										</div>
+
+										<Link
+											href={`/mangas/${manga.urlName}`}
+											className={styles.readManga}
+										>
+											<i className='icon'>book</i>
+											<span>Read Manga</span>
+										</Link>
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</header>
 			</main>
 		</>
 	);
+}
+
+export async function getServerSideProps() {
+	const headerMangas = await fetchAPI('/mangas?limit=10');
+
+	return {
+		props: {
+			headerMangas,
+		},
+	};
 }

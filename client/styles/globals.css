@@ -32,6 +32,11 @@
 
 	--error: #cf6679;
 	--update-badge: rgb(219, 8, 8);
+
+	--space-cadet: #1b1f35;
+	--rich-black: #131624;
+	--celtic-blue: #0069d9;
+	--redwood: #aa5042;
 }
 
 * {
@@ -45,12 +50,17 @@ body {
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background-color: var(--bg-00dp);
+	background-color: var(--space-cadet);
 	overflow-x: hidden;
 }
 
 button {
 	font: inherit;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
 }
 
 h1,
@@ -87,6 +97,7 @@ span {
 	-moz-font-feature-settings: 'liga';
 	-moz-osx-font-smoothing: grayscale;
 	color: inherit;
+	user-select: none;
 }
 
 svg {
