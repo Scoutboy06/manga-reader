@@ -1,12 +1,13 @@
 .dropdown {
-	background: var(--bg-03dp);
+	background: var(--dropdown-bg);
 	width: max-content;
 	z-index: 999;
 	cursor: auto;
-	padding: 5px 0;
+	padding: 0.5rem 0;
 	overflow-y: auto;
 	visibility: hidden;
 	position: fixed;
+	border-radius: 0.5rem;
 }
 
 .dropdown:global(.visible) {
@@ -14,7 +15,7 @@
 }
 
 .item {
-	padding: 10px 30px 10px 15px;
+	padding: 0.8rem 2.5rem 0.8rem 1rem;
 	cursor: pointer;
 	transition: background 0.15s;
 	display: flex;
@@ -42,7 +43,7 @@
 
 .item:not([disabled]):hover,
 .item:not([disabled]):global(.selected) {
-	background: var(--bg-24dp);
+	background: rgba(255, 255, 255, 0.1);
 }
 
 .item:global(.noHover) {

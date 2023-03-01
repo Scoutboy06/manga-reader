@@ -1,6 +1,7 @@
 import { useState, useRef, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import DropdownButton from '@/components/DropdownButton';
 import NewMangaPopup from '@/components/Popups/NewMangaPopup';
@@ -19,7 +20,12 @@ export default function LibraryNavbar() {
 		<nav className={styles.navbar}>
 			<div>
 				<Link href='/' className={styles.logo}>
-					<img src='/appIcons/rikka_square_72.png' />
+					<Image
+						src='/appIcons/rikka_square_72.png'
+						width={40}
+						height={40}
+						alt='Logo'
+					/>
 				</Link>
 			</div>
 
@@ -43,27 +49,15 @@ export default function LibraryNavbar() {
 					search
 				</button> */}
 
+				<i className='icon outlined'>notifications</i>
+
 				<DropdownButton
 					className={styles.profileDropdown}
 					dropdownItems={[
-						...(profiles || [])?.map(profile => ({
-							content: profile.name,
-							icon: <img src={profile.imageUrl} alt='Profile' />,
-							action: () => selectProfile(profile),
-						})),
-						'divider',
 						{
-							content: 'Profile settings',
-							action: () => router.push(`/settings/profile`),
-							icon: <i className='icon'>manage_accounts</i>,
-						},
-						{
-							content: 'Exit profile',
-							action: () => {
-								deselectProfile();
-								router.push('/');
-							},
-							icon: <i className='icon'>logout</i>,
+							content: 'Profile',
+							icon: <i className='icon outlined'>account_circle</i>,
+							action: () => router.push(`/profile`),
 						},
 						'divider',
 						{
@@ -71,10 +65,18 @@ export default function LibraryNavbar() {
 							action: () => router.push('/settings'),
 							icon: <i className='icon'>settings</i>,
 						},
+						{
+							content: 'Sign out',
+							action: () => {
+								deselectProfile();
+								router.push('/');
+							},
+							icon: <i className='icon'>logout</i>,
+						},
 					]}
 					offset={{ x: 0, y: 5 }}
 				>
-					<i className='icon'>account_circle</i>
+					<i className='icon outlined'>account_circle</i>
 				</DropdownButton>
 			</div>
 		</nav>

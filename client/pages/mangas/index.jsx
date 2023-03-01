@@ -51,6 +51,7 @@ export default function Mangas({ headerMangas }) {
 									onClick={() => setSlideshowIndex(i)}
 									className={slideshowIndex === i ? 'active' : ''}
 									key={`button_${i}`}
+									aria-label='Slideshow index'
 								></button>
 							))}
 						</div>
@@ -59,28 +60,34 @@ export default function Mangas({ headerMangas }) {
 							className={styles.items}
 							style={{ transform: `translateX(-${slideshowIndex * 100}%)` }}
 						>
-							{headerMangas.map(manga => (
+							{headerMangas.map((manga, i) => (
 								<div className={styles.item} key={manga._id}>
-									<img
-										src={
-											manga.backdrop ||
-											'https://www.themoviedb.org/t/p/original/iiGtoYxmKFq85i0C196veQJtyVB.jpg'
-										}
+									<Image
+										src={manga.backdrop}
 										alt='Backdrop'
+										width={1280}
+										height={720}
 										className={styles.backdrop}
+										priority={i === 0}
 									/>
 
 									<div className={styles.metadata}>
-										<img
+										<Image
+											width={300}
+											height={450}
 											src={manga.poster}
 											alt={manga.title}
 											className={styles.poster}
+											priority={i === 0}
 										/>
 
 										<div className={styles.text}>
 											<p className={styles.genres}>
 												{manga.genres.split(', ').map(genre => (
-													<Link href={`/mangas/genres/${genre.toLowerCase()}`}>
+													<Link
+														href={`/mangas/genres/${genre.toLowerCase()}`}
+														key={genre}
+													>
 														{genre}
 													</Link>
 												))}

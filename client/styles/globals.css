@@ -6,9 +6,7 @@
 		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
 	font-size: 16px;
-	color: var(--text-color);
-
-	--text-color: #fff;
+	color: #fff;
 
 	--main-color: #2596be; /* #00a4dc */
 	--main-color-hover: #30b1e0;
@@ -37,6 +35,8 @@
 	--rich-black: #131624;
 	--celtic-blue: #0069d9;
 	--redwood: #aa5042;
+
+	--dropdown-bg: #121524;
 }
 
 * {
@@ -71,7 +71,7 @@ h5,
 h6,
 p,
 span {
-	color: var(--text-color);
+	color: #fff;
 }
 
 @font-face {
@@ -79,6 +79,14 @@ span {
 	font-style: normal;
 	font-weight: 400;
 	src: url(https://fonts.gstatic.com/s/materialicons/v135/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
+		format('woff2');
+}
+
+@font-face {
+	font-family: 'Material Icons Outlined';
+	font-style: normal;
+	font-weight: 400;
+	src: url(https://fonts.gstatic.com/s/materialiconsoutlined/v108/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUce.woff2)
 		format('woff2');
 }
 
@@ -94,14 +102,16 @@ span {
 	white-space: nowrap;
 	word-wrap: normal;
 	direction: ltr;
+	font-feature-settings: 'liga';
 	-moz-font-feature-settings: 'liga';
 	-moz-osx-font-smoothing: grayscale;
 	color: inherit;
 	user-select: none;
+	font-display: swap;
 }
 
-svg {
-	fill: #fff;
+.icon.outlined {
+	font-family: 'Material Icons Outlined';
 }
 
 .hidden {

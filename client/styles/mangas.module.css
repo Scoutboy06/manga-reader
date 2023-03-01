@@ -96,6 +96,7 @@
 
 .metadata .poster {
 	height: 100%;
+	width: min-content;
 }
 
 .metadata .text {
@@ -131,6 +132,7 @@
 
 .metadata .readManga {
 	height: 80%;
+	aspect-ratio: 3 / 4;
 	padding: 1rem;
 	background-color: transparent;
 	display: flex;
