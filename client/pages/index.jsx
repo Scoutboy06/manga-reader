@@ -4,7 +4,9 @@ import { useEffect } from 'react';
 export default function Index() {
 	const router = useRouter();
 
-	useEffect(() => router.replace('/mangas'), []);
+	useEffect(() => {
+		router.replace('/mangas');
+	}, []);
 
 	return null;
 }

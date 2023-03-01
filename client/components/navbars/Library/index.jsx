@@ -18,7 +18,32 @@ export default function LibraryNavbar() {
 	return (
 		<nav className={styles.navbar}>
 			<div>
-				{/* <DropdownButton
+				<Link href='/' className={styles.logo}>
+					<img src='/appIcons/rikka_square_72.png' />
+				</Link>
+			</div>
+
+			<div>
+				<Navlink href='/mangas' className={styles.navlink}>
+					Mangas
+				</Navlink>
+				<Navlink href='/novels' className={styles.navlink}>
+					Novels
+				</Navlink>
+				<Navlink href='/animes' className={styles.navlink}>
+					Animes
+				</Navlink>
+			</div>
+
+			<div style={{ justifyContent: 'flex-end' }}>
+				{/* <button
+					className={styles.searchBtn + ' icon'}
+					onClick={() => router.push('/mangas/search')}
+				>
+					search
+				</button> */}
+
+				<DropdownButton
 					className={styles.profileDropdown}
 					dropdownItems={[
 						...(profiles || [])?.map(profile => ({
@@ -49,35 +74,8 @@ export default function LibraryNavbar() {
 					]}
 					offset={{ x: 0, y: 5 }}
 				>
-					<img src={currentProfile?.profilePicture} alt='Profile' />
-					<i className='icon'>chevron_left</i>
-				</DropdownButton> */}
-				<Link href='/' className={styles.logo}>
-					<img src='/appIcons/rikka_square_72.png' />
-				</Link>
-			</div>
-
-			<div>
-				<Navlink href='/mangas' className={styles.navlink}>
-					Mangas
-				</Navlink>
-				<Navlink href='/novels' className={styles.navlink}>
-					Novels
-				</Navlink>
-				<Navlink href='/animes' className={styles.navlink}>
-					Animes
-				</Navlink>
-			</div>
-
-			<div style={{ justifyContent: 'flex-end' }}>
-				{/* <button
-					className={styles.searchBtn + ' icon'}
-					onClick={() => router.push('/mangas/search')}
-				>
-					search
-				</button> */}
-
-				<i className='icon'>account_circle</i>
+					<i className='icon'>account_circle</i>
+				</DropdownButton>
 			</div>
 		</nav>
 	);

@@ -6,6 +6,7 @@
 	width: 80rem;
 	aspect-ratio: 16 / 9;
 	max-width: 100%;
+	max-height: 80vh;
 	margin: 1rem auto;
 	position: relative;
 	border-radius: 1rem;
