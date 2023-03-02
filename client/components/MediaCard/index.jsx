@@ -13,7 +13,7 @@ export default function MediaCard({
 	subtitle,
 	orientation = 'vertical',
 	seriesHref,
-	dropdownItems = [],
+	dropdownItems,
 	showSpinner = false,
 	hasUpdates = false,
 }) {
@@ -40,9 +40,11 @@ export default function MediaCard({
 
 				<div className={styles.overlayContainer}>
 					<div className={styles.buttonsContainer}>
-						<DropdownButton className='icon' dropdownItems={dropdownItems}>
-							more_vert
-						</DropdownButton>
+						{dropdownItems && (
+							<DropdownButton className='icon' dropdownItems={dropdownItems}>
+								more_vert
+							</DropdownButton>
+						)}
 					</div>
 				</div>
 			</div>

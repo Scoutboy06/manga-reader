@@ -1,5 +1,5 @@
-.main {
-	margin: 0 var(--padding);
+.main > header {
+	padding: 0 var(--padding);
 }
 
 .slideshow {
@@ -160,6 +160,11 @@
 
 .metadata .readManga span {
 	color: inherit;
+}
+
+.continueReading {
+	background-color: var(--rich-black);
+	padding: var(--padding);
 }
 
 @media screen and (max-width: 1080px) {

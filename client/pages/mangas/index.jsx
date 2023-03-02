@@ -6,15 +6,16 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 
-// import MediaCard from '@/components/MediaCard';
+import MediaCard from '@/components/MediaCard';
 import Navbar from '@/components/navbars/Library';
+import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
 
 // import { ProfileContext } from '@/contexts/ProfileContext';
 // import { PopupContext } from '@/contexts/PopupContext';
 
 import styles from '@/styles/mangas.module.css';
 
-export default function Mangas({ headerMangas }) {
+export default function Mangas({ headerMangas, continueReading }) {
 	// const router = useRouter();
 
 	// const [{ currentProfile }] = useContext(ProfileContext);
@@ -115,17 +116,36 @@ export default function Mangas({ headerMangas }) {
 						</div>
 					</div>
 				</header>
+
+				<section className={styles.continueReading}>
+					<HorizontalScrollContainer title='Continue Reading'>
+						{continueReading?.map(manga => (
+							<MediaCard
+								key={manga._id}
+								href={`/mangas/${manga.urlName}`}
+								imgUrl={manga.poster}
+								title={manga.title}
+								// subtitle={manga.currentChapter}
+								orientation='vertical'
+							/>
+						))}
+					</HorizontalScrollContainer>
+				</section>
 			</main>
 		</>
 	);
 }
 
 export async function getServerSideProps() {
-	const headerMangas = await fetchAPI('/mangas?limit=10');
+	const [headerMangas, continueReading] = await Promise.all([
+		fetchAPI('/mangas?limit=10'),
+		fetchAPI('/mangas?limit=10'),
+	]);
 
 	return {
 		props: {
 			headerMangas,
+			continueReading,
 		},
 	};
 }
