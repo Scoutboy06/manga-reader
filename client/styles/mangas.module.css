@@ -131,7 +131,8 @@
 }
 
 .metadata .readManga {
-	height: 80%;
+	height: 180px;
+	width: 130px;
 	aspect-ratio: 3 / 4;
 	padding: 1rem;
 	background-color: transparent;

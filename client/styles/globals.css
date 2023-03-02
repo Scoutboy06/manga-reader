@@ -6,7 +6,7 @@
 		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
 	font-size: 16px;
-	color: #fff;
+	color: #bbb;
 
 	--main-color: #2596be; /* #00a4dc */
 	--main-color-hover: #30b1e0;
@@ -35,8 +35,6 @@
 	--rich-black: #131624;
 	--celtic-blue: #0069d9;
 	--redwood: #aa5042;
-
-	--dropdown-bg: #121524;
 }
 
 * {
@@ -61,17 +59,6 @@ button {
 a {
 	text-decoration: none;
 	color: inherit;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-span {
-	color: #fff;
 }
 
 @font-face {

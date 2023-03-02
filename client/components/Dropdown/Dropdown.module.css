@@ -1,5 +1,5 @@
 .dropdown {
-	background: var(--dropdown-bg);
+	background: var(--rich-black);
 	width: max-content;
 	z-index: 999;
 	cursor: auto;

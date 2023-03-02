@@ -2,9 +2,9 @@ import { useState, useRef, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
+import fetchAPI from '@/functions/fetchAPI.js';
 
 import DropdownButton from '@/components/DropdownButton';
-import NewMangaPopup from '@/components/Popups/NewMangaPopup';
 import Navlink from '@/components/Navlink';
 
 import { useProfile } from '@/contexts/ProfileContext';
@@ -13,8 +13,38 @@ import styles from './LibraryNavbar.module.css';
 
 export default function LibraryNavbar() {
 	const router = useRouter();
-	const [{ profiles, currentProfile }, { selectProfile, deselectProfile }] =
-		useProfile();
+	const [_, { deselectProfile }] = useProfile();
+	const [searchValue, setSearchValue] = useState('');
+	const searchTimeout = useRef();
+	const [searchResults, setSearchResults] = useState(null);
+
+	const searchSubmit = e => {
+		e.preventDefault();
+		router.push(`/mangas/search?query=${searchValue}`);
+	};
+
+	const inputChange = e => {
+		setSearchValue(e.target.value);
+		clearTimeout(searchTimeout.current);
+
+		if (!e.target.value) {
+			setSearchResults(null);
+			return;
+		}
+
+		searchTimeout.current = setTimeout(async () => {
+			const mangas = await fetchAPI(
+				'/mangas?' +
+					new URLSearchParams({
+						limit: 5,
+						query: searchValue,
+					})
+			);
+
+			setSearchResults(mangas);
+			console.log(mangas);
+		}, 500);
+	};
 
 	return (
 		<nav className={styles.navbar}>
@@ -27,27 +57,80 @@ export default function LibraryNavbar() {
 						alt='Logo'
 					/>
 				</Link>
+
+				<div style={{ marginLeft: '1rem' }}>
+					<Navlink href='/mangas' className={styles.navlink}>
+						Mangas
+					</Navlink>
+					<Navlink href='/novels' className={styles.navlink}>
+						Novels
+					</Navlink>
+					<Navlink href='/animes' className={styles.navlink}>
+						Animes
+					</Navlink>
+				</div>
 			</div>
 
-			<div>
-				<Navlink href='/mangas' className={styles.navlink}>
-					Mangas
-				</Navlink>
-				<Navlink href='/novels' className={styles.navlink}>
-					Novels
-				</Navlink>
-				<Navlink href='/animes' className={styles.navlink}>
-					Animes
-				</Navlink>
-			</div>
-
-			<div style={{ justifyContent: 'flex-end' }}>
-				{/* <button
-					className={styles.searchBtn + ' icon'}
-					onClick={() => router.push('/mangas/search')}
+			<div className={styles.right}>
+				<form
+					className={styles.searchContainer}
+					onSubmit={searchSubmit}
+					onBlur={() => setSearchResults(null)}
 				>
-					search
-				</button> */}
+					<input
+						type='text'
+						name='mangaSearch'
+						value={searchValue}
+						onChange={inputChange}
+						placeholder='Search...'
+					/>
+
+					<i className='icon'>search</i>
+
+					<div
+						className={
+							styles.searchResults + (searchResults !== null ? ' visible' : '')
+						}
+					>
+						{searchResults?.map(manga => (
+							<Link
+								href={`/mangas/${manga.urlName}`}
+								className={styles.searchResult}
+								key={manga._id}
+								aria-label={manga.title}
+							>
+								<Image
+									width={40}
+									height={60}
+									src={manga.poster}
+									alt={manga.title}
+								/>
+
+								<div className={styles.content}>
+									<h5>{manga.title}</h5>
+									<p></p>
+								</div>
+							</Link>
+						))}
+
+						{searchResults?.length === 0 && (
+							<p style={{ textAlign: 'center' }}>No results found</p>
+						)}
+
+						{searchResults?.length >= 5 && (
+							<button
+								type='button'
+								onClick={() =>
+									router.push(`/mangas/search?query=${searchValue}`)
+								}
+								aria-label='See all results'
+								className={styles.allResults}
+							>
+								See all results
+							</button>
+						)}
+					</div>
+				</form>
 
 				<i className='icon outlined'>notifications</i>
 

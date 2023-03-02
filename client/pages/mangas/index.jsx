@@ -34,7 +34,13 @@ export default function Mangas({ headerMangas }) {
 					<div className={styles.slideshow}>
 						<div
 							className={styles.prevBtn + ' icon'}
-							onClick={() => setSlideshowIndex((slideshowIndex - 1) % 10)}
+							onClick={() =>
+								setSlideshowIndex(
+									slideshowIndex - 1 < 0
+										? headerMangas.length - 1
+										: slideshowIndex - 1
+								)
+							}
 						>
 							arrow_back_ios_new
 						</div>
