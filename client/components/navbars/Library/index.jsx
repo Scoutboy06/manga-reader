@@ -42,7 +42,6 @@ export default function LibraryNavbar() {
 			);
 
 			setSearchResults(mangas);
-			console.log(mangas);
 		}, 500);
 	};
 
@@ -83,6 +82,7 @@ export default function LibraryNavbar() {
 						value={searchValue}
 						onChange={inputChange}
 						placeholder='Search...'
+						autoComplete='false'
 					/>
 
 					<i className='icon'>search</i>
@@ -132,10 +132,12 @@ export default function LibraryNavbar() {
 					</div>
 				</form>
 
-				<i className='icon outlined'>notifications</i>
+				<button className={styles.button} type='button'>
+					<i className='icon outlined'>notifications</i>
+				</button>
 
 				<DropdownButton
-					className={styles.profileDropdown}
+					className={[styles.profileDropdown, styles.button].join(' ')}
 					dropdownItems={[
 						{
 							content: 'Profile',

@@ -4,7 +4,7 @@
 }
 
 .buttonGroup button {
-	background-color: var(--main-color);
+	background-color: var(--primary);
 	margin: 0;
 	font-size: 16px;
 	cursor: pointer;
@@ -15,7 +15,7 @@
 
 .buttonGroup button:hover,
 .buttonGroup button:focus-within {
-	background-color: var(--main-color-hover);
+	background-color: var(--primary-accent);
 }
 
 .buttonGroup > button:first-child {

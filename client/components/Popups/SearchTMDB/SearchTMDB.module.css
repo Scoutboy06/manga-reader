@@ -190,7 +190,7 @@
 
 .footer button[type='submit'] {
 	margin-left: 10px;
-	background-color: var(--main-color);
+	background-color: var(--primary);
 }
 
 .footer button[type='reset'] {
@@ -209,7 +209,7 @@
 
 .nextBtn {
 	position: absolute;
-	background-color: var(--main-color);
+	background-color: var(--primary);
 	padding: 0.6em 0.3em 0.6em 0.8em;
 	bottom: 1em;
 	right: 1em;

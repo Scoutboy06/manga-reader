@@ -44,6 +44,6 @@
 
 @media (hover: hover) {
 	.navlink:hover {
-		color: var(--main-color);
+		color: var(--primary);
 	}
 }

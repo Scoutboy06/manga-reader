@@ -52,7 +52,7 @@
 }
 
 .formGroup input:focus {
-	border-color: var(--main-color);
+	border-color: var(--primary);
 }
 
 .formGroup button:not([type='checkbox']) {
@@ -107,7 +107,7 @@
 
 .footer button[type='submit'] {
 	margin-left: 10px;
-	background: var(--main-color);
+	background: var(--primary);
 }
 
 .footer button[type='reset'] {

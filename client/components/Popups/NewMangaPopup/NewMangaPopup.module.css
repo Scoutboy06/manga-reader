@@ -182,7 +182,7 @@
 
 .footer button[type='submit'] {
 	margin-left: 10px;
-	background: var(--main-color);
+	background: var(--primary);
 }
 
 .footer button[type='submit'][disabled] {

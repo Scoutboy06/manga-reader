@@ -37,7 +37,7 @@
 }
 
 .submitBtn {
-	background: var(--main-color);
+	background: var(--primary);
 	width: 100%;
 	font-size: 18px;
 	padding: 0.7em 2em;

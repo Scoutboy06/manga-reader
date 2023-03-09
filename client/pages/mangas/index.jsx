@@ -1,6 +1,4 @@
 import { useState, useContext } from 'react';
-import useSWR from 'swr';
-import { useRouter } from 'next/router';
 import fetchAPI from '@/functions/fetchAPI';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -10,22 +8,15 @@ import MediaCard from '@/components/MediaCard';
 import Navbar from '@/components/navbars/Library';
 import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
 
-// import { ProfileContext } from '@/contexts/ProfileContext';
-// import { PopupContext } from '@/contexts/PopupContext';
-
 import styles from '@/styles/mangas.module.css';
 
 export default function Mangas({ headerMangas, continueReading }) {
-	// const router = useRouter();
-
-	// const [{ currentProfile }] = useContext(ProfileContext);
-
 	const [slideshowIndex, setSlideshowIndex] = useState(0);
 
 	return (
 		<>
 			<Head>
-				<title>Manga Reader - Read Manga Online For Free</title>
+				<title>Manga Reader</title>
 			</Head>
 
 			<Navbar />
@@ -80,8 +71,8 @@ export default function Mangas({ headerMangas, continueReading }) {
 
 									<div className={styles.metadata}>
 										<Image
-											width={300}
-											height={450}
+											width={150}
+											height={225}
 											src={manga.poster}
 											alt={manga.title}
 											className={styles.poster}
@@ -99,7 +90,16 @@ export default function Mangas({ headerMangas, continueReading }) {
 													</Link>
 												))}
 											</p>
-											<h1>{manga.title}</h1>
+											<h1>
+												{manga.title}
+												<Link
+													href={`/mangas/${manga.urlName}`}
+													className='icon'
+													style={{ marginLeft: 6 }}
+												>
+													open_in_new
+												</Link>
+											</h1>
 											<p className={styles.description}>{manga.description}</p>
 										</div>
 
@@ -122,10 +122,10 @@ export default function Mangas({ headerMangas, continueReading }) {
 						{continueReading?.map(manga => (
 							<MediaCard
 								key={manga._id}
-								href={`/mangas/${manga.urlName}`}
+								href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
 								imgUrl={manga.poster}
 								title={manga.title}
-								// subtitle={manga.currentChapter}
+								subtitle={`Chapter ${manga.currentChapter.number}`}
 								orientation='vertical'
 							/>
 						))}
@@ -139,7 +139,7 @@ export default function Mangas({ headerMangas, continueReading }) {
 export async function getServerSideProps() {
 	const [headerMangas, continueReading] = await Promise.all([
 		fetchAPI('/mangas?limit=10'),
-		fetchAPI('/mangas?limit=10'),
+		fetchAPI('/users/6240ce1e13856cb6d466e27a/mangas'),
 	]);
 
 	return {

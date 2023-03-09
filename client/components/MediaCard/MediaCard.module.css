@@ -36,7 +36,7 @@
 
 .imageContainer {
 	position: relative;
-	border-radius: 10px;
+	border-radius: 0.6rem;
 	overflow: hidden;
 }
 
@@ -110,7 +110,7 @@
 	border-radius: 50%;
 	top: -15%;
 	left: -15%;
-	background-color: var(--main-color);
+	background-color: var(--primary);
 	opacity: 0;
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -181,7 +181,7 @@
 	.buttonsContainer > button:hover,
 	.buttonsContainer > button:focus-within {
 		background-color: rgba(0, 164, 220, 0.2);
-		color: var(--main-color);
+		color: var(--primary);
 	}
 
 	.buttonsContainer > button:active::after {

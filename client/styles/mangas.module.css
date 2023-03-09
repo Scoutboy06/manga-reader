@@ -27,6 +27,7 @@
 	user-select: none;
 	position: relative;
 	flex-shrink: 0;
+	background-color: #000;
 }
 
 .slideshow .backdrop {
@@ -44,11 +45,11 @@
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
-	display: inline;
 	z-index: 2;
 	font-size: 3rem;
-	color: var(--celtic-blue);
+	color: var(--primary);
 	cursor: pointer;
+	text-shadow: 0 0 2px rgb(0 0 0 / 100%);
 }
 
 .slideshow .prevBtn {
@@ -74,20 +75,19 @@
 	height: 0.4rem;
 	border: 0;
 	background-color: rgba(255, 255, 255, 0.4);
-	outline: none;
 	cursor: pointer;
 	transition: background-color 0.3s ease-out;
 }
 
 .smallButtons > button:global(.active) {
-	background-color: var(--celtic-blue);
+	background-color: var(--primary);
 }
 
 .metadata {
-	height: 40%;
+	height: 300px;
 	width: 100%;
 	padding: 2rem;
-	background: linear-gradient(0deg, rgba(0, 0, 0, 0.8), transparent);
+	background: linear-gradient(0deg, rgba(0, 0, 0, 1), transparent);
 	position: absolute;
 	bottom: 0;
 	display: flex;
@@ -96,13 +96,15 @@
 
 .metadata .poster {
 	height: 100%;
-	width: min-content;
+	object-fit: cover;
+	border-radius: 0.6rem;
 }
 
 .metadata .text {
 	flex-grow: 1;
 	width: 0;
 	position: relative;
+	color: #ccc;
 }
 
 .metadata .genres {
@@ -112,17 +114,24 @@
 }
 
 .metadata .genres a {
-	color: #ccc;
 	transition: color 0.3s;
+	text-shadow: 0 0 5px #000;
 }
 
 .metadata .genres a:hover {
-	color: var(--celtic-blue);
+	color: var(--primary);
+}
+
+.metadata h1 {
+	color: #fff;
+}
+
+.metadata h1 a {
+	display: none;
 }
 
 .metadata .description {
 	margin-top: 2rem;
-	color: #ccc;
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
@@ -143,14 +152,14 @@
 	border-radius: 1rem;
 	text-decoration: none;
 	transition: 0.3s;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	color: rgba(255, 255, 255, 0.6);
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	color: #bbb;
 }
 
 .metadata .readManga:hover {
 	background-color: rgba(255, 255, 255, 0.1);
 	backdrop-filter: blur(5px);
-	color: rgba(255, 255, 255, 0.9);
+	color: #e6e6e6;
 }
 
 .metadata .readManga :global(.icon) {
@@ -158,13 +167,11 @@
 	color: inherit;
 }
 
-.metadata .readManga span {
-	color: inherit;
-}
-
 .continueReading {
-	background-color: var(--rich-black);
-	padding: var(--padding);
+	width: 80rem;
+	max-width: 100%;
+	margin: 0 auto;
+	margin-top: 2rem;
 }
 
 @media screen and (max-width: 1080px) {
@@ -193,5 +200,9 @@
 @media screen and (max-width: 500px) {
 	.metadata .readManga {
 		display: none;
+	}
+
+	.metadata h1 a {
+		display: inline;
 	}
 }

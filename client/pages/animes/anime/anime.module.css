@@ -23,7 +23,7 @@
 }
 
 .addToLibraryBtn {
-	background-color: var(--main-color);
+	background-color: var(--primary);
 	font-size: 18px;
 	border: 0;
 	padding: 8px 15px;
