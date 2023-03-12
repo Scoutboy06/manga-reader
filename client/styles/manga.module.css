@@ -1,0 +1,136 @@
+.header {
+	padding: calc(var(--navbar-height) + 2rem) var(--padding) 20px;
+	display: flex;
+	flex-direction: row;
+	gap: 2rem;
+	background: radial-gradient(
+		ellipse 80% 50% at 50% -20%,
+		rgba(120, 119, 198, 0.3),
+		transparent
+	);
+}
+
+.image {
+	width: 40%;
+	align-self: flex-start;
+}
+
+.image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 1rem;
+}
+
+.metadata {
+	width: 100%;
+}
+
+.title {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 1rem;
+	margin-bottom: 1rem;
+	border-bottom: 1px solid var(--divider-variant);
+}
+
+.title h1 {
+	font-weight: 500;
+}
+
+.description {
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.description:global(.expand) {
+	-webkit-line-clamp: unset;
+}
+
+.toggleDescription {
+	background-color: transparent;
+	border: 0;
+	outline-color: transparent;
+	text-decoration: underline;
+	font-size: inherit;
+	cursor: pointer;
+	color: var(--primary);
+}
+
+.misc {
+	text-align: left;
+	margin: 20px 0;
+}
+
+.misc tr th {
+	font-weight: normal;
+	padding-bottom: 5px;
+}
+
+.misc tr th:nth-child(1) {
+	padding-right: 40px;
+	white-space: nowrap;
+	vertical-align: top;
+	font-weight: bold;
+}
+
+.genre {
+	margin-right: 0.4rem;
+	transition: 0.15s;
+	text-decoration: underline;
+}
+
+.genre:hover {
+	color: var(--primary);
+}
+
+.main {
+	margin: 60px var(--padding);
+}
+
+.chapters {
+	max-height: 600px;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	margin-top: 1rem;
+	gap: 2px;
+}
+
+.chapters > a {
+	display: block;
+	padding: 0.3rem 10px;
+}
+
+.chapters > a:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 900px) {
+	.header {
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.image {
+		width: 60%;
+		margin: 0 auto;
+		padding: 0 10vw;
+	}
+
+	.title {
+		flex-direction: column;
+		gap: 1rem;
+		margin-top: 1rem;
+	}
+
+	.title h1 {
+		text-align: center;
+		font-size: 2rem;
+	}
+}

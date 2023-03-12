@@ -1,5 +1,10 @@
 .main > header {
-	padding: 0 var(--padding);
+	padding: var(--navbar-height) var(--padding) 0;
+	background: radial-gradient(
+		ellipse 80% 50% at 50% -20%,
+		rgba(120, 119, 198, 0.3),
+		transparent
+	);
 }
 
 .slideshow {
@@ -7,7 +12,7 @@
 	aspect-ratio: 16 / 9;
 	max-width: 100%;
 	max-height: 80vh;
-	margin: 1rem auto;
+	margin: 2rem auto;
 	position: relative;
 	border-radius: 1rem;
 	overflow: hidden;
@@ -86,7 +91,7 @@
 .metadata {
 	height: 300px;
 	width: 100%;
-	padding: 2rem;
+	padding: 2rem 3rem;
 	background: linear-gradient(0deg, rgba(0, 0, 0, 1), transparent);
 	position: absolute;
 	bottom: 0;
@@ -111,11 +116,13 @@
 	margin-bottom: 1rem;
 	display: flex;
 	gap: 1rem;
+	overflow-x: hidden;
 }
 
 .metadata .genres a {
 	transition: color 0.3s;
 	text-shadow: 0 0 5px #000;
+	white-space: nowrap;
 }
 
 .metadata .genres a:hover {
@@ -154,6 +161,8 @@
 	transition: 0.3s;
 	border: 1px solid rgba(255, 255, 255, 0.15);
 	color: #bbb;
+	align-self: flex-end;
+	margin-bottom: 1rem;
 }
 
 .metadata .readManga:hover {
@@ -174,7 +183,7 @@
 	margin-top: 2rem;
 }
 
-@media screen and (max-width: 1080px) {
+@media screen and (max-width: 900px) {
 	.metadata .genres,
 	.metadata .poster,
 	.metadata .description {

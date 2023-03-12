@@ -47,12 +47,16 @@ export default function LibraryNavbar() {
 
 	return (
 		<nav className={styles.navbar}>
-			<div>
-				<Link href='/' className={styles.logo}>
+			<div className={styles.left}>
+				<button className={`${styles.hamburger} ${styles.button} icon`}>
+					menu
+				</button>
+
+				<Link href='/'>
 					<Image
 						src='/appIcons/rikka_square_72.png'
-						width={40}
-						height={40}
+						width={32}
+						height={32}
 						alt='Logo'
 					/>
 				</Link>
@@ -71,6 +75,10 @@ export default function LibraryNavbar() {
 			</div>
 
 			<div className={styles.right}>
+				<button className={`${styles.button} ${styles.searchBtn} icon`}>
+					search
+				</button>
+
 				<form
 					className={styles.searchContainer}
 					onSubmit={searchSubmit}
@@ -124,9 +132,11 @@ export default function LibraryNavbar() {
 									router.push(`/mangas/search?query=${searchValue}`)
 								}
 								aria-label='See all results'
-								className={styles.allResults}
+								className='button primary'
+								style={{ margin: '0.7rem 0.7rem 0.2rem' }}
 							>
 								See all results
+								<i className='icon'>keyboard_arrow_right</i>
 							</button>
 						)}
 					</div>
@@ -137,7 +147,7 @@ export default function LibraryNavbar() {
 				</button>
 
 				<DropdownButton
-					className={[styles.profileDropdown, styles.button].join(' ')}
+					className={`${styles.profileDropdown} ${styles.button}`}
 					dropdownItems={[
 						{
 							content: 'Profile',

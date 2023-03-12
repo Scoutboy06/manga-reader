@@ -1,55 +1,74 @@
 /* @import 'https://fonts.googleapis.com/icon?family=Material+Icons'; */
 
 :root {
-	--padding: 0.7em;
+	/* Material Design Defaults:
+		--primary: #d0bcff;
+		--primary-container: #4f378b;
+		--secondary: #ccc2dc;
+		--secondary-container: #4a4458;
+		--tertiary: #efb8c8;
+		--tertiary-container: #633b48;
+		--surface: #1c1b1f;
+		--surface-variant: #49454f;
+		--background: #1c1b1f;
+		--error: #f2b8b5;
+		--error-container: #8c1d18;
+		--on-primary: #371e73;
+		--on-primary-container: #eaddff;
+		--on-secondary: #332d41;
+		--on-secondary-container: #e8def8;
+		--on-tertiary: #492532;
+		--on-tertiary-container: #ffd8e4;
+		--on-surface: #e6e1e5;
+		--on-surface-variant: #cac4d0;
+		--on-error: #601410;
+		--on-error-container: #f9dedc;
+		--on-background: #e6e1e5;
+		--outline: #938f99;
+		--outline-variant: #444746;
+		--shadow: #000000;
+		--surface-tint-color: #d0bcff;
+		--inverse-surface: #e6e1e5;
+		--inverse-on-surface: #313033;
+		--inverse-primary: #6750a4;
+		--scrim: #000000; */
+
+	--padding: 2rem;
 	--font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
 		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
 
-	/* Logo: #5251a3 #ab2d3a #efcb41 #0b0619 */
+	--navbar-height: 48px;
 
-	/* --background: #fffbfe; */
-	--background: #fafdff;
-	--on-background: #1c1b1f;
+	--on-background: #fafdff;
 
-	--primary: #1187ee;
+	--primary: #1967fc;
+	--primary-rgb: 25, 103, 252;
+	--primary-gradient: linear-gradient(
+		92.88deg,
+		#455eb5 9.16%,
+		#5643cc 43.89%,
+		#673fd7 64.72%
+	);
+	--primary-shadow: rgb(80 63 205 / 50%) 0px 1px 40px;
 	--on-primary: #fff;
-	--primary-container: #cfe7fc;
-	--on-primary-container: #031b30;
 
-	/* --secondary: hsl(48, 84%, 60%); */
-	--secondary: #bc9910;
+	--secondary: #ed7117;
 	--on-secondary: #000;
-	--secondary-container: #fbf2d0;
-	--on-secondary-container: #2f2604;
 
-	--00dp: #fafdff;
-	--01dp: #fafdff;
-	--02dp: #fafdff;
-	--03dp: #fafdff;
-	--04dp: #fafdff;
-	--06dp: #fafdff;
-	--08dp: #fafdff;
-	--12dp: #fafdff;
-	--16dp: #fafdff;
-	--24dp: #fafdff;
-	--on-surface: #1a1c1e;
-	--surface-variant: #dfe6ec;
-	--on-surface-variant: #131a20;
+	--surface-0: #000212;
+	--surface-0-rgb: 0, 2, 18;
+	--surface-1: #030620;
+	--surface-1-rgb: 3, 6, 32;
+	--on-surface: #f7f7f7;
+	--on-surface-variant: #e9e9e9;
 
-	--error: #b3261e;
-	--error-container: #f9dedc;
-	--on-error: #fff;
-	--on-error-container: #410e0b;
+	--outline: #938f99;
+	--outline-variant: #444746;
+	--divider: #242424;
+	--divider-variant: rgba(255, 255, 255, 0.08);
 
-	--outline: #79747e;
-	--outline-variant: #c4c7c5;
-
-	--shadow: #000;
-	--surface-tint-color: var(--primary);
-	--scrim: #000;
-
-	color-scheme: light dark;
+	color-scheme: dark;
 	font-family: var(--font-family);
 	font-size: 16px;
 	color: var(--on-background);
@@ -65,12 +84,18 @@
 	box-sizing: border-box;
 }
 
+::selection {
+	background-color: #4f52b4;
+	color: #d0d6e0;
+}
+
 body {
-	background-color: var(--00dp);
+	background-color: var(--surface-0);
 }
 
 button {
 	font: inherit;
+	cursor: pointer;
 }
 
 a {
@@ -116,6 +141,47 @@ a {
 
 .icon.outlined {
 	font-family: 'Material Icons Outlined';
+}
+
+.button {
+	padding: 0.6rem 1.8rem 0.6rem 2rem;
+	border-radius: 10000px;
+	border: 0;
+	outline-color: transparent;
+	display: flex;
+	white-space: nowrap;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.button.icon-right {
+	padding-right: 1.5rem;
+}
+
+.button.icon-left {
+	padding-left: 1.5rem;
+}
+
+.button.primary {
+	background: var(--primary-gradient);
+	color: var(--on-primary);
+	transition: box-shadow 0.15s;
+}
+
+.button.primary:hover {
+	box-shadow: var(--primary-shadow);
+}
+
+.button.secondary {
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	transition: background-color 0.15s;
+}
+
+.button.secondary:hover {
+	background-color: rgba(255, 255, 255, 0.15);
 }
 
 .hidden {
@@ -201,67 +267,4 @@ a {
 .formGroup textarea:focus,
 .formGroup select:focus {
 	border-color: var(--primary);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #0f0f0f;
-		--on-background: #fafdff;
-
-		/* --primary: #1187ee; */
-		--primary: #54a9f3;
-		--on-primary: #000;
-		--primary-container: #031b30;
-		--on-primary-container: #e2e2e2;
-
-		/* --secondary:  */
-
-		--00dp: #121212;
-		--01dp: #1d1d1d;
-		--02dp: #212121;
-		--03dp: #242424;
-		--04dp: #262626;
-		--06dp: #2c2c2c;
-		--08dp: #2d2d2d;
-		--12dp: #323232;
-		--16dp: #353535;
-		--24dp: #373737;
-		--on-surface: #f7f7f7;
-		--on-surface-variant: #e9e9e9;
-
-		--outline: #938f99;
-		--outline-variant: #444746;
-
-		/* Material Design Defaults:
-		--primary: #d0bcff;
-		--primary-container: #4f378b;
-		--secondary: #ccc2dc;
-		--secondary-container: #4a4458;
-		--tertiary: #efb8c8;
-		--tertiary-container: #633b48;
-		--surface: #1c1b1f;
-		--surface-variant: #49454f;
-		--background: #1c1b1f;
-		--error: #f2b8b5;
-		--error-container: #8c1d18;
-		--on-primary: #371e73;
-		--on-primary-container: #eaddff;
-		--on-secondary: #332d41;
-		--on-secondary-container: #e8def8;
-		--on-tertiary: #492532;
-		--on-tertiary-container: #ffd8e4;
-		--on-surface: #e6e1e5;
-		--on-surface-variant: #cac4d0;
-		--on-error: #601410;
-		--on-error-container: #f9dedc;
-		--on-background: #e6e1e5;
-		--outline: #938f99;
-		--outline-variant: #444746;
-		--shadow: #000000;
-		--surface-tint-color: #d0bcff;
-		--inverse-surface: #e6e1e5;
-		--inverse-on-surface: #313033;
-		--inverse-primary: #6750a4;
-		--scrim: #000000; */
-	}
 }

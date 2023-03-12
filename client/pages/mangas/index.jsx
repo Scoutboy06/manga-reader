@@ -117,20 +117,22 @@ export default function Mangas({ headerMangas, continueReading }) {
 					</div>
 				</header>
 
-				<section className={styles.continueReading}>
-					<HorizontalScrollContainer title='Continue Reading'>
-						{continueReading?.map(manga => (
-							<MediaCard
-								key={manga._id}
-								href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
-								imgUrl={manga.poster}
-								title={manga.title}
-								subtitle={`Chapter ${manga.currentChapter.number}`}
-								orientation='vertical'
-							/>
-						))}
-					</HorizontalScrollContainer>
-				</section>
+				{continueReading.length > 0 && (
+					<section className={styles.continueReading}>
+						<HorizontalScrollContainer title='Continue Reading'>
+							{continueReading?.map(manga => (
+								<MediaCard
+									key={manga._id}
+									href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
+									imgUrl={manga.poster}
+									title={manga.title}
+									subtitle={`Chapter ${manga.currentChapter.number}`}
+									orientation='vertical'
+								/>
+							))}
+						</HorizontalScrollContainer>
+					</section>
+				)}
 			</main>
 		</>
 	);
