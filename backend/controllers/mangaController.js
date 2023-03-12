@@ -15,7 +15,6 @@ const router = Router();
 
 
 // @desc	Get all of the user's mangas
-// @route	GET /users/:userId/mangas
 router.get('/users/:userId/mangas', async (req, res) => {
 	const { userId } = req.params;
 
@@ -72,12 +71,11 @@ router.get('/mangas/external', handler(async (req, res) => {
 }));
 
 
-// @desc	Get a manga by id
-// @route	GET /mangas/:mangaId
-router.get('/mangas/:mangaId', handler(async (req, res) => {
-	const { mangaId } = req.params;
+// @desc	Get a manga by it's urlName
+router.get('/mangas/:urlName', handler(async (req, res) => {
+	const { urlName } = req.params;
 
-	const manga = await Manga.findById(mangaId);
+	const manga = await Manga.findOne({ urlName });
 	if (!manga) {
 		res.status(404)
 		throw new Error('Manga not found');
@@ -88,7 +86,6 @@ router.get('/mangas/:mangaId', handler(async (req, res) => {
 
 
 // @desc	Get a manga by name
-// @route	GET /users/:userId/mangas/:mangaName
 router.get('/users/:userId/mangas/:mangaName', handler(async (req, res) => {
 	const { userId, mangaName } = req.params;
 
@@ -98,8 +95,7 @@ router.get('/users/:userId/mangas/:mangaName', handler(async (req, res) => {
 }));
 
 
-// @desc	Create a new manga
-// @route	POST /mangas
+// @desc	Create a new manga+
 router.post('/mangas', handler(async (req, res) => {
 	const { title, hostId, sourceUrlName } = req.body;
 
@@ -131,8 +127,8 @@ router.post('/mangas', handler(async (req, res) => {
 	res.status(201).json(createdManga);
 }));
 
-// @desc	Update the current chapter
-// @route	POST /mangas/:mangaId/currentChapter
+
+// @desc	Update the current chapter+
 router.post('/users/:userId/mangas/:mangaId/currentChapter', async (req, res, next) => {
 	const { userId, mangaId } = req.params;
 	const { urlName: chapterUrlName } = req.body;
@@ -167,23 +163,19 @@ router.post('/users/:userId/mangas/:mangaId/currentChapter', async (req, res, ne
 	res.json({ status: 'success' });
 });
 
-// @desc	Get images from a chapter
-// @route	GET /mangas/:mangaId/:chapter
-router.get('/mangas/:mangaId/:chapter', async (req, res, next) => {
-	const { mangaId, chapter } = req.params;
 
-	const manga = await Manga.findById(mangaId).catch(() => {
-		res.status(404);
-		next(new Error('Manga not found'));
-	});
-	if (!manga) return;
+// @desc	Get images from a chapter
+router.get('/mangas/:urlName/:chapter', handler(async (req, res) => {
+	const { urlName, chapter } = req.params;
+
+	const manga = await Manga.findOne({ urlName });
 
 	const currentChapter = manga.chapters.find(ch => ch.urlName === chapter);
 
 	const host = await Host.findById(manga.hostId);
 	const url = host.chapterPage.url.replace('%name', manga.sourceUrlName).replace('%chapter', currentChapter.sourceUrlName);
 
-	const html = await fetch(url).then(res => res.text());
+	const html = await fetch(url, { redirect: 'follow' }).then(res => res.text());
 	const document = parse(html);
 
 	const imageEls = document.querySelectorAll(host.chapterPage.images);
@@ -209,7 +201,7 @@ router.get('/mangas/:mangaId/:chapter', async (req, res, next) => {
 		images: srcs,
 		originalUrl: url,
 	});
-});
+}));
 
 
 export default router;
