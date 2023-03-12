@@ -10,8 +10,7 @@ import Loader from '@/components/Loader';
 
 import { ProfileContext } from '@/contexts/ProfileContext';
 
-import styles from '@/styles/ReadWrapper.module.css';
-
+import styles from '@/styles/read.module.css';
 
 export default function ReadManga() {
 	const router = useRouter();
@@ -20,23 +19,21 @@ export default function ReadManga() {
 	const [{ currentProfile }] = useContext(ProfileContext);
 	const [imageWidth, setImageWidth] = useState(null);
 
-	const { data: mangaMeta } = useSWRImmutable(
-		() => `/users/${currentProfile._id}/mangas/${query.manga}`
+	const { data: mangaMeta } = useSWRImmutable(() =>
+		query.urlName ? `/mangas/${query.urlName}` : null
 	);
-
 	const { data: chapterMeta } = useSWRImmutable(() =>
-		query.chapter ? `/mangas/${mangaMeta._id}/${query.chapter}` : null
+		query.chapter ? `/mangas/${query.urlName}/${query.chapter}` : null
 	);
-
-	const { prevChap, currChap, nextChap } = useChapterPagination({ currentProfile, mangaMeta });
-
-	const {
-		scrollProgress,
-		imagesContainerRef,
-		imageLoadHandler,
-	} = useScrollProgress({ chapterMeta, imageWidth });
-
 	const isLoading = !chapterMeta || !mangaMeta;
+
+	const { prevChap, currChap, nextChap } = useChapterPagination({
+		currentProfile,
+		mangaMeta,
+	});
+
+	const { scrollProgress, imagesContainerRef, imageLoadHandler } =
+		useScrollProgress({ chapterMeta, imageWidth });
 
 	useEffect(() => {
 		if (!imageWidth) {
@@ -48,23 +45,23 @@ export default function ReadManga() {
 
 	return (
 		<>
-			<div className={styles.header}>
-				<div style={{ marginBottom: 10 }}>
-					<Select
-						onChange={chapterUrlName =>
-							router.push(`/mangas/${query.manga}/${chapterUrlName}`)
-						}
+			<header className={styles.header}>
+				<Select.Root style={{ marginBottom: 10 }}>
+					<Select.Button className={styles.title}>
+						{'Chapter ' + (currChap?.number || '')}
+					</Select.Button>
+
+					<Select.Options
 						value={query.chapter}
-						containerText={
-							<h1 className={styles.title}>{currChap?.title}</h1>
-						}
-						placement='bl'
 						options={mangaMeta?.chapters?.map(chapter => ({
 							value: chapter.urlName,
-							label: chapter.title,
+							label: `Chapter ${chapter.number}`,
 						}))}
+						onChange={urlName =>
+							router.push(`/mangas/${query.urlName}/${urlName}`)
+						}
 					/>
-				</div>
+				</Select.Root>
 
 				<div className={styles.container} style={{ marginBottom: 30 }}>
 					<a
@@ -77,29 +74,31 @@ export default function ReadManga() {
 						<i className='icon'>open_in_new</i>
 					</a>
 
-					<Select
-						value={imageWidth}
-						onChange={value => {
-							setImageWidth(value);
-						}}
-						containerText={
-							imageWidth === 'pageWidth'
+					<Select.Root>
+						<Select.Button>
+							{imageWidth === 'pageWidth'
 								? 'Page width'
-								: `${imageWidth * 100}%`
-						}
-						placement='br'
-						options={[
-							{ value: 'pageWidth', label: 'Page width' },
-							'divider',
-							{ value: 0.5, label: '50%' },
-							{ value: 0.75, label: '75%' },
-							{ value: 0.9, label: '90%' },
-							{ value: 1.0, label: '100%' },
-							{ value: 1.25, label: '125%' },
-							{ value: 1.5, label: '150%' },
-							{ value: 2.0, label: '200%' },
-						]}
-					/>
+								: `${imageWidth * 100}%`}
+						</Select.Button>
+
+						<Select.Options
+							value={imageWidth}
+							options={[
+								{ value: 'pageWidth', label: 'Page width' },
+								<hr />,
+								{ value: 0.5, label: '50%' },
+								{ value: 0.75, label: '75%' },
+								{ value: 0.9, label: '90%' },
+								{ value: 1, label: '100%' },
+								{ value: 1.25, label: '125%' },
+								{ value: 1.5, label: '150%' },
+								{ value: 1.75, label: '175%' },
+								{ value: 2, label: '200%' },
+							]}
+							onChange={value => setImageWidth(value)}
+							placement='br'
+						/>
+					</Select.Root>
 				</div>
 
 				<div className={styles.container}>
@@ -131,15 +130,13 @@ export default function ReadManga() {
 						<i className='icon'>arrow_forward</i>
 					</button>
 				</div>
-			</div>
+			</header>
 
 			<section
 				className={styles.chapters}
 				style={{
 					width:
-						imageWidth === 'pageWidth'
-							? '100%'
-							: `calc(50% * ${imageWidth})`,
+						imageWidth === 'pageWidth' ? '100%' : `calc(50% * ${imageWidth})`,
 				}}
 				ref={imagesContainerRef}
 			>
@@ -155,7 +152,6 @@ export default function ReadManga() {
 								key={index}
 								data-isloaded={false}
 							>
-								{/* eslint-disable-next-line jsx-a11y/alt-text */}
 								<img
 									src={image}
 									loading='lazy'
@@ -167,7 +163,7 @@ export default function ReadManga() {
 				)}
 			</section>
 
-			<div className={styles.header}>
+			<header className={styles.header}>
 				<div className={styles.container}>
 					<button
 						onClick={() => {
@@ -197,7 +193,7 @@ export default function ReadManga() {
 						<i className='icon'>arrow_forward</i>
 					</button>
 				</div>
-			</div>
+			</header>
 
 			<div className={styles.progressContainer}>
 				<span>Ch. {chapterMeta?.number}</span>
@@ -208,7 +204,6 @@ export default function ReadManga() {
 		</>
 	);
 }
-
 
 function useScrollProgress({ chapterMeta, imageWidth }) {
 	const [scrollProgress, setScrollProgress] = useState('-');
@@ -228,7 +223,7 @@ function useScrollProgress({ chapterMeta, imageWidth }) {
 		}
 
 		setScrollProgress(currentImageIndex + 1);
-	}
+	};
 
 	const setImagesTopCoords = (start = 0, end = chapterMeta?.images?.length) => {
 		if (!chapterMeta?.images) return;
@@ -276,13 +271,12 @@ function useScrollProgress({ chapterMeta, imageWidth }) {
 		scrollProgress,
 		imagesContainerRef,
 		imageLoadHandler,
-	}
+	};
 }
-
 
 function useChapterPagination({ currentProfile, mangaMeta }) {
 	const router = useRouter();
-	const { chapter } = router.query;
+	const { urlName, chapter } = router.query;
 
 	const [data, setData] = useState({
 		prevChap: null,
@@ -295,26 +289,25 @@ function useChapterPagination({ currentProfile, mangaMeta }) {
 		if (!mangaMeta) return;
 
 		const { chapters } = mangaMeta;
-		const currChapIndex = chapters.findIndex(
-			chap => chap.urlName === chapter
-		);
+		const currChapIndex = chapters.findIndex(chap => chap.urlName === chapter);
 
-		setData({
-			prevChap: chapters[currChapIndex - 1],
-			currChap: chapters[currChapIndex],
-			nextChap: chapters[currChapIndex + 1],
-		});
+		const prevChap = chapters[currChapIndex - 1];
+		const currChap = chapters[currChapIndex];
+		const nextChap = chapters[currChapIndex + 1];
+
+		setData({ prevChap, currChap, nextChap });
 
 		// Sync chapter with server
-		fetchAPI(
-			`/users/${currentProfile._id}/mangas/${mangaMeta._id}/currentChapter`,
-			{
-				method: 'POST',
-				body: JSON.stringify({ urlName: chapter }),
-			}
-		);
+		if (currentProfile) {
+			fetchAPI(
+				`/users/${currentProfile._id}/mangas/${mangaMeta._id}/currentChapter`,
+				{
+					method: 'POST',
+					body: JSON.stringify({ urlName: chapter }),
+				}
+			);
+		}
 	}, [mangaMeta, router.query]);
-
 
 	return data;
 }
