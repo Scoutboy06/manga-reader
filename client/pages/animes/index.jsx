@@ -9,7 +9,7 @@ import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
 import EditAnimeMetadata from '@/components/Popups/EditAnimeMetadata';
 import Navbar from '@/components/navbars/Library';
 
-import { PopupContext } from '@/contexts/PopupContext';
+// import { PopupContext } from '@/contexts/PopupContext';
 import { ProfileContext } from '@/contexts/ProfileContext';
 
 /*

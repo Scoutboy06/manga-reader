@@ -1,28 +1,23 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import NProgress from 'nprogress';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import useSWR from 'swr';
 
-import { ProfileContext } from '../../contexts/ProfileContext';
+import { ProfileContext } from '@/contexts/ProfileContext';
 
-import Head from '../../components/Head';
-import Navbar from '../../components/navbars/Anime';
-import AddToLibraryButton from '../../components/AddToLibraryButton';
-import MediaCard from '../../components/MediaCard/index';
-import EditSeasonMetadata from '../../components/Popups/EditSeasonMetadata';
-
-import { PopupContext } from '../../contexts/PopupContext';
+import Navbar from '@/components/navbars/Library';
+import MediaCard from '@/components/MediaCard/index';
 
 import styles from './anime.module.css';
-import Image from '../../components/Image';
+import Image from '@/components/Image';
 
 export default function Anime() {
-	const params = useParams();
+	const { query } = useRouter();
+
 	const [{ currentProfile }] = useContext(ProfileContext);
-	const [, popupActions] = useContext(PopupContext);
 
 	const { data: animeMeta } = useSWR(
-		() => `/users/${currentProfile._id}/animes/${params.name}`,
+		() => `/users/${currentProfile._id}/animes/${query.name}`,
 		{
 			revalidateIfStale: false,
 			revalidateOnFocus: false,
@@ -30,16 +25,12 @@ export default function Anime() {
 	);
 	const [nextEpisode, setNextEpisode] = useState();
 
-	const isSeason = !!params.season;
-	const isAnime = !params.season;
+	const isSeason = !!query.season;
+	const isAnime = !query.season;
 
 	const currentSeason = animeMeta?.seasons?.find(
-		season => season.urlName === params.season
+		season => season.urlName === query.season
 	);
-
-	useEffect(() => {
-		NProgress.done();
-	}, []);
 
 	if (!animeMeta) return null;
 
@@ -69,9 +60,7 @@ export default function Anime() {
 							{isSeason && <p>{currentSeason.name}</p>}
 						</div>
 
-						{animeMeta.from === 'scrape' ? (
-							<AddToLibraryButton animeMeta={animeMeta} />
-						) : (
+						{animeMeta.from === 'scrape' ? null : (
 							<div className={styles.buttonContainer}>
 								<button className={styles.button}>
 									<i className='icon'>play_arrow</i>
@@ -123,7 +112,7 @@ export default function Anime() {
 						<div className={styles.nextUp}>
 							<p>Next up:</p>
 							<Link
-								to={`/animes/${params.name}/episode-${nextEpisode.number}`}
+								href={`/animes/${query.name}/episode-${nextEpisode.number}`}
 								className={styles.episode}
 							>
 								EP {nextEpisode.number}
@@ -131,14 +120,13 @@ export default function Anime() {
 						</div>
 					)}
 
-					{params.season || animeMeta.from === 'scrape' ? (
+					{query.season || animeMeta.from === 'scrape' ? (
 						<div className={styles.episodes}>
 							<p>Episodes</p>
 
 							{animeMeta.from === 'scrape' && (
 								<div className={styles.overlay}>
 									<h1>Add to your library to start watching</h1>
-									<AddToLibraryButton animeMeta={animeMeta} />
 								</div>
 							)}
 
@@ -151,7 +139,7 @@ export default function Anime() {
 									{part.episodes.map(episode => (
 										<Link
 											key={'EP ' + episode.number}
-											to={`/animes/${params.name}/${currentSeason.urlName}/episode-${episode.number}`}
+											href={`/animes/${query.name}/${currentSeason.urlName}/episode-${episode.number}`}
 											className={[
 												styles.episode,
 												episode.hasWatched ? 'completed' : '',
@@ -171,22 +159,22 @@ export default function Anime() {
 							{animeMeta?.seasons?.map(season => (
 								<MediaCard
 									key={season.tmdbId}
-									href={`/animes/${params.name}/${season.urlName}`}
+									href={`/animes/${query.name}/${season.urlName}`}
 									imgUrl={season.poster.small}
 									title={season.name}
 									type='series'
-									seriesHref={`/animes/${params.name}/${season.urlName}`}
+									seriesHref={`/animes/${query.name}/${season.urlName}`}
 									hasUpdates={season.hasNewEpisodes}
 									dropdownItems={[
 										{
 											content: 'Edit metadata',
 											icon: <i className='icon'>edit</i>,
 											action: () => {
-												popupActions.createPopup({
-													title: 'Edit metadata',
-													content: EditSeasonMetadata,
-													data: { season, anime: animeMeta },
-												});
+												// popupActions.createPopup({
+												// 	title: 'Edit metadata',
+												// 	content: EditSeasonMetadata,
+												// 	data: { season, anime: animeMeta },
+												// });
 											},
 										},
 										{
@@ -205,13 +193,13 @@ export default function Anime() {
 											content: 'Delete',
 											icon: <i className='icon'>delete</i>,
 											action: () => {
-												fetchAPI(
-													`/animes/${animeMeta._id}/seasons/${season._id}`,
-													{
-														method: 'DELETE',
-													}
-												);
-												mutate(`/animes/${animeMeta._id}`);
+												// 	fetchAPI(
+												// 		`/animes/${animeMeta._id}/seasons/${season._id}`,
+												// 		{
+												// 			method: 'DELETE',
+												// 		}
+												// 	);
+												// 	mutate(`/animes/${animeMeta._id}`);
 											},
 										},
 									]}
