@@ -1,6 +1,6 @@
 import { useState, Children, useEffect, useRef } from 'react';
 
-import styles from '@/styles/Select.module.css';
+import styles from '@/styles/Dropdown.module.css';
 
 function Root({ children, ...props }) {
 	const [isOpen, setIsOpen] = useState(false);

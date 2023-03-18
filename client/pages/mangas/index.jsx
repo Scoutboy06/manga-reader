@@ -3,6 +3,7 @@ import fetchAPI from '@/functions/fetchAPI';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import useSWR from 'swr';
 
 import MediaCard from '@/components/MediaCard';
 import Navbar from '@/components/navbars/Library';
@@ -10,8 +11,12 @@ import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
 
 import styles from '@/styles/mangas.module.css';
 
-export default function Mangas({ headerMangas, continueReading }) {
+export default function Mangas({ headerMangas }) {
 	const [slideshowIndex, setSlideshowIndex] = useState(0);
+
+	const { data: continueReading } = useSWR(
+		'/users/6240ce1e13856cb6d466e27a/mangas?limit=12'
+	);
 
 	return (
 		<>
@@ -46,7 +51,7 @@ export default function Mangas({ headerMangas, continueReading }) {
 						</button>
 
 						<div className={styles.smallButtons}>
-							{headerMangas.map((_, i) => (
+							{headerMangas?.map((_, i) => (
 								<button
 									onClick={() => setSlideshowIndex(i)}
 									className={slideshowIndex === i ? 'active' : ''}
@@ -60,13 +65,15 @@ export default function Mangas({ headerMangas, continueReading }) {
 							className={styles.items}
 							style={{ transform: `translateX(-${slideshowIndex * 100}%)` }}
 						>
-							{headerMangas.map((manga, i) => (
+							{headerMangas?.map((manga, i) => (
 								<div className={styles.item} key={manga._id}>
 									<Image
 										src={manga.backdrop}
-										alt='Backdrop'
+										sizes='(max-width: 900px) 100vw
+														900px'
 										width={1280}
 										height={720}
+										alt='Backdrop'
 										className={styles.backdrop}
 										priority={i === 0}
 									/>
@@ -118,7 +125,7 @@ export default function Mangas({ headerMangas, continueReading }) {
 					</div>
 				</header>
 
-				{continueReading.length > 0 && (
+				{continueReading?.length > 0 && (
 					<section className={styles.continueReading}>
 						<HorizontalScrollContainer title='Continue Reading'>
 							{continueReading?.map(manga => (
@@ -140,16 +147,12 @@ export default function Mangas({ headerMangas, continueReading }) {
 	);
 }
 
-export async function getServerSideProps() {
-	const [headerMangas, continueReading] = await Promise.all([
-		fetchAPI('/mangas/featured'),
-		fetchAPI('/users/6240ce1e13856cb6d466e27a/mangas?limit=12'),
-	]);
+export async function getStaticProps() {
+	const [headerMangas] = await Promise.all([fetchAPI('/mangas/featured')]);
 
 	return {
 		props: {
 			headerMangas,
-			continueReading,
 		},
 	};
 }

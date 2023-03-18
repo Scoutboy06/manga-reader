@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 import fetchAPI from '../../functions/fetchAPI';
 
-import DropdownButton from '../DropdownButton';
+import DropdownButton from '../Dropdown';
 import SearchTMDB from '../Popups/SearchTMDB';
 
 import { ProfileContext } from '../../contexts/ProfileContext';

@@ -1,22 +1,23 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import useSWR, { useSWRConfig } from 'swr';
-import fetchAPI from '../../functions/fetchAPI';
+import fetchAPI from '@/functions/fetchAPI';
 import Head from 'next/head';
 
-import { ProfileContext } from '../../contexts/ProfileContext';
+import { ProfileContext } from '@/contexts/ProfileContext';
 
-import Navbar from '../../components/navbars/watch';
+import Navbar from '@/components/navbars/Library';
 
 import styles from './watch.module.css';
 
 export default function Anime() {
-	const params = useParams();
+	const { query } = useRouter();
 	const [{ currentProfile }] = useContext(ProfileContext);
 	const { mutate } = useSWRConfig();
 
 	const { data: animeMeta } = useSWR(
-		`/users/${currentProfile._id}/animes/${params.name}`,
+		() => `/users/${currentProfile._id}/animes/${query.urlName}`,
 		{
 			revalidateIfStale: false,
 			revalidateOnFocus: false,
@@ -25,12 +26,12 @@ export default function Anime() {
 	);
 
 	const currentSeason = animeMeta?.seasons?.find(
-		season => season.urlName === params.season
+		season => season.urlName === query.season
 	);
 
 	const { data: episodeMeta } = useSWR(
 		() =>
-			`/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`,
+			`/users/${currentProfile._id}/animes/${query.name}/${currentSeason.urlName}/${query.episodeUrlName}`,
 		{
 			revalidateIfStale: false,
 			revalidateOnFocus: false,
@@ -50,8 +51,8 @@ export default function Anime() {
 
 				for (let j = 0; j < part.episodes.length; j++) {
 					if (
-						part.episodes[j]?.urlName === params.episodeUrlName &&
-						currentSeason.urlName === params.season
+						part.episodes[j]?.urlName === query.episodeUrlName &&
+						currentSeason.urlName === query.season
 					) {
 						setPrevEpisode(part.episodes[j - 1]);
 						setCurrentEpisode(part.episodes[j]);
@@ -61,13 +62,13 @@ export default function Anime() {
 				}
 			}
 		}
-	}, [currentSeason, params.episodeUrlName]);
+	}, [currentSeason, query.episodeUrlName]);
 
 	useEffect(() => {
 		if (!episodeMeta) return;
 
-		const animeUrl = `/users/${currentProfile._id}/animes/${params.name}`;
-		const episodeUrl = `/users/${currentProfile._id}/animes/${params.name}/${currentSeason.urlName}/${params.episodeUrlName}`;
+		const animeUrl = `/users/${currentProfile._id}/animes/${query.name}`;
+		const episodeUrl = `/users/${currentProfile._id}/animes/${query.name}/${currentSeason.urlName}/${query.episodeUrlName}`;
 
 		// Update current episode in anime's cache
 		mutate(
@@ -83,7 +84,7 @@ export default function Anime() {
 					for (const part of season.parts) {
 						for (const episode of part.episodes) {
 							// If it's the episode we're looking for
-							if (episode.urlName === params.episodeUrlName) {
+							if (episode.urlName === query.episodeUrlName) {
 								episode.hasWatched = true;
 								episode.isNew = false;
 							}
@@ -157,7 +158,7 @@ export default function Anime() {
 				<div className={styles.paginationContainer}>
 					{prevEpisode ? (
 						<Link
-							to={`/animes/${params.name}/${currentSeason?.urlName}/${prevEpisode.urlName}`}
+							to={`/animes/${query.name}/${currentSeason?.urlName}/${prevEpisode.urlName}`}
 						>
 							<i className='icon'>chevron_left</i> Episode {prevEpisode.number}
 						</Link>
@@ -166,7 +167,7 @@ export default function Anime() {
 					)}
 					{nextEpisode ? (
 						<Link
-							to={`/animes/${params.name}/${currentSeason?.urlName}/${nextEpisode.urlName}`}
+							to={`/animes/${query.name}/${currentSeason?.urlName}/${nextEpisode.urlName}`}
 						>
 							Episode {nextEpisode.number}
 							<i className='icon'>chevron_right</i>
@@ -224,7 +225,7 @@ export default function Anime() {
 							{part.episodes.map(episode => (
 								<Link
 									key={'EP_' + episode.number}
-									to={`/animes/${params.name}/${currentSeason.urlName}/${episode.urlName}`}
+									to={`/animes/${query.name}/${currentSeason.urlName}/${episode.urlName}`}
 									className={[
 										styles.episode,
 										currentEpisode?._id === episode._id

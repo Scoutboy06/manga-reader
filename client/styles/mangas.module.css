@@ -125,6 +125,7 @@
 	transition: color 0.3s;
 	text-shadow: 0 0 5px #000;
 	white-space: nowrap;
+	outline-offset: -1px;
 }
 
 .metadata .genres a:hover {

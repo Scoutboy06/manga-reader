@@ -66,76 +66,74 @@ export default function useFormCreator(fields) {
 		setStates(states);
 	};
 
-	return [
+	return {
 		states,
-		fields
-			? fields.map((field, i) => (
-					<div className='formGroup' key={field.name}>
-						{field.label && <label htmlFor={field.name}>{field.label}</label>}
+		elements: fields?.map((field, i) => (
+			<div className='formGroup' key={field.name}>
+				{field.label && <label htmlFor={field.name}>{field.label}</label>}
 
-						{field.type === 'input' && (
-							<input
-								type='text'
-								id={field.name}
-								value={states[field.name]}
-								onChange={e => inputChange(i, e.target.value)}
-								disabled={isDisabled(field)}
-								autoComplete={field?.autoComplete ? 'on' : 'off'}
-							/>
-						)}
+				{field.type === 'input' && (
+					<input
+						type='text'
+						id={field.name}
+						value={states[field.name]}
+						onChange={e => inputChange(i, e.target.value)}
+						disabled={isDisabled(field)}
+						autoComplete={field?.autoComplete ? 'on' : 'off'}
+					/>
+				)}
 
-						{field.type === 'input:number' && (
-							<input
-								type='number'
-								id={field.name}
-								value={states[field.name]}
-								onChange={e => inputChange(i, e.target.value)}
-								disabled={isDisabled(field)}
-								min={field.min || null}
-								max={field.max || null}
-							/>
-						)}
+				{field.type === 'input:number' && (
+					<input
+						type='number'
+						id={field.name}
+						value={states[field.name]}
+						onChange={e => inputChange(i, e.target.value)}
+						disabled={isDisabled(field)}
+						min={field.min || null}
+						max={field.max || null}
+					/>
+				)}
 
-						{field.type === 'textarea' && (
-							<textarea
-								id={field.name}
-								value={states[field.name]}
-								disabled={isDisabled(field)}
-								onChange={e => inputChange(i, e.target.value)}
-							/>
-						)}
+				{field.type === 'textarea' && (
+					<textarea
+						id={field.name}
+						value={states[field.name]}
+						disabled={isDisabled(field)}
+						onChange={e => inputChange(i, e.target.value)}
+					/>
+				)}
 
-						{field.type === 'select' && (
-							<select
-								id={field.name}
-								value={states[field.name]}
-								onChange={e => selectChange(i, e.target.value)}
-								disabled={isDisabled(field)}
-							>
-								{field?.options?.map(option => (
-									<option value={option.value} key={option.value}>
-										{option.displayName}
-									</option>
-								))}
-							</select>
-						)}
+				{field.type === 'select' && (
+					<select
+						id={field.name}
+						value={states[field.name]}
+						onChange={e => selectChange(i, e.target.value)}
+						disabled={isDisabled(field)}
+					>
+						{field?.options?.map(option => (
+							<option value={option.value} key={option.value}>
+								{option.displayName}
+							</option>
+						))}
+					</select>
+				)}
 
-						{field.type === 'checkbox' && (
-							<button
-								id={field.name}
-								type='button'
-								className='checkbox'
-								disabled={isDisabled(field)}
-								data-ischecked={states[field.name]}
-								onClick={() => checkboxClick(i)}
-							></button>
-						)}
+				{field.type === 'checkbox' && (
+					<button
+						id={field.name}
+						type='button'
+						className='checkbox'
+						disabled={isDisabled(field)}
+						data-ischecked={states[field.name]}
+						onClick={() => checkboxClick(i)}
+					></button>
+				)}
 
-						{!field.type && field}
-					</div>
-			  ))
-			: null,
+				{!field.type && field}
+			</div>
+		)),
 		updateFields,
-		stateChange,
-	];
+		setFields: stateChange,
+	};
 }
