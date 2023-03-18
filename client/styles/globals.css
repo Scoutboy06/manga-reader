@@ -44,12 +44,13 @@
 
 	--primary: #1967fc;
 	--primary-rgb: 25, 103, 252;
-	--primary-gradient: linear-gradient(
+	/* --primary-gradient: linear-gradient(
 		92.88deg,
 		#455eb5 9.16%,
 		#5643cc 43.89%,
 		#673fd7 64.72%
-	);
+	); */
+	--primary-gradient: linear-gradient(90deg, #324eb1, #683edb);
 	--primary-shadow: rgb(80 63 205 / 50%) 0px 1px 40px;
 	--on-primary: #fff;
 
@@ -60,6 +61,8 @@
 	--surface-0-rgb: 0, 2, 18;
 	--surface-1: #030620;
 	--surface-1-rgb: 3, 6, 32;
+	--surface-2: #1a1c2a;
+	--surface-2-rgb: 26, 28, 42;
 	--on-surface: #f7f7f7;
 	--on-surface-variant: #e9e9e9;
 
@@ -91,6 +94,7 @@
 
 body {
 	background-color: var(--surface-0);
+	color-scheme: dark;
 }
 
 button {
@@ -109,6 +113,7 @@ a {
 	font-weight: 400;
 	src: url(https://fonts.gstatic.com/s/materialicons/v135/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
 		format('woff2');
+	font-display: swap;
 }
 
 @font-face {
@@ -117,6 +122,7 @@ a {
 	font-weight: 400;
 	src: url(https://fonts.gstatic.com/s/materialiconsoutlined/v108/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUce.woff2)
 		format('woff2');
+	font-display: swap;
 }
 
 .icon {
@@ -136,7 +142,6 @@ a {
 	-moz-osx-font-smoothing: grayscale;
 	color: inherit;
 	user-select: none;
-	font-display: swap;
 }
 
 .icon.outlined {
@@ -249,8 +254,8 @@ a {
 .formGroup textarea,
 .formGroup select {
 	color: #bbb;
-	background-color: var(--bg-12dp);
-	border: 0.16em solid var(--bg-12dp);
+	background-color: var(--surface-2);
+	border: 0.16em solid var(--outline-variant);
 	outline: none;
 	border-radius: 0.2em;
 	padding: 0.4em 0.25em;

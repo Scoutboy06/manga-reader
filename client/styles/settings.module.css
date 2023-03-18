@@ -1,12 +1,14 @@
 .main {
-	width: 40em;
+	width: 50rem;
 	max-width: 100%;
 	margin: 0 auto;
-	padding: 1em;
+	margin-top: var(--navbar-height);
+	padding: 1rem var(--padding);
+	padding-bottom: 2rem;
 }
 
 .item {
-	margin: 0 0.2em;
+	margin: 0 0.2rem;
 	text-align: center;
 	cursor: pointer;
 	text-decoration: none;
@@ -16,8 +18,8 @@
 .item svg {
 	width: 10em;
 	aspect-ratio: 1 / 1;
-	border-radius: 0.25em;
-	border: 0.15em solid transparent;
+	border-radius: 0.25rem;
+	border: 0.15rem solid transparent;
 	fill: grey;
 }
 
@@ -56,13 +58,6 @@
 .poster {
 	height: 300px;
 	margin: 10px 0;
-}
-
-.importBtn {
-	display: block;
-	width: 10rem;
-	height: 3rem;
-	margin: 0 auto;
 }
 
 @media screen and (max-width: 26em) {
