@@ -14,7 +14,8 @@ export default function Manga({ manga }) {
 	return (
 		<>
 			<Head>
-				<title>{manga.title}</title>
+				<title>{manga.title} - Manga Reader</title>
+				<meta name='description' content={manga.description} />
 			</Head>
 
 			<Navbar />

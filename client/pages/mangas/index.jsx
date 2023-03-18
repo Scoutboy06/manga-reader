@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import fetchAPI from '@/functions/fetchAPI';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -124,6 +124,7 @@ export default function Mangas({ headerMangas, continueReading }) {
 								<MediaCard
 									key={manga._id}
 									href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
+									seriesHref={`/mangas/${manga.urlName}`}
 									imgUrl={manga.poster}
 									title={manga.title}
 									subtitle={`Chapter ${manga.currentChapter.number}`}
@@ -140,8 +141,8 @@ export default function Mangas({ headerMangas, continueReading }) {
 
 export async function getServerSideProps() {
 	const [headerMangas, continueReading] = await Promise.all([
-		fetchAPI('/mangas?limit=10'),
-		fetchAPI('/users/6240ce1e13856cb6d466e27a/mangas'),
+		fetchAPI('/mangas/featured'),
+		fetchAPI('/users/6240ce1e13856cb6d466e27a/mangas?limit=12'),
 	]);
 
 	return {

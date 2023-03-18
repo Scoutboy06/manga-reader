@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Router } from 'express';
 import fetch from 'node-fetch';
 import { parse } from 'node-html-parser';
@@ -8,21 +9,31 @@ import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
 import getMangaMeta from '../functions/manga/getMetadata.js';
-import isAdmin from '../middleware/isAdmin.js';
 import parseUrlName from '../functions/parseUrlName.js';
 
 const router = Router();
 
 
 // @desc	Get all of the user's mangas
-router.get('/users/:userId/mangas', async (req, res) => {
+router.get('/users/:userId/mangas', handler(async (req, res) => {
 	const { userId } = req.params;
+	const { limit = Infinity } = req.query;
 
-	const user = await User.findById(userId);
-	if (!user) return res.status(404).json({ error: 'No user found' });
+	const user = await User.findById(userId, {
+		mangas: {
+			$slice: [0, Number(limit)],
+		},
+	}, {
+		mangas: 1,
+	});
+
+	if (!user) {
+		res.status(404);
+		throw new Error('User not found');
+	}
 
 	res.json(user.mangas);
-});
+}));
 
 
 router.get('/mangas', handler(async (req, res) => {
@@ -47,6 +58,23 @@ router.get('/mangas', handler(async (req, res) => {
 	}, {
 		chapters: 0,
 	}).limit(limit).skip(skip);
+
+	res.json(mangas);
+}));
+
+
+router.get('/mangas/featured', handler(async (req, res) => {
+	const mangaIds = [
+		'63f9f34bbfb94d355de10a1d',
+		'63f7e42563c61bcace96d7f1',
+		'63fa421f7c653625db5bb0f1',
+		'63fa439e7c653625db5bb108',
+		'63fa43d07c653625db5bb10c',
+		'63fa459e7c653625db5bb122',
+		'63fa44e37c653625db5bb11d',
+	];
+
+	const mangas = await Manga.find({ '_id': { $in: mangaIds } });
 
 	res.json(mangas);
 }));
@@ -128,40 +156,39 @@ router.post('/mangas', handler(async (req, res) => {
 }));
 
 
-// @desc	Update the current chapter+
-router.post('/users/:userId/mangas/:mangaId/currentChapter', async (req, res, next) => {
+// @desc	Add the manga to the user's library (if not there) and update the current chapter
+router.post('/users/:userId/mangas/:mangaId/currentChapter', handler(async (req, res, next) => {
 	const { userId, mangaId } = req.params;
 	const { urlName: chapterUrlName } = req.body;
 
-	const user = await User.findById(userId).catch(err => {
-		res.status(404);
-		next(err);
-	});
-	if (!user) return;
+	const user = await User.findById(userId);
+	const manga = await Manga.findById(mangaId);
 
-	const manga = await Manga.findById(mangaId).catch(err => {
-		res.status(404);
-		next(err);
-	});
-	if (!manga) return;
+	// The chapter the user is currently on
+	const currentChapter = manga.chapters.find(chapter => chapter.urlName === chapterUrlName);
 
 	const userManga = user.mangas.find(manga => manga._id.toString() === mangaId);
-	if (!userManga) {
-		res.status(403);
-		return next(new Error('This manga is not in the user\'s library'));
+	if (userManga) {
+		// Update the current chapter
+		userManga.currentChapter = currentChapter;
+		userManga.lastRead = new Date();
+		user.mangas.sort((a, b) => b.lastRead - a.lastRead);
+	} else {
+		// Add manga to the user's library
+		user.mangas.unshift({
+			_id: manga._id,
+			urlName: manga.urlName,
+			title: manga.title,
+			currentChapter,
+			lastRead: new Date(),
+			poster: manga.poster,
+		});
 	}
 
-	// Update the current chapter
-	const currentChapter = manga.chapters.find(chapter => chapter.urlName === chapterUrlName);
-	userManga.currentChapter = currentChapter;
 
-	await user.save().catch(err => {
-		res.status(400);
-		next(err);
-	});
-
+	await user.save();
 	res.json({ status: 'success' });
-});
+}));
 
 
 // @desc	Get images from a chapter

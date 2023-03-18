@@ -17,6 +17,7 @@ const UserSchema = mongoose.Schema({
 			isFavorite: { type: Boolean, defualt: false },
 			notificationsOn: { type: Boolean, default: false },
 			readStatus: { type: String, enum: ['reading', 'finished'], default: 'reading' },
+			lastRead: { type: Date, required: true },
 
 			currentChapter: {
 				title: { type: String, required: true },

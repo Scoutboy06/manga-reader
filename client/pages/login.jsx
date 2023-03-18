@@ -1,29 +1,22 @@
-import { useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import { ProfileContext } from '@/contexts/ProfileContext';
+import { useProfile } from '@/contexts/ProfileContext';
 
 import styles from '@/styles/ProfilePicker.module.css';
 
 export default function Profiles() {
 	const router = useRouter();
 
-	const [{ profiles }, { selectProfile }] = useContext(ProfileContext);
+	const [{ profiles }, { selectProfile }] = useProfile();
 
-	const selectProfileHandler = profile => {
+	const profileSelectHandler = profile => {
 		selectProfile(profile);
 
-		const redirect = router.query.redirect;
+		const { redirect } = router.query;
 		if (redirect) router.push(redirect);
 		else router.push('/mangas');
 	};
-
-	useEffect(() => {
-		if (router.pathname.length > 1) {
-			router.push('/?redirect=' + location.pathname, { replace: true });
-		}
-	}, [router.pathname]);
 
 	return (
 		<>
@@ -40,7 +33,7 @@ export default function Profiles() {
 							<div
 								key={index}
 								className={styles.profile}
-								onClick={() => selectProfileHandler(profile)}
+								onClick={() => profileSelectHandler(profile)}
 							>
 								<img src={profile.imageUrl} alt='Profile' />
 								<p key={index}>{profile.name}</p>

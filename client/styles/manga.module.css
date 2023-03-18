@@ -90,7 +90,7 @@
 }
 
 .main {
-	margin: 60px var(--padding);
+	margin: 1.5rem var(--padding);
 }
 
 .chapters {
@@ -100,6 +100,8 @@
 	flex-direction: column;
 	margin-top: 1rem;
 	gap: 2px;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 0.6rem;
 }
 
 .chapters > a {

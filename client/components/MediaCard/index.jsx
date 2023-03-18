@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 import DropdownButton from '@/components/DropdownButton';
 import Loader from '@/components/Loader';
@@ -31,7 +32,12 @@ export default function MediaCard({
 			{hasUpdates && !showSpinner && <div className={styles.updates}></div>}
 
 			<div className={styles.imageContainer}>
-				<img src={imgUrl} alt={title} />
+				<Image
+					src={imgUrl}
+					width={orientation === 'vertical' ? 200 : 350}
+					height={orientation === 'vertical' ? 300 : 200}
+					alt={title}
+				/>
 
 				<button
 					className={styles.navigateButton}
