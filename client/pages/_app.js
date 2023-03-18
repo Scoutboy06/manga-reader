@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { SWRConfig } from 'swr';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import NProgress from 'NProgress';
+import NProgress from 'nprogress';
 
 import ProfileContext from '@/contexts/ProfileContext';
 
