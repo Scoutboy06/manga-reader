@@ -16,7 +16,8 @@ import router from './router.js';
 
 // import Manga from './models/mangaModel.js';
 // import Host from './models/hostModel.js';
-import Anime from './models/animeModel.js';
+// import Anime from './models/animeModel.js';
+// import User from './models/userModel.js';
 
 const app = express();
 const __dirname = path.resolve();
@@ -39,29 +40,6 @@ app.use('/tmdb/*', async (req, res) => {
 	res.json(data);
 });
 
-app.use('/test', async (req, res) => {
-	// const mangas = await Manga.find({});
-	// const hosts = await Host.find({});
-	const animes = await Anime.find({});
-
-	const data = await asyncMap(animes, async anime => {
-		for (const season of anime.seasons) {
-			// season.set('hasWatched', false);
-			// season.set('hasNewEpisodes', false);
-			// season.set('isAiring', false);
-
-			for (const part of season.parts) {
-				for (const episode of part.episodes) {
-				}
-			}
-		}
-
-		const saved = await anime.save();
-		return saved;
-	});
-
-	res.json(data);
-});
 
 app.use(errorCatcher);
 app.use(notFound);
@@ -73,6 +51,6 @@ app.listen(PORT, () => {
 
 	connectDB();
 
-	// If "--no-updates" isn't specified in command input
+	// If "--no-updates" is NOT specified in the command input
 	if (!process.argv.find(arg => arg === '--no-updates')) updatesChecker();
 });

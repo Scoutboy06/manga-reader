@@ -1,0 +1,49 @@
+.navbar {
+	background-color: #202020;
+	width: 100%;
+	height: 64px;
+	padding: 0 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.button {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	border: 0;
+	background-color: transparent;
+	color: #fff;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	transition: background-color 0.2s;
+	text-decoration: none;
+}
+
+.button:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+.navlink {
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	color: #a0a0a0;
+	font-size: 0.9em;
+	cursor: pointer;
+	transition: color 0.2s;
+	font-weight: bold;
+	margin: 0 1em;
+	text-decoration: none;
+}
+
+.navlink:global(.active) {
+	color: #fff;
+}
+
+@media (hover: hover) {
+	.navlink:hover {
+		color: var(--primary);
+	}
+}

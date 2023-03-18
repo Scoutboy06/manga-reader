@@ -1,193 +1,210 @@
+import mongoose from 'mongoose';
 import { Router } from 'express';
 import fetch from 'node-fetch';
-import HTMLParser from 'node-html-parser';
+import { parse } from 'node-html-parser';
+import handler from 'express-async-handler';
 
 import Manga from '../models/mangaModel.js';
 import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 
 import getMangaMeta from '../functions/manga/getMetadata.js';
+import parseUrlName from '../functions/parseUrlName.js';
 
 const router = Router();
 
 
-// @desc	Get all of the user's mangas, with search functionality
-// @route	GET /users/:userId/mangas
-router.get('/users/:userId/mangas', async (req, res) => {
+// @desc	Get all of the user's mangas
+router.get('/users/:userId/mangas', handler(async (req, res) => {
 	const { userId } = req.params;
-	const { limit = 50, skip = 0, query = '' } = req.query;
+	const { limit = Infinity } = req.query;
 
-	const keyword = query
-		? {
-			urlName: {
-				$regex: query,
-				$options: 'i',
-			},
-		} : {};
-
-	const mangas = await Manga.find({ ownerId: userId, ...keyword })
-		.limit(limit)
-		.skip(skip);
-
-	const removeFields = ['ownerId', 'hostId', 'sourceUrlName', 'description', 'chapters', 'otherNames', 'authors', 'artists', 'genres', 'released', 'lastUpdatePingedChapter'];
-	for (let manga of mangas) {
-		for (const field of removeFields) {
-			manga[field] = undefined;
-		}
-	}
-
-	res.json(mangas);
-});
-
-// @desc	Get a manga by id
-// @route	GET /mangas/:mangaId
-router.get('/mangas/:mangaId', async (req, res) => {
-	const { mangaId } = req.params;
-	const manga = await Manga.findById(mangaId);
-	if (!manga) return res.status(404).json({ error: 'Not found' });
-	res.json(manga);
-});
-
-// @desc	Get a manga by name
-// @route	GET /users/:userId/mangas/:mangaName
-router.get('/users/:userId/mangas/:mangaName', async (req, res) => {
-	const { userId, mangaName } = req.params;
-
-	const manga = await Manga.findOne({ ownerId: userId, urlName: mangaName });
-	if (!manga) {
-		res.status(404);
-		throw new Error('No manga found');
-	}
-
-	res.json(manga);
-});
-
-// @desc	Create a new manga
-// @route	POST /users/:userId/mangas
-router.post('/users/:userId/mangas', async (req, res) => {
-	const { userId } = req.params;
-
-	const {
-		hostName,
-		urlName: sourceUrlName,
-	} = req.body;
-
-	const user = await User.findById(userId);
-	if (!user) {
-		res.status(401);
-		throw new Error('Invalid user id');
-	}
-
-	const host = await Host.findOne({ name: hostName });
-	if (!host) {
-		res.status(401);
-		throw new Error('No host found');
-	}
-
-	const meta = await getMangaMeta({ urlName: sourceUrlName, host });
-	const urlName = encodeURI(meta.title.toLowerCase().replaceAll(/[^ a-z0-9-._~:\[\]@!$'()*+,;%=]/g, '').replaceAll(/[ ]+/g, '-'));
-
-	const manga = new Manga({
-		ownerId: userId,
-		hostId: host._id,
-		urlName,
-		sourceUrlName,
-
-		title: meta.title,
-		description: meta.description,
-
-		chapters: meta.chapters,
-		currentChapter: meta.chapters[0].urlName,
-
-		otherNames: meta.otherNames,
-		authors: meta.authors,
-		artists: meta.artists,
-		genres: meta.genres,
-		released: meta.released,
-		status: meta.status || 'ongoing',
-
-		poster: meta.poster,
+	const user = await User.findById(userId, {
+		mangas: {
+			$slice: [0, Number(limit)],
+		},
+	}, {
+		mangas: 1,
 	});
 
-	const createdManga = await manga.save();
-	res.status(201).json(createdManga);
-});
-
-// @desc	Update manga
-// @route	PATCH /mangas/:mangaId
-router.patch('/mangas/:mangaId', async (req, res) => {
-	const { mangaId } = req.params;
-
-	const manga = await Manga.findById(mangaId);
-	if (!manga) {
+	if (!user) {
 		res.status(404);
+		throw new Error('User not found');
+	}
+
+	res.json(user.mangas);
+}));
+
+
+router.get('/mangas', handler(async (req, res) => {
+	const { limit = 50, skip = 0, query = '' } = req.query;
+
+	const mangas = await Manga.find({
+		isVerified: true,
+		$or: [
+			{
+				title: {
+					$regex: query,
+					$options: 'i',
+				}
+			},
+			{
+				otherNames: {
+					$regex: query,
+					$options: 'i',
+				}
+			}
+		]
+	}, {
+		chapters: 0,
+	}).limit(limit).skip(skip);
+
+	res.json(mangas);
+}));
+
+
+router.get('/mangas/featured', handler(async (req, res) => {
+	const mangaIds = [
+		'63f7e42563c61bcace96d7f1', // Solo Leveling
+		'63f9f34bbfb94d355de10a1d', // One Punch Man
+		'63fa44e37c653625db5bb11d', // Mushoku Tensei
+		'6415d66a5a465065c30fb8a7', // Berserk
+		'63fa439e7c653625db5bb108', // Spy x Family
+		'63fa421f7c653625db5bb0f1', // Kaguya-sama
+		'63fa43d07c653625db5bb10c', // Chainsaw man
+		'63fa459e7c653625db5bb122', // My Dress-Up Darling
+	];
+
+	const mangas = await Manga.find({ '_id': { $in: mangaIds } }, { chapters: 0 });
+
+	res.json(mangas);
+}));
+
+
+// @desc	Get metadata from an external source
+router.get('/mangas/external', handler(async (req, res) => {
+	const { url } = req.query;
+	const parsedUrl = new URL(url);
+	const urlName = parsedUrl.pathname.split('/')[2];
+
+	const host = await Host.findOne({ name: parsedUrl.host });
+	const manga = await getMangaMeta({ urlName, host });
+
+	res.json({
+		...manga,
+		sourceUrlName: urlName,
+		urlName: parseUrlName(manga.title),
+		hostId: host._id,
+		airStatus: manga.airStatus,
+	});
+}));
+
+
+// @desc	Get a manga by it's urlName
+router.get('/mangas/:urlName', handler(async (req, res) => {
+	const { urlName } = req.params;
+
+	const manga = await Manga.findOne({ urlName });
+	if (!manga) {
+		res.status(404)
 		throw new Error('Manga not found');
 	}
 
-	for (const key of Object.keys(req.body)) {
-		if (key === '_id' || key === 'isLast') {
-			continue;
-		}
+	res.json(manga);
+}));
 
-		manga[key] = req.body[key];
+
+// @desc	Get a manga by name
+router.get('/users/:userId/mangas/:mangaName', handler(async (req, res) => {
+	const { userId, mangaName } = req.params;
+
+	const manga = await Manga.findOne({ ownerId: userId, urlName: mangaName });
+
+	res.json(manga);
+}));
+
+
+// @desc	Create a new manga+
+router.post('/mangas', handler(async (req, res) => {
+	const { title, hostId, sourceUrlName } = req.body;
+
+	const host = await Host.findById(hostId);
+	const { chapters } = await getMangaMeta({ urlName: sourceUrlName, host });
+
+	const urlName = parseUrlName(title);
+
+	const manga = new Manga({
+		isVerified: req.body.isVerified || true,
+		title: req.body.title,
+		description: req.body.description,
+		urlName,
+		sourceUrlName: req.body.sourceUrlName,
+		hostId,
+		airStatus: req.body.airStatus,
+		// ownerId: req.body.userId,
+		chapters,
+		otherNames: req.body.otherNames,
+		authors: req.body.authors,
+		artists: req.body.artists,
+		genres: req.body.genres,
+		released: req.body.released,
+		poster: req.body.poster,
+	});
+
+	const createdManga = await manga.save();
+
+	res.status(201).json(createdManga);
+}));
+
+
+// @desc	Add the manga to the user's library (if not there) and update the current chapter
+router.post('/users/:userId/mangas/:mangaId/currentChapter', handler(async (req, res, next) => {
+	const { userId, mangaId } = req.params;
+	const { urlName: chapterUrlName } = req.body;
+
+	const user = await User.findById(userId);
+	const manga = await Manga.findById(mangaId);
+
+	// The chapter the user is currently on
+	const currentChapter = manga.chapters.find(chapter => chapter.urlName === chapterUrlName);
+
+	const userManga = user.mangas.find(manga => manga._id.toString() === mangaId);
+	if (userManga) {
+		// Update the current chapter
+		userManga.currentChapter = currentChapter;
+		userManga.lastRead = new Date();
+		user.mangas.sort((a, b) => b.lastRead - a.lastRead);
+	} else {
+		// Add manga to the user's library
+		user.mangas.unshift({
+			_id: manga._id,
+			urlName: manga.urlName,
+			title: manga.title,
+			currentChapter,
+			lastRead: new Date(),
+			poster: manga.poster,
+		});
 	}
 
-	await manga.save();
-	res.status(201).json(manga);
-});
 
-// @desc	Delete a manga
-// @route	DELETE /mangas/:mangaId
-router.delete('/mangas/:mangaId', async (req, res) => {
-	const { mangaId } = req.params;
+	await user.save();
+	res.json({ status: 'success' });
+}));
 
-	const manga = await Manga.findById(mangaId);
-	if (!manga) res.status(404).json({ error: 'Not found' });
-
-	await manga.remove();
-	res.json({ message: `Manga ${manga.name} was removed from library` });
-});
-
-// @desc	Update the current chapter
-// @route	POST /mangas/:mangaId/currentChapter
-router.post('/mangas/:mangaId/currentChapter', async (req, res, next) => {
-	const { mangaId } = req.params;
-	const { currentChapter } = req.body;
-
-	const manga = await Manga.findById(mangaId).catch(err => {
-		res.status(404);
-		next(err);
-	});
-	if (!manga) return;
-
-	manga.currentChapter = currentChapter;
-	manga.hasUpdates = (currentChapter !== manga.chapters[manga.chapters.length - 1].urlName);
-
-	const savedManga = await manga.save().catch(err => {
-		res.status(400);
-		next(err);
-	});
-	if (savedManga) res.json(savedManga);
-});
 
 // @desc	Get images from a chapter
-// @route	GET /mangas/:mangaId/:chapter
-router.get('/mangas/:mangaId/:chapter', async (req, res, next) => {
-	const { mangaId, chapter } = req.params;
+router.get('/mangas/:urlName/:chapter', handler(async (req, res) => {
+	const { urlName, chapter } = req.params;
 
-	const manga = await Manga.findById(mangaId).catch(() => {
-		res.status(404);
-		next(new Error('Manga not found'));
-	});
-	if (!manga) return;
+	const manga = await Manga.findOne({ urlName });
 
 	const currentChapter = manga.chapters.find(ch => ch.urlName === chapter);
 
 	const host = await Host.findById(manga.hostId);
 	const url = host.chapterPage.url.replace('%name', manga.sourceUrlName).replace('%chapter', currentChapter.sourceUrlName);
 
-	const html = await fetch(url).then(res => res.text());
-	const document = HTMLParser.parse(html);
+	const html = await fetch(url, { redirect: 'follow' }).then(res => res.text());
+	const document = parse(html);
 
 	const imageEls = document.querySelectorAll(host.chapterPage.images);
 	const srcs = [];
@@ -206,20 +223,13 @@ router.get('/mangas/:mangaId/:chapter', async (req, res, next) => {
 		return next(new Error('No images found'));
 	}
 
-	// {
-	// 	"title": "Chapter 1",
-	// 	"number": 1,
-	// 	"urlName": "chapter-1",
-	// 	"sourceUrlName": "chapter-1"
-	// },
-
 	res.json({
 		title: currentChapter.title,
 		number: currentChapter.number,
 		images: srcs,
 		originalUrl: url,
 	});
-});
+}));
 
 
 export default router;

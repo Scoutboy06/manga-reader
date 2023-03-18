@@ -58,7 +58,7 @@ export default async function getMangaMeta({ urlName, host }) {
 		artists,
 		genres,
 		released,
-		status,
+		airStatus: status,
 		chapters,
 	};
 }
