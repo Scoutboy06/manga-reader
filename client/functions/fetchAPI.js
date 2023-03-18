@@ -20,7 +20,6 @@ export default async function fetchAPI(url, options = {}, useCache = false) {
 		return json;
 	} catch (err) {
 		console.error(err);
-		window.alert(err);
 	}
 }
 
