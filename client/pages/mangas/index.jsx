@@ -24,7 +24,7 @@ export default function Mangas({ headerMangas, continueReading }) {
 			<main className={styles.main}>
 				<header>
 					<div className={styles.slideshow}>
-						<div
+						<button
 							className={styles.prevBtn + ' icon'}
 							onClick={() =>
 								setSlideshowIndex(
@@ -35,13 +35,15 @@ export default function Mangas({ headerMangas, continueReading }) {
 							}
 						>
 							arrow_back_ios_new
-						</div>
-						<div
+						</button>
+						<button
 							className={styles.nextBtn + ' icon'}
-							onClick={() => setSlideshowIndex((slideshowIndex + 1) % 10)}
+							onClick={() =>
+								setSlideshowIndex((slideshowIndex + 1) % headerMangas.length)
+							}
 						>
 							arrow_forward_ios
-						</div>
+						</button>
 
 						<div className={styles.smallButtons}>
 							{headerMangas.map((_, i) => (
@@ -90,16 +92,15 @@ export default function Mangas({ headerMangas, continueReading }) {
 													</Link>
 												))}
 											</p>
-											<h1>
-												{manga.title}
-												<Link
-													href={`/mangas/${manga.urlName}`}
-													className='icon'
-													style={{ marginLeft: 6 }}
-												>
-													open_in_new
-												</Link>
-											</h1>
+											<Link
+												href={`/mangas/${manga.urlName}`}
+												style={{ marginLeft: 6 }}
+											>
+												<h1>
+													{manga.title}
+													<i className='icon'>open_in_new</i>
+												</h1>
+											</Link>
 											<p className={styles.description}>{manga.description}</p>
 										</div>
 

@@ -47,6 +47,8 @@
 
 .slideshow .prevBtn,
 .slideshow .nextBtn {
+	background-color: transparent;
+	border: 0;
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
@@ -133,7 +135,7 @@
 	color: #fff;
 }
 
-.metadata h1 a {
+.metadata h1 i {
 	display: none;
 }
 
@@ -211,7 +213,7 @@
 		display: none;
 	}
 
-	.metadata h1 a {
+	.metadata h1 i {
 		display: inline;
 	}
 }
