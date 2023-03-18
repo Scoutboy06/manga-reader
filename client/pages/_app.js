@@ -1,21 +1,39 @@
+import { useEffect } from 'react';
 import { SWRConfig } from 'swr';
-import Head from 'next/head'
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import NProgress from 'NProgress';
 
-// import SettingsContext from '@/contexts/SettingsContext';
 import ProfileContext from '@/contexts/ProfileContext';
-// import AlertContext from '@/contexts/AlertContext';
-// import PopupContext from '@/contexts/PopupContext';
 
 import { fetcher } from '@/functions/fetchAPI.js';
 
 import '@/styles/globals.css';
+import '@/styles/NProgress.css';
 
 export default function App({ Component, pageProps }) {
+	const router = useRouter();
+
+	useEffect(() => {
+		NProgress.configure({ showSpinner: false });
+
+		const handleRouteStart = () => NProgress.start();
+		const handleRouteEnd = () => NProgress.done();
+
+		router.events.on('routeChangeStart', handleRouteStart);
+		router.events.on('routeChangeComplete', handleRouteEnd);
+		router.events.on('routeChangeError', handleRouteEnd);
+
+		return () => {
+			router.events.off('routeChangeStart', handleRouteStart);
+			router.events.off('routeChangeComplete', handleRouteEnd);
+			router.events.off('routeChangeError', handleRouteEnd);
+		};
+	}, [router]);
+
 	return (
 		<SWRConfig value={{ fetcher }}>
 			<ProfileContext>
-				<Component {...pageProps} />
-
 				<Head>
 					<meta charSet="utf-8" />
 					<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -99,6 +117,8 @@ export default function App({ Component, pageProps }) {
 						media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
 					/>
 				</Head>
+
+				<Component {...pageProps} />
 			</ProfileContext>
 		</SWRConfig>
 	)
