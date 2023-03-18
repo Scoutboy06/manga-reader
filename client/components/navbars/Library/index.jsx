@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import fetchAPI from '@/functions/fetchAPI.js';
 
-import DropdownButton from '@/components/DropdownButton';
+import Dropdown from '@/components/Dropdown';
 import Navlink from '@/components/Navlink';
 
 import { useProfile } from '@/contexts/ProfileContext';
@@ -79,11 +79,7 @@ export default function LibraryNavbar() {
 					search
 				</button>
 
-				<form
-					className={styles.searchContainer}
-					onSubmit={searchSubmit}
-					onBlur={() => setSearchResults(null)}
-				>
+				<form className={styles.searchContainer} onSubmit={searchSubmit}>
 					<input
 						type='text'
 						name='mangaSearch'
@@ -95,84 +91,74 @@ export default function LibraryNavbar() {
 
 					<i className='icon'>search</i>
 
-					<div
-						className={
-							styles.searchResults + (searchResults !== null ? ' visible' : '')
-						}
-					>
-						{searchResults?.map(manga => (
-							<Link
-								href={`/mangas/${manga.urlName}`}
-								className={styles.searchResult}
-								key={manga._id}
-								aria-label={manga.title}
-							>
-								<Image
-									width={40}
-									height={60}
-									src={manga.poster}
-									alt={manga.title}
-								/>
+					{searchResults && (
+						<Dropdown.Items className={styles.searchResults}>
+							{searchResults.map(manga => (
+								<Dropdown.Item
+									href={`/mangas/${manga.urlName}`}
+									className={styles.searchResult}
+									key={manga._id}
+									aria-label={manga.title}
+								>
+									<Image
+										width={40}
+										height={60}
+										src={manga.poster}
+										alt={manga.title}
+									/>
 
-								<div className={styles.content}>
-									<h5>{manga.title}</h5>
-									<p></p>
-								</div>
-							</Link>
-						))}
+									<div className={styles.content}>
+										<h5>{manga.title}</h5>
+										<p>{manga.released}</p>
+									</div>
+								</Dropdown.Item>
+							))}
 
-						{searchResults?.length === 0 && (
-							<p style={{ textAlign: 'center' }}>No results found</p>
-						)}
+							{searchResults?.length === 0 && (
+								<p style={{ textAlign: 'center' }}>No results found</p>
+							)}
 
-						{searchResults?.length >= 5 && (
-							<button
-								type='button'
-								onClick={() =>
-									router.push(`/mangas/search?query=${searchValue}`)
-								}
-								aria-label='See all results'
-								className='button primary'
-								style={{ margin: '0.7rem 0.7rem 0.2rem' }}
-							>
-								See all results
-								<i className='icon'>keyboard_arrow_right</i>
-							</button>
-						)}
-					</div>
+							{searchResults?.length >= 5 && (
+								<button
+									onClick={() => {
+										router.push(`/mangas/search?query=${searchValue}`);
+									}}
+									className={styles.allResults + ' button primary'}
+									type='button'
+									aria-label='See all results'
+								>
+									See all results
+									<i className='icon'>keyboard_arrow_right</i>
+								</button>
+							)}
+						</Dropdown.Items>
+					)}
 				</form>
 
-				<button className={styles.button} type='button'>
-					<i className='icon outlined'>notifications</i>
-				</button>
+				<Dropdown>
+					<Dropdown.Button className={'icon outlined ' + styles.button}>
+						notifications
+					</Dropdown.Button>
+				</Dropdown>
 
-				<DropdownButton
-					className={`${styles.profileDropdown} ${styles.button}`}
-					dropdownItems={[
-						{
-							content: 'Profile',
-							icon: <i className='icon outlined'>account_circle</i>,
-							action: () => router.push(`/profile`),
-						},
-						'divider',
-						{
-							content: 'Settings',
-							action: () => router.push('/settings'),
-							icon: <i className='icon'>settings</i>,
-						},
-						{
-							content: 'Sign out',
-							action: () => {
-								deselectProfile();
-								router.push('/');
-							},
-							icon: <i className='icon'>logout</i>,
-						},
-					]}
-					offset={{ x: 0, y: 5 }}
-				>
-					<i className='icon outlined'>account_circle</i>
-				</DropdownButton>
+				<Dropdown>
+					<Dropdown.Button className={'icon outlined ' + styles.button}>
+						account_circle
+					</Dropdown.Button>
+
+					<Dropdown.Items placement='br'>
+						<Dropdown.Item href='/profile' icon='account_circle' iconOutlined>
+							Profile
+						</Dropdown.Item>
+						<hr />
+						<Dropdown.Item href='/settings' icon='settings'>
+							Settings
+						</Dropdown.Item>
+						<Dropdown.Item onClick={deselectProfile} icon='logout'>
+							Settings
+						</Dropdown.Item>
+					</Dropdown.Items>
+				</Dropdown>
 			</div>
 		</nav>
 	);

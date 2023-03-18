@@ -5,6 +5,7 @@
 	height: max-content;
 }
 
+/* For <Select> */
 .button {
 	background-color: transparent;
 	border: 1px solid var(--divider);
@@ -18,6 +19,7 @@
 	padding: 6px 5px 6px 8px;
 }
 
+/* For <Select> */
 .button > i {
 	font-size: 18px;
 	transition: transform 0.15s ease-out;
@@ -55,6 +57,9 @@
 }
 
 .item {
+	background-color: transparent;
+	border: 0;
+	outline-offset: -1px;
 	padding: 0.8rem 2.5rem 0.8rem 1rem;
 	cursor: pointer;
 	transition: background-color 0.15s;
@@ -86,4 +91,10 @@
 	background-color: var(--divider-variant);
 	color: var(--divider-variant);
 	margin: 5px 0;
+}
+
+.dropdown :global(.icon) {
+	display: grid;
+	place-items: center;
+	margin-right: 0.8rem;
 }

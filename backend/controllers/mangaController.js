@@ -65,16 +65,17 @@ router.get('/mangas', handler(async (req, res) => {
 
 router.get('/mangas/featured', handler(async (req, res) => {
 	const mangaIds = [
-		'63f9f34bbfb94d355de10a1d',
-		'63f7e42563c61bcace96d7f1',
-		'63fa421f7c653625db5bb0f1',
-		'63fa439e7c653625db5bb108',
-		'63fa43d07c653625db5bb10c',
-		'63fa459e7c653625db5bb122',
-		'63fa44e37c653625db5bb11d',
+		'63f7e42563c61bcace96d7f1', // Solo Leveling
+		'63f9f34bbfb94d355de10a1d', // One Punch Man
+		'63fa44e37c653625db5bb11d', // Mushoku Tensei
+		'6415d66a5a465065c30fb8a7', // Berserk
+		'63fa439e7c653625db5bb108', // Spy x Family
+		'63fa421f7c653625db5bb0f1', // Kaguya-sama
+		'63fa43d07c653625db5bb10c', // Chainsaw man
+		'63fa459e7c653625db5bb122', // My Dress-Up Darling
 	];
 
-	const mangas = await Manga.find({ '_id': { $in: mangaIds } });
+	const mangas = await Manga.find({ '_id': { $in: mangaIds } }, { chapters: 0 });
 
 	res.json(mangas);
 }));

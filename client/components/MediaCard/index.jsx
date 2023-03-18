@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
-import DropdownButton from '@/components/DropdownButton';
+import DropdownButton from '@/components/Dropdown';
 import Loader from '@/components/Loader';
 
 import styles from './MediaCard.module.css';
