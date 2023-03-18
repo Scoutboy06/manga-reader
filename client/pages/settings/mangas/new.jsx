@@ -2,12 +2,12 @@ import Head from 'next/head';
 
 import fetchAPI from '@/functions/fetchAPI';
 import useFormCreator from '@/hooks/useFormCreator';
-import Navbar from '@/components/navbars/Settings';
+import Navbar from '@/components/navbars/Library';
 
 import styles from '@/styles/settings.module.css';
 
 export default function Mangas({ hosts }) {
-	const [formStates, formElements, _, setFields] = useFormCreator([
+	const { states, elements, _, setFields } = useFormCreator([
 		{
 			label: 'Poster URL:',
 			name: 'poster',
@@ -19,7 +19,7 @@ export default function Mangas({ hosts }) {
 			name: 'hostId',
 			type: 'select',
 			defaultValue: '',
-			options: hosts?.map(host => ({
+			options: hosts.map(host => ({
 				value: host._id,
 				displayName: host.name,
 			})),
@@ -115,7 +115,7 @@ export default function Mangas({ hosts }) {
 		} = await fetchAPI(`/mangas/external?url=${encodeURI(url)}`);
 
 		setFields({
-			...formStates,
+			...states,
 			poster,
 			hostId,
 			title,
@@ -132,12 +132,12 @@ export default function Mangas({ hosts }) {
 	};
 
 	const submitHandler = async () => {
-		console.log(formStates);
+		console.log(states);
 
 		const res = await fetchAPI('/mangas', {
 			method: 'POST',
 			body: JSON.stringify({
-				...formStates,
+				...states,
 				isVerified: true,
 			}),
 		});
@@ -154,21 +154,22 @@ export default function Mangas({ hosts }) {
 			<Navbar />
 
 			<main className={styles.main}>
-				<button className={styles.importBtn} onClick={importHandler}>
+				<button
+					className='button secondary'
+					style={{ margin: '0 auto', height: '3rem' }}
+					onClick={importHandler}
+				>
 					Import
 				</button>
 
-				<img
-					src={formStates.poster}
-					alt='Manga poster'
-					className={styles.poster}
-				/>
+				<img src={states.poster} alt='Manga poster' className={styles.poster} />
 
-				{formElements}
+				{elements}
 
 				<button
 					type='submit'
-					className={styles.submitBtn}
+					className='button primary'
+					style={{ width: '100%', height: '3rem' }}
 					onClick={submitHandler}
 				>
 					Create manga
