@@ -4,20 +4,13 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import fetch from 'node-fetch';
+import chalk from 'chalk';
 
 import connectDB from './config/db.js';
-
 import { notFound, errorCatcher } from './middleware/errorMiddleware.js';
-
 import updatesChecker from './functions/updatesChecker.js';
-import asyncMap from './functions/asyncMap.js';
 
 import router from './router.js';
-
-// import Manga from './models/mangaModel.js';
-// import Host from './models/hostModel.js';
-// import Anime from './models/animeModel.js';
-// import User from './models/userModel.js';
 
 const app = express();
 const __dirname = path.resolve();
@@ -47,7 +40,7 @@ app.use(notFound);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.clear();
-	console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+	console.log(chalk.green(`API running in ${process.env.NODE_ENV} mode on port ${PORT}`));
 
 	connectDB();
 

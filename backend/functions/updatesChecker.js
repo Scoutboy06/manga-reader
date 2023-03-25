@@ -1,12 +1,11 @@
 import chalk from 'chalk';
 
-import Manga from '../models/mangaModel.js';
-import Host from '../models/hostModel.js';
 import User from '../models/userModel.js';
 import Anime from '../models/animeModel.js';
 
 import getMangaMeta from './manga/getMetadata.js';
 import getAnimeMeta from './anime/getAnimeMeta.js';
+import mangaUpdates from './updates/mangaUpdates.js';
 import sendDiscordWebhookUpdate from './sendDiscordWebhook.js';
 import asyncMap from './asyncMap.js';
 import updateEpisodes from './anime/updateEpisodes.js';
@@ -17,67 +16,12 @@ export default async function updatesChecker() {
 	console.log(chalk.blue(`Updates checker is activated with an interval of ${intervalDelay} minutes.`));
 
 	const checkUpdates = async () => {
-		const hosts = await Host.find({});
-		const mangas = await Manga.find({ airStatus: 'ongoing' });
-		// const animes = await Anime.find({});
-
-		checkMangaUpdates({ hosts, mangas });
+		mangaUpdates();
 		// checkAnimeUpdates({ users, hosts, animes });
 	}
 
 	setInterval(checkUpdates, 1000 * 60 * intervalDelay);
 	checkUpdates();
-}
-
-export async function checkMangaUpdates({ hosts, mangas }) {
-	console.log(chalk.yellow('Checking manga updates...'));
-	let updates = 0;
-
-	await asyncSettled(mangas, async manga => {
-		const host = hosts.find(host => host._id.toString() === manga.hostId.toString());
-		const meta = await getMangaMeta({ urlName: manga.sourceUrlName, host });
-
-		const newChapters = meta.chapters.filter(chapter =>
-			!manga.chapters.find(ch => ch.sourceUrlName === chapter.sourceUrlName)
-		);
-
-		if (newChapters.length > 0) {
-			updates += newChapters.length;
-			manga.hasUpdates = true;
-			manga.chapters = meta.chapters;
-			await manga.save();
-
-			const usersWithNotificationsOn = await User.find({
-				mangas: {
-					$elemMatch: {
-						_id: manga._id,
-						notificationsOn: true,
-					}
-				}
-			});
-
-			await asyncSettled(usersWithNotificationsOn, async user => {
-				if (!user.discordUserId) return;
-
-				await sendDiscordWebhookUpdate({
-					username: 'Manga update',
-					content: `${manga.title} - ${chapter.title}\n<@${user.discordUserId}>`,
-					embeds: [{
-						title: `${manga.title} - ${chapter.title}`,
-						color: 0x1eaeec,
-						thumbnail: {
-							url: manga.poster,
-							height: 150,
-							width: 100,
-						},
-						url: `${process.env.WEBSITE_URI}/read/${manga.urlName}/${chapter.urlName}`
-					}],
-				});
-			});
-		}
-	});
-
-	console.log(chalk.blue(`Found ${updates} new chapters`));
 }
 
 export async function checkAnimeUpdates({ users, hosts, animes }) {
