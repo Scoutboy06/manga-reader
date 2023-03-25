@@ -1,7 +1,7 @@
 {
 	"name": "manga-reader-backend",
 	"version": "1.0.0",
-	"main": "server.js",
+	"main": "src/server.js",
 	"repository": "https://github.com/Scoutboy06/manga-reader",
 	"author": "Elias Wennerlund",
 	"license": "MIT",
@@ -21,8 +21,9 @@
 		"node-html-parser": "^5.3.3"
 	},
 	"scripts": {
-		"start": "node server.js",
-		"dev": "nodemon server.js"
+		"build": "tsc",
+		"serve": "node dist/server.js",
+		"dev": "tsc -w"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.20"
