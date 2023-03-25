@@ -1,6 +1,31 @@
-import mongoose from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 
-const MODEL_NAME = mongoose.Schema(
+export interface IManga {
+	isVerified: boolean;
+	title: string;
+	description: string;
+	urlName: string;
+	sourceUrlName: string;
+	hostId: Schema.Types.ObjectId;
+	airStatus: 'ongoing' | 'completed';
+	chapters: [
+		{
+			title: string;
+			number: number;
+			urlName: string;
+			sourceUrlName: string;
+		}
+	];
+	otherNames?: string;
+	authors?: string;
+	artists?: string;
+	genres?: string;
+	released?: string;
+	poster: string;
+	backdrop?: string;
+}
+
+const mangaModel = new Schema<IManga>(
 	{
 		isVerified: { type: Boolean, required: true },
 		title: { type: String, required: true },
@@ -8,8 +33,7 @@ const MODEL_NAME = mongoose.Schema(
 		urlName: { type: String, required: true, unique: true },
 		sourceUrlName: { type: String, required: true },
 
-		hostId: { type: mongoose.Types.ObjectId, ref: 'Host', required: true },
-		ownerId: { type: mongoose.Types.ObjectId, ref: 'User' },
+		hostId: { type: Schema.Types.ObjectId, ref: 'Host', required: true },
 
 		airStatus: { type: String, enum: ['ongoing', 'completed'], required: true },
 
@@ -37,6 +61,6 @@ const MODEL_NAME = mongoose.Schema(
 	}
 );
 
-const Manga = mongoose.model('Manga', MODEL_NAME);
+const Manga = model('Manga', mangaModel);
 
 export default Manga;

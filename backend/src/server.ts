@@ -1,5 +1,5 @@
 import path from 'path';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -24,15 +24,17 @@ app.use(cors());
 
 app.use(router);
 
-app.use('/tmdb/*', async (req, res) => {
-	const data = await fetch(`https://api.themoviedb.org/3/${req.params[0]}?` + new URLSearchParams({
-		api_key: process.env.TMDB_V3_API_KEY,
-		...req.query,
-	})).then(res => res.json());
+app.use('/tmdb/*', async (req: Request, res: Response) => {
+	const data = await fetch(
+		`https://api.themoviedb.org/3/${req.params[0]}?` +
+			new URLSearchParams({
+				api_key: process.env.TMDB_V3_API_KEY,
+				...req.query,
+			})
+	).then(res => res.json());
 
 	res.json(data);
 });
-
 
 app.use(errorCatcher);
 app.use(notFound);
@@ -40,7 +42,9 @@ app.use(notFound);
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.clear();
-	console.log(chalk.green(`API running in ${process.env.NODE_ENV} mode on port ${PORT}`));
+	console.log(
+		chalk.green(`API running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+	);
 
 	connectDB();
 

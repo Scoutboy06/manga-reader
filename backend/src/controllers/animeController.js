@@ -13,27 +13,14 @@ const router = Router();
 
 // @desc	Fetch the user's anime landing page
 // @route	GET /users/:userId/animes
-router.get('/users/:userId/animes', async (req, res, next) => {
+router.get('/users/:userId/animes', handler(async (req, res, next) => {
+	const { limit = 50, skip = 0, query = '' } = req.query;
 	const { userId } = req.params;
 
-	const user = await User.findById(userId);
-	if (!user) {
-		res.status(400);
-		return next(new Error('User not found'));
-	}
+	const user = await User.findById(userId, { animes: 1 });
 
-	const animes = await Anime.find({ ownerId: userId });
-
-	let removeFields = ['ownerId', 'tmdbId', 'seasons', 'otherNames'];
-
-	for (const anime of animes) {
-		for (const field of removeFields) {
-			anime[field] = undefined;
-		}
-	}
-
-	res.json(animes);
-});
+	res.json(user.animes);
+}));
 
 
 // @desc	Create an anime to save in the database
