@@ -116,9 +116,10 @@ export default function SearchTMDB({ closePopup, data: animeMeta }) {
 
 					<button
 						type='reset'
-						className={`${styles.resetBtn} ${
-							inputText.length === 0 ? 'hidden' : ''
-						} icon`}
+						className={`${styles.resetBtn} icon`}
+						style={{
+							visibility: inputText.length === 0 ? 'hidden' : 'visible',
+						}}
 						onClick={() => setInputText('')}
 					>
 						close

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { SWRConfig } from 'swr';
 import Head from 'next/head';
+import Script from 'next/script';
 import { useRouter } from 'next/router';
 import NProgress from 'NProgress';
 
@@ -117,6 +118,8 @@ export default function App({ Component, pageProps }) {
 						media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
 					/>
 				</Head>
+
+				<Script src='https://accounts.google.com/gsi/client' />
 
 				<Component {...pageProps} />
 			</ProfileContext>

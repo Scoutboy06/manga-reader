@@ -155,7 +155,7 @@ export default function Mangas({ hosts }) {
 
 			<main className={styles.main}>
 				<button
-					className='button secondary'
+					className='btn secondary'
 					style={{ margin: '0 auto', height: '3rem' }}
 					onClick={importHandler}
 				>
@@ -168,7 +168,7 @@ export default function Mangas({ hosts }) {
 
 				<button
 					type='submit'
-					className='button primary'
+					className='btn btn-primary'
 					style={{ width: '100%', height: '3rem' }}
 					onClick={submitHandler}
 				>

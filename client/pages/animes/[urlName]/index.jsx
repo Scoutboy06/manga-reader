@@ -167,29 +167,6 @@ export default function Anime() {
 									hasUpdates={season.hasNewEpisodes}
 									dropdownItems={[
 										{
-											content: 'Edit metadata',
-											icon: <i className='icon'>edit</i>,
-											action: () => {
-												// popupActions.createPopup({
-												// 	title: 'Edit metadata',
-												// 	content: EditSeasonMetadata,
-												// 	data: { season, anime: animeMeta },
-												// });
-											},
-										},
-										{
-											content: 'Edit cover',
-											icon: <i className='icon'>image</i>,
-											action: () => {
-												// popupActions.createPopup({
-												// 	title: 'Edit manga cover',
-												// 	content: EditMangaCover,
-												// 	data: manga,
-												// });
-											},
-										},
-										'divider',
-										{
 											content: 'Delete',
 											icon: <i className='icon'>delete</i>,
 											action: () => {

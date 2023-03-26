@@ -59,6 +59,7 @@
 
 .right {
 	justify-content: flex-end;
+	gap: 0.5rem;
 }
 
 .hamburger {
@@ -87,8 +88,7 @@
 	align-items: center;
 	position: relative;
 	border: 1px solid var(--outline-variant);
-	background-color: rgba(var(--surface-0-rgb), 0.3);
-	margin-right: 6px;
+	background-color: rgba(var(--surface-0-rgb), 0.4);
 	outline-offset: -1px;
 }
 
@@ -128,8 +128,9 @@
 }
 
 .allResults {
-	margin: 0.7rem 0.7rem 0.2rem;
-	width: calc(100% - 2 * 0.7rem);
+	--margin: 0.7rem;
+	margin: var(--margin) var(--margin) 0.2rem;
+	width: calc(100% - 2 * var(--margin));
 }
 
 @media (hover: hover) {
