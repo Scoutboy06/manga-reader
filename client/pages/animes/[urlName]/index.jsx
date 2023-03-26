@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import Image from 'next/image';
 import useSWR from 'swr';
 
 import { ProfileContext } from '@/contexts/ProfileContext';
@@ -9,7 +10,6 @@ import Navbar from '@/components/navbars/Library';
 import MediaCard from '@/components/MediaCard/index';
 
 import styles from './anime.module.css';
-import Image from '@/components/Image';
 
 export default function Anime() {
 	const { query } = useRouter();
@@ -165,21 +165,6 @@ export default function Anime() {
 									type='series'
 									seriesHref={`/animes/${query.name}/${season.urlName}`}
 									hasUpdates={season.hasNewEpisodes}
-									dropdownItems={[
-										{
-											content: 'Delete',
-											icon: <i className='icon'>delete</i>,
-											action: () => {
-												// 	fetchAPI(
-												// 		`/animes/${animeMeta._id}/seasons/${season._id}`,
-												// 		{
-												// 			method: 'DELETE',
-												// 		}
-												// 	);
-												// 	mutate(`/animes/${animeMeta._id}`);
-											},
-										},
-									]}
 								/>
 							))}
 						</div>
