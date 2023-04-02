@@ -3,7 +3,7 @@ import { SWRConfig } from 'swr';
 import Head from 'next/head';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
-import NProgress from 'NProgress';
+import NProgress from 'nprogress';
 
 import ProfileContext from '@/contexts/ProfileContext';
 
@@ -119,7 +119,15 @@ export default function App({ Component, pageProps }) {
 					/>
 				</Head>
 
-				<Script src='https://accounts.google.com/gsi/client' />
+				<Script src='https://accounts.google.com/gsi/client' onLoad={() => {
+					google.accounts.id.initialize({
+						client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+						ux_mode: 'popup',
+						callback: console.log,
+					});
+
+					google.accounts.id.prompt();
+				}} />
 
 				<Component {...pageProps} />
 			</ProfileContext>

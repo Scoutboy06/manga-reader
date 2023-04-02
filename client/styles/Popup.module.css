@@ -1,25 +1,3 @@
-@keyframes contentIn {
-	from {
-		opacity: 0;
-		transform: translate(-50%, -60%) scale(1);
-	}
-	to {
-		opacity: 1;
-		transform: translate(-50%, -50%) scale(1);
-	}
-}
-
-@keyframes contentOut {
-	from {
-		opacity: 1;
-		transform: translate(-50%, -50%) scale(1);
-	}
-	to {
-		opacity: 0;
-		transform: translate(-50%, -60%) scale(1);
-	}
-}
-
 .background {
 	position: fixed;
 	top: 0;
@@ -43,7 +21,7 @@
 	position: fixed;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, -60%);
 
 	background-color: var(--surface-2);
 	border-radius: 0.5em;
@@ -53,15 +31,15 @@
 	max-height: calc(100vh - 2 * var(--margin));
 	z-index: 1000;
 	pointer-events: none;
+	opacity: 0;
+
+	transition: opacity 0.2s, transform 0.2s;
 }
 
 .popup[data-visible='true'] {
-	animation: contentIn 0.2s forwards;
 	pointer-events: all;
-}
-
-.popup[data-visible='false'] {
-	animation: contentOut 0.1s forwards;
+	transform: translate(-50%, -50%);
+	opacity: 1;
 }
 
 .closeBtn {
