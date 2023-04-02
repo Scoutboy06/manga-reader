@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import Head from 'next/head';
@@ -6,11 +5,10 @@ import fetchAPI from '@/functions/fetchAPI';
 
 import MediaCard from '@/components/MediaCard';
 import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
-import EditAnimeMetadata from '@/components/Popups/EditAnimeMetadata';
 import Navbar from '@/components/navbars/Library';
 
 // import { PopupContext } from '@/contexts/PopupContext';
-import { ProfileContext } from '@/contexts/ProfileContext';
+import { useProfile } from '@/contexts/ProfileContext';
 
 /*
 	Continue watching
@@ -25,8 +23,7 @@ import { ProfileContext } from '@/contexts/ProfileContext';
 
 export default function Animes() {
 	const router = useRouter();
-	// const [, { createPopup }] = useContext(PopupContext);
-	const [{ currentProfile }] = useContext(ProfileContext);
+	const [{ currentProfile }] = useProfile();
 
 	const { data: animes, mutate } = useSWR(
 		() => `/users/${currentProfile._id}/animes`,
@@ -94,28 +91,6 @@ export default function Animes() {
 											: anime.backdrop.small
 									}
 									dropdownItems={[
-										{
-											content: 'Edit metadata',
-											icon: <i className='icon'>edit</i>,
-											action: () => {
-												// createPopup({
-												// 	title: 'Edit metadata',
-												// 	content: EditAnimeMetadata,
-												// 	data: anime,
-												// });
-											},
-										},
-										{
-											content: 'Edit cover',
-											icon: <i className='icon'>image</i>,
-											action: () => {
-												// createPopup({
-												// 	title: 'Edit manga cover',
-												// 	content: EditMangaCover,
-												// 	data: manga,
-												// });
-											},
-										},
 										anime.isAiring
 											? {
 													content:
@@ -138,17 +113,6 @@ export default function Animes() {
 													},
 											  }
 											: null,
-										'divider',
-										{
-											content: 'Delete',
-											icon: <i className='icon'>delete</i>,
-											action: async () => {
-												await fetchAPI(`/animes/${anime._id}`, {
-													method: 'DELETE',
-												});
-												mutate();
-											},
-										},
 									]}
 								/>
 							))}

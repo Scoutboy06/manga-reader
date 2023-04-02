@@ -37,7 +37,7 @@ export default function Manga({ manga }) {
 
 						<Link
 							href={`/mangas/${manga.urlName}/chapter-1`}
-							className='button primary'
+							className='btn btn-lg btn-primary icon-right'
 						>
 							Read now
 							<i className='icon'>keyboard_arrow_right</i>
@@ -52,6 +52,7 @@ export default function Manga({ manga }) {
 						{manga.description}
 					</p>
 					<button
+						type='button'
 						className={styles.toggleDescription}
 						onClick={() => setExpandDescription(bool => !bool)}
 					>

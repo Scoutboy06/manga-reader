@@ -1,7 +1,7 @@
 {
 	"name": "manga-reader-backend",
 	"version": "1.0.0",
-	"main": "server.js",
+	"main": "dist/server.js",
 	"repository": "https://github.com/Scoutboy06/manga-reader",
 	"author": "Elias Wennerlund",
 	"license": "MIT",
@@ -21,10 +21,21 @@
 		"node-html-parser": "^5.3.3"
 	},
 	"scripts": {
-		"start": "node server.js",
-		"dev": "nodemon server.js"
+		"build": "tsc",
+		"serve": "node .",
+		"start": "tsc && node .",
+		"dev": "tsc-watch --onsuccess \"node .\"",
+		"dev:no-updates": "tsc-watch --onsuccess \"node . --no-updates\""
 	},
 	"devDependencies": {
-		"nodemon": "^2.0.20"
+		"@types/cors": "^2.8.13",
+		"@types/express": "^4.17.17",
+		"@types/morgan": "^1.9.4",
+		"@types/node": "^18.15.9",
+		"@typescript-eslint/eslint-plugin": "^5.56.0",
+		"@typescript-eslint/parser": "^5.56.0",
+		"eslint": "^8.36.0",
+		"tsc-watch": "^6.0.0",
+		"typescript": "^5.0.2"
 	}
 }

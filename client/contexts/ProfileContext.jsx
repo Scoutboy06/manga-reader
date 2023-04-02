@@ -5,7 +5,7 @@ export const ProfileContext = createContext();
 
 export const useProfile = () => useContext(ProfileContext);
 
-export default function Provider(props) {
+export default function Provider({ children }) {
 	const { data: profiles, error } = useSWR('/users', {
 		revalidateIfStale: false,
 		revalidateOnFocus: false,
@@ -42,7 +42,7 @@ export default function Provider(props) {
 		<ProfileContext.Provider
 			value={[{ currentProfile, profiles, isLoading, error }, actions]}
 		>
-			{props.children}
+			{children}
 		</ProfileContext.Provider>
 	);
 }

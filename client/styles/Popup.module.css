@@ -1,0 +1,52 @@
+.background {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1000;
+	background-color: rgba(0, 0, 0, 0.65);
+	opacity: 0;
+	transition: opacity 0.2s;
+	pointer-events: none;
+}
+
+.background[data-visible='true'] {
+	opacity: 1;
+	pointer-events: all;
+}
+
+.popup {
+	--margin: 1rem;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -60%);
+
+	background-color: var(--surface-2);
+	border-radius: 0.5em;
+
+	width: 30rem;
+	max-width: calc(100% - 2 * var(--margin));
+	max-height: calc(100vh - 2 * var(--margin));
+	z-index: 1000;
+	pointer-events: none;
+	opacity: 0;
+
+	transition: opacity 0.2s, transform 0.2s;
+}
+
+.popup[data-visible='true'] {
+	pointer-events: all;
+	transform: translate(-50%, -50%);
+	opacity: 1;
+}
+
+.closeBtn {
+	position: absolute;
+	top: 0.6rem;
+	right: 0.6rem;
+	background-color: transparent;
+	border: 0;
+	font-size: 1.8rem;
+}

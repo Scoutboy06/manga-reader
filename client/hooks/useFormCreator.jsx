@@ -83,6 +83,17 @@ export default function useFormCreator(fields) {
 					/>
 				)}
 
+				{field.type === 'input:password' && (
+					<input
+						type='password'
+						id={field.name}
+						value={states[field.name]}
+						onChange={e => inputChange(i, e.target.value)}
+						disabled={isDisabled(field)}
+						autoComplete={field?.autoComplete ? 'on' : 'off'}
+					/>
+				)}
+
 				{field.type === 'input:number' && (
 					<input
 						type='number'
