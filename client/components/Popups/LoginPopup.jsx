@@ -1,59 +1,43 @@
-import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
 
 import Popup from '@/components/Popup';
 
 import styles from '@/styles/LoginPopup.module.css';
 
 export default function LoginPopup(props) {
-	const btnContainer = useRef();
-	const { register, handleSubmit, formState } = useForm();
-
-	const submitHandler = () => {
-		console.log(formState);
+	const icons = {
+		google: (
+			<Image src='/icons/google.svg' width={24} height={24} alt='Google logo' />
+		),
+		email: 'email',
 	};
-
-	useEffect(() => {
-		if (!window.google) return;
-
-		window.google.accounts.id.renderButton(btnContainer.current, {
-			type: 'standard',
-			width: 384,
-			theme: 'filled_blue',
-			// theme: 'filled_black',
-			// theme: 'filled_white',
-			size: 'large',
-			text: 'signin_with',
-			shape: 'pill',
-			locale: 'EN_eng',
-			logo_alignment: 'left',
-			click_listener: console.log,
-		});
-	}, []);
 
 	return (
 		<Popup {...props} unmountOnClose={false}>
 			<div className={styles.container}>
 				<h1>Log in</h1>
 
-				<div ref={btnContainer}></div>
+				<button
+					className={'btn btn-secondary ' + styles.googleBtn}
+					type='button'
+					onClick={() => signIn('google')}
+				>
+					<div className={styles.icon + ' icon'}>{icons.google}</div>
+					Continue with Google
+				</button>
 
-				{/* <button
+				<button
 					className='btn btn-secondary'
 					type='button'
+					onClick={() => signIn('email')}
+					disabled
 				>
-					<Image
-						src='/icons/google.svg'
-						alt='Google logo'
-						height={24}
-						width={24}
-						style={{ marginRight: '1rem' }}
-					/>
-					Sign in with Google
-				</button> */}
+					<div className={styles.icon + ' icon'}>{icons.email}</div>
+					Continue with Email
+				</button>
 
-				<div className={styles.divider}>
+				{/* <div className={styles.divider}>
 					<div></div>
 					<p>Or</p>
 					<div></div>
@@ -97,7 +81,7 @@ export default function LoginPopup(props) {
 					>
 						Sign up
 					</button>
-				</p>
+				</p> */}
 			</div>
 		</Popup>
 	);

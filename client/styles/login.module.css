@@ -1,0 +1,37 @@
+.main {
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: radial-gradient(
+		ellipse 80% 50% at 50% -20%,
+		rgba(120, 119, 198, 0.3),
+		transparent
+	);
+}
+
+.container {
+	border-radius: 0.5rem;
+	padding: 2.5rem 3rem;
+
+	width: 30rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.container h1 {
+	margin-bottom: 1rem;
+}
+
+.container h1,
+.container p {
+	text-align: center;
+}
+
+.icon {
+	margin-right: 1rem;
+	display: grid;
+	place-items: center;
+	font-size: 24px;
+}

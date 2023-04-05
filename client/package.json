@@ -2,9 +2,12 @@
 	"name": "manga-reader-client",
 	"version": "0.1.0",
 	"type": "module",
+	"license": "MIT",
 	"dependencies": {
 		"memory-cache": "^0.2.0",
+		"mongoose": "^7.0.3",
 		"next": "^13.1.6",
+		"next-auth": "^4.21.1",
 		"nprogress": "^0.2.0",
 		"react": "^18.0.0",
 		"react-dom": "^18.0.0",
@@ -38,6 +41,9 @@
 	},
 	"proxy": "http://localhost:5001/",
 	"devDependencies": {
-		"eslint": "^8.36.0"
+		"@types/node": "18.15.11",
+		"@types/react": "18.0.33",
+		"eslint": "^8.36.0",
+		"typescript": "5.0.3"
 	}
 }

@@ -1,6 +1,7 @@
 import { Schema, Types, model } from 'mongoose';
 
 export interface IUser {
+	_id: string;
 	name: string;
 	password?: string;
 	isAdmin: boolean;
@@ -59,6 +60,7 @@ export interface IUser {
 }
 
 const UserSchema = new Schema<IUser>({
+	_id: { type: String, required: true },
 	name: { type: String, required: true },
 	password: String,
 	isAdmin: { type: Boolean, default: false },

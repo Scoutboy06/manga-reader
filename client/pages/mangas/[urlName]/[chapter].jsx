@@ -8,15 +8,12 @@ import fetchAPI from '@/functions/fetchAPI';
 import Select from '@/components/Select';
 import Loader from '@/components/Loader';
 
-import { ProfileContext } from '@/contexts/ProfileContext';
-
 import styles from '@/styles/read.module.css';
 
 export default function ReadManga() {
 	const router = useRouter();
 	const { query } = router;
 
-	const [{ currentProfile }] = useContext(ProfileContext);
 	const [imageWidth, setImageWidth] = useState(null);
 
 	const { data: mangaMeta } = useSWRImmutable(() =>

@@ -1,21 +1,19 @@
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
 import fetchAPI from '@/functions/fetchAPI.js';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 import Dropdown from '@/components/Dropdown';
 import Navlink from '@/components/Navlink';
-import Popup from '@/components/Popup';
-
-import { useProfile } from '@/contexts/ProfileContext';
 
 import styles from './LibraryNavbar.module.css';
 import LoginPopup from './../../Popups/LoginPopup';
 
 export default function LibraryNavbar() {
 	const router = useRouter();
-	const [{ currentProfile, isLoading }, { deselectProfile }] = useProfile();
+	const { data: session } = useSession();
 	const [searchValue, setSearchValue] = useState('');
 	const searchTimeout = useRef();
 	const [searchResults, setSearchResults] = useState(null);
@@ -48,6 +46,8 @@ export default function LibraryNavbar() {
 			setSearchResults(mangas);
 		}, 500);
 	};
+
+	console.log(session);
 
 	return (
 		<>
@@ -128,7 +128,7 @@ export default function LibraryNavbar() {
 										onClick={() => {
 											router.push(`/mangas/search?query=${searchValue}`);
 										}}
-										className={styles.allResults + ' btn btn-primary btn-lg'}
+										className={styles.allResults + ' btn btn-primary'}
 										type='button'
 										aria-label='See all results'
 									>
@@ -140,7 +140,7 @@ export default function LibraryNavbar() {
 						)}
 					</form>
 
-					{currentProfile ? (
+					{session ? (
 						<>
 							<Dropdown>
 								<Dropdown.Button className={'icon outlined ' + styles.button}>
@@ -148,8 +148,13 @@ export default function LibraryNavbar() {
 								</Dropdown.Button>
 							</Dropdown>
 							<Dropdown>
-								<Dropdown.Button className={'icon outlined ' + styles.button}>
-									account_circle
+								<Dropdown.Button className={styles.button}>
+									<Image
+										src={session.user.image}
+										width={28}
+										height={28}
+										alt='Profile picture'
+									/>
 								</Dropdown.Button>
 
 								<Dropdown.Items placement='br'>
@@ -164,13 +169,13 @@ export default function LibraryNavbar() {
 									<Dropdown.Item href='/settings' icon='settings'>
 										Settings
 									</Dropdown.Item>
-									<Dropdown.Item onClick={deselectProfile} icon='logout'>
-										Settings
+									<Dropdown.Item onClick={signOut} icon='logout'>
+										Log out
 									</Dropdown.Item>
 								</Dropdown.Items>
 							</Dropdown>
 						</>
-					) : !isLoading ? (
+					) : (
 						<>
 							<button
 								type='button'
@@ -183,7 +188,7 @@ export default function LibraryNavbar() {
 								Sign up
 							</button>
 						</>
-					) : null}
+					)}
 				</div>
 			</nav>
 

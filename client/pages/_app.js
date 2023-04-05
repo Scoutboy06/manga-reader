@@ -4,15 +4,14 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
-
-import ProfileContext from '@/contexts/ProfileContext';
+import { SessionProvider } from 'next-auth/react';
 
 import { fetcher } from '@/functions/fetchAPI.js';
 
 import '@/styles/globals.css';
 import '@/styles/NProgress.css';
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
 	const router = useRouter();
 
 	useEffect(() => {
@@ -34,7 +33,7 @@ export default function App({ Component, pageProps }) {
 
 	return (
 		<SWRConfig value={{ fetcher }}>
-			<ProfileContext>
+			<SessionProvider session={session}>
 				<Head>
 					<meta charSet="utf-8" />
 					<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -119,7 +118,7 @@ export default function App({ Component, pageProps }) {
 					/>
 				</Head>
 
-				<Script src='https://accounts.google.com/gsi/client' onLoad={() => {
+				{/* <Script src='https://accounts.google.com/gsi/client' onLoad={() => {
 					google.accounts.id.initialize({
 						client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 						ux_mode: 'popup',
@@ -127,10 +126,10 @@ export default function App({ Component, pageProps }) {
 					});
 
 					google.accounts.id.prompt();
-				}} />
+				}} /> */}
 
 				<Component {...pageProps} />
-			</ProfileContext>
+			</SessionProvider>
 		</SWRConfig>
 	)
 }

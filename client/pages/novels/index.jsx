@@ -6,12 +6,10 @@ export default function Novels() {
 	return (
 		<>
 			<Head>
-				<title>Coming soon</title>
+				<title>Novels</title>
 			</Head>
 
 			<Navbar />
-
-			<h1>Coming soon</h1>
 		</>
 	);
 }

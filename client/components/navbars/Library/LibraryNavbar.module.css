@@ -42,9 +42,8 @@
 	font-size: 28px;
 }
 
-.button:hover,
-.button:focus-within {
-	background-color: var(--primary);
+.button > img {
+	border-radius: 50%;
 }
 
 .navlink {

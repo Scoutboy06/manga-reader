@@ -7,9 +7,6 @@ import MediaCard from '@/components/MediaCard';
 import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
 import Navbar from '@/components/navbars/Library';
 
-// import { PopupContext } from '@/contexts/PopupContext';
-import { useProfile } from '@/contexts/ProfileContext';
-
 /*
 	Continue watching
 		(New episodes - subscribed)
@@ -23,10 +20,9 @@ import { useProfile } from '@/contexts/ProfileContext';
 
 export default function Animes() {
 	const router = useRouter();
-	const [{ currentProfile }] = useProfile();
 
 	const { data: animes, mutate } = useSWR(
-		() => `/users/${currentProfile._id}/animes`,
+		() => `/users/${currentProfile?._id}/animes`,
 		{
 			revalidateIfStale: false,
 			revalidateOnFocus: false,

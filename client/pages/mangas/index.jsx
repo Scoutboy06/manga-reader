@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
+import { useSession } from 'next-auth/react';
 
 import MediaCard from '@/components/MediaCard';
 import Navbar from '@/components/navbars/Library';
@@ -14,8 +15,10 @@ import styles from '@/styles/mangas.module.css';
 export default function Mangas({ headerMangas }) {
 	const [slideshowIndex, setSlideshowIndex] = useState(0);
 
+	const { data: session } = useSession();
+
 	const { data: continueReading } = useSWR(
-		'/users/6240ce1e13856cb6d466e27a/mangas?limit=12'
+		() => `/users/${session.user.id}/mangas?limit=12`
 	);
 
 	return (
@@ -137,6 +140,7 @@ export default function Mangas({ headerMangas }) {
 									title={manga.title}
 									subtitle={`Chapter ${manga.currentChapter.number}`}
 									orientation='vertical'
+									dropdownItems={null}
 								/>
 							))}
 						</HorizontalScrollContainer>

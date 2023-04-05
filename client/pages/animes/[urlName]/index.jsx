@@ -4,8 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import useSWR from 'swr';
 
-import { ProfileContext } from '@/contexts/ProfileContext';
-
 import Navbar from '@/components/navbars/Library';
 import MediaCard from '@/components/MediaCard/index';
 
@@ -14,10 +12,8 @@ import styles from './anime.module.css';
 export default function Anime() {
 	const { query } = useRouter();
 
-	const [{ currentProfile }] = useContext(ProfileContext);
-
 	const { data: animeMeta } = useSWR(
-		() => `/users/${currentProfile._id}/animes/${query.name}`,
+		() => `/users/${currentProfile?._id}/animes/${query.name}`,
 		{
 			revalidateIfStale: false,
 			revalidateOnFocus: false,
