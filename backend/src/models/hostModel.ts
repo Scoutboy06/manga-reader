@@ -5,7 +5,7 @@ const MODEL_NAME = new Schema<IHost>({
 	name: { type: String, required: true },
 
 	detailsPage: {
-		url: { type: String, required: true },
+		urlPattern: { type: String, required: true },
 
 		title: { type: String, required: true },
 		poster: { type: String, required: true },
@@ -21,7 +21,7 @@ const MODEL_NAME = new Schema<IHost>({
 	},
 
 	chapterPage: {
-		url: { type: String, required: true },
+		urlPattern: { type: String, required: true },
 
 		prevPage: { type: String, required: true },
 		nextPage: { type: String, required: true },
@@ -29,7 +29,7 @@ const MODEL_NAME = new Schema<IHost>({
 	},
 
 	search: {
-		url: { type: String, required: true },
+		urlPattern: { type: String, required: true },
 		method: { type: String, required: true },
 
 		container: { type: String, required: true },

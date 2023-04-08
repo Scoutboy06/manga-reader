@@ -9,7 +9,7 @@ export default async function scrapeManga(
 	host: IHost,
 	fieldsAreRequired: boolean
 ) {
-	const url = host.detailsPage.url.replace('%name', urlName);
+	const url = host.detailsPage.urlPattern.replace('%name%', urlName);
 
 	const html = await fetch(url, { redirect: 'follow' }).then(res => res.text());
 	const document = parse(html);
@@ -39,9 +39,13 @@ export default async function scrapeManga(
 	}
 
 	const poster = getImage(document, detailsPage.poster, fieldsAreRequired);
-	const chapters = getChapters(document, detailsPage.chapters, host);
+	const chapters = getChapters(
+		document,
+		detailsPage.chapters,
+		host.chapterPage.urlPattern
+	);
 
-	const mangaMeta: Omit<IManga, '_id' | 'featured'> = {
+	const mangaMeta: Omit<IManga, '_id' | 'urlName' | 'featured'> = {
 		title,
 		description,
 		otherNames,
@@ -82,7 +86,11 @@ function getImage(root: HTMLElement, selector: string, required: boolean) {
 	return src;
 }
 
-function getChapters(root: HTMLElement, selector: string, host: IHost) {
+function getChapters(
+	root: HTMLElement,
+	selector: string,
+	chapterPagePattern: string
+) {
 	const chapters: IManga['chapters'] = [];
 	const chapterEls = root.querySelectorAll(selector);
 
@@ -93,13 +101,13 @@ function getChapters(root: HTMLElement, selector: string, host: IHost) {
 		// Removing ghost chapters
 		if (!chapterTitle) continue;
 
-		const sourceUrlName = matchValueWithSchema({
-			source: chapterTitleEl.getAttribute('href'),
-			schema: host.detailsPage.url,
-			key: '%name',
-		});
-
 		const chapterNumber = getChapterNumber(chapterTitle);
+
+		const sourceUrlName = matchValueWithSchema({
+			value: chapterTitleEl.getAttribute('href'),
+			schema: chapterPagePattern,
+		}).get('name');
+
 		// Removing ghost chapters
 		if (isNaN(chapterNumber)) continue;
 

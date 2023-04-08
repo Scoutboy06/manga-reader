@@ -34,10 +34,17 @@ export default function NewManga({ hosts }) {
 
 	const importPrompt = async () => {
 		const url = prompt('URL:');
-		const { data } = await axios.get('/api/mangas/external', {
-			params: { url },
-		});
-		setValues(data);
+		if (!url) return;
+
+		try {
+			const { data } = await axios.get('/api/mangas/external', {
+				params: { url },
+			});
+			setValues(data);
+		} catch (err) {
+			console.error(err);
+			window.alert(err.message);
+		}
 	};
 
 	const submit = async fields => {

@@ -2,7 +2,7 @@ export default interface IHost {
 	_id: string;
 	name: string;
 	detailsPage: {
-		url: string;
+		urlPattern: string;
 		title: string;
 		poster: string;
 		otherNames: string;
@@ -15,13 +15,13 @@ export default interface IHost {
 		chapters: string;
 	};
 	chapterPage: {
-		url: string;
+		urlPattern: string;
 		prevPage: string;
 		nextPage: string;
 		images: string;
 	};
 	search: {
-		url: string;
+		urlPattern: string;
 		method: string;
 		container: string;
 		poster: string;

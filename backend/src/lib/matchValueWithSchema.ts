@@ -1,30 +1,37 @@
-type MatchValueWithSchema = {
-	source: string;
-	schema: string;
-	key: string;
-};
-
 export default function matchValueWithSchema({
-	source,
+	value,
 	schema,
-	key,
-}: MatchValueWithSchema) {
-	const regex = new RegExp(schema.replace(key, '(.+?)'));
-	return regex.exec(source)?.[1];
+}: {
+	value: string;
+	schema: string;
+}) {
+	const matches = new Map<string, string>();
+
+	const keys = [];
+	for (const match of schema.matchAll(/%(.+?)%/gi)) {
+		keys.push(match[1]);
+	}
+
+	const regex = new RegExp(schema.replaceAll(/%(.+?)%/gi, '(.+?)'), 'gi');
+	let i = 0;
+	for (const match of regex.exec(value).slice(1)) {
+		matches.set(keys[i], match);
+		i++;
+	}
+
+	return matches;
 }
 
 // console.log(
 // 	matchValueWithSchema({
-// 		source: 'https://www.mangaread.org/manga/fullmetal-alchemist/',
-// 		schema: 'https://www.mangaread.org/manga/%name/',
-// 		key: '%name',
+// 		value: 'https://www.mangaread.org/manga/fullmetal-alchemist/',
+// 		schema: 'https://www.mangaread.org/manga/%name%/',
 // 	})
 // );
 
 // console.log(
 // 	matchValueWithSchema({
-// 		source: 'https://www.mangaread.org/manga/one-punch-man/chapter-235.6/',
-// 		schema: 'https://www.mangaread.org/manga/%name/',
-// 		key: '%name',
+// 		value: 'https://www.mangaread.org/manga/one-punch-man/chapter-235.6/',
+// 		schema: 'https://www.mangaread.org/manga/%name%/%chapter%/',
 // 	})
 // );

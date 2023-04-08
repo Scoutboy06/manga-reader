@@ -15,10 +15,9 @@ router.get('/mangas/external', async (req: Request, res: Response) => {
 	if (!host) return res.status(404).json({ message: 'No host found' });
 
 	const urlName = matchValueWithSchema({
-		source: url.href,
-		schema: host.detailsPage.url,
-		key: '%name',
-	});
+		value: url.href,
+		schema: host.detailsPage.urlPattern,
+	}).get('name');
 
 	if (!urlName)
 		return res

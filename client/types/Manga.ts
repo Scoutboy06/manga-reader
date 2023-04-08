@@ -1,7 +1,8 @@
 import { Types } from 'mongoose';
 
 export default interface IManga {
-	_id: string;
+	_id: Types.ObjectId;
+	urlName: string;
 	title: string;
 	description: string;
 	sourceUrlName: string;

@@ -2,17 +2,12 @@ import { Model, Schema, model, models } from 'mongoose';
 import IManga from '@/types/Manga';
 
 const MangaSchema = new Schema<IManga>({
-	_id: { type: String, required: true, unique: true },
+	urlName: { type: String, required: true, unique: true },
 	title: { type: String, required: true },
 	description: { type: String, required: true },
 	sourceUrlName: { type: String, required: true },
-	featured: { type: Boolean, default: false },
 
-	hostId: {
-		type: Schema.Types.ObjectId,
-		ref: 'Host',
-		required: true,
-	},
+	hostId: { type: Schema.Types.ObjectId, ref: 'Host', required: true },
 
 	airStatus: { type: String, enum: ['ongoing', 'completed'], required: true },
 
