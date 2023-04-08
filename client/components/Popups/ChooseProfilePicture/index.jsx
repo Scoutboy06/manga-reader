@@ -3,7 +3,7 @@ import profilePictures from './profilePictures.js';
 
 import HorizontalScrollContainer from '../../HorizontalScrollContainer';
 
-import styles from './index.module.css';
+import styles from './ChooseProfilePicture.module.css';
 
 export default function ChooseProfilePicture({ callback, closePopup }) {
 	const mainContainer = useRef();

@@ -1,31 +1,17 @@
 import { useState, useEffect, useContext } from 'react';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-import fetchAPI from '@/functions/fetchAPI';
-
-import ChooseProfilePicture from '@/components/Popups/ChooseProfilePicture';
 import Navbar from '@/components/navbars/Settings';
-
-import { PopupContext } from '@/contexts/PopupContext';
-import { ProfileContext } from '@/contexts/ProfileContext';
-import { AlertContext } from '@/contexts/AlertContext';
 
 import styles from '@/styles/settings.module.css';
 
 export default function Profile() {
-	const router = useRouter();
-
-	const [{ profiles, currentProfile }] = useContext(ProfileContext);
-	const [, popupActions] = useContext(PopupContext);
-	const [, alertActions] = useContext(AlertContext);
-
 	const [username, setUsername] = useState('');
 	const [profilePicture, setProfilePicture] = useState();
 	const [discordUserId, setDiscordUserId] = useState('');
 
 	const saveHandler = () => {
-		fetchAPI(`/users/${currentProfile._id}`, {
+		fetch(`/api/users/${currentProfile._id}`, {
 			method: 'PATCH',
 			body: JSON.stringify({
 				name: username,

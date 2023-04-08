@@ -2,14 +2,13 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Image from 'next/image';
-import fetchAPI from '@/functions/fetchAPI.js';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 
 import Dropdown from '@/components/Dropdown';
 import Navlink from '@/components/Navlink';
 
 import styles from './LibraryNavbar.module.css';
-import LoginPopup from './../../Popups/LoginPopup';
+import LoginPopup from '@/components/popups/LoginPopup';
 
 export default function LibraryNavbar() {
 	const router = useRouter();
@@ -35,8 +34,8 @@ export default function LibraryNavbar() {
 		}
 
 		searchTimeout.current = setTimeout(async () => {
-			const mangas = await fetchAPI(
-				'/mangas?' +
+			const mangas = await fetch(
+				'/api/mangas?' +
 					new URLSearchParams({
 						limit: 5,
 						query: searchValue,
@@ -46,8 +45,6 @@ export default function LibraryNavbar() {
 			setSearchResults(mangas);
 		}, 500);
 	};
-
-	console.log(session);
 
 	return (
 		<>
@@ -158,11 +155,12 @@ export default function LibraryNavbar() {
 								</Dropdown.Button>
 
 								<Dropdown.Items placement='br'>
-									<Dropdown.Item
-										href='/profile'
-										icon='account_circle'
-										iconOutlined
-									>
+									{session?.user?.isAdmin && (
+										<Dropdown.Item href='/admin' icon='dashboard'>
+											Admin
+										</Dropdown.Item>
+									)}
+									<Dropdown.Item href='/profile' icon='person'>
 										Profile
 									</Dropdown.Item>
 									<hr />

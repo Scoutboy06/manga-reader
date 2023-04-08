@@ -1,4 +1,4 @@
-export default interface Anime {
+export default interface IAnime {
 	title: string;
 	description: string;
 	urlName: string;

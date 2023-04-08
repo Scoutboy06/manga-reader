@@ -1,6 +1,6 @@
 import { useState, Children, useEffect, useRef } from 'react';
 
-import styles from '@/styles/Dropdown.module.css';
+import styles from '@/components/Dropdown/Dropdown.module.css';
 
 function Root({ children, ...props }) {
 	const [isOpen, setIsOpen] = useState(false);
@@ -32,11 +32,12 @@ function Root({ children, ...props }) {
 			ref={rootEl}
 			{...props}
 		>
-			{Children.map(children, child => {
+			{Children.map(children, (child, i) => {
 				// Button
 				if (child.type === Button) {
 					return (
 						<button
+							key={`button_${i}`}
 							{...child.props}
 							onClick={() => {
 								child.props.onClick?.();
@@ -61,10 +62,13 @@ function Root({ children, ...props }) {
 								styles.dropdown,
 								child.props.placement || 'bl',
 							].join(' ')}
+							key={`options_${i}`}
 						>
-							{child.props.options?.map(option => {
+							{child.props.options?.map((option, j) => {
 								if (option.type === 'hr' || option === 'divider') {
-									return <div className={styles.divider}></div>;
+									return (
+										<div className={styles.divider} key={`divider_${j}`}></div>
+									);
 								}
 
 								return (

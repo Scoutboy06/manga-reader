@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWR, { useSWRConfig } from 'swr';
-import fetchAPI from '@/functions/fetchAPI';
+import fetchAPI from '@/lib/fetchAPI';
 import Head from 'next/head';
 
 import { ProfileContext } from '@/contexts/ProfileContext';

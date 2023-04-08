@@ -5,13 +5,13 @@ export interface Embed {
 	url?: string;
 	timestamp?: string;
 	color?: number | string;
-	footer?: {};
-	image?: {};
-	thumbnail?: {};
-	video?: {};
-	provider?: {};
-	author?: {};
-	fields?: [{}];
+	footer?: object;
+	image?: object;
+	thumbnail?: object;
+	video?: object;
+	provider?: object;
+	author?: object;
+	fields?: [object];
 }
 
 export interface WebhookMessage {
@@ -20,8 +20,8 @@ export interface WebhookMessage {
 	avatar_url?: string;
 	tts?: boolean;
 	embeds: [Embed];
-	allowed_mensions?: {};
-	components?: [{}];
+	allowed_mensions?: object;
+	components?: [object];
 	files?: [];
 	attachments?: [];
 	flags?: number;

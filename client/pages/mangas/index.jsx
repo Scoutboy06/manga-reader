@@ -1,24 +1,25 @@
 import { useState } from 'react';
-import fetchAPI from '@/functions/fetchAPI';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
+import Manga from '@/models/mangaModel';
+import connectDB from '@/lib/mongodb';
 
 import MediaCard from '@/components/MediaCard';
 import Navbar from '@/components/navbars/Library';
 import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
 
-import styles from '@/styles/mangas.module.css';
+import styles from './mangas.module.css';
 
-export default function Mangas({ headerMangas }) {
+export default function Mangas({ featuredMangas }) {
 	const [slideshowIndex, setSlideshowIndex] = useState(0);
 
 	const { data: session } = useSession();
 
 	const { data: continueReading } = useSWR(
-		() => `/users/${session.user.id}/mangas?limit=12`
+		() => `/api/users/${session.user._id}/mangas?limit=12`
 	);
 
 	return (
@@ -37,7 +38,7 @@ export default function Mangas({ headerMangas }) {
 							onClick={() =>
 								setSlideshowIndex(
 									slideshowIndex - 1 < 0
-										? headerMangas.length - 1
+										? featuredMangas.length - 1
 										: slideshowIndex - 1
 								)
 							}
@@ -47,14 +48,14 @@ export default function Mangas({ headerMangas }) {
 						<button
 							className={styles.nextBtn + ' icon'}
 							onClick={() =>
-								setSlideshowIndex((slideshowIndex + 1) % headerMangas.length)
+								setSlideshowIndex((slideshowIndex + 1) % featuredMangas.length)
 							}
 						>
 							arrow_forward_ios
 						</button>
 
 						<div className={styles.smallButtons}>
-							{headerMangas?.map((_, i) => (
+							{featuredMangas?.map((_, i) => (
 								<button
 									onClick={() => setSlideshowIndex(i)}
 									className={slideshowIndex === i ? 'active' : ''}
@@ -68,7 +69,7 @@ export default function Mangas({ headerMangas }) {
 							className={styles.items}
 							style={{ transform: `translateX(-${slideshowIndex * 100}%)` }}
 						>
-							{headerMangas?.map((manga, i) => (
+							{featuredMangas?.map((manga, i) => (
 								<div className={styles.item} key={manga._id}>
 									<Image
 										src={manga.backdrop}
@@ -152,11 +153,12 @@ export default function Mangas({ headerMangas }) {
 }
 
 export async function getStaticProps() {
-	const [headerMangas] = await Promise.all([fetchAPI('/mangas/featured')]);
+	await connectDB();
+	const featuredMangas = await Manga.find({ featured: true }, { chapters: 0 });
 
 	return {
 		props: {
-			headerMangas,
+			featuredMangas: JSON.parse(JSON.stringify(featuredMangas)),
 		},
 	};
 }

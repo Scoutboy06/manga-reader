@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-import fetchAPI from '@/functions/fetchAPI';
+import fetchAPI from '@/lib/fetchAPI';
 import useFormCreator from '@/hooks/useFormCreator';
 import Navbar from '@/components/navbars/Library';
 

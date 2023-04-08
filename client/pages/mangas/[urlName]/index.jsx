@@ -2,13 +2,14 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import fetchAPI from '@/functions/fetchAPI';
+import connectDB from '@/lib/mongodb';
+import Manga from '@/models/mangaModel';
 
 import Navbar from '@/components/navbars/Library';
 
-import styles from '@/styles/manga.module.css';
+import styles from './manga.module.css';
 
-export default function Manga({ manga }) {
+export default function MangaPage({ manga }) {
 	const [expandDescription, setExpandDescription] = useState(false);
 
 	return (
@@ -120,12 +121,13 @@ export default function Manga({ manga }) {
 	);
 }
 
-export async function getServerSideProps({ params }) {
-	const manga = await fetchAPI(`/mangas/${params.urlName}`);
+export async function getServerSideProps({ params: { urlName } }) {
+	await connectDB();
+	const manga = await Manga.findOne({ urlName });
 
 	return {
 		props: {
-			manga,
+			manga: JSON.parse(JSON.stringify(manga)),
 		},
 	};
 }

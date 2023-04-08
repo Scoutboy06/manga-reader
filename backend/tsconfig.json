@@ -1,5 +1,13 @@
 {
 	"compilerOptions": {
+		"baseUrl": "./src",
+		"paths": {
+			"@/lib/*": ["./lib/*"],
+			"@/models/*": ["./models/*"],
+			"@/types/*": ["./types/*"],
+			"@/api/*": ["./api/*"],
+			"@/*": ["./*"]
+		},
 		"module": "esnext",
 		"moduleResolution": "nodenext",
 		"target": "ES2022",
@@ -8,9 +16,11 @@
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"typeRoots": ["./src/types"]
 	},
 	"include": ["./src/**/*"],
+	"exclude": ["node_modules"],
 	"ts-node": {
 		"esm": true
 	}

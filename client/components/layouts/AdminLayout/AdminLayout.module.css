@@ -1,0 +1,25 @@
+.pageContainer {
+	height: 100vh;
+	display: flex;
+	flex-direction: row;
+	background: radial-gradient(
+		ellipse 80% 50% at 50% -20%,
+		rgba(120, 119, 198, 0.2),
+		transparent
+	);
+}
+
+.main {
+	height: 100%;
+	width: 100%;
+	overflow-y: auto;
+	padding: 3rem;
+	flex: 1;
+}
+
+.top {
+	margin-bottom: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}

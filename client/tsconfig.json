@@ -3,13 +3,14 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/components/*": ["components/*"],
-			"@/core/*": ["core/*"],
 			"@/lib/*": ["lib/*"],
+			"@/models/*": ["lib/models/*"],
 			"@/pages/*": ["pages/*"],
 			"@/api/*": ["pages/api/*"],
 			"@/public/*": ["public/*"],
 			"@/styles/*": ["styles/*"],
-			"@/types/*": ["types/*"]
+			"@/types/*": ["types/*"],
+			"@/*": ["./*"]
 		},
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
@@ -23,7 +24,14 @@
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
-		"jsx": "preserve"
+		"jsx": "preserve",
+		"typeRoots": ["./types"],
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"strictNullChecks": true
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
 	"exclude": ["node_modules"]

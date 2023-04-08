@@ -1,35 +1,5 @@
 import { Schema, model } from 'mongoose';
-
-export interface IHost {
-	name: string;
-	detailsPage: {
-		url: string;
-		title: string;
-		poster: string;
-		otherNames: string;
-		authors?: string;
-		artists?: string;
-		genres: string;
-		released?: string;
-		status: string;
-	};
-	chapterPage: {
-		url: string;
-		prevPage: string;
-		nextPage: string;
-		images: string;
-	};
-	search: {
-		url: string;
-		method: string;
-		container: string;
-		poster: string;
-		title: string;
-		latestChapter: string;
-		latestUpdate: string;
-		detailsPage: string;
-	};
-}
+import IHost from '@/types/Host.js';
 
 const MODEL_NAME = new Schema<IHost>({
 	name: { type: String, required: true },
@@ -44,7 +14,7 @@ const MODEL_NAME = new Schema<IHost>({
 		artists: String,
 		genres: { type: String, required: true },
 		released: String,
-		status: { type: String, required: true },
+		airStatus: { type: String, required: true },
 
 		description: { type: String, required: true },
 		chapters: { type: String, required: true },

@@ -2,8 +2,7 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWRImmutable from 'swr/immutable';
-
-import fetchAPI from '@/functions/fetchAPI';
+import { useSession } from 'next-auth/react';
 
 import Select from '@/components/Select';
 import Loader from '@/components/Loader';
@@ -13,6 +12,7 @@ import styles from '@/styles/read.module.css';
 export default function ReadManga() {
 	const router = useRouter();
 	const { query } = router;
+	const { data: session } = useSession();
 
 	const [imageWidth, setImageWidth] = useState(null);
 
@@ -25,7 +25,7 @@ export default function ReadManga() {
 	const isLoading = !chapterMeta || !mangaMeta;
 
 	const { prevChap, currChap, nextChap } = useChapterPagination({
-		currentProfile,
+		user: session?.user,
 		mangaMeta,
 	});
 
@@ -271,7 +271,7 @@ function useScrollProgress({ chapterMeta, imageWidth }) {
 	};
 }
 
-function useChapterPagination({ currentProfile, mangaMeta }) {
+function useChapterPagination({ user, mangaMeta }) {
 	const router = useRouter();
 	const { urlName, chapter } = router.query;
 
@@ -295,14 +295,11 @@ function useChapterPagination({ currentProfile, mangaMeta }) {
 		setData({ prevChap, currChap, nextChap });
 
 		// Sync chapter with server
-		if (currentProfile) {
-			fetchAPI(
-				`/users/${currentProfile._id}/mangas/${mangaMeta._id}/currentChapter`,
-				{
-					method: 'POST',
-					body: JSON.stringify({ urlName: chapter }),
-				}
-			);
+		if (user) {
+			fetch(`/api/users/${user._id}/mangas/${mangaMeta._id}/currentChapter`, {
+				method: 'POST',
+				body: JSON.stringify({ urlName: chapter }),
+			});
 		}
 	}, [mangaMeta, router.query]);
 
