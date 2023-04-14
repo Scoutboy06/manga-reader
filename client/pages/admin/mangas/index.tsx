@@ -11,18 +11,18 @@ import IManga from '@/types/Manga';
 import connectDB from '@/lib/mongoose';
 
 type PageProps = {
-	totalMangas: number;
-	ongoingMangas: number;
-	finishedMangas: number;
-	totalChapters: number;
+	totalMangaCount: number;
+	ongoingMangaCount: number;
+	finishedMangaCount: number;
+	totalChapterCount: number;
 	featuredMangas: IManga[];
 };
 
 export default function Mangas({
-	totalMangas,
-	ongoingMangas,
-	finishedMangas,
-	totalChapters,
+	totalMangaCount,
+	ongoingMangaCount,
+	finishedMangaCount,
+	totalChapterCount,
 	featuredMangas,
 }: PageProps) {
 	return (
@@ -47,19 +47,19 @@ export default function Mangas({
 			>
 				<div className={styles.infoCards}>
 					<div className={styles.infoCard}>
-						<h1>{totalMangas}</h1>
+						<h1>{totalMangaCount}</h1>
 						<p>Total mangas</p>
 					</div>
 					<div className={styles.infoCard}>
-						<h1>{ongoingMangas}</h1>
+						<h1>{ongoingMangaCount}</h1>
 						<p>Ongonig mangas</p>
 					</div>
 					<div className={styles.infoCard}>
-						<h1>{finishedMangas}</h1>
+						<h1>{finishedMangaCount}</h1>
 						<p>Finished mangas</p>
 					</div>
 					<div className={styles.infoCard}>
-						<h1>{totalChapters}</h1>
+						<h1>{totalChapterCount}</h1>
 						<p>Total chapters</p>
 					</div>
 				</div>
@@ -81,15 +81,15 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		};
 	}
 
-	const [details, ongoingMangas, featuredMangas] = await Promise.all([
+	const [details, ongoingMangaCount, featuredMangas] = await Promise.all([
 		Manga.aggregate([
 			{
 				$group: {
 					_id: 1,
-					totalMangas: {
+					totalMangaCount: {
 						$count: {},
 					},
-					totalChapters: {
+					totalChapterCount: {
 						$sum: { $size: '$chapters' },
 					},
 				},
@@ -102,17 +102,14 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		),
 	]);
 
-	console.log(details);
-
-	const { totalMangas, totalChapters } = details[0];
-
-	const finishedMangas = totalMangas - ongoingMangas;
+	const { totalMangaCount, totalChapterCount } = details[0];
+	const finishedMangaCount = totalMangaCount - ongoingMangaCount;
 
 	const props: PageProps = {
-		totalMangas,
-		ongoingMangas,
-		finishedMangas,
-		totalChapters,
+		totalMangaCount,
+		ongoingMangaCount,
+		finishedMangaCount,
+		totalChapterCount,
 		featuredMangas,
 	};
 
