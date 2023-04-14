@@ -110,7 +110,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		ongoingMangaCount,
 		finishedMangaCount,
 		totalChapterCount,
-		featuredMangas,
+		featuredMangas: JSON.parse(JSON.stringify(featuredMangas)),
 	};
 
 	return { props };
