@@ -23,7 +23,6 @@ export default interface IHost {
 	search: {
 		urlPattern: string;
 		method: string;
-		container: string;
 		poster: string;
 		title: string;
 		latestChapter: string;

@@ -5,23 +5,25 @@ import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/api/auth/[...nextauth]';
-import Manga from '@/models/mangaModel';
+import Manga from '@/models/Manga.model';
 import IUser from '@/types/User';
+import IManga from '@/types/Manga';
+import connectDB from '@/lib/mongoose';
 
 type PageProps = {
-	user: IUser;
 	totalMangas: number;
 	ongoingMangas: number;
 	finishedMangas: number;
 	totalChapters: number;
+	featuredMangas: IManga[];
 };
 
 export default function Mangas({
-	user,
 	totalMangas,
 	ongoingMangas,
 	finishedMangas,
 	totalChapters,
+	featuredMangas,
 }: PageProps) {
 	return (
 		<>
@@ -67,6 +69,7 @@ export default function Mangas({
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
+	await connectDB();
 	const session = await getServerSession(context.req, context.res, authOptions);
 
 	if (!session?.user?.isAdmin) {
@@ -78,29 +81,39 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		};
 	}
 
-	const [totalMangas, ongoingMangas, totalChapters] = await Promise.all([
-		Manga.countDocuments({}),
-		Manga.countDocuments({ airStatus: 'ongoing' }),
+	const [details, ongoingMangas, featuredMangas] = await Promise.all([
 		Manga.aggregate([
 			{
 				$group: {
-					_id: null,
-					count: {
+					_id: 1,
+					totalMangas: {
+						$count: {},
+					},
+					totalChapters: {
 						$sum: { $size: '$chapters' },
 					},
 				},
 			},
 		]),
+		Manga.countDocuments({ airStatus: 'ongoing' }),
+		Manga.find(
+			{ featured: true },
+			{ urlName: 1, title: 1, airStatus: 1, poster: 1 }
+		),
 	]);
+
+	console.log(details);
+
+	const { totalMangas, totalChapters } = details[0];
 
 	const finishedMangas = totalMangas - ongoingMangas;
 
 	const props: PageProps = {
-		user: JSON.parse(JSON.stringify(session.user)),
 		totalMangas,
 		ongoingMangas,
 		finishedMangas,
-		totalChapters: totalChapters[0].count,
+		totalChapters,
+		featuredMangas,
 	};
 
 	return { props };

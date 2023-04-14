@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from '@/lib/mongodb';
-import Manga from '@/models/mangaModel';
+import connectDB from '@/lib/mongoose';
+import Manga from '@/models/Manga.model';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	await connectDB();

@@ -29,7 +29,7 @@
 
 .button {
 	border: 0;
-	padding: 6px;
+	padding: 0.3rem;
 	border-radius: 50%;
 	background-color: transparent;
 	color: var(--on-surface);
@@ -39,7 +39,7 @@
 	transition: background-color 0.15s;
 	text-decoration: none;
 	transition: 0.15s;
-	font-size: 28px;
+	font-size: 1.5rem;
 }
 
 .button > img {

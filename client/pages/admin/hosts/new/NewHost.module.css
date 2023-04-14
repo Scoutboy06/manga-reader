@@ -1,0 +1,27 @@
+.container {
+}
+
+.section {
+	width: calc(100% - 2rem);
+	display: inline-flex;
+	margin: 1rem;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.container :global(.formGroup) input,
+.container :global(.formGroup) textarea,
+.container :global(.formGroup) select {
+	background-color: #0f1736 !important;
+}
+
+.divider {
+	height: 1px;
+	background-color: var(--divider-variant);
+}
+
+@media screen and (min-width: 80rem) {
+	.section {
+		width: calc(50% - 2rem);
+	}
+}

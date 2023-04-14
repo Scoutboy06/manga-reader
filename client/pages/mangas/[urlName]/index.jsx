@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import connectDB from '@/lib/mongodb';
-import Manga from '@/models/mangaModel';
+import connectDB from '@/lib/mongoose';
+import Manga from '@/models/Manga.model';
 
 import Navbar from '@/components/navbars/Library';
 
@@ -21,7 +21,7 @@ export default function MangaPage({ manga }) {
 
 			<Navbar />
 
-			<header className={styles.header}>
+			<main className={styles.header}>
 				<div className={styles.image}>
 					<Image
 						src={manga.poster}
@@ -100,21 +100,18 @@ export default function MangaPage({ manga }) {
 							</tr>
 						</tbody>
 					</table>
-				</div>
-			</header>
 
-			<main className={styles.main}>
-				<h2>Chapters</h2>
-
-				<div className={styles.chapters}>
-					{manga.chapters.map(chapter => (
-						<Link
-							key={`chapter_${chapter.number}`}
-							href={`/mangas/${manga.urlName}/${chapter.urlName}`}
-						>
-							{chapter.title}
-						</Link>
-					))}
+					<h2 style={{ marginTop: '3rem' }}>Chapters</h2>
+					<div className={styles.chapters}>
+						{manga.chapters.map(chapter => (
+							<Link
+								key={`chapter_${chapter.number}`}
+								href={`/mangas/${manga.urlName}/${chapter.urlName}`}
+							>
+								{chapter.title}
+							</Link>
+						))}
+					</div>
 				</div>
 			</main>
 		</>

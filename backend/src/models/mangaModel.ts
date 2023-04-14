@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
-import IManga from '@/types/Manga.js';
+import IManga from '../types/Manga.js';
 
 const mangaModel = new Schema<IManga>({
-	urlName: { type: String, required: true, unique: true },
+	urlName: { type: String, required: true, unique: true, index: true },
 	title: { type: String, required: true },
 	description: { type: String, required: true },
 	sourceUrlName: { type: String, required: true },

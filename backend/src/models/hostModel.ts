@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import IHost from '@/types/Host.js';
+import IHost from '../types/Host.js';
 
 const MODEL_NAME = new Schema<IHost>({
 	name: { type: String, required: true },

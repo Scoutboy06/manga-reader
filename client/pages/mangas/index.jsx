@@ -3,9 +3,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
-import { useSession } from 'next-auth/react';
-import Manga from '@/models/mangaModel';
-import connectDB from '@/lib/mongodb';
+import Manga from '@/models/Manga.model';
+import connectDB from '@/lib/mongoose';
 
 import MediaCard from '@/components/MediaCard';
 import Navbar from '@/components/navbars/Library';
@@ -16,11 +15,7 @@ import styles from './mangas.module.css';
 export default function Mangas({ featuredMangas }) {
 	const [slideshowIndex, setSlideshowIndex] = useState(0);
 
-	const { data: session } = useSession();
-
-	const { data: continueReading } = useSWR(
-		() => `/api/users/${session.user._id}/mangas?limit=12`
-	);
+	const { data: continueReading } = useSWR(`/api/me/mangas?limit=12`);
 
 	return (
 		<>

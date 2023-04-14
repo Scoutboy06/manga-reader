@@ -1,15 +1,16 @@
 import { Types } from 'mongoose';
+import Notification from './Notification.js';
 
 export default interface IUser {
-	_id: string;
-	isAdmin: boolean;
-	name: string;
-	image: string;
-	discordUserId?: string;
+	_id: Types.ObjectId | string;
+	isAdmin?: boolean;
+	name?: string | null;
+	email?: string | null;
+	image?: string | null;
 
-	mangas?: [
+	mangas: [
 		{
-			_id: Types.ObjectId;
+			_id: Types.ObjectId | string;
 			urlName: string;
 			title: string;
 			isFavorite: boolean;
@@ -26,33 +27,5 @@ export default interface IUser {
 		}
 	];
 
-	animes?: [
-		{
-			_id: Types.ObjectId;
-			urlName: string;
-			isFavorite: boolean;
-			notificationsOn: boolean;
-			watchStatus: 'watching' | 'finished';
-			seasons: [
-				{
-					urlName: string;
-					episodes: [
-						{
-							number: number;
-							hasWatched: boolean;
-							isFavorite: boolean;
-						}
-					];
-				}
-			];
-			currentSeason: {
-				name: string;
-				urlName: string;
-			};
-			currentEpisode: {
-				number: number;
-				urlName: string;
-			};
-		}
-	];
+	notifications: Notification[];
 }

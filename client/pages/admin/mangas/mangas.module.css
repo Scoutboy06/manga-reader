@@ -1,9 +1,3 @@
-.top {
-	margin-bottom: 2rem;
-	display: flex;
-	justify-content: space-between;
-}
-
 .infoCards {
 	display: grid;
 	grid-template-columns: repeat(4, calc(25% - 1.5rem));

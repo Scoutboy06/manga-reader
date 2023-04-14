@@ -6,7 +6,7 @@ export default interface IManga {
 	title: string;
 	description: string;
 	sourceUrlName: string;
-	featured: boolean;
+	featured?: boolean;
 	hostId: Types.ObjectId | string;
 	airStatus: 'ongoing' | 'completed';
 	chapters: {

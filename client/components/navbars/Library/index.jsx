@@ -144,10 +144,11 @@ export default function LibraryNavbar() {
 									notifications
 								</Dropdown.Button>
 							</Dropdown>
+
 							<Dropdown>
 								<Dropdown.Button className={styles.button}>
 									<Image
-										src={session.user.image}
+										src={session?.user?.image}
 										width={28}
 										height={28}
 										alt='Profile picture'

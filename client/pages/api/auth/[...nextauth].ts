@@ -1,8 +1,6 @@
 import NextAuth, { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-
-import connectDB from '@/lib/mongodb';
-import User from '@/lib/models/userModel';
+import MongooseAdapter from '@/lib/MongooseAdapter';
 
 export const authOptions: AuthOptions = {
 	providers: [
@@ -12,37 +10,13 @@ export const authOptions: AuthOptions = {
 		}),
 	],
 	session: {
-		strategy: 'jwt',
+		strategy: 'database',
 	},
+	adapter: MongooseAdapter(),
 	callbacks: {
-		session: async ({ session, token }) => {
-			const user = await User.findOne(
-				{ _id: token._id },
-				{ mangas: 0, animes: 0 }
-			);
-			if (user) session.user = user;
+		async session({ session, user }) {
+			session.user = user;
 			return session;
-		},
-		jwt: async ({ user, token }) => {
-			if (user) token._id = user.id;
-			return token;
-		},
-		async signIn({ user }) {
-			await connectDB();
-			// If the user doesn't exist, add it to the database
-			await User.findOneAndUpdate(
-				{ _id: user.id },
-				{
-					$setOnInsert: {
-						email: user.email,
-						image: user.image,
-						name: user.name,
-					},
-				},
-				{ upsert: true, new: true, setDefaultsOnInsert: true }
-			);
-
-			return true;
 		},
 	},
 };

@@ -1,15 +1,16 @@
-import IHost from '@/types/Host.js';
-import IManga from '@/types/Manga.js';
+import IHost from '../types/Host.js';
+import IManga from '../types/Manga.js';
 import { parse, HTMLElement } from 'node-html-parser';
 import matchValueWithSchema from './matchValueWithSchema.js';
 import getChapterNumber from './getChapterNumber.js';
+import { HydratedDocument } from 'mongoose';
 
 export default async function scrapeManga(
-	urlName: string,
-	host: IHost,
+	sourceUrlName: string,
+	host: HydratedDocument<IHost>,
 	fieldsAreRequired: boolean
 ) {
-	const url = host.detailsPage.urlPattern.replace('%name%', urlName);
+	const url = host.detailsPage.urlPattern.replace('%name%', sourceUrlName);
 
 	const html = await fetch(url, { redirect: 'follow' }).then(res => res.text());
 	const document = parse(html);
@@ -45,7 +46,7 @@ export default async function scrapeManga(
 		host.chapterPage.urlPattern
 	);
 
-	const mangaMeta: Omit<IManga, '_id' | 'urlName' | 'featured'> = {
+	const mangaMeta: Omit<IManga, '_id' | 'urlName'> = {
 		title,
 		description,
 		otherNames,
@@ -54,7 +55,7 @@ export default async function scrapeManga(
 		genres,
 		released,
 		airStatus,
-		sourceUrlName: urlName,
+		sourceUrlName,
 		hostId: host._id,
 		poster,
 		chapters,
@@ -66,7 +67,7 @@ export default async function scrapeManga(
 function getText(root: HTMLElement, selector: string, required: boolean) {
 	const text = root.querySelector(selector)?.textContent?.trim();
 	if (!text && required) {
-		throw new Error(`Selector failed: ${selector}`);
+		throw new Error(`Text selector failed: ${selector}`);
 	}
 	return text;
 }
@@ -80,7 +81,7 @@ function getImage(root: HTMLElement, selector: string, required: boolean) {
 		imgEl.getAttribute('src');
 
 	if (!src && required) {
-		throw new Error(`Selector failed: ${selector}`);
+		throw new Error(`Image selector failed: ${selector}`);
 	}
 
 	return src;
@@ -106,7 +107,7 @@ function getChapters(
 		const sourceUrlName = matchValueWithSchema({
 			value: chapterTitleEl.getAttribute('href'),
 			schema: chapterPagePattern,
-		}).get('name');
+		}).get('chapter');
 
 		// Removing ghost chapters
 		if (isNaN(chapterNumber)) continue;

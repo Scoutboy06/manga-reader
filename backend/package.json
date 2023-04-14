@@ -1,7 +1,7 @@
 {
 	"name": "manga-reader-backend",
 	"version": "1.0.0",
-	"main": "dist/server.js",
+	"main": "dist/index.js",
 	"repository": "https://github.com/Scoutboy06/manga-reader",
 	"author": "Elias Wennerlund",
 	"license": "MIT",

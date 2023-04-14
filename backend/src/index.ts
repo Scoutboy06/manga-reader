@@ -6,7 +6,7 @@ import morgan from 'morgan';
 import chalk from 'chalk';
 
 import connectDB from './lib/mongoDB.js';
-import updatesChecker from './functions/updatesChecker.js';
+import updatesChecker from './lib/updatesChecker.js';
 import router from './router.js';
 
 const app = express();
@@ -26,6 +26,6 @@ app.listen(PORT, () => {
 
 	connectDB();
 
-	// If "--no-updates" is NOT specified in the command input
+	// If "--no-updates" is NOT specified in the command arguments
 	if (!process.argv.find(arg => arg === '--no-updates')) updatesChecker();
 });

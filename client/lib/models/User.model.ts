@@ -1,5 +1,5 @@
-import IUser from '../types/User.js';
-import { Schema, model } from 'mongoose';
+import { Model, Schema, model, models } from 'mongoose';
+import IUser from '@/types/User';
 
 const UserSchema = new Schema<IUser>({
 	isAdmin: Boolean,
@@ -10,6 +10,7 @@ const UserSchema = new Schema<IUser>({
 	mangas: [
 		{
 			_id: { type: Schema.Types.ObjectId, ref: 'Manga', required: true },
+			email: { type: String, required: true },
 			urlName: { type: String, required: true },
 			title: { type: String, required: true },
 
@@ -44,6 +45,7 @@ const UserSchema = new Schema<IUser>({
 	],
 });
 
-const User = model('User', UserSchema);
+const User = (models.User ||
+	model('User', UserSchema, 'users')) as Model<IUser>;
 
 export default User;

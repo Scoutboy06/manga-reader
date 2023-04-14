@@ -1,13 +1,5 @@
 {
 	"compilerOptions": {
-		"baseUrl": "./src",
-		"paths": {
-			"@/lib/*": ["./lib/*"],
-			"@/models/*": ["./models/*"],
-			"@/types/*": ["./types/*"],
-			"@/api/*": ["./api/*"],
-			"@/*": ["./*"]
-		},
 		"module": "esnext",
 		"moduleResolution": "nodenext",
 		"target": "ES2022",

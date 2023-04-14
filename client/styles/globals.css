@@ -107,7 +107,7 @@ a {
 	font-weight: 400;
 	src: url(https://fonts.gstatic.com/s/materialicons/v135/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2)
 		format('woff2');
-	font-display: swap;
+	/* font-display: swap; */
 }
 
 @font-face {
@@ -116,7 +116,7 @@ a {
 	font-weight: 400;
 	src: url(https://fonts.gstatic.com/s/materialiconsoutlined/v108/gok-H7zzDkdnRel8-DQ6KAXJ69wP1tGnf4ZGhUce.woff2)
 		format('woff2');
-	font-display: swap;
+	/* font-display: swap; */
 }
 
 .icon {
@@ -153,7 +153,7 @@ button:not(:disabled) {
 .btn {
 	background-color: transparent;
 	border: 1px solid transparent;
-	padding: 0.6rem 1.8rem 0.6rem 2rem;
+	padding: 0.6rem 2rem;
 	font-size: 1rem;
 	border-radius: 10000px;
 	font-weight: 400;

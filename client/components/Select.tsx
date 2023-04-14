@@ -4,12 +4,12 @@ import styles from '@/components/Dropdown/Dropdown.module.css';
 
 function Root({ children, ...props }) {
 	const [isOpen, setIsOpen] = useState(false);
-	const rootEl = useRef();
+	const rootEl = useRef<HTMLDivElement>(null);
 
-	const handleWindowClick = e => {
+	const handleWindowClick = (e: Event) => {
 		const path = e.composedPath();
 
-		if (!path.includes(rootEl.current)) {
+		if (rootEl.current && !path.includes(rootEl.current)) {
 			setIsOpen(false);
 		}
 	};

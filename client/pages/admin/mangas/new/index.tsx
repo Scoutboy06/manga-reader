@@ -5,7 +5,7 @@ import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import { useForm, useWatch } from 'react-hook-form';
 import Head from 'next/head';
-import Host from '@/models/hostModel';
+import Host from '@/models/Host.model';
 import IHost from '@/types/Host';
 import axios from 'axios';
 import { useState } from 'react';

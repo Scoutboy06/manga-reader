@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getToken } from 'next-auth/jwt';
 
 import connectDB from '@/lib/mongoose';
 import User from '@/models/User.model';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	await connectDB();
@@ -15,20 +16,17 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-	const { userId, limit = 50, skip = 0 } = req.query;
+	const { limit = 50, skip = 0 } = req.query;
+	const session = await getServerSession(req, res, authOptions);
 
-	const token = await getToken({ req });
-	if (!token) return res.status(401).json({ message: 'Not authorized' });
+	if (!session) return res.status(401).json({ message: 'Not authorized' });
 
-	const user = await User.findOne(
-		{ _id: userId },
-		{
-			mangas: {
-				// Start and end number, for pagination
-				$slice: [Number(skip), Number(skip) + Number(limit)],
-			},
-		}
-	);
+	const user = await User.findById(session.user._id, {
+		mangas: {
+			// For pagination
+			$slice: [Number(skip), Number(skip) + Number(limit)],
+		},
+	});
 
 	if (!user) res.status(404).json({ message: 'User not found' });
 	else res.json(user.mangas);

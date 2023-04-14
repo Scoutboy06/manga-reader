@@ -31,7 +31,7 @@ const MangaSchema = new Schema<IManga>({
 	backdrop: String,
 });
 
-const Manga = (models.Manga ||
+const Manga = (models?.Manga ||
 	model('Manga', MangaSchema, 'mangas')) as Model<IManga>;
 
 export default Manga;

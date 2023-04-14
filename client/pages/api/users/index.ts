@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import connectDB from '@/lib/mongodb';
-import User from '@/models/userModel';
+import connectDB from '@/lib/mongoose';
+import User from '@/models/User.model';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	await connectDB();
