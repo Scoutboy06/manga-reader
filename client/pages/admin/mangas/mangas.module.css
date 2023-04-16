@@ -1,13 +1,15 @@
-.infoCards {
-	display: grid;
-	grid-template-columns: repeat(4, calc(25% - 1.5rem));
-	gap: 2rem;
+.main {
+	--gap: 2rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gap);
 }
 
 .infoCard {
 	background-color: #0d1530;
+	width: 100%;
 	border-radius: 1rem;
-	padding: 1.5rem 2rem;
+	padding: 1rem 2rem;
 	text-align: center;
 	box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.2);
 }
@@ -16,19 +18,49 @@
 	line-height: 1.2;
 }
 
-@media screen and (max-width: 85rem) {
-	.infoCards {
-		grid-template-columns: repeat(2, calc(50% - 1rem));
+.listContainer {
+	width: 100%;
+}
+
+.listContainer > h2 {
+	margin-bottom: 0.8rem;
+}
+
+.list {
+	background-color: #0d1530;
+}
+
+.actionBtns {
+	margin-top: 0.6rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.8rem;
+}
+
+.actionBtns > button:global(.add) {
+	padding: 0.375rem;
+}
+
+.actionBtns > button:global(.submit) {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+@media screen and (min-width: 50rem) {
+	.infoCard {
+		width: calc(50% - 0.5 * var(--gap));
+		padding: 1.5rem 2rem;
 	}
 }
 
-@media screen and (max-width: 50rem) {
-	.infoCards {
-		grid-template-columns: repeat(1, 100%);
-		gap: 0.6rem;
+@media screen and (min-width: 85rem) {
+	.infoCard {
+		width: calc(25% - 0.75 * var(--gap));
 	}
 
-	.infoCard {
-		padding: 1rem 2rem;
+	.listContainer {
+		width: calc(50% - 0.5 * var(--gap));
 	}
 }

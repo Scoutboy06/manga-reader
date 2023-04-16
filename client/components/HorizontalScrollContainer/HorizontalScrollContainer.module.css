@@ -49,6 +49,7 @@
 
 .scrollContainer {
 	width: 100%;
+	padding-top: 2px;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: nowrap;

@@ -1,5 +1,5 @@
 import styles from './NewManga.module.css';
-import AdminLayout from '@/components/layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { authOptions } from '@/api/auth/[...nextauth]';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
@@ -21,7 +21,8 @@ export default function NewManga({ hosts }) {
 			hostId: '',
 			airStatus: '',
 			description: '',
-			_id: '',
+			urlName: '',
+			sourceUrlName: '',
 			otherNames: '',
 			authors: '',
 			artists: '',
@@ -37,7 +38,9 @@ export default function NewManga({ hosts }) {
 		if (!url) return;
 
 		try {
-			const { data } = await axios.get('/api/mangas/external', {
+			const {
+				data: { chapters, ...data },
+			} = await axios.get('/api/scraper/mangas/external', {
 				params: { url },
 			});
 			setValues(data);
@@ -49,12 +52,10 @@ export default function NewManga({ hosts }) {
 
 	const submit = async fields => {
 		try {
+			console.log(fields);
 			const res = await axios.post('/api/mangas', fields);
 
 			window.alert(res.statusText);
-
-			// if (res.ok) window.alert('OK');
-			// else throw Error(`Error ${res.status}: ${res.statusText}`);
 		} catch (err) {
 			window.alert(err.message);
 			console.error(err);
@@ -149,11 +150,21 @@ export default function NewManga({ hosts }) {
 						</div>
 
 						<div className='formGroup'>
-							<label htmlFor='_id'>URL name:</label>
+							<label htmlFor='urlName'>URL name:</label>
 							<input
-								{...register('_id', { required: true })}
-								name='_id'
-								id='_id'
+								{...register('urlName', { required: true })}
+								name='urlName'
+								id='urlName'
+								type='text'
+							/>
+						</div>
+
+						<div className='formGroup'>
+							<label htmlFor='sourceUrlName'>Source URL name:</label>
+							<input
+								{...register('sourceUrlName', { required: true })}
+								name='sourceUrlName'
+								id='sourceUrlName'
 								type='text'
 							/>
 						</div>

@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import styles from './mangas.module.css';
-import AdminLayout from '@/components/layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
@@ -9,6 +9,9 @@ import Manga from '@/models/Manga.model';
 import IUser from '@/types/User';
 import IManga from '@/types/Manga';
 import connectDB from '@/lib/mongoose';
+import ReorderableList from '@/components/ReorderableList';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 type PageProps = {
 	totalMangaCount: number;
@@ -25,6 +28,35 @@ export default function Mangas({
 	totalChapterCount,
 	featuredMangas,
 }: PageProps) {
+	const [featured, setFeatured] = useState(
+		featuredMangas.map(({ _id, title }) => ({ _id, title }))
+	);
+
+	const addFeatured = async () => {
+		const urlName = prompt('Manga URL name:');
+		try {
+			const { data: manga } = await axios.get(`/api/mangas/${urlName}`);
+
+			setFeatured([...featured, { _id: manga._id, title: manga.title }]);
+		} catch (err) {
+			console.error(err);
+			window.alert(err.message);
+		}
+	};
+
+	const saveFeatured = async () => {
+		try {
+			const ids = featured.map(manga => manga._id);
+			console.log(ids);
+
+			const res = await axios.put('/api/mangas/featured', ids);
+			console.log(res);
+		} catch (err) {
+			console.error(err);
+			window.alert(err.message);
+		}
+	};
+
 	return (
 		<>
 			<Head>
@@ -45,24 +77,60 @@ export default function Mangas({
 					</>
 				}
 			>
-				<div className={styles.infoCards}>
+				<main className={styles.main}>
 					<div className={styles.infoCard}>
 						<h1>{totalMangaCount}</h1>
 						<p>Total mangas</p>
 					</div>
+
 					<div className={styles.infoCard}>
 						<h1>{ongoingMangaCount}</h1>
 						<p>Ongonig mangas</p>
 					</div>
+
 					<div className={styles.infoCard}>
 						<h1>{finishedMangaCount}</h1>
 						<p>Finished mangas</p>
 					</div>
+
 					<div className={styles.infoCard}>
 						<h1>{totalChapterCount}</h1>
 						<p>Total chapters</p>
 					</div>
-				</div>
+
+					<div className={styles.listContainer}>
+						<h2>Featured mangas</h2>
+
+						<ReorderableList
+							className={styles.list}
+							items={featured}
+							remove={_id =>
+								setFeatured(featured.filter(item => item._id !== _id))
+							}
+							swap={(a, b) => {
+								const obj = JSON.parse(JSON.stringify(featured));
+								let copy = obj[a];
+								obj[a] = obj[b];
+								obj[b] = copy;
+								console.log(obj);
+
+								setFeatured(obj);
+							}}
+						/>
+
+						<div className={styles.actionBtns}>
+							<button className='btn btn-sm add' onClick={addFeatured}>
+								<i className='icon'>add</i>
+							</button>
+							<button
+								className='btn btn-sm btn-primary submit'
+								onClick={saveFeatured}
+							>
+								Submit
+							</button>
+						</div>
+					</div>
+				</main>
 			</AdminLayout>
 		</>
 	);
@@ -98,7 +166,8 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		Manga.countDocuments({ airStatus: 'ongoing' }),
 		Manga.find(
 			{ featured: true },
-			{ urlName: 1, title: 1, airStatus: 1, poster: 1 }
+			{ title: 1 },
+			{ sort: { featuredIndex: 1 } }
 		),
 	]);
 

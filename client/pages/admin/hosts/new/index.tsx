@@ -1,5 +1,5 @@
 import styles from './NewHost.module.css';
-import AdminLayout from '@/components/layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import { authOptions } from '@/api/auth/[...nextauth]';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';

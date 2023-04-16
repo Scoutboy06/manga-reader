@@ -5,12 +5,10 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import Manga from '@/models/Manga.model';
 import connectDB from '@/lib/mongoose';
-
-import MediaCard from '@/components/MediaCard';
-import Navbar from '@/components/navbars/Library';
 import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
-
-import styles from './mangas.module.css';
+import styles from './homepage.module.css';
+import MangaCard from '@/components/MangaCard';
+import DefaultLayout from '@/layouts/DefaultLayout';
 
 export default function Mangas({ featuredMangas }) {
 	const [slideshowIndex, setSlideshowIndex] = useState(0);
@@ -23,9 +21,7 @@ export default function Mangas({ featuredMangas }) {
 				<title>Manga Reader</title>
 			</Head>
 
-			<Navbar />
-
-			<main className={styles.main}>
+			<DefaultLayout>
 				<header>
 					<div className={styles.slideshow}>
 						<button
@@ -90,12 +86,7 @@ export default function Mangas({ featuredMangas }) {
 										<div className={styles.text}>
 											<p className={styles.genres}>
 												{manga.genres.split(', ').map(genre => (
-													<Link
-														href={`/mangas/genres/${genre.toLowerCase()}`}
-														key={genre}
-													>
-														{genre}
-													</Link>
+													<span key={genre}>{genre}</span>
 												))}
 											</p>
 											<Link
@@ -126,30 +117,32 @@ export default function Mangas({ featuredMangas }) {
 
 				{continueReading?.length > 0 && (
 					<section className={styles.continueReading}>
-						<HorizontalScrollContainer title='Continue Reading'>
+						<HorizontalScrollContainer title='Continue Reading' gap='1rem'>
 							{continueReading?.map(manga => (
-								<MediaCard
+								<MangaCard.Vertical
 									key={manga._id}
 									href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
-									seriesHref={`/mangas/${manga.urlName}`}
-									imgUrl={manga.poster}
 									title={manga.title}
+									titleHref={`/mangas/${manga.urlName}`}
+									image={manga.poster}
 									subtitle={`Chapter ${manga.currentChapter.number}`}
-									orientation='vertical'
-									dropdownItems={null}
 								/>
 							))}
 						</HorizontalScrollContainer>
 					</section>
 				)}
-			</main>
+			</DefaultLayout>
 		</>
 	);
 }
 
 export async function getStaticProps() {
 	await connectDB();
-	const featuredMangas = await Manga.find({ featured: true }, { chapters: 0 });
+	const featuredMangas = await Manga.find(
+		{ featured: true },
+		{ chapters: 0 },
+		{ sort: { featuredIndex: 1 } }
+	);
 
 	return {
 		props: {

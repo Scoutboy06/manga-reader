@@ -6,6 +6,7 @@ export default function HorizontalScrollContainer({
 	children,
 	title,
 	className = '',
+	gap,
 }) {
 	const [canScrollTo, setCanScrollTo] = useState({
 		left: false,
@@ -79,7 +80,11 @@ export default function HorizontalScrollContainer({
 				</div>
 			</div>
 
-			<div className={styles.scrollContainer} ref={scrollContainerEl}>
+			<div
+				className={styles.scrollContainer}
+				style={{ gap }}
+				ref={scrollContainerEl}
+			>
 				{children}
 			</div>
 		</div>

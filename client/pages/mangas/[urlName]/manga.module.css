@@ -3,11 +3,7 @@
 	display: flex;
 	flex-direction: row;
 	gap: 2rem;
-	background: radial-gradient(
-		ellipse 80% 50% at 50% -20%,
-		rgba(120, 119, 198, 0.3),
-		transparent
-	);
+	background: var(--glow-effect);
 }
 
 .image {
@@ -81,12 +77,6 @@
 
 .genre {
 	margin-right: 0.4rem;
-	transition: 0.15s;
-	text-decoration: underline;
-}
-
-.genre:hover {
-	color: var(--primary);
 }
 
 .main {

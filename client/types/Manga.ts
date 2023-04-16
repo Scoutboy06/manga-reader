@@ -1,25 +1,40 @@
 import { Types } from 'mongoose';
 
-export default interface IManga {
-	_id: Types.ObjectId;
+export interface Chapter {
+	number: number;
+	urlName: string;
+	sourceUrlName: string;
+	dateAdded: Date | string;
+}
+
+export interface NewManga {
 	urlName: string;
 	title: string;
 	description: string;
 	sourceUrlName: string;
-	featured: boolean;
+
 	hostId: Types.ObjectId | string;
+
 	airStatus: 'ongoing' | 'completed';
-	chapters: {
-		title: string;
-		number: number;
-		urlName: string;
-		sourceUrlName: string;
-	}[];
+
+	chapters: Chapter[];
+	latestChapterAt: Date | string;
+
 	otherNames?: string;
 	authors?: string;
 	artists?: string;
 	genres?: string;
 	released?: string;
+
 	poster: string;
 	backdrop?: string;
+
+	createdAt: Date | string;
+}
+
+export default interface IManga extends NewManga {
+	_id: Types.ObjectId;
+
+	featured?: boolean;
+	featuredIndex?: number;
 }

@@ -2,7 +2,7 @@ import { Model, Schema, model, models } from 'mongoose';
 import IManga from '@/types/Manga';
 
 const MangaSchema = new Schema<IManga>({
-	urlName: { type: String, required: true, unique: true },
+	urlName: { type: String, required: true, unique: true, index: true },
 	title: { type: String, required: true },
 	description: { type: String, required: true },
 	sourceUrlName: { type: String, required: true },
@@ -14,10 +14,10 @@ const MangaSchema = new Schema<IManga>({
 	chapters: [
 		{
 			_id: false,
-			title: { type: String, required: true },
 			number: { type: Number, required: true },
 			urlName: { type: String, required: true },
 			sourceUrlName: { type: String, required: true },
+			dateAdded: { type: Date, required: true },
 		},
 	],
 
@@ -29,6 +29,12 @@ const MangaSchema = new Schema<IManga>({
 
 	poster: { type: String, required: true },
 	backdrop: String,
+
+	featured: Boolean,
+	featuredIndex: Number,
+
+	createdAt: { type: Date, required: true },
+	latestChapterAt: { type: Date, required: true },
 });
 
 const Manga = (models?.Manga ||

@@ -23,7 +23,7 @@ export default async function checkUpdates() {
 
 		if (!host) throw new Error('No host found');
 
-		const mangaMeta = await scrapeManga(manga.sourceUrlName, host, true);
+		const mangaMeta = await scrapeManga(manga.sourceUrlName, host, false);
 		const newChapters = mangaMeta.chapters.filter(
 			chapter =>
 				!manga.chapters.find(ch => ch.sourceUrlName === chapter.sourceUrlName)
@@ -34,6 +34,7 @@ export default async function checkUpdates() {
 		updatedMangaCount++;
 		newChapterCount += newChapters.length;
 		manga.chapters = mangaMeta.chapters;
+		manga.latestChapterAt = new Date();
 
 		await manga.save();
 

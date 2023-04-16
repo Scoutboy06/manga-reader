@@ -5,7 +5,7 @@ import Link from 'next/link';
 import connectDB from '@/lib/mongoose';
 import Manga from '@/models/Manga.model';
 
-import Navbar from '@/components/navbars/Library';
+import Navbar from '@/components/navbars/DefaultNavbar';
 
 import styles from './manga.module.css';
 
@@ -37,8 +37,8 @@ export default function MangaPage({ manga }) {
 						<h1>{manga.title}</h1>
 
 						<Link
-							href={`/mangas/${manga.urlName}/chapter-1`}
-							className='btn btn-lg btn-primary icon-right'
+							href={`/mangas/${manga.urlName}/${manga.chapters.at(-1).urlName}`}
+							className='btn btn-primary icon-right'
 						>
 							Read now
 							<i className='icon'>keyboard_arrow_right</i>
@@ -70,17 +70,7 @@ export default function MangaPage({ manga }) {
 							</tr>
 							<tr>
 								<th>Genres</th>
-								<th>
-									{manga.genres.split(', ').map(genre => (
-										<Link
-											href={`/mangas/genres/${genre}`}
-											key={`genre_${genre}`}
-											className={styles.genre}
-										>
-											{genre},
-										</Link>
-									))}
-								</th>
+								<th>{manga.genres}</th>
 							</tr>
 							<tr>
 								<th>Other names</th>
@@ -108,7 +98,7 @@ export default function MangaPage({ manga }) {
 								key={`chapter_${chapter.number}`}
 								href={`/mangas/${manga.urlName}/${chapter.urlName}`}
 							>
-								{chapter.title}
+								Chapter {chapter.number}
 							</Link>
 						))}
 					</div>
@@ -121,6 +111,10 @@ export default function MangaPage({ manga }) {
 export async function getServerSideProps({ params: { urlName } }) {
 	await connectDB();
 	const manga = await Manga.findOne({ urlName });
+
+	if (!manga) {
+		return { notFound: true };
+	}
 
 	return {
 		props: {

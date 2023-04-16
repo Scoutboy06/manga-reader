@@ -10,7 +10,6 @@ const UserSchema = new Schema<IUser>({
 	mangas: [
 		{
 			_id: { type: Schema.Types.ObjectId, ref: 'Manga', required: true },
-			email: { type: String, required: true },
 			urlName: { type: String, required: true },
 			title: { type: String, required: true },
 

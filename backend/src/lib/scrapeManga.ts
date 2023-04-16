@@ -1,9 +1,10 @@
 import IHost from '../types/Host.js';
-import IManga from '../types/Manga.js';
+import { Chapter } from '../types/Manga.js';
 import { parse, HTMLElement } from 'node-html-parser';
 import matchValueWithSchema from './matchValueWithSchema.js';
 import getChapterNumber from './getChapterNumber.js';
 import { HydratedDocument } from 'mongoose';
+import { NewManga } from '../types/Manga.js';
 
 export default async function scrapeManga(
 	sourceUrlName: string,
@@ -46,19 +47,27 @@ export default async function scrapeManga(
 		host.chapterPage.urlPattern
 	);
 
-	const mangaMeta: Omit<IManga, '_id' | 'urlName'> = {
+	const mangaMeta: NewManga = {
+		urlName: sourceUrlName,
 		title,
 		description,
+		sourceUrlName,
+
+		hostId: host._id,
+		airStatus,
+
+		chapters,
+		latestChapterAt: new Date(),
+
 		otherNames,
 		authors,
 		artists,
 		genres,
 		released,
-		airStatus,
-		sourceUrlName,
-		hostId: host._id,
+
 		poster,
-		chapters,
+
+		createdAt: new Date(),
 	};
 
 	return mangaMeta;
@@ -75,9 +84,11 @@ function getText(root: HTMLElement, selector: string, required: boolean) {
 function getImage(root: HTMLElement, selector: string, required: boolean) {
 	const imgEl = root.querySelector(selector);
 	const src =
-		imgEl.getAttribute('data-src') ||
 		imgEl.getAttribute('data-srcset') ||
 		imgEl.getAttribute('srcset') ||
+		imgEl.getAttribute('data-setsrc') ||
+		imgEl.getAttribute('setsrc') ||
+		imgEl.getAttribute('data-src') ||
 		imgEl.getAttribute('src');
 
 	if (!src && required) {
@@ -92,7 +103,7 @@ function getChapters(
 	selector: string,
 	chapterPagePattern: string
 ) {
-	const chapters: IManga['chapters'] = [];
+	const chapters: Chapter[] = [];
 	const chapterEls = root.querySelectorAll(selector);
 
 	for (const chapterEl of [...chapterEls]) {
@@ -112,11 +123,11 @@ function getChapters(
 		// Removing ghost chapters
 		if (isNaN(chapterNumber)) continue;
 
-		const chapter: IManga['chapters'][0] = {
-			title: chapterTitle,
+		const chapter: Chapter = {
 			number: chapterNumber,
 			urlName: `chapter-${chapterNumber}`,
 			sourceUrlName,
+			dateAdded: new Date(),
 		};
 
 		chapters.push(chapter);

@@ -1,38 +1,4 @@
-/* @import 'https://fonts.googleapis.com/icon?family=Material+Icons'; */
-
 :root {
-	/* Material Design Defaults:
-		--primary: #d0bcff;
-		--primary-container: #4f378b;
-		--secondary: #ccc2dc;
-		--secondary-container: #4a4458;
-		--tertiary: #efb8c8;
-		--tertiary-container: #633b48;
-		--surface: #1c1b1f;
-		--surface-variant: #49454f;
-		--background: #1c1b1f;
-		--error: #f2b8b5;
-		--error-container: #8c1d18;
-		--on-primary: #371e73;
-		--on-primary-container: #eaddff;
-		--on-secondary: #332d41;
-		--on-secondary-container: #e8def8;
-		--on-tertiary: #492532;
-		--on-tertiary-container: #ffd8e4;
-		--on-surface: #e6e1e5;
-		--on-surface-variant: #cac4d0;
-		--on-error: #601410;
-		--on-error-container: #f9dedc;
-		--on-background: #e6e1e5;
-		--outline: #938f99;
-		--outline-variant: #444746;
-		--shadow: #000000;
-		--surface-tint-color: #d0bcff;
-		--inverse-surface: #e6e1e5;
-		--inverse-on-surface: #313033;
-		--inverse-primary: #6750a4;
-		--scrim: #000000; */
-
 	--padding: 2rem;
 	--font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
 		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -63,6 +29,12 @@
 	--outline-variant: #444746;
 	--divider: #242424;
 	--divider-variant: rgba(255, 255, 255, 0.08);
+
+	--glow-effect: radial-gradient(
+		ellipse 80% 500px at 50% -200px,
+		rgba(120, 119, 198, 0.2),
+		transparent
+	);
 
 	color-scheme: dark;
 	font-family: var(--font-family);

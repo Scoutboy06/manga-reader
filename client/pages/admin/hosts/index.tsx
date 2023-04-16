@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import styles from './hosts.module.css';
-import AdminLayout from '@/components/layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';

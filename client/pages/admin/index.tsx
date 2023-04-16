@@ -1,7 +1,7 @@
 import styles from './admin.module.css';
 import Head from 'next/head';
 import adminServerSideProps from '@/lib/adminServerSideProps';
-import AdminLayout from '@/components/layouts/AdminLayout';
+import AdminLayout from '@/layouts/AdminLayout';
 
 export default function Admin({ user }) {
 	return (
@@ -10,9 +10,7 @@ export default function Admin({ user }) {
 				<title>Settings - General</title>
 			</Head>
 
-			<AdminLayout>
-				<h1>General</h1>
-			</AdminLayout>
+			<AdminLayout top={<h1>General</h1>}>{''}</AdminLayout>
 		</>
 	);
 }

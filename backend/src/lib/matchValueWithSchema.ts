@@ -13,8 +13,11 @@ export default function matchValueWithSchema({
 	}
 
 	const regex = new RegExp(schema.replaceAll(/%(.+?)%/gi, '(.+?)'), 'gi');
+	const exec = regex.exec(value);
+	if (!exec) return null;
+
 	let i = 0;
-	for (const match of regex.exec(value).slice(1)) {
+	for (const match of exec.slice(1)) {
 		matches.set(keys[i], match);
 		i++;
 	}

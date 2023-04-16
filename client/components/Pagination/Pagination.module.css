@@ -1,0 +1,41 @@
+.pagination {
+	display: flex;
+	width: max-content;
+}
+
+.btn {
+	width: 24px;
+	height: 24px;
+	padding: 0.4rem;
+	box-sizing: content-box;
+	border: 0;
+	border-radius: 50%;
+	background-color: transparent;
+	transition: 0.15s;
+	color: #fff;
+}
+
+.btn:not(:disabled):hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn:disabled {
+	color: #67707a;
+	cursor: auto;
+}
+
+.btn:global(.current) {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+.btn:global(.current):hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dots {
+	width: 24px;
+	height: 24px;
+	padding: 0.4rem;
+	box-sizing: content-box;
+	text-align: center;
+	user-select: none;
+}

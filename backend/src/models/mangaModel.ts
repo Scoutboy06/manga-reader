@@ -18,6 +18,7 @@ const mangaModel = new Schema<IManga>({
 			number: { type: Number, required: true },
 			urlName: { type: String, required: true },
 			sourceUrlName: { type: String, required: true },
+			dateAdded: { type: Date, required: true },
 		},
 	],
 
@@ -29,6 +30,12 @@ const mangaModel = new Schema<IManga>({
 
 	poster: { type: String, required: true },
 	backdrop: String,
+
+	featured: Boolean,
+	featuredIndex: Number,
+
+	createdAt: { type: Date, required: true },
+	latestChapterAt: { type: Date, required: true },
 });
 
 const Manga = model('Manga', mangaModel);

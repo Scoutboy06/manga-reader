@@ -27,19 +27,20 @@
 
 .dropdown {
 	--vertical-offset: -4px;
-	background-color: var(--surface-0);
+	background-color: #00020e;
 	width: max-content;
 	z-index: 999;
 	cursor: auto;
 	padding: 0.5rem 0;
 	border-radius: 0.3rem;
 	box-shadow: 0px 5px 9px 2px rgba(0, 0, 0, 0.25);
-	border: 1px solid var(--divider-variant);
+	border: 1px solid var(--divider);
 	max-height: 500px;
 	position: absolute;
 	left: 0;
 	bottom: var(--vertical-offset);
 	transform: translateY(100%);
+	overflow-y: auto;
 }
 
 .dropdown:global(.br),
@@ -56,6 +57,7 @@
 }
 
 .item {
+	width: 100%;
 	background-color: transparent;
 	border: 0;
 	outline-offset: -1px;
@@ -68,6 +70,7 @@
 	font-family: var(--font-family);
 	text-align: left;
 	white-space: nowrap;
+	overflow: hidden;
 }
 
 .item[disabled],
@@ -87,8 +90,8 @@
 .divider {
 	width: 100%;
 	height: 1px;
-	background-color: var(--divider-variant);
-	color: var(--divider-variant);
+	background-color: var(--divider);
+	color: var(--divider);
 	margin: 5px 0;
 }
 

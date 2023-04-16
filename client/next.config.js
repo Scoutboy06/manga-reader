@@ -20,7 +20,9 @@ export default {
 			{ protocol: 'https', hostname: 'www.themoviedb.org' },
 			{ protocol: 'https', hostname: 'image.tmdb.org' },
 			{ protocol: 'https', hostname: 'images.fanart.tv' },
+			{ protocol: 'https', hostname: 'cdn.myanimelist.net' },
 			{ protocol: 'https', hostname: 'lh3.googleusercontent.com' },
+			{ protocol: 'https', hostname: 'www.mangaread.org' },
 		],
 	},
 	rewrites: () => {

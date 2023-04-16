@@ -6,13 +6,13 @@
  */
 export function promiseAll<T>(
 	arr: T[],
-	callback: (item: T) => Promise<unknown>
+	callback: (item?: T, index?: number) => Promise<unknown>
 ) {
 	return Promise.all(
 		arr.map(
-			item =>
+			(item, i) =>
 				new Promise((resolve, reject) =>
-					callback(item).then(resolve).catch(reject)
+					callback(item, i).then(resolve).catch(reject)
 				)
 		)
 	);
@@ -26,13 +26,13 @@ export function promiseAll<T>(
  */
 export function promiseSettled<T>(
 	arr: T[],
-	callback: (item: T) => Promise<unknown>
+	callback: (item?: T, index?: number) => Promise<unknown>
 ) {
 	return Promise.allSettled(
 		arr.map(
-			item =>
+			(item, i) =>
 				new Promise((resolve, reject) =>
-					callback(item).then(resolve).catch(reject)
+					callback(item, i).then(resolve).catch(reject)
 				)
 		)
 	);
