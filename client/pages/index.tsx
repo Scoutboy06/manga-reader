@@ -12,6 +12,7 @@ import DefaultLayout from '@/layouts/DefaultLayout';
 import { GetServerSideProps } from 'next';
 import IManga from '@/types/Manga';
 import { HydratedDocument } from 'mongoose';
+import Slideshow from '@/components/Slideshow';
 
 interface Props {
 	featuredMangas: HydratedDocument<IManga>[];
@@ -24,8 +25,6 @@ export default function Home({
 	popularMangas,
 	recentlyUpdated,
 }: Props) {
-	const [slideshowIndex, setSlideshowIndex] = useState(0);
-
 	const { data: continueReading } = useSWR(`/api/me/mangas?limit=12`);
 
 	return (
@@ -36,96 +35,7 @@ export default function Home({
 
 			<DefaultLayout>
 				<header>
-					<div className={styles.slideshow}>
-						<button
-							className={styles.prevBtn + ' icon'}
-							onClick={() =>
-								setSlideshowIndex(
-									slideshowIndex - 1 < 0
-										? featuredMangas.length - 1
-										: slideshowIndex - 1
-								)
-							}
-						>
-							arrow_back_ios_new
-						</button>
-						<button
-							className={styles.nextBtn + ' icon'}
-							onClick={() =>
-								setSlideshowIndex((slideshowIndex + 1) % featuredMangas.length)
-							}
-						>
-							arrow_forward_ios
-						</button>
-
-						<div className={styles.smallButtons}>
-							{featuredMangas?.map((_, i) => (
-								<button
-									onClick={() => setSlideshowIndex(i)}
-									className={slideshowIndex === i ? 'active' : ''}
-									key={`button_${i}`}
-									aria-label='Slideshow index'
-								></button>
-							))}
-						</div>
-
-						<div
-							className={styles.items}
-							style={{ transform: `translateX(-${slideshowIndex * 100}%)` }}
-						>
-							{featuredMangas.map((manga, i) => (
-								<div className={styles.item} key={manga._id.toString()}>
-									<Image
-										src={manga.backdrop || ''}
-										sizes='(max-width: 900px) 100vw
-														900px'
-										width={1280}
-										height={720}
-										alt='Backdrop'
-										className={styles.backdrop}
-										priority={i === 0}
-									/>
-
-									<div className={styles.metadata}>
-										<Image
-											width={150}
-											height={225}
-											src={manga.poster}
-											alt={manga.title}
-											className={styles.poster}
-											priority={i === 0}
-										/>
-
-										<div className={styles.text}>
-											<p className={styles.genres}>
-												{manga.genres?.split(', ')?.map(genre => (
-													<span key={genre}>{genre}</span>
-												))}
-											</p>
-											<Link
-												href={`/mangas/${manga.urlName}`}
-												style={{ marginLeft: 6 }}
-											>
-												<h1>
-													{manga.title}
-													<i className='icon'>open_in_new</i>
-												</h1>
-											</Link>
-											<p className={styles.description}>{manga.description}</p>
-										</div>
-
-										<Link
-											href={`/mangas/${manga.urlName}`}
-											className={styles.readManga}
-										>
-											<i className='icon'>book</i>
-											<span>Read Manga</span>
-										</Link>
-									</div>
-								</div>
-							))}
-						</div>
-					</div>
+					<Slideshow mangas={featuredMangas} />
 				</header>
 
 				<section className={styles.section}>

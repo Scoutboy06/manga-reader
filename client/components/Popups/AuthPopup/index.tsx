@@ -5,7 +5,7 @@ import Popup from '@/components/Popup';
 
 import styles from './LoginPopup.module.css';
 
-export default function LoginPopup(props) {
+export default function AuthPopup({ title, ...props }) {
 	const icons = {
 		google: (
 			<Image src='/icons/google.svg' width={24} height={24} alt='Google logo' />
@@ -16,7 +16,7 @@ export default function LoginPopup(props) {
 	return (
 		<Popup {...props} unmountOnClose={false}>
 			<div className={styles.container}>
-				<h1>Log in</h1>
+				<h1>{title}</h1>
 
 				<button
 					className={'btn btn-secondary ' + styles.googleBtn}
@@ -27,7 +27,7 @@ export default function LoginPopup(props) {
 					Continue with Google
 				</button>
 
-				<button
+				{/* <button
 					className='btn btn-secondary'
 					type='button'
 					onClick={() => signIn('email')}
@@ -35,7 +35,7 @@ export default function LoginPopup(props) {
 				>
 					<div className={styles.icon + ' icon'}>{icons.email}</div>
 					Continue with Email
-				</button>
+				</button> */}
 			</div>
 		</Popup>
 	);

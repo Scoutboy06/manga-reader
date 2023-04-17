@@ -6,18 +6,22 @@ import { useSession, signOut } from 'next-auth/react';
 import axios from 'axios';
 import Dropdown from '@/components/Dropdown';
 import styles from './DefaultNavbar.module.css';
-import LoginPopup from '@/components/popups/LoginPopup';
+import AuthPopup from '@/components/popups/AuthPopup';
 import VerticalNavbar from '@/components/navbars/VerticalNavbar';
+import IManga from '@/types/Manga';
+import useSWRImmutable from 'swr/immutable';
 
-export default function LibraryNavbar() {
+export default function DefaultNavbar() {
 	const router = useRouter();
 	const { data: session } = useSession();
+	const { data: notifications } = useSWRImmutable('/api/me/notifications');
 	const [searchValue, setSearchValue] = useState('');
-	const [searchResults, setSearchResults] = useState(null);
+	const [searchResults, setSearchResults] = useState<IManga[] | null>(null);
 	const [showLogin, setShowLogin] = useState(false);
+	const [showSignUp, setShowSignUp] = useState(false);
 	const [showVertical, setShowVertical] = useState(false);
 	const [showSearch, setShowSearch] = useState(false);
-	const searchTimeout = useRef();
+	const searchTimeout = useRef<number | null>(null);
 	const searchContainer = useRef(null);
 	const searchBtn = useRef(null);
 
@@ -28,14 +32,11 @@ export default function LibraryNavbar() {
 
 	const inputChange = e => {
 		setSearchValue(e.target.value);
-		clearTimeout(searchTimeout.current);
+		if (searchTimeout.current) clearTimeout(searchTimeout.current);
 
-		if (!e.target.value) {
-			setSearchResults(null);
-			return;
-		}
+		if (!e.target.value) return setSearchResults(null);
 
-		searchTimeout.current = setTimeout(async () => {
+		searchTimeout.current = window.setTimeout(async () => {
 			const mangas = await axios.get('/api/mangas', {
 				params: {
 					limit: 5,
@@ -152,7 +153,7 @@ export default function LibraryNavbar() {
 									<Dropdown.Item
 										href={`/mangas/${manga.urlName}`}
 										className={styles.searchResult}
-										key={manga._id}
+										key={manga._id.toString()}
 										aria-label={manga.title}
 										onClick={() => {
 											setSearchResults(null);
@@ -199,18 +200,18 @@ export default function LibraryNavbar() {
 						)}
 					</form>
 
-					{session ? (
+					{session?.user ? (
 						<>
 							<Dropdown>
-								<Dropdown.Button className={'icon outlined ' + styles.button}>
-									notifications
+								<Dropdown.Button className={styles.button}>
+									<i className='icon outlined'>notifications</i>
 								</Dropdown.Button>
 							</Dropdown>
 
 							<Dropdown>
 								<Dropdown.Button className={styles.button}>
 									<Image
-										src={session?.user?.image}
+										src={session.user.image || ''}
 										width={28}
 										height={28}
 										alt='Profile picture'
@@ -218,18 +219,12 @@ export default function LibraryNavbar() {
 								</Dropdown.Button>
 
 								<Dropdown.Items placement='br'>
-									{session?.user?.isAdmin && (
+									{session.user.isAdmin && (
 										<Dropdown.Item href='/admin' icon='dashboard'>
 											Admin
 										</Dropdown.Item>
 									)}
-									<Dropdown.Item href='/profile' icon='person'>
-										Profile
-									</Dropdown.Item>
-									<hr />
-									<Dropdown.Item href='/settings' icon='settings'>
-										Settings
-									</Dropdown.Item>
+									{session.user.isAdmin && 'divider'}
 									<Dropdown.Item onClick={signOut} icon='logout'>
 										Log out
 									</Dropdown.Item>
@@ -245,7 +240,11 @@ export default function LibraryNavbar() {
 							>
 								Log in
 							</button>
-							<button type='button' className='btn btn-sm btn-primary'>
+							<button
+								type='button'
+								className='btn btn-sm btn-primary'
+								onClick={() => setShowSignUp(true)}
+							>
 								Sign up
 							</button>
 						</>
@@ -253,7 +252,17 @@ export default function LibraryNavbar() {
 				</div>
 			</nav>
 
-			<LoginPopup visible={showLogin} close={() => setShowLogin(false)} />
+			<AuthPopup
+				title='Log in'
+				visible={showLogin}
+				close={() => setShowLogin(false)}
+			/>
+
+			<AuthPopup
+				title='Sign up'
+				visible={showSignUp}
+				close={() => setShowSignUp(false)}
+			/>
 		</>
 	);
 }

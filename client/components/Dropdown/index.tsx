@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, Children } from 'react';
+import { useRef, useState, useEffect, Children, ReactNode } from 'react';
 import Link from 'next/link';
 
 import styles from './Dropdown.module.css';
@@ -61,18 +61,31 @@ export default function Dropdown({ children, ...props }) {
 	);
 }
 
-function Button() {
+function Button(props) {
 	return null;
 }
 
-function Items({ children, className, placement = 'bl', ...props }) {
+interface ItemsProps {
+	children?: ReactNode;
+	className?: string;
+	placement?: 'bl' | 'br' | 'tl' | 'tr';
+	style?: object;
+}
+
+function Items({
+	children,
+	className,
+	placement = 'bl',
+	...props
+}: ItemsProps) {
 	return (
 		<div
 			className={[styles.dropdown, placement, className].join(' ')}
 			{...props}
 		>
 			{Children.map(children, child => {
-				if (child === 'divider' || child?.type === 'hr') {
+				// child?.type === 'hr')
+				if (child === 'divider') {
 					return <div className={styles.divider}></div>;
 				}
 
@@ -82,6 +95,15 @@ function Items({ children, className, placement = 'bl', ...props }) {
 	);
 }
 
+interface ItemProps {
+	children?: ReactNode;
+	href?: string;
+	className?: string;
+	icon?: string;
+	iconOutlined?: boolean;
+	[key: string]: any;
+}
+
 function Item({
 	children,
 	href,
@@ -89,16 +111,16 @@ function Item({
 	icon,
 	iconOutlined = false,
 	...props
-}) {
+}: ItemProps) {
 	let element = {
-		type: href ? Link : 'button',
+		type: props.href ? Link : 'button',
 	};
 
 	return (
 		<element.type
-			{...props}
-			href={href}
+			href={href || ''}
 			className={[className, styles.item].join(' ')}
+			{...props}
 		>
 			{icon && (
 				<i className={`icon ${iconOutlined ? 'outlined' : ''}`}>{icon}</i>
