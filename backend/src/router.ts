@@ -16,7 +16,7 @@ router.get('/mangas/external', async (req: Request, res: Response) => {
 
 	if (sourceUrlName && hostId) {
 		host = await Host.findById(hostId);
-		if (!host) return res.status(404).json({ message: 'No host found' });
+		if (!host) return res.status(404).json({ message: 'Host not found' });
 	} else {
 		if (!req.query.url)
 			return res.status(400).json({ message: `Invalid value 'url' in query` });

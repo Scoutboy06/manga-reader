@@ -20,16 +20,17 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 	]);
 
 	if (!user) return res.status(401).json({ message: 'User not found' });
-	if (!manga) return res.status(404).json({ message: 'Manga not found' });
+	if (!user.mangas)
+		return res.status(401).json({ message: 'User has no mangas' });
+	if (!manga || !user.mangas)
+		return res.status(404).json({ message: 'Manga not found' });
 
 	const chapter = manga.chapters.find(
 		chapter => chapter.urlName === chapterUrlName
 	);
 	if (!chapter) return res.status(404).json({ message: 'Chapter not found' });
 
-	const userManga = user
-		.toObject()
-		.mangas.find(manga => manga.urlName === mangaUrlName);
+	const userManga = user.mangas.find(manga => manga.urlName === mangaUrlName);
 
 	if (!userManga) {
 		const mangaMeta: UserManga = {

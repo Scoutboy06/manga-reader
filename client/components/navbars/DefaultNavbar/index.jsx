@@ -23,7 +23,7 @@ export default function LibraryNavbar() {
 
 	const searchSubmit = e => {
 		e.preventDefault();
-		router.push(`/mangas/search?query=${searchValue}`);
+		router.push(`/mangas/search?q=${searchValue}`);
 	};
 
 	const inputChange = e => {

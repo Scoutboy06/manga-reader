@@ -34,6 +34,9 @@ const mangaModel = new Schema<IManga>({
 	featured: Boolean,
 	featuredIndex: Number,
 
+	popular: Boolean,
+	popularIndex: Number,
+
 	createdAt: { type: Date, required: true },
 	latestChapterAt: { type: Date, required: true },
 });

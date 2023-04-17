@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import connectDB from '@/lib/mongoose';
 import Manga from '@/models/Manga.model';
+import { Chapter } from '@/types/Manga';
 import fetchScraper from '@/lib/fetchScraper';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -49,15 +50,17 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
 async function POST(req: NextApiRequest, res: NextApiResponse) {
 	const { hostId, sourceUrlName } = req.body;
 
-	const { chapters } = await fetchScraper(
-		'/mangas/external?' +
-			new URLSearchParams({
+	try {
+		const response = await fetchScraper({
+			url: '/mangas/external',
+			params: {
 				sourceUrlName,
 				hostId,
-			})
-	);
+			},
+		});
 
-	try {
+		const chapters: Chapter[] = response.data.chapters;
+
 		const newManga = await Manga.create({
 			...req.body,
 			chapters,

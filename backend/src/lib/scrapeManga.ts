@@ -84,11 +84,10 @@ function getText(root: HTMLElement, selector: string, required: boolean) {
 function getImage(root: HTMLElement, selector: string, required: boolean) {
 	const imgEl = root.querySelector(selector);
 	const src =
-		imgEl.getAttribute('data-srcset') ||
-		imgEl.getAttribute('srcset') ||
-		imgEl.getAttribute('data-setsrc') ||
-		imgEl.getAttribute('setsrc') ||
 		imgEl.getAttribute('data-src') ||
+		imgEl.getAttribute('data-setsrc') ||
+		imgEl.getAttribute('srcset') ||
+		imgEl.getAttribute('setsrc') ||
 		imgEl.getAttribute('src');
 
 	if (!src && required) {

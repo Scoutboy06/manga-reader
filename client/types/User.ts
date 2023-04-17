@@ -6,7 +6,6 @@ import { Chapter } from './Manga.js';
 export interface UserManga {
 	_id?: Types.ObjectId | string;
 	urlName: string;
-	title: string;
 	isFavorite: boolean;
 	notificationsOn: boolean;
 	readStatus: 'reading' | 'finished';
@@ -19,7 +18,7 @@ export default interface IUser extends AdapterUser {
 	_id?: Types.ObjectId | string;
 	isAdmin?: boolean;
 
-	mangas: UserManga[];
+	mangas?: UserManga[];
 
 	notifications?: Notification[];
 }

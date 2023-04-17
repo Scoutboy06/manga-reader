@@ -33,7 +33,7 @@ export default function Horizontal({ title, urlName, image, chapters }: Props) {
 						>
 							<span
 								className={styles.chapterTitle}
-							>{`Chap ${chapter.number}`}</span>
+							>{`Chapter ${chapter.number}`}</span>
 							<span className={styles.dateAdded}>
 								{relativeTimeString(new Date(chapter.dateAdded))}
 							</span>

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import connectDB from '@/lib/mongoose';
-import axios from 'axios';
+import fetchScraper from '@/lib/fetchScraper';
 
 const { SCRAPER_URI } = process.env;
 
@@ -10,18 +10,21 @@ if (!SCRAPER_URI) {
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	await connectDB();
-	const { path } = req.query;
+	const { path, ...params } = req.query;
 
 	const url = Array.isArray(path) ? path.join('/') : path || '';
 
 	try {
-		const data = await axios({
+		const data = await fetchScraper({
 			method: req.method,
-			baseURL: SCRAPER_URI,
 			url,
+			params,
+			data: req.query.body,
 		});
+		console.log('Herrrrrrrree');
 		res.status(data.status).json(data.data);
 	} catch (err) {
-		res.status(err.response.status).json(err);
+		console.log('Errorrrrrr');
+		res.status(err.status || 500).json(err);
 	}
 }

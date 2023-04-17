@@ -15,22 +15,18 @@ interface Props {
 	lastPage: number;
 }
 
-export default function UpdatedMangas({
-	mangas,
-	currentPage,
-	lastPage,
-}: Props) {
+export default function SearchMangas({ mangas, currentPage, lastPage }: Props) {
 	const router = useRouter();
 
 	return (
 		<>
 			<Head>
-				<title>Latest Updates</title>
+				<title>Search: {router.query.q || ''}</title>
 			</Head>
 
 			<DefaultLayout>
 				<main className={styles.main}>
-					<h1>Latest Updates</h1>
+					<h1>Search: {router.query.q || ''}</h1>
 
 					<div className={styles.mangas}>
 						{mangas.map(manga => (
@@ -49,7 +45,7 @@ export default function UpdatedMangas({
 							currentPage={currentPage}
 							lastPage={lastPage}
 							paginate={pageNumber =>
-								router.push(`/mangas/updated?page=${pageNumber}`)
+								router.push(`/mangas/search?page=${pageNumber}`)
 							}
 						/>
 					</div>
@@ -63,17 +59,32 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	await connectDB();
 	const itemsPerPage = 24;
 	const page = Number(context.query.page) || 1;
+	const q = Number(context.query.q) || '';
 
 	const mangas = await Manga.find(
-		{},
+		{
+			$or: [
+				{
+					title: {
+						$regex: q,
+						$options: 'i',
+					},
+				},
+				{
+					otherNames: {
+						$regex: q,
+						$options: 'i',
+					},
+				},
+			],
+		},
 		{
 			chapters: { $slice: [0, 3] },
 			title: 1,
 			urlName: 1,
 			poster: 1,
-			latestChapterAt: 1,
-		},
-		{ sort: { latestChapterAt: -1 } }
+			// createdAt: 1,
+		}
 	)
 		.limit(itemsPerPage)
 		.skip((Number(page) - 1) * itemsPerPage);

@@ -20,11 +20,10 @@ export default async function scrapeImages(
 
 	for (const img of imageEls) {
 		let src =
-			img.getAttribute('data-srcset') ||
-			img.getAttribute('srcset') ||
-			img.getAttribute('data-setsrc') ||
-			img.getAttribute('setsrc') ||
 			img.getAttribute('data-src') ||
+			img.getAttribute('data-setsrc') ||
+			img.getAttribute('srcset') ||
+			img.getAttribute('setsrc') ||
 			img.getAttribute('src');
 
 		src = src.trim();
