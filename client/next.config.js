@@ -5,15 +5,6 @@ if (!SCRAPER_URI) {
 }
 
 export default {
-	async redirects() {
-		return [
-			{
-				source: '/',
-				destination: '/mangas',
-				permanent: true,
-			},
-		];
-	},
 	images: {
 		remotePatterns: [
 			{ protocol: 'https', hostname: 'manga-reader-scoutboy06.vercel.app' },
@@ -25,13 +16,5 @@ export default {
 			{ protocol: 'https', hostname: 'www.mangaread.org' },
 		],
 	},
-	rewrites: () => {
-		return [
-			{
-				source: '/api/mangas/external',
-				destination: new URL('/mangas/external', SCRAPER_URI).href,
-			},
-		]
-	}
 };
 
