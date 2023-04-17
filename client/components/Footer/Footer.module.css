@@ -1,5 +1,6 @@
 .footer {
-	padding: 2rem var(--padding);
+	height: var(--footer-height);
+	padding: 0 var(--padding);
 	border-top: 1px solid #2a2f3d;
 	display: flex;
 	flex-direction: column;
@@ -32,7 +33,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.2rem;
-	color: #67707a;
+	color: #777f89;
 	font-size: 0.9rem;
 	text-align: center;
 	margin-top: 1.5rem;

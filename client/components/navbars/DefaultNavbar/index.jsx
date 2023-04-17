@@ -93,7 +93,7 @@ export default function LibraryNavbar() {
 						menu
 					</button>
 
-					<Link href='/mangas'>
+					<Link href='/'>
 						<Image
 							src='/appIcons/rikka_square_72.png'
 							width={32}

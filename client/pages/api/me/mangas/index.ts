@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import connectDB from '@/lib/mongoose';
 import User from '@/models/User.model';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]';
+import { authOptions } from '@/api/auth/[...nextauth]';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	await connectDB();

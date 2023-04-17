@@ -23,7 +23,6 @@ const UserSchema = new Schema<IUser>({
 			lastRead: { type: Date, required: true },
 
 			currentChapter: {
-				title: { type: String, required: true },
 				number: { type: Number, required: true },
 				urlName: { type: String, required: true },
 				sourceUrlName: { type: String, required: true },

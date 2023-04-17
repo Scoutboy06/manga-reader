@@ -25,21 +25,22 @@ export default function UpdatedMangas({
 	return (
 		<>
 			<Head>
-				<title>Latest Updates</title>
+				<title>Popular Mangas</title>
 			</Head>
 
 			<DefaultLayout>
 				<main className={styles.main}>
-					<h1>Latest Updates</h1>
+					<h1>Popular Mangas</h1>
 
 					<div className={styles.mangas}>
 						{mangas.map(manga => (
-							<MangaCard.Horizontal
+							<MangaCard.Vertical
 								key={manga._id.toString()}
 								title={manga.title}
-								urlName={manga.urlName}
+								href={`/mangas/${manga.urlName}`}
+								// urlName={manga.urlName}
 								image={manga.poster}
-								chapters={manga.chapters}
+								// chapters={manga.chapters}
 							/>
 						))}
 					</div>
@@ -49,7 +50,7 @@ export default function UpdatedMangas({
 							currentPage={currentPage}
 							lastPage={lastPage}
 							paginate={pageNumber =>
-								router.push(`/mangas/updated?page=${pageNumber}`)
+								router.push(`/mangas/popular?page=${pageNumber}`)
 							}
 						/>
 					</div>
@@ -64,23 +65,26 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	const itemsPerPage = 24;
 	const page = Number(context.query.page) || 1;
 
+	const filter = { popularIndex: { $exists: true } };
+
 	const mangas = await Manga.find(
-		{},
+		filter,
 		{
 			chapters: { $slice: [0, 3] },
 			title: 1,
 			urlName: 1,
 			poster: 1,
-			latestChapterAt: 1,
 		},
 		{
 			limit: itemsPerPage,
 			skip: (Number(page) - 1) * itemsPerPage,
-			sort: { latestChapterAt: -1 },
+			sort: { popularIndex: -1 },
 		}
 	);
 
-	const lastPage = Math.ceil((await Manga.countDocuments({})) / itemsPerPage);
+	const lastPage = Math.ceil(
+		(await Manga.countDocuments({ filter })) / itemsPerPage
+	);
 
 	return {
 		props: {

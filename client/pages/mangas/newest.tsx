@@ -69,10 +69,12 @@ export const getServerSideProps: GetServerSideProps = async context => {
 			poster: 1,
 			createdAt: 1,
 		},
-		{ sort: { createdAt: -1 } }
-	)
-		.limit(itemsPerPage)
-		.skip((Number(page) - 1) * itemsPerPage);
+		{
+			limit: itemsPerPage,
+			skip: (Number(page) - 1) * itemsPerPage,
+			sort: { createdAt: -1 },
+		}
+	);
 
 	const lastPage = Math.ceil((await Manga.countDocuments({})) / itemsPerPage);
 

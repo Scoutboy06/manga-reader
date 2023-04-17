@@ -5,7 +5,7 @@ export default function Footer() {
 	return (
 		<footer className={styles.footer}>
 			<div className={styles.links}>
-				<Link href='/mangas'>Home</Link>
+				<Link href='/'>Home</Link>
 				<Link href='/contact'>Contact</Link>
 				<Link href='/about'>About</Link>
 			</div>

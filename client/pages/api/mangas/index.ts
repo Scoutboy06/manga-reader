@@ -21,28 +21,10 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
 	const { limit = 50, skip = 0, query = '' } = req.query;
 
 	const mangas = await Manga.find(
-		{
-			$or: [
-				{
-					title: {
-						$regex: query,
-						$options: 'i',
-					},
-				},
-				{
-					otherNames: {
-						$regex: query,
-						$options: 'i',
-					},
-				},
-			],
-		},
-		{
-			chapters: 0,
-		}
-	)
-		.limit(Number(limit))
-		.skip(Number(skip));
+		{ title: { $regex: query, $options: 'i' } },
+		{ chapters: 0 },
+		{ limit: Number(limit), skip: Number(skip) }
+	);
 
 	res.json(mangas);
 }

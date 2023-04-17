@@ -19,6 +19,7 @@ type PageProps = {
 	finishedMangaCount: number;
 	totalChapterCount: number;
 	featuredMangas: IManga[];
+	popularMangas: IManga[];
 };
 
 export default function Mangas({
@@ -27,9 +28,13 @@ export default function Mangas({
 	finishedMangaCount,
 	totalChapterCount,
 	featuredMangas,
+	popularMangas,
 }: PageProps) {
 	const [featured, setFeatured] = useState(
 		featuredMangas.map(({ _id, title }) => ({ _id, title }))
+	);
+	const [popular, setPopular] = useState(
+		popularMangas.map(({ _id, title }) => ({ _id, title }))
 	);
 
 	const addFeatured = async () => {
@@ -44,13 +49,39 @@ export default function Mangas({
 		}
 	};
 
+	const addPopular = async () => {
+		const urlName = prompt('Manga URL name:');
+		try {
+			const { data: manga } = await axios.get(`/api/mangas/${urlName}`);
+			setPopular([...popular, { _id: manga._id, title: manga.title }]);
+		} catch (err) {
+			console.error(err);
+			window.alert(err.message);
+		}
+	};
+
 	const saveFeatured = async () => {
 		try {
 			const ids = featured.map(manga => manga._id);
 			console.log(ids);
 
 			const res = await axios.put('/api/mangas/featured', ids);
-			console.log(res);
+			if (res.statusText === 'OK') {
+				window.alert(res.data.message || 'Success');
+			}
+		} catch (err) {
+			console.error(err);
+			window.alert(err.message);
+		}
+	};
+
+	const savePopular = async () => {
+		try {
+			const ids = popular.map(manga => manga._id);
+			const res = await axios.put('/api/mangas/popular', ids);
+			if (res.statusText === 'OK') {
+				window.alert(res.data.message || 'Success');
+			}
 		} catch (err) {
 			console.error(err);
 			window.alert(err.message);
@@ -112,7 +143,6 @@ export default function Mangas({
 								let copy = obj[a];
 								obj[a] = obj[b];
 								obj[b] = copy;
-								console.log(obj);
 
 								setFeatured(obj);
 							}}
@@ -125,6 +155,38 @@ export default function Mangas({
 							<button
 								className='btn btn-sm btn-primary submit'
 								onClick={saveFeatured}
+							>
+								Submit
+							</button>
+						</div>
+					</div>
+
+					<div className={styles.listContainer}>
+						<h2>Popular mangas</h2>
+
+						<ReorderableList
+							className={styles.list}
+							items={popular}
+							remove={_id =>
+								setPopular(popular.filter(item => item._id !== _id))
+							}
+							swap={(a, b) => {
+								const obj = JSON.parse(JSON.stringify(popular));
+								let copy = obj[a];
+								obj[a] = obj[b];
+								obj[b] = copy;
+
+								setPopular(obj);
+							}}
+						/>
+
+						<div className={styles.actionBtns}>
+							<button className='btn btn-sm add' onClick={addPopular}>
+								<i className='icon'>add</i>
+							</button>
+							<button
+								className='btn btn-sm btn-primary submit'
+								onClick={savePopular}
 							>
 								Submit
 							</button>
@@ -149,30 +211,38 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		};
 	}
 
-	const [details, ongoingMangaCount, featuredMangas] = await Promise.all([
-		Manga.aggregate([
-			{
-				$group: {
-					_id: 1,
-					totalMangaCount: {
-						$count: {},
-					},
-					totalChapterCount: {
-						$sum: { $size: '$chapters' },
+	const [details, ongoingMangaCount, featuredMangas, popularMangas] =
+		await Promise.all([
+			Manga.aggregate([
+				{
+					$group: {
+						_id: 1,
+						totalMangaCount: {
+							$count: {},
+						},
+						totalChapterCount: {
+							$sum: { $size: '$chapters' },
+						},
 					},
 				},
-			},
-		]),
-		Manga.countDocuments({ airStatus: 'ongoing' }),
-		Manga.find(
-			{ featured: true },
-			{ title: 1 },
-			{ sort: { featuredIndex: 1 } }
-		),
-	]);
+			]),
+			Manga.countDocuments({ airStatus: 'ongoing' }),
+			Manga.find(
+				{ featured: true },
+				{ title: 1 },
+				{ sort: { featuredIndex: 1 } }
+			),
+			Manga.find(
+				{ popular: true },
+				{ title: 1 },
+				{ sort: { popularIndex: 1 } }
+			),
+		]);
 
 	const { totalMangaCount, totalChapterCount } = details[0];
 	const finishedMangaCount = totalMangaCount - ongoingMangaCount;
+
+	console.log(popularMangas);
 
 	const props: PageProps = {
 		totalMangaCount,
@@ -180,6 +250,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		finishedMangaCount,
 		totalChapterCount,
 		featuredMangas: JSON.parse(JSON.stringify(featuredMangas)),
+		popularMangas: JSON.parse(JSON.stringify(popularMangas)),
 	};
 
 	return { props };

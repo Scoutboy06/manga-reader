@@ -8,6 +8,7 @@ interface Props {
 	image: string;
 	title: string;
 	subtitle?: string;
+	imagePriority?: boolean;
 }
 
 export default function Vertical({
@@ -16,11 +17,18 @@ export default function Vertical({
 	image,
 	title,
 	subtitle,
+	imagePriority,
 }: Props) {
 	return (
 		<div className={styles.card}>
 			<Link href={href} className={styles.imageContainer}>
-				<Image src={image} width={200} height={300} alt={title} />
+				<Image
+					src={image}
+					width={200}
+					height={300}
+					alt={title}
+					priority={imagePriority}
+				/>
 
 				<div className={styles.overlayContainer}></div>
 			</Link>

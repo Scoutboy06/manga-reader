@@ -14,7 +14,6 @@ const mangaModel = new Schema<IManga>({
 	chapters: [
 		{
 			_id: false,
-			title: { type: String, required: true },
 			number: { type: Number, required: true },
 			urlName: { type: String, required: true },
 			sourceUrlName: { type: String, required: true },

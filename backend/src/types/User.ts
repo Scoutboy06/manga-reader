@@ -4,6 +4,7 @@ import { Chapter } from './Manga.js';
 
 export interface UserManga {
 	_id?: Types.ObjectId | string;
+	title: string;
 	urlName: string;
 	isFavorite: boolean;
 	notificationsOn: boolean;

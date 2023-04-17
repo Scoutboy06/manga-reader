@@ -3,7 +3,7 @@
 	flex-wrap: nowrap;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 10px;
+	margin-bottom: 1rem;
 }
 
 .title {
@@ -20,12 +20,13 @@
 .buttons {
 	display: flex;
 	flex-wrap: nowrap;
-	width: 90px;
 }
 
 .buttons button {
-	font-size: 1.6rem;
-	padding: 0.6rem;
+	width: 24px;
+	height: 24px;
+	padding: 0.4rem;
+	box-sizing: content-box;
 	background-color: transparent;
 	color: var(--on-background);
 	border: 0;
@@ -38,8 +39,7 @@
 }
 
 .buttons button:not([disabled]):hover {
-	background-color: var(--primary-container);
-	color: var(--primary);
+	background-color: rgba(255, 255, 255, 0.1);
 }
 
 .buttons button[disabled=''] {

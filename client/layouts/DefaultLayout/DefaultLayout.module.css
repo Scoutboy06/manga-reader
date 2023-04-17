@@ -1,5 +1,5 @@
 .container {
-	min-height: 100vh;
+	min-height: calc(100vh - var(--footer-height));
 	padding: var(--navbar-height) var(--padding) 2rem;
 	background-image: var(--glow-effect);
 }

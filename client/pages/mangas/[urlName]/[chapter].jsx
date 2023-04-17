@@ -115,7 +115,7 @@ export default function ReadManga() {
 						Prev
 					</button>
 
-					<Link href='/mangas' className={styles.button}>
+					<Link href='/' className={styles.button}>
 						<i className='icon'>home</i>
 					</Link>
 
@@ -178,7 +178,7 @@ export default function ReadManga() {
 						Prev
 					</button>
 
-					<Link href='/mangas' className={styles.button}>
+					<Link href='/' className={styles.button}>
 						<i className='icon'>home</i>
 					</Link>
 

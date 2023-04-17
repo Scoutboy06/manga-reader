@@ -8,8 +8,8 @@ import { UserManga } from '@/types/User';
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	await connectDB();
-	const mangaUrlName = req.query.urlName;
-	const chapterUrlName = req.body.urlName;
+	const mangaUrlName = req.query.urlName!;
+	const chapterUrlName: string = req.body.urlName;
 
 	const session = await getServerSession(req, res, authOptions);
 	if (!session?.user) return res.status(401).json({ message: 'Unauthorized' });
@@ -22,40 +22,38 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 	if (!user) return res.status(401).json({ message: 'User not found' });
 	if (!user.mangas)
 		return res.status(401).json({ message: 'User has no mangas' });
-	if (!manga || !user.mangas)
-		return res.status(404).json({ message: 'Manga not found' });
+	if (!manga) return res.status(404).json({ message: 'Manga not found' });
 
-	const chapter = manga.chapters.find(
+	const currentChapter = manga.chapters.find(
 		chapter => chapter.urlName === chapterUrlName
 	);
-	if (!chapter) return res.status(404).json({ message: 'Chapter not found' });
+	if (!currentChapter)
+		return res.status(404).json({ message: 'Chapter not found' });
 
 	const userManga = user.mangas.find(manga => manga.urlName === mangaUrlName);
 
 	if (!userManga) {
 		const mangaMeta: UserManga = {
+			_id: manga._id,
 			urlName: manga.urlName,
 			title: manga.title,
 			isFavorite: false,
 			notificationsOn: true,
 			readStatus: 'reading',
 			lastRead: new Date(),
-			currentChapter: chapter,
+			currentChapter,
 			poster: manga.poster,
 		};
 
 		user.mangas.unshift(mangaMeta);
 	} else {
-		userManga.currentChapter = chapter;
-
-		// Place manga first in library
-		const userMangaIndex = user.mangas.findIndex(
-			manga => manga._id === userManga._id
-		);
-		// user.mangas.unshift(userManga);
-		// user.mangas.splice(userMangaIndex + 1, 1);
-		console.log(user.mangas[userMangaIndex]);
+		userManga.currentChapter = currentChapter;
+		userManga.lastRead = new Date();
 	}
+
+	user.mangas.sort(
+		(mangaA, mangaB) => mangaB.lastRead.getTime() - mangaA.lastRead.getTime()
+	);
 
 	await user.save();
 	res.status(200).json({ message: 'Success' });

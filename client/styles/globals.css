@@ -4,7 +4,8 @@
 		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
 		sans-serif;
 
-	--navbar-height: 48px;
+	--navbar-height: 3rem;
+	--footer-height: 10rem;
 
 	--on-background: #fafdff;
 

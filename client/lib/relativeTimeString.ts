@@ -17,7 +17,7 @@ export default function relativeTimeString(date: Date): string {
 	}
 	if (timeDiff < aWeek) {
 		const days = getDays(timeDiff);
-		return `${days} hour${days === 1 ? '' : 's'} ago`;
+		return `${days} day${days === 1 ? '' : 's'} ago`;
 	}
 
 	return date.toLocaleDateString();

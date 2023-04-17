@@ -57,9 +57,7 @@ router.get('/mangas/:urlName/:chapter', async (req: Request, res: Response) => {
 	);
 	if (!manga) return res.status(404).json({ message: 'Manga not found' });
 
-	const currChap = manga
-		.toObject()
-		.chapters.find(chap => chap.urlName === chapter);
+	const currChap = manga.chapters.find(chap => chap.urlName === chapter);
 	if (!currChap) return res.status(404).json({ message: 'Chapter not found' });
 
 	const host = await Host.findById(manga.hostId);

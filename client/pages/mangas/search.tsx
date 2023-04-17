@@ -16,17 +16,18 @@ interface Props {
 }
 
 export default function SearchMangas({ mangas, currentPage, lastPage }: Props) {
-	const router = useRouter();
+	const { push, query } = useRouter();
+	const q = typeof query.q === 'string' ? query.q : query.q?.toString() || '';
 
 	return (
 		<>
 			<Head>
-				<title>Search: {router.query.q || ''}</title>
+				<title>Search: {query.q || ''}</title>
 			</Head>
 
 			<DefaultLayout>
 				<main className={styles.main}>
-					<h1>Search: {router.query.q || ''}</h1>
+					<h1>Search: {query.q || ''}</h1>
 
 					<div className={styles.mangas}>
 						{mangas.map(manga => (
@@ -45,7 +46,13 @@ export default function SearchMangas({ mangas, currentPage, lastPage }: Props) {
 							currentPage={currentPage}
 							lastPage={lastPage}
 							paginate={pageNumber =>
-								router.push(`/mangas/search?page=${pageNumber}`)
+								push(
+									'/mangas/search?' +
+										new URLSearchParams({
+											q,
+											page: pageNumber.toString(),
+										})
+								)
 							}
 						/>
 					</div>
@@ -59,37 +66,28 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	await connectDB();
 	const itemsPerPage = 24;
 	const page = Number(context.query.page) || 1;
-	const q = Number(context.query.q) || '';
+	const q = context.query.q || '';
+
+	const filter = { title: { $regex: q, $options: 'i' } };
 
 	const mangas = await Manga.find(
-		{
-			$or: [
-				{
-					title: {
-						$regex: q,
-						$options: 'i',
-					},
-				},
-				{
-					otherNames: {
-						$regex: q,
-						$options: 'i',
-					},
-				},
-			],
-		},
+		filter,
 		{
 			chapters: { $slice: [0, 3] },
 			title: 1,
 			urlName: 1,
 			poster: 1,
-			// createdAt: 1,
+		},
+		{
+			limit: itemsPerPage,
+			skip: (Number(page) - 1) * itemsPerPage,
+			sort: { title: 1 },
 		}
-	)
-		.limit(itemsPerPage)
-		.skip((Number(page) - 1) * itemsPerPage);
+	);
 
-	const lastPage = Math.ceil((await Manga.countDocuments({})) / itemsPerPage);
+	const lastPage = Math.ceil(
+		(await Manga.countDocuments(filter)) / itemsPerPage
+	);
 
 	return {
 		props: {

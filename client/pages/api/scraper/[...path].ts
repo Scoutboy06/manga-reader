@@ -21,10 +21,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 			params,
 			data: req.query.body,
 		});
-		console.log('Herrrrrrrree');
 		res.status(data.status).json(data.data);
 	} catch (err) {
-		console.log('Errorrrrrr');
 		res.status(err.status || 500).json(err);
 	}
 }

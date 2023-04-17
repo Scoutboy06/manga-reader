@@ -1,9 +1,8 @@
 .header {
-	padding: calc(var(--navbar-height) + 2rem) var(--padding) 20px;
+	padding: 2rem 0 20px;
 	display: flex;
 	flex-direction: row;
 	gap: 2rem;
-	background: var(--glow-effect);
 }
 
 .image {
@@ -42,6 +41,7 @@
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space: pre-line;
 }
 
 .description:global(.expand) {
