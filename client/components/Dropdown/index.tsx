@@ -35,7 +35,7 @@ export default function Dropdown({ children, ...props }) {
 		>
 			{Children.map(children, child => {
 				// Button
-				if (child.type === Button) {
+				if (child?.type === Button) {
 					return (
 						<button
 							{...child.props}
@@ -50,7 +50,7 @@ export default function Dropdown({ children, ...props }) {
 				}
 
 				// Items
-				if (child.type === Items) {
+				if (child?.type === Items) {
 					if (isOpen) return child;
 					return null;
 				}
@@ -113,7 +113,7 @@ function Item({
 	...props
 }: ItemProps) {
 	let element = {
-		type: props.href ? Link : 'button',
+		type: href ? Link : 'button',
 	};
 
 	return (

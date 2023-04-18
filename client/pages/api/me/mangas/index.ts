@@ -17,8 +17,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
 	const { limit = 50, skip = 0 } = req.query;
-	const session = await getServerSession(req, res, authOptions);
 
+	const session = await getServerSession(req, res, authOptions);
 	if (!session) return res.status(401).json({ message: 'Not authorized' });
 
 	const user = await User.findById(session.user._id, {

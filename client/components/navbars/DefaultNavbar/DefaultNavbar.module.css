@@ -40,10 +40,30 @@
 	text-decoration: none;
 	transition: 0.15s;
 	font-size: 1.5rem;
+	position: relative;
 }
 
 .button > img {
 	border-radius: 50%;
+}
+
+.notificationCount {
+	position: absolute;
+	font-size: 0.7rem;
+	width: 1.2rem;
+	height: 1.2rem;
+	background-color: red;
+	border-radius: 50%;
+	top: -2px;
+	right: -2px;
+	display: grid;
+	place-items: center;
+	border: 2px solid #080a1e;
+}
+
+.notifications {
+	width: 300px;
+	max-width: 100vw;
 }
 
 .navlink {
@@ -106,14 +126,33 @@
 	width: 18rem;
 }
 
-.searchResult {
-	padding: 0.7rem;
+.dropdownItem {
+	height: 80px;
+	padding: 0 0.7rem;
 	display: flex;
-	gap: 0.5rem;
+	gap: 0.7rem;
 }
 
-.searchResult > img {
+.imageContainer {
+	width: 40px;
+	height: 60px;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdownItem img {
 	object-fit: cover;
+	width: 40px;
+	height: 60px;
+}
+
+.content {
+	width: calc(100% - 40px);
+}
+
+.content > * {
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .content p {

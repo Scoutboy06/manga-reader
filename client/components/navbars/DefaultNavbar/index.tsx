@@ -6,15 +6,18 @@ import { useSession, signOut } from 'next-auth/react';
 import axios from 'axios';
 import Dropdown from '@/components/Dropdown';
 import styles from './DefaultNavbar.module.css';
-import AuthPopup from '@/components/popups/AuthPopup';
+import AuthPopup from '@/components/Popups/AuthPopup';
 import VerticalNavbar from '@/components/navbars/VerticalNavbar';
 import IManga from '@/types/Manga';
 import useSWRImmutable from 'swr/immutable';
+import Notification from '@/types/Notification';
 
 export default function DefaultNavbar() {
 	const router = useRouter();
 	const { data: session } = useSession();
-	const { data: notifications } = useSWRImmutable('/api/me/notifications');
+	const { data: notifications }: { data?: Notification[] } = useSWRImmutable(
+		'/api/me/notifications'
+	);
 	const [searchValue, setSearchValue] = useState('');
 	const [searchResults, setSearchResults] = useState<IManga[] | null>(null);
 	const [showLogin, setShowLogin] = useState(false);
@@ -73,6 +76,8 @@ export default function DefaultNavbar() {
 			window.removeEventListener('click', click);
 		};
 	}, []);
+
+	console.log(notifications);
 
 	return (
 		<>
@@ -152,7 +157,7 @@ export default function DefaultNavbar() {
 								{searchResults?.map(manga => (
 									<Dropdown.Item
 										href={`/mangas/${manga.urlName}`}
-										className={styles.searchResult}
+										className={styles.dropdownItem}
 										key={manga._id.toString()}
 										aria-label={manga.title}
 										onClick={() => {
@@ -205,7 +210,44 @@ export default function DefaultNavbar() {
 							<Dropdown>
 								<Dropdown.Button className={styles.button}>
 									<i className='icon outlined'>notifications</i>
+									{notifications && notifications.length > 0 && (
+										<span className={styles.notificationCount}>
+											{notifications.length}
+										</span>
+									)}
 								</Dropdown.Button>
+
+								{notifications && notifications.length > 0 && (
+									<Dropdown.Items
+										placement='br'
+										className={styles.notifications}
+									>
+										{notifications?.map((notification, i) => (
+											<Dropdown.Item
+												key={`notification_${i}`}
+												href={notification.action.replace('url:', '')}
+												className={styles.dropdownItem}
+												aria-label={notification.title}
+											>
+												<div className={styles.imageContainer}>
+													{notification.image && (
+														<Image
+															src={notification.image}
+															width={40}
+															height={60}
+															alt={notification.title}
+														/>
+													)}
+												</div>
+
+												<div className={styles.content}>
+													<h5>{notification.title}</h5>
+													<p>{notification.body}</p>
+												</div>
+											</Dropdown.Item>
+										))}
+									</Dropdown.Items>
+								)}
 							</Dropdown>
 
 							<Dropdown>

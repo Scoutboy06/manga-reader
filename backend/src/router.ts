@@ -6,6 +6,8 @@ import { HydratedDocument } from 'mongoose';
 import IHost from './types/Host.js';
 import Manga from './models/mangaModel.js';
 import scrapeImages from './lib/scrapeImages.js';
+import User from './models/userModel.js';
+import { promiseAll } from './lib/asyncFunctions.js';
 
 const router = Router();
 
@@ -76,7 +78,6 @@ router.get('/mangas/:urlName/:chapter', async (req: Request, res: Response) => {
 });
 
 // router.use('/test', async (req: Request, res: Response) => {
-
 // });
 
 export default router;

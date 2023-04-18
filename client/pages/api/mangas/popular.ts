@@ -5,6 +5,8 @@ import Manga from '@/models/Manga.model';
 export default async function (req: NextApiRequest, res: NextApiResponse) {
 	await connectDB();
 	switch (req.method) {
+		case 'GET':
+			return GET(req, res);
 		case 'PUT':
 			return PUT(req, res);
 		default:
@@ -12,9 +14,16 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 	}
 }
 
+async function GET(req: NextApiRequest, res: NextApiResponse) {
+	const mangas = await Manga.find(
+		{ popular: true },
+		{ title: 1, urlName: 1, poster: 1 }
+	);
+	res.json(mangas);
+}
+
 async function PUT(req: NextApiRequest, res: NextApiResponse) {
 	const ids: string[] = req.body;
-	console.log(ids);
 
 	if (!Array.isArray(ids))
 		return res
