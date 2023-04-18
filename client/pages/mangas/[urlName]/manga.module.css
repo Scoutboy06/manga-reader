@@ -84,7 +84,8 @@
 }
 
 .chapters {
-	max-height: 600px;
+	width: calc(40vw + 40px);
+	max-width: 100%;
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;

@@ -6,9 +6,12 @@ import connectDB from '@/lib/mongoose';
 import Manga from '@/models/Manga.model';
 import styles from './manga.module.css';
 import DefaultLayout from '@/layouts/DefaultLayout';
+import { useSWR } from 'swr';
 
 export default function MangaPage({ manga }) {
 	const [expandDescription, setExpandDescription] = useState(false);
+
+	const { data: popularMangas } = useSWR('/api/mangas/popular');
 
 	return (
 		<>
@@ -89,20 +92,21 @@ export default function MangaPage({ manga }) {
 								</tr>
 							</tbody>
 						</table>
-
-						<h2 style={{ marginTop: '3rem' }}>Chapters</h2>
-						<div className={styles.chapters}>
-							{manga.chapters.map(chapter => (
-								<Link
-									key={`chapter_${chapter.number}`}
-									href={`/mangas/${manga.urlName}/${chapter.urlName}`}
-								>
-									Chapter {chapter.number}
-								</Link>
-							))}
-						</div>
 					</div>
 				</main>
+				<div className={styles.chaptersContainer}>
+					<h2 style={{ marginTop: '3rem' }}>Chapters</h2>
+					<div className={styles.chapters}>
+						{manga.chapters.map((chapter, i) => (
+							<Link
+								key={`chapter_${chapter.number}_${i}`}
+								href={`/mangas/${manga.urlName}/${chapter.urlName}`}
+							>
+								Chapter {chapter.number}
+							</Link>
+						))}
+					</div>
+				</div>
 			</DefaultLayout>
 		</>
 	);
