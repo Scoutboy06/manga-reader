@@ -30,10 +30,8 @@ const mangaModel = new Schema<IManga>({
 	poster: { type: String, required: true },
 	backdrop: String,
 
-	featured: Boolean,
 	featuredIndex: Number,
-
-	popular: Boolean,
+	top100Index: Number,
 	popularIndex: Number,
 
 	createdAt: { type: Date, required: true },

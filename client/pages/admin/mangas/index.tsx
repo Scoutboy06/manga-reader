@@ -228,12 +228,12 @@ export const getServerSideProps: GetServerSideProps = async context => {
 			]),
 			Manga.countDocuments({ airStatus: 'ongoing' }),
 			Manga.find(
-				{ featured: true },
+				{ featured: { $exists: true } },
 				{ title: 1 },
 				{ sort: { featuredIndex: 1 } }
 			),
 			Manga.find(
-				{ popular: true },
+				{ popularIndex: { $exists: true } },
 				{ title: 1 },
 				{ sort: { popularIndex: 1 } }
 			),

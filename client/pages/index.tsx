@@ -116,12 +116,13 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 	const [featuredMangas, popularMangas, recentlyUpdated] = await Promise.all([
 		await Manga.find(
-			{ featured: true },
+			{ featuredIndex: { $exists: true } },
 			{ chapters: 0 },
 			{ sort: { featuredIndex: 1 } }
 		),
+
 		await Manga.find(
-			{ popular: true },
+			{ popularIndex: { $exists: true } },
 			{ title: 1, urlName: 1, poster: 1 },
 			{ sort: { popularIndex: 1 } }
 		),

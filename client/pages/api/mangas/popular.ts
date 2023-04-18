@@ -16,7 +16,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
 	const mangas = await Manga.find(
-		{ popular: true },
+		{ popularIndex: { $exists: true } },
 		{ title: 1, urlName: 1, poster: 1 }
 	);
 	res.json(mangas);
@@ -32,15 +32,14 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
 
 	// Clear all featured mangas
 	await Manga.updateMany(
-		{ popular: true },
-		{ $unset: { popular: '', popularIndex: '' } }
+		{ popularIndex: { $exists: true } },
+		{ $unset: { popularIndex: '' } }
 	);
 	// Set featured that were added
 	const popularMangas = await Manga.find({ _id: { $in: ids } });
 
 	const updated = await Promise.all(
 		popularMangas.map(async manga => {
-			manga.popular = true;
 			manga.popularIndex = ids.findIndex(id => id === manga._id.toString());
 			return await manga.save();
 		})

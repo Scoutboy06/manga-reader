@@ -22,15 +22,14 @@ async function PUT(req: NextApiRequest, res: NextApiResponse) {
 
 	// Clear all featured mangas
 	await Manga.updateMany(
-		{ featured: true },
-		{ $unset: { featured: '', featuredIndex: '' } }
+		{ featuredIndex: { $exists: true } },
+		{ $unset: { featuredIndex: '' } }
 	);
 	// Set featured that were added
 	const featuredMangas = await Manga.find({ _id: { $in: ids } });
 
 	const updated = await Promise.all(
 		featuredMangas.map(async manga => {
-			manga.featured = true;
 			manga.featuredIndex = ids.findIndex(id => id === manga._id.toString());
 			return await manga.save();
 		})
