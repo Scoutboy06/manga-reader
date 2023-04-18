@@ -17,7 +17,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 async function GET(req: NextApiRequest, res: NextApiResponse) {
 	const mangas = await Manga.find(
 		{ popularIndex: { $exists: true } },
-		{ title: 1, urlName: 1, poster: 1 }
+		{ chapters: { $slice: [0, 3] }, title: 1, urlName: 1, poster: 1 }
 	);
 	res.json(mangas);
 }

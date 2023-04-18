@@ -15,22 +15,18 @@ interface Props {
 	lastPage: number;
 }
 
-export default function UpdatedMangas({
-	mangas,
-	currentPage,
-	lastPage,
-}: Props) {
+export default function Top100Page({ mangas, currentPage, lastPage }: Props) {
 	const router = useRouter();
 
 	return (
 		<>
 			<Head>
-				<title>Popular Mangas</title>
+				<title>Top 100 Mangas</title>
 			</Head>
 
 			<DefaultLayout>
 				<main className={styles.main}>
-					<h1>Popular Mangas</h1>
+					<h1>Top 100 Mangas</h1>
 
 					<div className={styles.mangas + ' vertical'}>
 						{mangas.map(manga => (
@@ -49,7 +45,7 @@ export default function UpdatedMangas({
 							currentPage={currentPage}
 							lastPage={lastPage}
 							paginate={pageNumber =>
-								router.push(`/mangas/popular?page=${pageNumber}`)
+								router.push(`/mangas/top-100?page=${pageNumber}`)
 							}
 						/>
 					</div>
@@ -64,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 	const itemsPerPage = 24;
 	const page = Number(context.query.page) || 1;
 
-	const filter = { popularIndex: { $exists: true } };
+	const filter = { top100Index: { $exists: true } };
 
 	const mangas = await Manga.find(
 		filter,
@@ -77,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 		{
 			limit: itemsPerPage,
 			skip: (Number(page) - 1) * itemsPerPage,
-			sort: { popularIndex: -1 },
+			sort: { top100Index: 1 },
 		}
 	);
 

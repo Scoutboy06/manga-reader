@@ -14,7 +14,7 @@ export default function VerticalNavbar({ visible, close }: Props) {
 				onClick={close}
 			></div>
 			<nav className={styles.navbar + (visible ? ' visible' : '')}>
-				<Link href='/mangas' className={styles.link}>
+				<Link href='/' className={styles.link}>
 					Home
 				</Link>
 				<Link href='/mangas/popular' className={styles.link}>

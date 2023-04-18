@@ -43,6 +43,7 @@ export default async function checkUpdates() {
 				title: manga.title,
 				body: `Chapter ${chapter.number}`,
 				action: `url:/mangas/${manga.urlName}/${chapter.urlName}`,
+				image: manga.poster,
 				createdAt: new Date(),
 			};
 

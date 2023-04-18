@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
 import Link from 'next/link';
 import useSWR from 'swr';
 import Manga from '@/models/Manga.model';
@@ -13,6 +11,7 @@ import { GetServerSideProps } from 'next';
 import IManga from '@/types/Manga';
 import { HydratedDocument } from 'mongoose';
 import Slideshow from '@/components/Slideshow';
+import { UserManga } from '@/types/User';
 
 interface Props {
 	featuredMangas: HydratedDocument<IManga>[];
@@ -25,7 +24,8 @@ export default function Home({
 	popularMangas,
 	recentlyUpdated,
 }: Props) {
-	const { data: continueReading } = useSWR(`/api/me/mangas?limit=12`);
+	const { data: continueReading }: { data?: HydratedDocument<UserManga>[] } =
+		useSWR(`/api/me/mangas?limit=8`);
 
 	return (
 		<>
@@ -52,7 +52,7 @@ export default function Home({
 								</Link>
 							</>
 						}
-						gap='1rem'
+						gap={16}
 					>
 						{popularMangas.map((manga, i) => (
 							<MangaCard.Vertical
@@ -66,12 +66,12 @@ export default function Home({
 					</HorizontalScrollContainer>
 				</section>
 
-				{continueReading?.length > 0 && (
+				{continueReading && continueReading?.length > 0 && (
 					<section className={styles.section}>
-						<HorizontalScrollContainer title='Continue Reading' gap='1rem'>
+						<HorizontalScrollContainer title='Continue Reading' gap={16}>
 							{continueReading?.map(manga => (
 								<MangaCard.Vertical
-									key={manga._id}
+									key={manga._id.toString()}
 									href={`/mangas/${manga.urlName}/${manga.currentChapter.urlName}`}
 									title={manga.title}
 									titleHref={`/mangas/${manga.urlName}`}
@@ -111,7 +111,7 @@ export default function Home({
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async context => {
+export const getServerSideProps: GetServerSideProps = async () => {
 	await connectDB();
 
 	const [featuredMangas, popularMangas, recentlyUpdated] = await Promise.all([

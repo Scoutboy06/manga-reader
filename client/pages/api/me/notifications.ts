@@ -9,6 +9,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
 	switch (req.method) {
 		case 'GET':
 			return GET(req, res);
+		case 'DELETE':
+			return DELETE(req, res);
 		default:
 			res.status(404).end();
 	}
@@ -22,4 +24,15 @@ const GET = async (req: NextApiRequest, res: NextApiResponse) => {
 	if (!user) return res.status(404).json({ message: 'User not found' });
 
 	res.json(user.notifications?.reverse());
+};
+
+const DELETE = async (req: NextApiRequest, res: NextApiResponse) => {
+	const session = await getServerSession(req, res, authOptions);
+	if (!session?.user) return res.status(401).json({ message: 'Unauthorized' });
+
+	const status = await User.updateOne(
+		{ _id: session.user._id },
+		{ $set: { notifications: [] } }
+	);
+	res.json(status);
 };

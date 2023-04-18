@@ -8,6 +8,10 @@
 	gap: 1.5rem;
 }
 
+.mangas:global(.vertical) {
+	grid-template-columns: repeat(auto-fill, minmax(150px, auto));
+}
+
 .main > h1 {
 	margin: 3rem 0 3rem 0;
 }

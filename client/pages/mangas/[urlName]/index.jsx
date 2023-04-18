@@ -6,7 +6,8 @@ import connectDB from '@/lib/mongoose';
 import Manga from '@/models/Manga.model';
 import styles from './manga.module.css';
 import DefaultLayout from '@/layouts/DefaultLayout';
-import { useSWR } from 'swr';
+import useSWR from 'swr';
+import MangaCard from '@/components/MangaCard';
 
 export default function MangaPage({ manga }) {
 	const [expandDescription, setExpandDescription] = useState(false);
@@ -94,17 +95,35 @@ export default function MangaPage({ manga }) {
 						</table>
 					</div>
 				</main>
-				<div className={styles.chaptersContainer}>
-					<h2 style={{ marginTop: '3rem' }}>Chapters</h2>
-					<div className={styles.chapters}>
-						{manga.chapters.map((chapter, i) => (
-							<Link
-								key={`chapter_${chapter.number}_${i}`}
-								href={`/mangas/${manga.urlName}/${chapter.urlName}`}
-							>
-								Chapter {chapter.number}
-							</Link>
-						))}
+
+				<div className={styles.bottomContainer}>
+					<div className={styles.chaptersContainer}>
+						<h2>Chapters</h2>
+						<div className={styles.chapters}>
+							{manga.chapters?.map((chapter, i) => (
+								<Link
+									key={`chapter_${chapter.number}_${i}`}
+									href={`/mangas/${manga.urlName}/${chapter.urlName}`}
+								>
+									Chapter {chapter.number}
+								</Link>
+							))}
+						</div>
+					</div>
+
+					<div className={styles.popularContainer}>
+						<h2>Popular Mangas</h2>
+
+						<div className={styles.popularMangas}>
+							{popularMangas?.map(manga => (
+								<MangaCard.Horizontal
+									title={manga.title}
+									urlName={manga.urlName}
+									image={manga.poster}
+									chapters={manga.chapters}
+								/>
+							))}
+						</div>
 					</div>
 				</div>
 			</DefaultLayout>

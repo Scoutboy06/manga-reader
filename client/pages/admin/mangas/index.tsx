@@ -228,7 +228,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
 			]),
 			Manga.countDocuments({ airStatus: 'ongoing' }),
 			Manga.find(
-				{ featured: { $exists: true } },
+				{ featuredIndex: { $exists: true } },
 				{ title: 1 },
 				{ sort: { featuredIndex: 1 } }
 			),
@@ -241,8 +241,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
 
 	const { totalMangaCount, totalChapterCount } = details[0];
 	const finishedMangaCount = totalMangaCount - ongoingMangaCount;
-
-	console.log(popularMangas);
 
 	const props: PageProps = {
 		totalMangaCount,

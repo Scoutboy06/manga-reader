@@ -1,10 +1,44 @@
-import { useRef, useState, useEffect, Children, ReactNode } from 'react';
-import Link from 'next/link';
-
 import styles from './Dropdown.module.css';
+import {
+	useRef,
+	useState,
+	useEffect,
+	HTMLAttributes,
+	Dispatch,
+	SetStateAction,
+	ElementType,
+} from 'react';
+import Toggle from './Toggle';
+import Menu from './Menu';
+import Item from './Item';
+import Divider from './Divider';
+import DropdownContext, { DropdownPlacement } from './Context';
 
-export default function Dropdown({ children, ...props }) {
+interface DropdownProps extends HTMLAttributes<HTMLElement> {
+	rootCloseEvent?: 'click' | 'mousedown';
+	placement: DropdownPlacement;
+	isOpen?: boolean;
+	setIsOpen?: Dispatch<SetStateAction<boolean>>;
+	as?: string | ElementType;
+	onOpen?: () => any;
+	onClose?: () => any;
+}
+
+function Dropdown({
+	rootCloseEvent = 'click',
+	children,
+	placement,
+	className,
+	isOpen: _isOpen,
+	setIsOpen: _setIsOpen,
+	as: Component = 'div',
+	onOpen,
+	onClose,
+	...props
+}: DropdownProps) {
+	const isHandled = _isOpen !== undefined && _setIsOpen !== undefined;
 	const [isOpen, setIsOpen] = useState(false);
+	const isActuallyOpen = (isHandled && _isOpen) || (!isHandled && isOpen);
 	const rootEl = useRef<HTMLDivElement>(null);
 
 	const handleWindowClick = (e: Event) => {
@@ -12,124 +46,54 @@ export default function Dropdown({ children, ...props }) {
 
 		if (rootEl.current && !path.includes(rootEl.current)) {
 			setIsOpen(false);
+			_setIsOpen?.(false);
 		}
 	};
 
 	useEffect(() => {
-		if (isOpen) {
-			window.addEventListener('click', handleWindowClick);
+		if (isActuallyOpen) {
+			window.addEventListener(rootCloseEvent, handleWindowClick);
+			onOpen?.();
 		} else {
-			window.removeEventListener('click', handleWindowClick);
+			window.removeEventListener(rootCloseEvent, handleWindowClick);
+			onClose?.();
 		}
 
 		return () => {
-			window.removeEventListener('click', handleWindowClick);
+			window.removeEventListener(rootCloseEvent, handleWindowClick);
 		};
-	}, [isOpen]);
+	}, [isActuallyOpen]);
 
 	return (
-		<div
-			className={styles.container + (isOpen ? ' open' : '')}
-			ref={rootEl}
-			{...props}
+		<DropdownContext.Provider
+			value={[
+				{
+					isOpen: isHandled ? _isOpen : isOpen,
+					placement,
+				},
+				{
+					setIsOpen: isHandled ? _setIsOpen : setIsOpen,
+				},
+			]}
 		>
-			{Children.map(children, child => {
-				// Button
-				if (child?.type === Button) {
-					return (
-						<button
-							{...child.props}
-							onClick={() => {
-								child.props.onClick?.();
-								setIsOpen(!isOpen);
-							}}
-						>
-							{child.props.children}
-						</button>
-					);
-				}
-
-				// Items
-				if (child?.type === Items) {
-					if (isOpen) return child;
-					return null;
-				}
-
-				return child;
-			})}
-		</div>
+			<Component
+				className={[
+					className,
+					styles.container,
+					(isHandled && _isOpen) || (!isHandled && isOpen) ? 'open' : '',
+				].join(' ')}
+				ref={rootEl}
+				{...props}
+			>
+				{children}
+			</Component>
+		</DropdownContext.Provider>
 	);
 }
 
-function Button(props) {
-	return null;
-}
-
-interface ItemsProps {
-	children?: ReactNode;
-	className?: string;
-	placement?: 'bl' | 'br' | 'tl' | 'tr';
-	style?: object;
-}
-
-function Items({
-	children,
-	className,
-	placement = 'bl',
-	...props
-}: ItemsProps) {
-	return (
-		<div
-			className={[styles.dropdown, placement, className].join(' ')}
-			{...props}
-		>
-			{Children.map(children, child => {
-				// child?.type === 'hr')
-				if (child === 'divider') {
-					return <div className={styles.divider}></div>;
-				}
-
-				return child;
-			})}
-		</div>
-	);
-}
-
-interface ItemProps {
-	children?: ReactNode;
-	href?: string;
-	className?: string;
-	icon?: string;
-	iconOutlined?: boolean;
-	[key: string]: any;
-}
-
-function Item({
-	children,
-	href,
-	className,
-	icon,
-	iconOutlined = false,
-	...props
-}: ItemProps) {
-	let element = {
-		type: href ? Link : 'button',
-	};
-
-	return (
-		<element.type
-			href={href || ''}
-			className={[className, styles.item].join(' ')}
-			{...props}
-		>
-			{icon && (
-				<i className={`icon ${iconOutlined ? 'outlined' : ''}`}>{icon}</i>
-			)}
-			{children}
-		</element.type>
-	);
-}
-
-Dropdown.Button = Button;
-Dropdown.Items = Items;
-Dropdown.Item = Item;
+export default Object.assign(Dropdown, {
+	Toggle,
+	Menu,
+	Item,
+	Divider,
+});

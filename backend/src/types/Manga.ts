@@ -35,7 +35,7 @@ export interface NewManga {
 export default interface IManga extends NewManga {
 	_id: Types.ObjectId;
 
-	popular?: boolean;
+	featuredIndex?: boolean;
 	popularIndex?: number;
 	top100Index?: number;
 }
