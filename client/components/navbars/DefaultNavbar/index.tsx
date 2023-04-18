@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import styles from './DefaultNavbar.module.css';
-import AuthPopup from '@/components/popups/AuthPopup';
+import AuthPopup from '@/components/Popups/AuthPopup';
 import VerticalNavbar from '@/components/navbars/VerticalNavbar';
 import useSWRImmutable from 'swr/immutable';
 import Notification from '@/types/Notification';
