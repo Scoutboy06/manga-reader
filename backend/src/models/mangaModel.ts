@@ -1,65 +1,42 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import IManga from '../types/Manga.js';
 
-export interface IManga {
-	isVerified: boolean;
-	title: string;
-	description: string;
-	urlName: string;
-	sourceUrlName: string;
-	hostId: Schema.Types.ObjectId;
-	airStatus: 'ongoing' | 'completed';
+const mangaModel = new Schema<IManga>({
+	urlName: { type: String, required: true, unique: true, index: true },
+	title: { type: String, required: true },
+	description: { type: String, required: true },
+	sourceUrlName: { type: String, required: true },
+
+	hostId: { type: Schema.Types.ObjectId, ref: 'Host', required: true },
+
+	airStatus: { type: String, enum: ['ongoing', 'completed'], required: true },
+
 	chapters: [
 		{
-			title: string;
-			number: number;
-			urlName: string;
-			sourceUrlName: string;
-		}
-	];
-	otherNames?: string;
-	authors?: string;
-	artists?: string;
-	genres?: string;
-	released?: string;
-	poster: string;
-	backdrop?: string;
-}
+			_id: false,
+			number: { type: Number, required: true },
+			urlName: { type: String, required: true },
+			sourceUrlName: { type: String, required: true },
+			dateAdded: { type: Date, required: true },
+		},
+	],
 
-const mangaModel = new Schema<IManga>(
-	{
-		isVerified: { type: Boolean, required: true },
-		title: { type: String, required: true },
-		description: { type: String, required: true },
-		urlName: { type: String, required: true, unique: true },
-		sourceUrlName: { type: String, required: true },
+	otherNames: String,
+	authors: String,
+	artists: String,
+	genres: String,
+	released: String,
 
-		hostId: { type: Schema.Types.ObjectId, ref: 'Host', required: true },
+	poster: { type: String, required: true },
+	backdrop: String,
 
-		airStatus: { type: String, enum: ['ongoing', 'completed'], required: true },
+	featuredIndex: Number,
+	top100Index: Number,
+	popularIndex: Number,
 
-		chapters: [
-			{
-				_id: false,
-				title: { type: String, required: true },
-				number: { type: Number, required: true },
-				urlName: { type: String, required: true },
-				sourceUrlName: { type: String, required: true },
-			},
-		],
-
-		otherNames: String,
-		authors: String,
-		artists: String,
-		genres: String,
-		released: String,
-
-		poster: { type: String, required: true },
-		backdrop: String,
-	},
-	{
-		timestamps: true,
-	}
-);
+	createdAt: { type: Date, required: true },
+	latestChapterAt: { type: Date, required: true },
+});
 
 const Manga = model('Manga', mangaModel);
 

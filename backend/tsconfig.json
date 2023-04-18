@@ -8,9 +8,11 @@
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true
+		"forceConsistentCasingInFileNames": true,
+		"typeRoots": ["./src/types"]
 	},
 	"include": ["./src/**/*"],
+	"exclude": ["node_modules"],
 	"ts-node": {
 		"esm": true
 	}

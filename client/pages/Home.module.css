@@ -1,0 +1,24 @@
+.section {
+	max-width: 100%;
+	margin-top: 3rem;
+}
+
+.title {
+	font-weight: 500;
+	font-size: 26px;
+	-webkit-user-select: none;
+	user-select: none;
+	margin-bottom: 1rem;
+}
+
+.horizontalCards {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(350px, auto));
+	gap: 1.5rem;
+}
+
+@media screen and (max-width: 450px) {
+	.horizontalCards {
+		grid-template-columns: repeat(1, 100%);
+	}
+}

@@ -1,0 +1,33 @@
+.container {
+	position: relative;
+	border-radius: 0.4rem;
+}
+
+.item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.5rem 0.8rem;
+	transition: background-color 0.15s;
+}
+
+.item:not(:last-child) {
+	border-bottom: 1px solid #1e2746;
+}
+
+.actionBtn {
+	display: inline;
+	background-color: transparent;
+	border: 0;
+	padding: 0.4rem;
+	border-radius: 50%;
+}
+
+.actionBtn:global(.hidden) {
+	visibility: hidden;
+}
+
+.actionBtn:hover {
+	background-color: rgba(255, 255, 255, 0.15);
+	transition: background-color 0.15s;
+}

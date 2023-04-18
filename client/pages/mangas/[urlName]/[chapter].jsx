@@ -1,36 +1,31 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import useSWRImmutable from 'swr/immutable';
-
-import fetchAPI from '@/functions/fetchAPI';
-
+import { useSession } from 'next-auth/react';
 import Select from '@/components/Select';
 import Loader from '@/components/Loader';
-
-import { ProfileContext } from '@/contexts/ProfileContext';
-
 import styles from '@/styles/read.module.css';
+import Manga from '@/models/Manga.model';
+import Head from 'next/head';
+import axios from 'axios';
 
 export default function ReadManga() {
 	const router = useRouter();
 	const { query } = router;
-
-	const [{ currentProfile }] = useContext(ProfileContext);
 	const [imageWidth, setImageWidth] = useState(null);
 
 	const { data: mangaMeta } = useSWRImmutable(() =>
-		query.urlName ? `/mangas/${query.urlName}` : null
+		query.urlName ? `/api/mangas/${query.urlName}` : null
 	);
 	const { data: chapterMeta } = useSWRImmutable(() =>
-		query.chapter ? `/mangas/${query.urlName}/${query.chapter}` : null
+		query.chapter
+			? `/api/scraper/mangas/${query.urlName}/${query.chapter}`
+			: null
 	);
 	const isLoading = !chapterMeta || !mangaMeta;
 
-	const { prevChap, currChap, nextChap } = useChapterPagination({
-		currentProfile,
-		mangaMeta,
-	});
+	const { prevChap, currChap, nextChap } = useChapterPagination(mangaMeta);
 
 	const { scrollProgress, imagesContainerRef, imageLoadHandler } =
 		useScrollProgress({ chapterMeta, imageWidth });
@@ -45,6 +40,12 @@ export default function ReadManga() {
 
 	return (
 		<>
+			<Head>
+				<title>
+					{mangaMeta?.title} - Chapter {chapterMeta?.number}
+				</title>
+			</Head>
+
 			<header className={styles.header}>
 				<Select.Root style={{ marginBottom: 10 }}>
 					<Select.Button className={styles.title}>
@@ -114,7 +115,7 @@ export default function ReadManga() {
 						Prev
 					</button>
 
-					<Link href='/mangas' className={styles.button}>
+					<Link href='/' className={styles.button}>
 						<i className='icon'>home</i>
 					</Link>
 
@@ -177,7 +178,7 @@ export default function ReadManga() {
 						Prev
 					</button>
 
-					<Link href='/mangas' className={styles.button}>
+					<Link href='/' className={styles.button}>
 						<i className='icon'>home</i>
 					</Link>
 
@@ -230,6 +231,7 @@ function useScrollProgress({ chapterMeta, imageWidth }) {
 
 		for (let i = start; i < end; i++) {
 			const el = imagesContainerRef.current.children[i];
+			if (!el) return;
 			const { y } = el.getBoundingClientRect();
 			imageSizes.current[i] = y + window.scrollY;
 		}
@@ -274,7 +276,8 @@ function useScrollProgress({ chapterMeta, imageWidth }) {
 	};
 }
 
-function useChapterPagination({ currentProfile, mangaMeta }) {
+function useChapterPagination(mangaMeta) {
+	const { data: session } = useSession();
 	const router = useRouter();
 	const { urlName, chapter } = router.query;
 
@@ -291,23 +294,36 @@ function useChapterPagination({ currentProfile, mangaMeta }) {
 		const { chapters } = mangaMeta;
 		const currChapIndex = chapters.findIndex(chap => chap.urlName === chapter);
 
-		const prevChap = chapters[currChapIndex - 1];
+		// Chapters are in reverse chronological order
+		const prevChap = chapters[currChapIndex + 1];
 		const currChap = chapters[currChapIndex];
-		const nextChap = chapters[currChapIndex + 1];
+		const nextChap = chapters[currChapIndex - 1];
 
 		setData({ prevChap, currChap, nextChap });
 
 		// Sync chapter with server
-		if (currentProfile) {
-			fetchAPI(
-				`/users/${currentProfile._id}/mangas/${mangaMeta._id}/currentChapter`,
-				{
-					method: 'POST',
-					body: JSON.stringify({ urlName: chapter }),
-				}
-			);
+		if (session?.user) {
+			axios
+				.post(`/api/me/mangas/${mangaMeta.urlName}/currentChapter`, {
+					urlName: chapter,
+				})
+				.then(console.log)
+				.catch(console.error);
 		}
 	}, [mangaMeta, router.query]);
 
 	return data;
 }
+
+// export const getServerSideProps = async ({ params }) => {
+// 	const { urlName } = params;
+// 	const manga = await Manga.findOne({ urlName });
+
+// 	if (!manga) return { notFound: true };
+
+// 	return {
+// 		props: {
+// 			manga: JSON.parse(JSON.stringify(manga)),
+// 		},
+// 	};
+// };

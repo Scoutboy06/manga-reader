@@ -1,0 +1,30 @@
+.banner {
+	height: 80px;
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #00020e;
+	border-top: 1px solid var(--divider);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 1rem var(--padding);
+	transition: transform 0.15s;
+	text-align: center;
+	transform: translateY(0);
+}
+
+.banner:global(.hidden) {
+	transform: translateY(100%);
+}
+
+@media screen and (max-width: 700px) {
+	.banner {
+		height: 120px;
+		flex-direction: column;
+		justify-content: center;
+	}
+}

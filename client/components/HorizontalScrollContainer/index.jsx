@@ -6,6 +6,7 @@ export default function HorizontalScrollContainer({
 	children,
 	title,
 	className = '',
+	gap = 16,
 }) {
 	const [canScrollTo, setCanScrollTo] = useState({
 		left: false,
@@ -15,12 +16,19 @@ export default function HorizontalScrollContainer({
 	const scrollContainerEl = useRef();
 
 	const scroll = dir => {
-		const firstChildWidth = scrollContainerEl.current.childNodes[0].offsetWidth;
+		const container = scrollContainerEl.current;
 
+		const { width: containerWidth } = container.getBoundingClientRect();
+		const firstChildWidth = container.childNodes[0].offsetWidth;
+
+		const childrenToScroll = Math.floor(
+			containerWidth / (firstChildWidth + gap)
+		);
+		const scrollDist = childrenToScroll * (firstChildWidth + gap);
 		const { scrollLeft } = scrollContainerEl.current;
 
 		scrollContainerEl.current.scroll({
-			left: scrollLeft + dir * firstChildWidth,
+			left: scrollLeft + dir * scrollDist,
 			behavior: 'smooth',
 		});
 	};
@@ -79,7 +87,11 @@ export default function HorizontalScrollContainer({
 				</div>
 			</div>
 
-			<div className={styles.scrollContainer} ref={scrollContainerEl}>
+			<div
+				className={styles.scrollContainer}
+				style={{ gap }}
+				ref={scrollContainerEl}
+			>
 				{children}
 			</div>
 		</div>

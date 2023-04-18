@@ -1,0 +1,115 @@
+.button {
+	border: 0;
+	padding: 0.3rem;
+	border-radius: 50%;
+	background-color: transparent;
+	color: var(--on-surface);
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	transition: background-color 0.15s;
+	text-decoration: none;
+	transition: 0.15s;
+	font-size: 1.5rem;
+	position: relative;
+}
+
+.searchBtn {
+	display: none;
+}
+
+.searchContainer {
+	padding: 0.1rem 0.8rem 0.1rem 1.2rem;
+	border-radius: 0.3rem;
+	display: flex;
+	align-items: center;
+	position: relative;
+	border: 1px solid var(--outline-variant);
+	background-color: rgba(var(--surface-0-rgb), 0.4);
+	outline-offset: -1px;
+}
+
+.searchContainer:focus-within {
+	outline: 1px solid var(--primary);
+}
+
+.searchContainer > input {
+	width: 12rem;
+	height: 2rem;
+	background-color: transparent;
+	border: 0;
+	outline: none;
+	font-size: 1rem;
+	transition: width 0.3s;
+	width: 18rem;
+}
+
+.dropdownItem {
+	height: 80px;
+	padding: 0 0.7rem;
+	display: flex;
+	gap: 0.7rem;
+}
+
+.imageContainer {
+	width: 40px;
+	height: 60px;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdownItem img {
+	object-fit: cover;
+	width: 40px;
+	height: 60px;
+}
+
+.content {
+	width: calc(100% - 40px);
+}
+
+.content > * {
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.content p {
+	color: rgba(255, 255, 255, 0.7);
+	font-size: 14px;
+	margin-top: 0.4rem;
+}
+
+.allResults {
+	--margin: 0.7rem;
+	margin: var(--margin) var(--margin) 0.2rem;
+	width: calc(100% - 2 * var(--margin));
+}
+
+@media screen and (max-width: 700px) {
+	.searchContainer {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		border-radius: 0;
+		background-color: var(--surface-0);
+		border: 1px solid var(--divider);
+		opacity: 0;
+		pointer-events: none;
+		transition: 0.15s;
+	}
+
+	.searchContainer:global(.visible) {
+		opacity: 1;
+		pointer-events: all;
+		top: 100%;
+	}
+
+	.searchContainer > input {
+		width: 100%;
+	}
+
+	.searchBtn {
+		display: inline;
+	}
+}

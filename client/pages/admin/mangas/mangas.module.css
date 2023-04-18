@@ -1,0 +1,66 @@
+.main {
+	--gap: 2rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--gap);
+}
+
+.infoCard {
+	background-color: #0d1530;
+	width: 100%;
+	border-radius: 1rem;
+	padding: 1rem 2rem;
+	text-align: center;
+	box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.2);
+}
+
+.infoCard h1 {
+	line-height: 1.2;
+}
+
+.listContainer {
+	width: 100%;
+}
+
+.listContainer > h2 {
+	margin-bottom: 0.8rem;
+}
+
+.list {
+	background-color: #0d1530;
+}
+
+.actionBtns {
+	margin-top: 0.6rem;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 0.8rem;
+}
+
+.actionBtns > button:global(.add) {
+	padding: 0.375rem;
+}
+
+.actionBtns > button:global(.submit) {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+@media screen and (min-width: 50rem) {
+	.infoCard {
+		width: calc(50% - 0.5 * var(--gap));
+		padding: 1.5rem 2rem;
+	}
+}
+
+@media screen and (min-width: 85rem) {
+	.infoCard {
+		width: calc(25% - 0.75 * var(--gap));
+	}
+
+	.listContainer {
+		width: calc(50% - 0.5 * var(--gap));
+	}
+}
