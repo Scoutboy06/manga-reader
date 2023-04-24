@@ -7,19 +7,13 @@ export interface Chapter {
 	dateAdded: Date | string;
 }
 
-export interface NewManga {
+export interface DefaultManga {
 	urlName: string;
 	title: string;
 	description: string;
 	sourceUrlName: string;
 
-	hostId: Types.ObjectId | string;
-
-	airStatus: 'ongoing' | 'completed';
-
-	chapters: Chapter[];
-	latestChapterAt: Date | string;
-
+	airStatus?: 'ongoing' | 'completed';
 	otherNames?: string;
 	authors?: string;
 	artists?: string;
@@ -27,13 +21,21 @@ export interface NewManga {
 	released?: string;
 
 	poster: string;
-	backdrop?: string;
+
+	chapters: Chapter[];
+}
+
+export interface NewManga extends DefaultManga {
+	hostId: Types.ObjectId | string;
+	latestChapterAt: Date | string;
 
 	createdAt: Date | string;
 }
 
 export default interface IManga extends NewManga {
 	_id: Types.ObjectId;
+
+	backdrop?: string;
 
 	featuredIndex?: number;
 	popularIndex?: number;

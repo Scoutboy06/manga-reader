@@ -1,7 +1,7 @@
 import styles from './SearchBar.module.css';
 import Dropdown from '@/components/Dropdown';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import IManga from '@/types/Manga';
 import axios from 'axios';
@@ -14,12 +14,14 @@ export default function SearchBar() {
 	const searchTimeout = useRef<number | null>(null);
 	const searchBtn = useRef(null);
 
-	const searchSubmit = e => {
+	const searchSubmit = (e: FormEvent) => {
 		e.preventDefault();
 		router.push(`/mangas/search?q=${searchValue}`);
 	};
 
-	const inputChange = e => {
+	const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (!e.target) return;
+
 		setSearchValue(e.target.value);
 		if (searchTimeout.current) clearTimeout(searchTimeout.current);
 

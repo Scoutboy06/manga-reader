@@ -24,6 +24,7 @@
 		"build": "tsc",
 		"serve": "node .",
 		"start": "tsc && node .",
+		"start:no-updates": "tsc && node . --no-updates",
 		"dev": "tsc-watch --onsuccess \"node .\"",
 		"dev:no-updates": "tsc-watch --onsuccess \"node . --no-updates\""
 	},

@@ -1,11 +1,16 @@
 import Image from 'next/image';
 import { signIn } from 'next-auth/react';
-
 import Popup from '@/components/Popup';
-
 import styles from './LoginPopup.module.css';
+import { HTMLAttributes } from 'react';
 
-export default function AuthPopup({ title, ...props }) {
+interface AuthPopupProps extends HTMLAttributes<HTMLElement> {
+	title: string;
+	visible: boolean;
+	close: () => any;
+}
+
+export default function AuthPopup({ title, ...props }: AuthPopupProps) {
 	const icons = {
 		google: (
 			<Image src='/icons/google.svg' width={24} height={24} alt='Google logo' />
