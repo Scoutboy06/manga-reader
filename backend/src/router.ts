@@ -6,8 +6,6 @@ import { HydratedDocument } from 'mongoose';
 import IHost from './types/Host.js';
 import Manga from './models/mangaModel.js';
 import scrapeImages from './lib/scrapeImages.js';
-import User from './models/userModel.js';
-import { promiseAll } from './lib/asyncFunctions.js';
 
 const router = Router();
 
@@ -30,8 +28,8 @@ router.get('/mangas/external', async (req: Request, res: Response) => {
 
 		sourceUrlName = matchValueWithSchema({
 			value: url.href,
-			schema: host.detailsPage.urlPattern,
-		}).get('name');
+			schema: host.detailsPage.scrapePattern,
+		})?.get('name');
 	}
 
 	if (!sourceUrlName)

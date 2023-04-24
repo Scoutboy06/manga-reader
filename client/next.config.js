@@ -14,6 +14,7 @@ export default {
 			{ protocol: 'https', hostname: 'cdn.myanimelist.net' },
 			{ protocol: 'https', hostname: 'lh3.googleusercontent.com' },
 			{ protocol: 'https', hostname: 'www.mangaread.org' },
+			{ protocol: 'https', hostname: 'www.readm.org' },
 		],
 	},
 };

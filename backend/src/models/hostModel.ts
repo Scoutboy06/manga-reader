@@ -6,6 +6,7 @@ const MODEL_NAME = new Schema<IHost>({
 
 	detailsPage: {
 		urlPattern: { type: String, required: true },
+		scrapePattern: { type: String, required: true },
 
 		title: { type: String, required: true },
 		poster: { type: String, required: true },
@@ -22,22 +23,12 @@ const MODEL_NAME = new Schema<IHost>({
 
 	chapterPage: {
 		urlPattern: { type: String, required: true },
+		scrapePattern: { type: String, required: true },
 
 		prevPage: { type: String, required: true },
 		nextPage: { type: String, required: true },
 		images: { type: String, required: true },
-	},
-
-	search: {
-		urlPattern: { type: String, required: true },
-		method: { type: String, required: true },
-
-		container: { type: String, required: true },
-		poster: { type: String, required: true },
-		title: { type: String, required: true },
-		latestChapter: { type: String, required: true },
-		latestUpdate: { type: String, required: true },
-		detailsPage: { type: String, required: true },
+		imageUrlPrepend: { type: String, required: true },
 	},
 });
 

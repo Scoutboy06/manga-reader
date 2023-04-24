@@ -14,7 +14,7 @@ export default function matchValueWithSchema({
 
 	const regex = new RegExp(schema.replaceAll(/%(.+?)%/gi, '(.+?)'), 'gi');
 	const exec = regex.exec(value);
-	if (!exec) return null;
+	if (!exec) return matches;
 
 	let i = 0;
 	for (const match of exec.slice(1)) {
@@ -36,5 +36,12 @@ export default function matchValueWithSchema({
 // 	matchValueWithSchema({
 // 		value: 'https://www.mangaread.org/manga/one-punch-man/chapter-235.6/',
 // 		schema: 'https://www.mangaread.org/manga/%name%/%chapter%/',
+// 	})
+// );
+
+// console.log(
+// 	matchValueWithSchema({
+// 		value: 'https://www.readm.org/manga/16591/',
+// 		schema: 'https://www.readm.org/manga/%name%/',
 // 	})
 // );

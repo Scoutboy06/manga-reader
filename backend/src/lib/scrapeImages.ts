@@ -26,7 +26,7 @@ export default async function scrapeImages(
 			img.getAttribute('setsrc') ||
 			img.getAttribute('src');
 
-		src = src.trim();
+		src = host.chapterPage.imageUrlPrepend + src.trim();
 		srcs.push(src);
 	}
 

@@ -27,8 +27,9 @@ export default async function scrapeManga(
 	const otherNames = getText(document, detailsPage.otherNames, false);
 	const authors = getText(document, detailsPage.authors, false);
 	const artists = getText(document, detailsPage.artists, false);
-	const genres = getText(document, detailsPage.genres, fieldsAreRequired);
-	const released = getText(document, detailsPage.released, fieldsAreRequired);
+	const genres = getText(document, detailsPage.genres, false);
+	console.log('here');
+	const released = getText(document, detailsPage.released, false);
 
 	const airStatus = getText(
 		document,
@@ -36,7 +37,11 @@ export default async function scrapeManga(
 		fieldsAreRequired
 	)?.toLowerCase();
 
-	if (airStatus !== 'ongoing' && airStatus !== 'completed') {
+	if (
+		airStatus !== 'ongoing' &&
+		airStatus !== 'completed' &&
+		fieldsAreRequired
+	) {
 		throw new Error(`airStatus had invalid value: ${airStatus}`);
 	}
 
@@ -44,7 +49,7 @@ export default async function scrapeManga(
 	const chapters = getChapters(
 		document,
 		detailsPage.chapters,
-		host.chapterPage.urlPattern
+		host.chapterPage.scrapePattern
 	);
 
 	const mangaMeta: NewManga = {
@@ -54,7 +59,10 @@ export default async function scrapeManga(
 		sourceUrlName,
 
 		hostId: host._id,
-		airStatus,
+		airStatus:
+			airStatus === 'ongoing' || airStatus === 'completed'
+				? airStatus
+				: undefined,
 
 		chapters,
 		latestChapterAt: new Date(),
@@ -74,6 +82,7 @@ export default async function scrapeManga(
 }
 
 function getText(root: HTMLElement, selector: string, required: boolean) {
+	if (!selector) return null;
 	const text = root.querySelector(selector)?.textContent?.trim();
 	if (!text && required) {
 		throw new Error(`Text selector failed: ${selector}`);
@@ -114,13 +123,15 @@ function getChapters(
 
 		const chapterNumber = getChapterNumber(chapterTitle);
 
+		// Removing ghost chapters
+		if (isNaN(chapterNumber)) continue;
+
+		console.log(chapterTitleEl.getAttribute('href'));
+
 		const sourceUrlName = matchValueWithSchema({
 			value: chapterTitleEl.getAttribute('href'),
 			schema: chapterPagePattern,
 		}).get('chapter');
-
-		// Removing ghost chapters
-		if (isNaN(chapterNumber)) continue;
 
 		const chapter: Chapter = {
 			number: chapterNumber,
