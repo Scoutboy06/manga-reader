@@ -37,7 +37,7 @@ export default interface IManga extends NewManga {
 
 	backdrop?: string;
 
-	featuredIndex?: boolean;
+	featuredIndex?: number;
 	popularIndex?: number;
 	top100Index?: number;
 }

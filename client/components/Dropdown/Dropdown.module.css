@@ -5,26 +5,6 @@
 	height: max-content;
 }
 
-/* For <Select> */
-.button {
-	background-color: transparent;
-	border: 1px solid var(--divider);
-	border-radius: 0.3rem;
-	cursor: pointer;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	padding: 6px 5px 6px 8px;
-}
-
-/* For <Select> */
-.button > i {
-	font-size: 18px;
-	transition: transform 0.15s ease-out;
-}
-
 .dropdown {
 	--vertical-offset: -4px;
 	background-color: #00020e;
