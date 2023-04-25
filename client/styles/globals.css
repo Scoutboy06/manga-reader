@@ -267,3 +267,9 @@ button:not(:disabled) {
 .formGroup select:focus {
 	border-color: var(--primary);
 }
+
+@media screen and (max-width: 700px) {
+	:root {
+		--padding: 1rem;
+	}
+}

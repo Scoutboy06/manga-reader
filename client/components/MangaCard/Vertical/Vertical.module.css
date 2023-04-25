@@ -1,7 +1,6 @@
 .card {
 	display: block;
 	width: 200px;
-	aspect-ratio: 2 / 3;
 	text-decoration: none;
 	max-width: 100%;
 	position: relative;
@@ -9,8 +8,8 @@
 
 .imageContainer {
 	display: block;
-	width: 100%;
-	height: 100%;
+	width: 200px;
+	height: 300px;
 	position: relative;
 	border-radius: 0.6rem;
 	overflow: hidden;
