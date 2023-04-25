@@ -1,5 +1,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { HTMLAttributes } from 'react';
+
+interface NavlinkProps extends HTMLAttributes<HTMLElement> {
+	href: string;
+	subpaths?: boolean;
+}
 
 export default function Navlink({
 	children,
@@ -7,7 +13,7 @@ export default function Navlink({
 	className,
 	subpaths = false,
 	...props
-}) {
+}: NavlinkProps) {
 	const router = useRouter();
 
 	const isActive = subpaths

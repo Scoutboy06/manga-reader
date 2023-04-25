@@ -4,6 +4,33 @@
 	padding: 20px 5vw;
 }
 
+.topContainer {
+	margin-bottom: 1.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+/* For <Select> */
+.selectBtn {
+	background-color: transparent;
+	border: 1px solid var(--divider);
+	border-radius: 0.3rem;
+	cursor: pointer;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	padding: 6px 5px 6px 8px;
+}
+
+/* For <Select> */
+.selectBtn > i {
+	font-size: 18px;
+	transition: transform 0.15s ease-out;
+}
+
 .title {
 	padding: 0.2rem 0.4rem;
 	font-weight: 100;

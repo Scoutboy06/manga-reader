@@ -1,111 +1,43 @@
-import { useState, Children, useEffect, useRef } from 'react';
+import Dropdown, { DropdownProps } from '@/components/Dropdown';
+import { MenuProps } from './Dropdown/Menu';
 
-import styles from '@/components/Dropdown/Dropdown.module.css';
+interface SelectProps extends DropdownProps {}
 
-function Root({ children, ...props }) {
-	const [isOpen, setIsOpen] = useState(false);
-	const rootEl = useRef<HTMLDivElement>(null);
+function Select({ children, ...props }: SelectProps) {
+	return <Dropdown {...props}>{children}</Dropdown>;
+}
 
-	const handleWindowClick = (e: Event) => {
-		const path = e.composedPath();
+interface OptionsProps extends Omit<MenuProps, 'onChange'> {
+	value: string;
+	options: {
+		value: string;
+		label: string;
+	}[];
+	onChange?: (value: string) => any;
+}
 
-		if (rootEl.current && !path.includes(rootEl.current)) {
-			setIsOpen(false);
-		}
-	};
-
-	useEffect(() => {
-		if (isOpen) {
-			window.addEventListener('click', handleWindowClick);
-		} else {
-			window.removeEventListener('click', handleWindowClick);
-		}
-
-		return () => {
-			window.removeEventListener('click', handleWindowClick);
-		};
-	}, [isOpen]);
-
+function Options({ value, options, onChange, ...props }: OptionsProps) {
 	return (
-		<div
-			className={styles.container + (isOpen ? ' open' : '')}
-			ref={rootEl}
-			{...props}
-		>
-			{Children.map(children, (child, i) => {
-				// Button
-				if (child.type === Button) {
-					return (
-						<button
-							key={`button_${i}`}
-							{...child.props}
-							onClick={() => {
-								child.props.onClick?.();
-								setIsOpen(!isOpen);
-							}}
-							className={[child.props.className, styles.button].join(' ')}
-						>
-							{child.props.children}
-							<i className='icon'>arrow_drop_down</i>
-						</button>
-					);
-				}
+		<Dropdown.Menu {...props}>
+			{options.map((option, i) => {
+				if (typeof option === 'string' && option === 'divider')
+					return <Dropdown.Divider key={`divider_${i}`} />;
 
-				// Options
-				if (child.type === Options) {
-					if (!isOpen) return null;
-
-					return (
-						<div
-							className={[
-								child.props.className,
-								styles.dropdown,
-								child.props.placement || 'bl',
-							].join(' ')}
-							key={`options_${i}`}
-						>
-							{child.props.options?.map((option, j) => {
-								if (option.type === 'hr' || option === 'divider') {
-									return (
-										<div className={styles.divider} key={`divider_${j}`}></div>
-									);
-								}
-
-								return (
-									<div
-										key={option.value}
-										onClick={() =>
-											child.props.onChange?.(option.value, option.label)
-										}
-										className={[
-											option.className,
-											styles.item,
-											option.value === child.props.value ? 'selected' : '',
-										].join(' ')}
-										style={option.style}
-									>
-										{option.label}
-									</div>
-								);
-							})}
-						</div>
-					);
-				} else return child;
+				return (
+					<Dropdown.Item
+						key={option.value}
+						onClick={() => onChange?.(option.value)}
+						className={value === option.value ? 'selected' : ''}
+					>
+						{option.label}
+					</Dropdown.Item>
+				);
 			})}
-		</div>
+		</Dropdown.Menu>
 	);
 }
 
-function Button() {
-	return null;
-}
-
-function Options() {
-	return null;
-}
-
-export default {
-	Root,
-	Button,
+export default Object.assign(Select, {
+	Toggle: Dropdown.Toggle,
 	Options,
-};
+});

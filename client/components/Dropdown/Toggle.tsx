@@ -1,9 +1,19 @@
 import { HTMLAttributes } from 'react';
 import { useDropdownContext } from './Context';
 
-interface ToggleProps extends HTMLAttributes<HTMLElement> {}
+interface ToggleProps extends HTMLAttributes<HTMLElement> {
+	toggleIconLeft?: boolean;
+	toggleIconRight?: boolean;
+}
 
-function Toggle({ className, children, onClick, ...props }: ToggleProps) {
+function Toggle({
+	className,
+	children,
+	onClick,
+	toggleIconLeft,
+	toggleIconRight,
+	...props
+}: ToggleProps) {
 	const [{ isOpen }, { setIsOpen }] = useDropdownContext();
 
 	return (
@@ -15,7 +25,9 @@ function Toggle({ className, children, onClick, ...props }: ToggleProps) {
 				onClick?.(e);
 			}}
 		>
+			{toggleIconLeft && <i className='icon'>arrow_drop_down</i>}
 			{children}
+			{toggleIconRight && <i className='icon'>arrow_drop_down</i>}
 		</button>
 	);
 }

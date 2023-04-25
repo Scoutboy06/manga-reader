@@ -14,7 +14,7 @@ import Item from './Item';
 import Divider from './Divider';
 import DropdownContext, { DropdownPlacement } from './Context';
 
-interface DropdownProps extends HTMLAttributes<HTMLElement> {
+export interface DropdownProps extends HTMLAttributes<HTMLElement> {
 	rootCloseEvent?: 'click' | 'mousedown';
 	placement: DropdownPlacement;
 	isOpen?: boolean;

@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import Select from '@/components/Select';
 import Loader from '@/components/Loader';
 import styles from '@/styles/read.module.css';
-import Manga from '@/models/Manga.model';
 import Head from 'next/head';
 import axios from 'axios';
 
@@ -47,46 +46,43 @@ export default function ReadManga() {
 			</Head>
 
 			<header className={styles.header}>
-				<Select.Root style={{ marginBottom: 10 }}>
-					<Select.Button className={styles.title}>
-						{'Chapter ' + (currChap?.number || '')}
-					</Select.Button>
+				<div className={styles.topContainer}>
+					<Select placement='bl'>
+						<Select.Toggle
+							className={[styles.selectBtn, styles.title].join(' ')}
+							toggleIconRight
+						>
+							{'Chapter ' + (currChap?.number || '')}
+						</Select.Toggle>
 
-					<Select.Options
-						value={query.chapter}
-						options={mangaMeta?.chapters?.map(chapter => ({
-							value: chapter.urlName,
-							label: `Chapter ${chapter.number}`,
-						}))}
-						onChange={urlName =>
-							router.push(`/mangas/${query.urlName}/${urlName}`)
-						}
-					/>
-				</Select.Root>
+						<Select.Options
+							value={query.chapter}
+							options={
+								mangaMeta?.chapters
+									? mangaMeta.chapters.map(chapter => ({
+											value: chapter.urlName,
+											label: `Chapter ${chapter.number}`,
+									  }))
+									: []
+							}
+							onChange={urlName =>
+								router.push(`/mangas/${query.urlName}/${urlName}`)
+							}
+						/>
+					</Select>
 
-				<div className={styles.container} style={{ marginBottom: 30 }}>
-					<a
-						href={chapterMeta?.originalUrl}
-						target='_blank'
-						rel='nofollow noreferrer noopener'
-						className={styles.button}
-						disabled={isLoading || !chapterMeta?.originalUrl}
-					>
-						<i className='icon'>open_in_new</i>
-					</a>
-
-					<Select.Root>
-						<Select.Button>
+					<Select placement='br'>
+						<Select.Toggle className={styles.selectBtn} toggleIconRight>
 							{imageWidth === 'pageWidth'
 								? 'Page width'
 								: `${imageWidth * 100}%`}
-						</Select.Button>
+						</Select.Toggle>
 
 						<Select.Options
 							value={imageWidth}
 							options={[
 								{ value: 'pageWidth', label: 'Page width' },
-								<hr />,
+								'divider',
 								{ value: 0.5, label: '50%' },
 								{ value: 0.75, label: '75%' },
 								{ value: 0.9, label: '90%' },
@@ -97,9 +93,8 @@ export default function ReadManga() {
 								{ value: 2, label: '200%' },
 							]}
 							onChange={value => setImageWidth(value)}
-							placement='br'
 						/>
-					</Select.Root>
+					</Select>
 				</div>
 
 				<div className={styles.container}>
@@ -304,26 +299,12 @@ function useChapterPagination(mangaMeta) {
 		// Sync chapter with server
 		if (session?.user) {
 			axios
-				.post(`/api/me/mangas/${mangaMeta.urlName}/currentChapter`, {
+				.post(`/api/me/mangas/${urlName}/currentChapter`, {
 					urlName: chapter,
 				})
-				.then(console.log)
 				.catch(console.error);
 		}
 	}, [mangaMeta, router.query]);
 
 	return data;
 }
-
-// export const getServerSideProps = async ({ params }) => {
-// 	const { urlName } = params;
-// 	const manga = await Manga.findOne({ urlName });
-
-// 	if (!manga) return { notFound: true };
-
-// 	return {
-// 		props: {
-// 			manga: JSON.parse(JSON.stringify(manga)),
-// 		},
-// 	};
-// };
