@@ -7,7 +7,7 @@ import HorizontalScrollContainer from '@/components/HorizontalScrollContainer';
 import styles from './Home.module.css';
 import MangaCard from '@/components/MangaCard';
 import DefaultLayout from '@/layouts/DefaultLayout';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import IManga from '@/types/Manga';
 import { HydratedDocument } from 'mongoose';
 import Slideshow from '@/components/Slideshow';
@@ -111,7 +111,7 @@ export default function Home({
 	);
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
 	await connectDB();
 
 	const [featuredMangas, popularMangas, recentlyUpdated] = await Promise.all([
