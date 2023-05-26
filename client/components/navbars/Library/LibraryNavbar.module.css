@@ -1,9 +1,8 @@
 .navbar {
-	background-color: rgba(var(--surface-0-rgb), 0.2);
-	backdrop-filter: blur(10px);
+	/* background-color: rgba(var(--surface-0-rgb), 0.2); */
+	/* backdrop-filter: blur(12px); */
 	width: 100%;
 	height: var(--navbar-height);
-	border-bottom: 1px solid var(--divider-variant);
 	padding: 0 var(--padding);
 	display: flex;
 	flex-direction: row;
@@ -49,11 +48,10 @@
 
 .navlink {
 	border: 0;
-	font-size: 0.9rem;
+	font-size: 14px;
 	cursor: pointer;
 	transition: color 0.15s;
-	font-weight: bold;
-	margin-right: 2rem;
+	margin-right: 2.5rem;
 	text-decoration: none;
 }
 

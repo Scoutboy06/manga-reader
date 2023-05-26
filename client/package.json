@@ -3,6 +3,13 @@
 	"version": "0.1.0",
 	"type": "module",
 	"dependencies": {
+<<<<<<< Updated upstream
+=======
+		"@next/font": "^13.4.2",
+		"axios": "^1.3.5",
+		"eslint-config-next": "^13.2.4",
+		"express-http-proxy": "^1.6.3",
+>>>>>>> Stashed changes
 		"memory-cache": "^0.2.0",
 		"next": "^13.1.6",
 		"nprogress": "^0.2.0",
