@@ -1,19 +1,19 @@
 {
-	"compilerOptions": {
-		"module": "esnext",
-		"moduleResolution": "nodenext",
-		"target": "ES2022",
-		"sourceMap": true,
-		"outDir": "./dist",
-		"allowJs": true,
-		"allowSyntheticDefaultImports": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
-		"typeRoots": ["./src/types"]
-	},
-	"include": ["./src/**/*"],
-	"exclude": ["node_modules"],
-	"ts-node": {
-		"esm": true
-	}
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "target": "ES2022",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./src/types"]
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "esm": true
+  }
 }
