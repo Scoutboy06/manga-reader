@@ -1,5 +1,10 @@
-.container {
+.layout {
 	min-height: calc(100vh - var(--footer-height));
-	padding: var(--navbar-height) var(--padding) 2rem;
-	background-image: var(--glow-effect);
+
+	font-family: var(--font-poppins);
+	font-weight: 400;
+	font-size: 14px;
+	font-style: normal;
+	line-height: 14px;
+	letter-spacing: 0.3px;
 }

@@ -1,5 +1,9 @@
-import DefaultLayout from '@/layouts/DefaultLayout';
+// import DefaultLayout from '@/layouts/DefaultLayout';
 
 export default function Test() {
-	return <DefaultLayout></DefaultLayout>;
+  return (
+    // <DefaultLayout>
+    <h1 className='text-primary px-10'>Hello there!</h1>
+    // </DefaultLayout>
+  );
 }
