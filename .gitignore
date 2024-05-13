@@ -13,6 +13,8 @@
 /client/dist
 
 # misc
+.vscode/*
+!.vscode.extensions.json
 .DS_Store
 .env
 .env.local

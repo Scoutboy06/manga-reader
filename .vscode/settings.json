@@ -1,7 +1,7 @@
 {
-	"files.exclude": {
-		"**/.vscode": true,
-		"**/node_modules": true
-	},
-	"editor.suggest.snippetsPreventQuickSuggestions": false
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "editor.tabSize": 4
 }
