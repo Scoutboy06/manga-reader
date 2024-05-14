@@ -12,6 +12,7 @@
   position: absolute;
   top: 0;
   z-index: -1;
+  background-color: #000;
 }
 
 .backdrop_container > img {
@@ -47,25 +48,27 @@
 }
 
 .poster {
-  background-color: #000;
   border-radius: 1.25rem;
+  width: 30rem;
 }
 
 .poster img {
+  background-color: #000;
   border-radius: inherit;
   object-fit: cover;
   -webkit-user-select: none;
   user-select: none;
   transition: opacity 0.2s;
+  width: 100%;
 }
 
 .poster img:hover {
-  /* opacity: 0.5; */
   opacity: 0.8;
 }
 
 .text {
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -113,8 +116,24 @@
   gap: 1.5rem;
 }
 
+@media screen and (max-width: 1250px) {
+  .poster {
+    width: 20rem;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .poster {
+    width: 15rem;
+  }
+}
+
 @media screen and (max-width: 450px) {
   .horizontalCards {
     grid-template-columns: repeat(1, 100%);
+  }
+
+  .poster {
+    width: 10rem;
   }
 }

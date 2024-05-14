@@ -4,6 +4,7 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
+    "@radix-ui/react-slot": "^1.0.2",
     "axios": "^1.3.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -18,6 +19,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.8",
+    "react-icons": "^5.2.1",
     "sharp": "^0.31.3",
     "swr": "^1.3.0",
     "tailwind-merge": "^2.3.0",

@@ -24,8 +24,9 @@ export default function Home({
   popularMangas,
   recentlyUpdated,
 }: Props) {
-  const { data: continueReading }: { data?: HydratedDocument<UserManga>[] } =
-    useSWR(`/api/me/mangas?limit=8`);
+  // const { data: continueReading }: { data?: HydratedDocument<UserManga>[] } =
+  //   useSWR(`/api/me/mangas?limit=8`);
+  const continueReading: Array<UserManga & { _id: string }> = [];
 
   return (
     <>
